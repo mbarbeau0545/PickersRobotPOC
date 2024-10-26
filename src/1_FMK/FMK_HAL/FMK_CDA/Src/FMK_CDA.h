@@ -32,7 +32,7 @@
     typedef enum 
     {
 
-        FMKCDA_ADC_CFG_PERIODIC_INTERRUPT,      /**< ADC conversion in periodic interrupt : multiple channels -> 
+        FMKCDA_ADC_CFG_PERIODIC_INTERRUPT = 0,      /**< ADC conversion in periodic interrupt : multiple channels -> 
                                                     Configure a periodic conversion that will be launch periodically and callback function will
                                                      be called once the conversion channel is done*/
         FMKCDA_ADC_CFG_PERIODIC_DMA,            /**< ADC conversion in periodic dma : multiple channels -> 

@@ -380,7 +380,7 @@ class FMKIO_CodeGen():
         print("\t\t- variable for GPIO enum")
         cls.code_gen._write_into_file(gpio_enable_clk, FMKIO_PATH)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<End code generation for FmkIO Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<End code generation for FMFIO Module>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION

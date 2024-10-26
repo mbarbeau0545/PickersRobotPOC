@@ -525,6 +525,7 @@ static t_eReturnState s_FMKCDA_PerformDiagnostic(void)
         }
         
     }
+    
     return Ret_e;
 }
 /**

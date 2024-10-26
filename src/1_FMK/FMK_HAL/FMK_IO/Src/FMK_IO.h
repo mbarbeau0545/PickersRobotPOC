@@ -319,7 +319,7 @@
                                           t_eFMKIO_SpdMode   f_spd_e);
     /**
     *
-    *	@brief      Update the digital output.\n
+    *	@brief      Update the digital output value.\n
     *	@note       Once the configuration is done, this function update the state of 
     *               the digital cycle with f_value_e.\n
     *
