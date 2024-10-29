@@ -99,6 +99,8 @@
         t_cbAppAct_DrvInit   * Init_pcb;        /**< Reference for init driver function */
         t_cbAppAct_DrvCyclic * Cyclic_pcb;      /**< Reference for cyclic driver function */
     } t_sAPPACT_SysDrvFunc;
+
+
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
