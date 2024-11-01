@@ -768,10 +768,6 @@ t_eReturnState FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
             comparedValue_u32 = (t_uint32)HAL_TIM_ReadCapturedValue(&g_TimerInfo_as[f_timer_e].BspTimer_ps, BspChannel_u32);
             *f_dutyCycle_u16 = (t_uint16)((comparedValue_u32 * 1000) /
                                             (g_TimerInfo_as[f_timer_e].BspTimer_ps.Init.Period + 1));
-        }        
-        else
-        {
-            Ret_e = RC_ERROR_WRONG_STATE;
         }
     }
     return Ret_e;

@@ -469,6 +469,7 @@
     /**
      *  @brief Declaration for hardware IRQnHandler call
      */
+    // flag automatic generated code 
     void TIM1_IRQHandler(void);
     void TIM3_IRQHandler(void);
     void TIM14_IRQHandler(void);

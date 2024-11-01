@@ -163,7 +163,7 @@ static t_eReturnState s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority 
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static t_eReturnState s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e);
+static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e);
 //********************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -284,8 +284,9 @@ t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
             bspRet_e = HAL_DMA_Init(&DmaChnl_ps->bspDma_ps);
             if(bspRet_e == HAL_OK)
             {
-                __HAL_DMA_ENABLE_IT(&DmaChnl_ps->bspDma_ps, DMA_IT_TC); // transfer-complete
                 g_DmaInfo_as[dmaCtrl_e].isConfigured_b = (t_bool)True;
+                // enable in circular mode the callback of complete
+                __HAL_DMA_ENABLE_IT(&DmaChnl_ps->bspDma_ps, DMA_IT_TC); // transfer-complete
             }
             else
             {   
@@ -303,7 +304,7 @@ t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
 /***********************************
  * s_FMKMAC_RqstInterruptionMngmt
  ***********************************/
-static t_eReturnState s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
+static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
 {
     t_eReturnState Ret_e = RC_OK;
     t_eFMKMAC_DmaChnl chnl_e;
@@ -360,10 +361,6 @@ static t_eReturnState s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
                 // Make link between Module Handle and Dma Channel
                 // Lier le handle DMA au handle ADC
                 __HAL_LINKDMA(&f_modHandle_pu->adcHandle_s, DMA_Handle, *f_bspDma_ps);
-                /*Not working*/
-                //f_modHandle_pu->adcHandle_s.DMA_Handle = f_bspDma_ps;
-                //f_bspDma_ps->Parent = &f_modHandle_pu->adcHandle_s;
-
                 break;
             }
             case FMKMAC_DMA_RQSTYPE_SPI1:

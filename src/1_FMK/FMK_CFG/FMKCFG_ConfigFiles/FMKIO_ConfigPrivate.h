@@ -20,7 +20,6 @@
     // ********************************************************************
     #include "TypeCommon.h"
     #include "./FMKIO_ConfigPublic.h"
-    #include "./FMKCDA_ConfigPublic.h"
     #include "./FMKCPU_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
