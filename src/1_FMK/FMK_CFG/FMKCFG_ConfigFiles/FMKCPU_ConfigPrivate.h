@@ -220,9 +220,9 @@
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  EXTI0_1_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  EXTI2_3_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  EXTI4_15_IRQn
-        FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  DMA1_Channel1_IRQn
-        FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  DMA1_Channel2_3_IRQn
-        FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  DMA1_Channel4_5_IRQn
+        FMKCPU_NVIC_PRIORITY_HIGH,                        //  DMA1_Channel1_IRQn
+        FMKCPU_NVIC_PRIORITY_HIGH,                        //  DMA1_Channel2_3_IRQn
+        FMKCPU_NVIC_PRIORITY_HIGH,                        //  DMA1_Channel4_5_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  ADC1_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  TIM1_BRK_UP_TRG_COM_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  TIM1_CC_IRQn

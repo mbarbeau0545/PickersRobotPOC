@@ -3,7 +3,7 @@
 #  @brief       Template_BriefDescription.
 #  @details     TemplateDetailsDescription.\n
 #
-#  @author      AUDMBA
+#  @author      mba
 #  @date        jj/mm/yyyy
 #  @version     1.0
 """

@@ -43,9 +43,11 @@
         t_eFMKMAC_DmaChnl               Chnl_e;
         t_eFMKMAC_DmaTransferPriority   transfPrio_e;
     } t_sFMKMAC_DmaRqstCfg;
+
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
+
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -58,15 +60,16 @@
     /* CAUTION : Automatic generated code section for Variable: End */
     // Flag generate code
     const t_sFMKMAC_DmaRqstCfg c_FmkMac_DmaRqstCfg_as[FMKMAC_DMA_RQSTYPE_NB] = {
-        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_1, FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_ADC1
-        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_2, FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_SPI1
-        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_4, FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_SPI2
-        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_3, FMKMAC_DMA_TRANSPRIO_HIGH}   // FMKMAC_DMA_RQSTYPE_UART1
+        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_1,     FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_ADC1
+        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_2,     FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_SPI1
+        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_4,     FMKMAC_DMA_TRANSPRIO_HIGH},  // FMKMAC_DMA_RQSTYPE_SPI2
+        {FMKMAC_DMA_CTRL_1        ,FMKMAC_DMA_CHANNEL_3,     FMKMAC_DMA_TRANSPRIO_HIGH}   // FMKMAC_DMA_RQSTYPE_UART1
     };
     // Flag generate code
     const t_uint8 c_FmkMac_DmaMaxChnl_ua8[FMKMAC_DMA_CTRL_NB] = {
         (t_uint8)FMKMAC_DMA_1_MAX_CHANNELS,
     };
+
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

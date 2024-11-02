@@ -36,31 +36,13 @@
 //********************************************************************************
 int main(void)
 {
-    #ifdef STANDALONE_MODE
-        t_eReturnState Ret_e = RC_OK;
-        Ret_e = FMKCPU_Set_HardwareInit();
-        if(Ret_e == RC_OK)
-        {
-            Ret_e = FMKCPU_Set_SysClockCfg();
-        }
-        if(Ret_e == RC_OK)
-        {
-            APPLGC_Init();
-        }
-        if(Ret_e != RC_OK)
-        {
-            while(1){}
-        }
-    #else
-        APPSYS_Init();
-    #endif
+    // code running once
+    APPSYS_Init();
+
     while (1)
     {
-        #ifdef STANDALONE_MODE
-            APPLGC_Cyclic();
-        #else
-            APPSYS_Cyclic();
-        #endif
+        // code running every APPSYS_ELAPSED_TIME_CYCLIC ms
+        APPSYS_Cyclic();
     }
     return 0;
 }

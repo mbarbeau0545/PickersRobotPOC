@@ -34,6 +34,8 @@
         "appsns_configpublic.h": "c",
         "fmk_mac.h": "c",
         "fmkmac_configpublic.h": "c",
-        "appact_configpublic.h": "c"
-    }
+        "appact_configpublic.h": "c",
+        "fmkmac_configprivate.h": "c"
+    },
+    "stm32-for-vscode.armToolchainPath": false
 }

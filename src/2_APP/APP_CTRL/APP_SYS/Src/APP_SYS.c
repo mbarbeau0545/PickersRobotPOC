@@ -79,7 +79,7 @@ void APPSYS_Init(void)
 {
     t_eReturnState Ret_e = RC_OK;
     static t_bool s_IsSysCfgDone_b = False;
-    t_uint8 LLI_u8 = 0;
+    t_uint8 modIndex_u8 = 0;
     // set sys confgiguration 
     if( s_IsSysCfgDone_b == (t_bool)False)
     {
@@ -99,9 +99,9 @@ void APPSYS_Init(void)
     }
     if(Ret_e == RC_OK)
     {
-        for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; LLI_u8++)
+        for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 < APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
-            Ret_e = c_AppSys_ModuleFunc_apf[LLI_u8].Init_pcb();
+            Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].Init_pcb();
         }
     }
     else
@@ -157,13 +157,13 @@ void APPSYS_Cyclic(void)
 static t_eReturnState s_APPSYS_Set_ModulesCyclic(void)
 {
     t_eReturnState Ret_e = RC_OK;
-    t_uint8 LLI_u8;
+    t_uint8 modIndex_u8;
 
-    for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < (t_uint8)APPSYS_MODULE_NB) && (Ret_e >= RC_OK) ; LLI_u8++)
+    for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 < (t_uint8)APPSYS_MODULE_NB) && (Ret_e >= RC_OK) ; modIndex_u8++)
     {
-        if(c_AppSys_ModuleFunc_apf[LLI_u8].Cyclic_pcb != NULL_FONCTION)
+        if(c_AppSys_ModuleFunc_apf[modIndex_u8].Cyclic_pcb != NULL_FONCTION)
         {
-            Ret_e = c_AppSys_ModuleFunc_apf[LLI_u8].Cyclic_pcb();  
+            Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].Cyclic_pcb();  
         }
     }
     return Ret_e;
@@ -175,16 +175,16 @@ static t_eReturnState s_APPSYS_Set_ModulesCyclic(void)
 static t_eReturnState s_APPSYS_PreOperational(void)
 {
     t_eReturnState Ret_e = RC_OK;
-    t_uint8 LLI_u8;
+    t_uint8 modIndex_u8;
     t_uint8 ModuleInitCnt_u8 = 0;
 
     Ret_e = s_APPSYS_Set_ModulesCyclic();
     if(Ret_e == RC_OK)
     {//  get the state of all modules
-        for(LLI_u8 = (t_uint8)0 ; (LLI_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; LLI_u8++)
+        for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
-            Ret_e = c_AppSys_ModuleFunc_apf[LLI_u8].GetState_pcb(&g_ModuleState_ae[LLI_u8]);
-            if(g_ModuleState_ae[LLI_u8] == STATE_CYCLIC_WAITING)
+            Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].GetState_pcb(&g_ModuleState_ae[modIndex_u8]);
+            if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
             {
                 ModuleInitCnt_u8 += 1;
             }
@@ -192,11 +192,11 @@ static t_eReturnState s_APPSYS_PreOperational(void)
     }
     if(ModuleInitCnt_u8 >= (t_uint8)APPSYS_MODULE_NB)
     {// set the all state module to ope
-        for(LLI_u8 = (t_uint8)0 ; (LLI_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; LLI_u8++)
+        for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
-            if(g_ModuleState_ae[LLI_u8] == STATE_CYCLIC_WAITING)
+            if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
             {
-                Ret_e = c_AppSys_ModuleFunc_apf[LLI_u8].SetState_pcb(STATE_CYCLIC_OPE);
+                Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].SetState_pcb(STATE_CYCLIC_OPE);
             }
         }
     }

@@ -8,7 +8,7 @@
 #               You dont't have to indicate Sheet from your Excel, We search in every sheet
 #               The array name. For the rest read API function and the example at the end
 #
-#  @author      AUDMBA
+#  @author      mba
 #  @date        jj/mm/yyyy
 #  @version     1.0
 """

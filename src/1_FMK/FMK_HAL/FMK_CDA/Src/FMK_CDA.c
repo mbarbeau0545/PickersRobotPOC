@@ -38,9 +38,11 @@
 /**< Structure for store and manage analog value in Scan_Dma mode */
 typedef struct
 {
-    t_uint16 rawValue_au16[FMKCDA_ADC_CHANNEL_NB];                  /**< Array for analog value for all channel */
-    t_eFMKCPU_InterruptChnl BspChnlmapp[FMKCDA_ADC_CHANNEL_NB];     /**< Mapping with raywvalue array and channelINfo structure abalog value */    
-    t_bool FlagValueUpdated_b;                                      /**< Flag to know whenever the adc ennding a conversion */
+    t_uint32 rawValue_au32[FMKCDA_ADC_CHANNEL_NB];                  /**< Array for analog value for all channel */
+    t_uint16 savedVal_ua16[FMKCDA_ADC_CHANNEL_NB];
+    t_eFMKCDA_AdcChannel BspChnlmapp_ae[FMKCDA_ADC_CHANNEL_NB];      /**< Mapping with raywvalue array and channelINfo structure abalog value */    
+    t_bool flagReadBuffer_b;                                        /**< Flag reading buffer  */
+    t_uint32 lastUpate_u32;                                       /**< time between the last update */
 } t_sFMKCDA_AdcBuffer;
 
 /**< Structure for adc channel information*/
@@ -83,8 +85,8 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
 };
 
 /**< Rank for each channel add for ADC */
-t_uint8 g_counterRank_au8[FMKCDA_ADC_NB] = {
-    (t_uint8)1,
+t_uint32 g_counterRank_au8[FMKCDA_ADC_NB] = {
+    (t_uint32)1,
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */
@@ -173,7 +175,7 @@ static t_eReturnState s_FMKCDA_Operational(void);
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_FMKCDA_PerformDiagnostic(void);
+static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e);
 /**
  *
  *	@brief      Start adc ocnversion
@@ -197,6 +199,7 @@ t_eReturnState FMKCDA_Init(void)
 {
     t_uint8 LLI1_u8 = 0;
     t_uint8 LLI2_u8 = 0;
+    t_eReturnState Ret_e = RC_OK;
     // initiate to default value variable structure
     for (LLI1_u8 = (t_uint8)0; LLI1_u8 < (t_uint8)FMKCDA_ADC_NB; LLI1_u8++)
     { // all timer
@@ -211,7 +214,9 @@ t_eReturnState FMKCDA_Init(void)
             g_AdcInfo_as[LLI1_u8].Channel_as[LLI2_u8].rawValue_u16 = (t_uint16)0;
         }
     }
-    return RC_OK;
+    // set configuration channel for ADC_VREF
+    Ret_e = FMKCDA_Set_AdcChannelCfg(FMKCDA_ADC_1, FMKCDA_ADC_CHANNEL_17, FMKCDA_ADC_CFG_SCAN_DMA);
+    return Ret_e;
 }
 
 /*********************************
@@ -390,53 +395,65 @@ t_eReturnState FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState
 static t_eReturnState s_FMKCDA_Operational(void)
 {
     static t_uint32 SavedTime_u32    = 0;
+    t_eFMKCDA_AdcChannel chnl_e;
     t_eReturnState Ret_e = RC_OK;
     t_uint32 currentTime_u32 = 0;
-    t_uint8 LLI_u8;
-    t_uint8 LLI2_u8;
-    t_eFMKCPU_InterruptChnl channel_e;
+    t_uint8 adcIndex_u8 = 0;
+    t_uint8 LLI_u8 = 0;
+    t_uint8 reverseLLI_u8 = 0;
 
    FMKCPU_Get_Tick(&currentTime_u32);
 
-    if((currentTime_u32 - SavedTime_u32) > (t_uint32)FMKCDA_TIME_BTWN_DIAG_MS)
-    {//perform diag on timer / chnl used
-        SavedTime_u32 = currentTime_u32;
-        Ret_e = s_FMKCDA_PerformDiagnostic();
-    }
-    
     // For every adc in stm32
-    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKCDA_ADC_NB ; LLI_u8++)
-    {
-        // if ADC buffer for this ADC has been filled store value buffer in adcInfo value
-        if(g_AdcBuffer_as[LLI_u8].FlagValueUpdated_b == (t_bool)True)
-        {// 
-            g_AdcBuffer_as[LLI_u8].FlagValueUpdated_b = (t_bool)False;
-            for(LLI2_u8 = (t_uint8)0 ; LLI2_u8 < g_counterRank_au8[LLI_u8] ; LLI2_u8++)
-            {
-                channel_e = g_AdcBuffer_as[LLI_u8].BspChnlmapp[LLI2_u8];
-                g_AdcInfo_as[LLI_u8].Channel_as[channel_e].rawValue_u16 = 
-                    g_AdcBuffer_as[LLI_u8].rawValue_au16[LLI2_u8];
-
-                g_AdcInfo_as[LLI_u8].Channel_as[channel_e].FlagValueUpdated_b = (t_bool)True;
-            }
+    for(adcIndex_u8 = (t_uint8)0 ; (adcIndex_u8 < (t_uint8)FMKCDA_ADC_NB) && (g_AdcInfo_as[adcIndex_u8].IsAdcConfigured_b == (t_bool)true) ; adcIndex_u8++)
+    {// if the adc is running
+        if((g_AdcInfo_as[adcIndex_u8].flagErrDetected_b == True)
+        ||((currentTime_u32 - SavedTime_u32) > (t_uint32)FMKCDA_TIME_BTWN_DIAG_MS))
+        {
+            SavedTime_u32 = currentTime_u32;
+            Ret_e = s_FMKCDA_PerformDiagnostic((t_eFMKCDA_Adc)adcIndex_u8);
         }
-        // if the adc is not running and the adc is configured, launch a conversion
-        // only on timer and Dma cpnfiguration
-        else if (g_AdcInfo_as[LLI_u8].IsAdcRunning_b == (t_bool)False
-                && g_AdcInfo_as[LLI_u8].IsAdcConfigured_b == (t_bool)true)
+        // if the adc is not running and the adc is configured, launch a conversion only if error_state = NO_ERROR or PRESENTS
+        if ((g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b == (t_bool)False)
+        &&( (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_OK)
+        || (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_PRESENTS)))
         {
             
-            Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)LLI_u8, g_AdcInfo_as[LLI_u8].HwCfg_e);
-            if(Ret_e != RC_OK)
+            Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
+            if(Ret_e == RC_OK)
             {
-                g_AdcInfo_as[LLI_u8].IsAdcRunning_b = True;
+                g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = True;
+                g_AdcInfo_as[adcIndex_u8].Error_e &= ~FMKCDA_ERRSTATE_PRESENTS; // reset present bit
             }
         }
         else
-        {
-            Ret_e = RC_WARNING_NO_OPERATION;
-        }
-    }
+        {// check last time update to make actions if there is no update from adc
+            if((t_uint32)(currentTime_u32 - g_AdcBuffer_as[adcIndex_u8].lastUpate_u32) > (t_uint32)FMKCDA_OVR_CONVERSION_MS)
+            {
+                // update information 
+                g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = False;
+                g_AdcInfo_as[adcIndex_u8].Error_e |= FMKCDA_ERRSTATE_PRESENTS;
+                Ret_e = RC_WARNING_PENDING;
+            }
+            else
+            {// put the buffer into adc channel block
+                // update flag reading 
+                g_AdcBuffer_as[adcIndex_u8].flagReadBuffer_b = (t_bool)True;
+                //  here the dma load the buffer with FILO method, first in last out.
+                reverseLLI_u8 = (t_uint8)(g_counterRank_au8[adcIndex_u8] - 1);
+                for (LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_counterRank_au8[adcIndex_u8] - 1) ; LLI_u8++)
+                {
+                    chnl_e = g_AdcBuffer_as[adcIndex_u8].BspChnlmapp_ae[reverseLLI_u8];
+                    g_AdcInfo_as[adcIndex_u8].Channel_as[chnl_e].rawValue_u16 = 
+                        (t_uint16)g_AdcBuffer_as[adcIndex_u8].savedVal_ua16[LLI_u8];
+                    
+                    reverseLLI_u8 -= (t_uint8)1;
+                }  
+                // update flag reading 
+                g_AdcBuffer_as[adcIndex_u8].flagReadBuffer_b = (t_bool)False;           
+            }
+        }            
+    }       
 
     return Ret_e;
 }
@@ -448,6 +465,7 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
 {
     t_eReturnState Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
+
 
     if(f_Adc_e > FMKCDA_ADC_NB
     || f_hwAdc_e > FMKCDA_ADC_CFG_NB)
@@ -461,29 +479,27 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
             case FMKCDA_ADC_CFG_SCAN_DMA:
             {
                 bspRet_e = HAL_ADC_Start_DMA(&g_AdcInfo_as[f_Adc_e].BspInit_s,
-                                            (t_uint32 *)g_AdcBuffer_as[f_Adc_e].rawValue_au16,
-                                            g_counterRank_au8[f_Adc_e]); // corresponing to the number of channel 
+                                            (t_uint32 *)g_AdcBuffer_as[f_Adc_e].rawValue_au32,
+                                            (t_uint32)(g_counterRank_au8[f_Adc_e] - 1)); // corresponing to the number of channel 
                                                                         //configured for this adc
                 break;                                                        
             }
-            case FMKCDA_ADC_CFG_SCAN_INTERRUPT:
-            {
-                bspRet_e = HAL_ADC_Start_IT(&g_AdcInfo_as[f_Adc_e].BspInit_s);
-                break;
-            }
             case FMKCDA_ADC_CFG_PERIODIC_DMA:
             case FMKCDA_ADC_CFG_TRIGGERED_DMA:
-            case FMKCDA_ADC_CFG_PERIODIC_INTERRUPT:
-            case FMKCDA_ADC_CFG_TRIGGERED_INTERRUPT:
             default:
             {
                 Ret_e = RC_WARNING_NO_OPERATION;
             }
                 break;
         }
-        if(bspRet_e != HAL_OK)
+        // sometimes adc is doing something else just wait a sec
+        if(bspRet_e == HAL_BUSY)
         {
-            Ret_e = RC_ERROR_WRONG_RESULT;
+            Ret_e = RC_WARNING_BUSY;
+        }
+        else if(bspRet_e != HAL_OK)
+        {
+            Ret_e = RC_ERROR_WRONG_STATE;
         }
     }
 
@@ -492,68 +508,37 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
 /*********************************
  * s_FMKCDA_PerformDiagnostic
  *********************************/
-static t_eReturnState s_FMKCDA_PerformDiagnostic(void)
+static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e)
 {
     t_eReturnState Ret_e = RC_OK;
-    t_uint8 LLI_u8 = 0; /**< Loop for Adc */
     t_uint32 adcErr_u32 = HAL_ADC_ERROR_NONE;
     t_sFMKCDA_AdcInfo * adcInfo_ps;
 
-    for (LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKCDA_ADC_NB ; LLI_u8++)
-    {
-        adcInfo_ps = (t_sFMKCDA_AdcInfo *)&g_AdcInfo_as[LLI_u8];
-        // enter in condition only in basic_register or triggered register (no HAL_errorCallback)
-        // or if the flag is set to true in DMA & Interrupt mode
-        if(adcInfo_ps->flagErrDetected_b == (t_bool)True)
-        {
-            adcErr_u32 = HAL_ADC_GetError(&adcInfo_ps->BspInit_s);
-        }
-        if(adcErr_u32 != HAL_ADC_ERROR_NONE)
-        {// mng mapping error with enum
-            if((adcErr_u32 & HAL_ADC_ERROR_OVR) == HAL_ADC_ERROR_OVR)
-            {
-                adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_ERR_OVR;
-            }
-            if((adcErr_u32 & HAL_ADC_ERROR_DMA) == HAL_ADC_ERROR_DMA)
-            {
-                adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_ERR_DMA;
-            }
-            if((adcErr_u32 & HAL_ADC_ERROR_INTERNAL) == HAL_ADC_ERROR_INTERNAL)
-            {
-                adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_UNKNOWN;
-            }
-        }
-        
-    }
-    
-    return Ret_e;
-}
-/**
- *
- *	@brief      CallBack function called when adc in DMa or Interrupt mdode
- *  @note       Update flag error detected.\n
- *             
- */
-/*********************************
- * HAL_ADC_ErrorCallback
- *********************************/
-void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
-{
-    t_uint8 LLI_u8;
 
-    // find enum adc corresponding
-    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKCDA_ADC_NB ; LLI_u8++)
+    adcInfo_ps = (t_sFMKCDA_AdcInfo *)&g_AdcInfo_as[f_adc_e];
+    // enter in condition only in basic_register or triggered register (no HAL_errorCallback)
+    // or if the flag is set to true in DMA & Interrupt mode
+    if(adcInfo_ps->flagErrDetected_b == (t_bool)True)
     {
-        if(&g_AdcInfo_as[LLI_u8].BspInit_s == hadc)
+        adcErr_u32 = HAL_ADC_GetError(&adcInfo_ps->BspInit_s);
+    }
+    if(adcErr_u32 != HAL_ADC_ERROR_NONE)
+    {// mng mapping error with enum
+        if((adcErr_u32 & HAL_ADC_ERROR_OVR) == HAL_ADC_ERROR_OVR)
         {
-            break;
+            adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_ERR_OVR;
+        }
+        if((adcErr_u32 & HAL_ADC_ERROR_DMA) == HAL_ADC_ERROR_DMA)
+        {
+            adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_ERR_DMA;
+        }
+        if((adcErr_u32 & HAL_ADC_ERROR_INTERNAL) == HAL_ADC_ERROR_INTERNAL)
+        {
+            adcInfo_ps->Error_e |= FMKCDA_ERRSTATE_UNKNOWN;
         }
     }
-    if(LLI_u8 < FMKCDA_ADC_NB)
-    {
-        g_AdcInfo_as[LLI_u8].flagErrDetected_b = (t_bool)True;
-    }
-    return;
+
+    return Ret_e;
 }
 /*********************************
  * s_FMKCDA_Get_BspChannel
@@ -646,7 +631,6 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
     t_eReturnState Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     ADC_InitTypeDef *bspAdcInit_s;
-    t_bool setAdcDmaCfg_b = False;
 
     if (f_Adc_e > FMKCDA_ADC_NB || f_HwAdcCfg_e > FMKCDA_ADC_CFG_NB)
     {
@@ -657,74 +641,45 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         bspAdcInit_s = &g_AdcInfo_as[f_Adc_e].BspInit_s.Init;
         // Set shared Init varaible
         bspAdcInit_s->ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+        bspAdcInit_s->Overrun = ADC_OVR_DATA_OVERWRITTEN;
         bspAdcInit_s->Resolution = ADC_RESOLUTION_12B;
         bspAdcInit_s->DataAlign = ADC_DATAALIGN_RIGHT;
-        bspAdcInit_s->SamplingTimeCommon = ADC_SAMPLETIME_13CYCLES_5; // Assuming a default value
+        bspAdcInit_s->SamplingTimeCommon = ADC_SAMPLETIME_71CYCLES_5; // Assuming a default value
         bspAdcInit_s->EOCSelection = ADC_EOC_SEQ_CONV;
-        bspAdcInit_s->LowPowerAutoPowerOff = ENABLE;
+        bspAdcInit_s->LowPowerAutoPowerOff = DISABLE;
+        
+        if(FMKMAC_ADC_DMA_MODE == DMA_CIRCULAR)
+        {
+            bspAdcInit_s->DMAContinuousRequests = ENABLE;
+        }
+        else // DMA_NORMAL
+        {
+            bspAdcInit_s->DMAContinuousRequests = DISABLE;
+        }
         switch (f_HwAdcCfg_e)
         {
-            case FMKCDA_ADC_CFG_PERIODIC_INTERRUPT:
-            {
-                bspAdcInit_s->ScanConvMode = DISABLE;
-                bspAdcInit_s->ContinuousConvMode = ENABLE;
-                bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = DISABLE;
-                bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
-                bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-                break;
-            }
             case FMKCDA_ADC_CFG_PERIODIC_DMA:
             {
-                bspAdcInit_s->ScanConvMode = DISABLE;
+                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
                 bspAdcInit_s->ContinuousConvMode = ENABLE;
-                bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = ENABLE;
-                bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
-                bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-                setAdcDmaCfg_b = True;
-                break;
-            }
-            case FMKCDA_ADC_CFG_SCAN_INTERRUPT:
-            {
-                bspAdcInit_s->ScanConvMode = ENABLE;
-                bspAdcInit_s->ContinuousConvMode = DISABLE;
-                bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = DISABLE;
                 bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
                 break;
             }
             case FMKCDA_ADC_CFG_SCAN_DMA:
             {
-                bspAdcInit_s->ScanConvMode = ADC_SCAN_ENABLE;
-                bspAdcInit_s->ContinuousConvMode = DISABLE;
-                bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = ENABLE;
+                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
+                bspAdcInit_s->ContinuousConvMode = ENABLE;
                 bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-                setAdcDmaCfg_b = True;
-                break;
-            }
-            case FMKCDA_ADC_CFG_TRIGGERED_INTERRUPT:
-            {
-                bspAdcInit_s->ScanConvMode = DISABLE;
-                bspAdcInit_s->ContinuousConvMode = DISABLE;
-                bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = DISABLE;
-                bspAdcInit_s->ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4; // Example trigger source
-                bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
                 break;
             }
             case FMKCDA_ADC_CFG_TRIGGERED_DMA:
             {
-                bspAdcInit_s->ScanConvMode = DISABLE;
-                bspAdcInit_s->ContinuousConvMode = DISABLE;
+                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
                 bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->DMAContinuousRequests = ENABLE;
                 bspAdcInit_s->ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4; // Example trigger source
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-                setAdcDmaCfg_b = True;
                 break;
             }
             case FMKCDA_ADC_CFG_NB:
@@ -737,8 +692,7 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         {
             Ret_e = FMKCPU_Set_NVICState(g_AdcInfo_as[f_Adc_e].IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
-        if((Ret_e == RC_OK) 
-        && setAdcDmaCfg_b == (t_bool)True)
+        if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config
             
             Ret_e = FMKMAC_RqstDmaInit(FMKMAC_DMA_RQSTYPE_ADC1, (void *)&g_AdcInfo_as[f_Adc_e].BspInit_s);
@@ -792,15 +746,17 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
 
         if (Ret_e == RC_OK)
         {
+            // For mapping 
             BspChannelInit_s.Channel = bspChannel_u32;
             BspChannelInit_s.Rank = g_counterRank_au8[f_Adc_e];
+            // configure adc channel
             BspRet_e = HAL_ADC_ConfigChannel(&g_AdcInfo_as[f_Adc_e].BspInit_s,
                                              &BspChannelInit_s);
 
             if (BspRet_e == HAL_OK)
             {
                 // update mapping for dma
-                g_AdcBuffer_as[f_Adc_e].BspChnlmapp[g_counterRank_au8[f_Adc_e]] = f_channel_e;
+                g_AdcBuffer_as[f_Adc_e].BspChnlmapp_ae[(g_counterRank_au8[f_Adc_e] - 1)] = f_channel_e;
                 // update info
                 g_AdcInfo_as[f_Adc_e].Channel_as[f_channel_e].IsChnlConfigured_b = (t_bool)True;
                 g_counterRank_au8[f_Adc_e] += (t_uint8)1;
@@ -817,25 +773,100 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
 //********************************************************************************
 //                      HAL_Callback Implementation
 //********************************************************************************
+/******************************************
+ * BSP CALLBACK IMPLEMENTATION
+ *****************************************/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-    t_uint8 LLI_u8 = 8;
+    t_uint8 adcIndex_u8 = 8;
+    t_uint8 LLI_u8 = 0;
     t_eFMKCDA_Adc IT_Adc_e = FMKCDA_ADC_NB;
-    for (LLI_u8 = (t_uint8)0; LLI_u8 < (t_uint8)FMKCDA_ADC_NB; LLI_u8++)
+    for (adcIndex_u8 = (t_uint8)0; adcIndex_u8 < (t_uint8)FMKCDA_ADC_NB; adcIndex_u8++)
     {
-        if (&g_AdcInfo_as[LLI_u8].BspInit_s == (ADC_HandleTypeDef *)hadc)
+        if (&g_AdcInfo_as[adcIndex_u8].BspInit_s == (ADC_HandleTypeDef *)hadc)
         {
-            IT_Adc_e = (t_eFMKCDA_Adc)LLI_u8;
+            IT_Adc_e = (t_eFMKCDA_Adc)adcIndex_u8;
             break;
         }
     }
     
     if (IT_Adc_e < FMKCDA_ADC_NB)
     {
-        g_AdcBuffer_as[IT_Adc_e].FlagValueUpdated_b = (t_bool)True;
-        g_AdcInfo_as[IT_Adc_e].IsAdcRunning_b = (t_bool)False;
+        // update saved value only if cyclic is not reading it
+        if(g_AdcBuffer_as[IT_Adc_e].flagReadBuffer_b == (t_bool)False)
+        {
+            //                                      number of channel configured
+            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_counterRank_au8[IT_Adc_e] - 1); LLI_u8++)
+            {
+                g_AdcBuffer_as[IT_Adc_e].savedVal_ua16[LLI_u8] = (t_uint16)g_AdcBuffer_as[IT_Adc_e].rawValue_au32[LLI_u8];
+            }
+        }
+        // update last time the value has been changed 
+        FMKCPU_Get_Tick(&g_AdcBuffer_as[IT_Adc_e].lastUpate_u32);
+        
+
     }
     return;
+}
+/*********************************
+ * HAL_ADC_ConvHalfCpltCallback
+ *********************************/
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {
+    // Vérifiez que les données sont dans les attentes
+    // find enum adc corresponding
+    t_uint8 LLI_u8;
+
+    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKCDA_ADC_NB ; LLI_u8++)
+    {
+        if(&g_AdcInfo_as[LLI_u8].BspInit_s == hadc)
+        {
+            break;
+        }
+    }
+    if(LLI_u8 < FMKCDA_ADC_NB)
+    {
+        g_AdcInfo_as[LLI_u8].flagErrDetected_b = (t_bool)True;
+    }
+    return;
+}
+/**
+ *
+ *	@brief      CallBack function called when adc in DMa or Interrupt mdode
+ *  @note       Update flag error detected.\n
+ *             
+ */
+/*********************************
+ * HAL_ADC_ErrorCallback
+ *********************************/
+void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
+{
+    t_uint8 LLI_u8;
+
+    // find enum adc corresponding
+    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKCDA_ADC_NB ; LLI_u8++)
+    {
+        if(&g_AdcInfo_as[LLI_u8].BspInit_s == hadc)
+        {
+            break;
+        }
+    }
+    if(LLI_u8 < FMKCDA_ADC_NB)
+    {
+        g_AdcInfo_as[LLI_u8].flagErrDetected_b = (t_bool)True;
+    }
+    return;
+}
+/**
+ *
+ *	@brief      CallBack function called for adc interruption (including DMA)
+ *             
+ */
+/*********************************
+ * HAL_ADC_ErrorCallback
+ *********************************/
+void ADC1_IRQHandler(void) 
+{
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
 }
 //************************************************************************************
 // End of File

@@ -206,8 +206,14 @@ static t_eReturnState s_APPLGC_Operational(void)
 {
     t_eReturnState Ret_e = RC_OK;
     t_uint16 value_u16;
+    t_uint16 vref_u32 = 0;
     //Ret_e = FMKIO_Get_InDigSigValue(FMKIO_INPUT_SIGDIG_10, &value_e);
     Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_INPUT_SIGANA_2, &value_u16);
+    Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_IINSIG_ANA_VREF, &vref_u32);
+    if(vref_u32 > (t_uint32)value_u16)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
     return Ret_e;
 }
 //************************************************************************************

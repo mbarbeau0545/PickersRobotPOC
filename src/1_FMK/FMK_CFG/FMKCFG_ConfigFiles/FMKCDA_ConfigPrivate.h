@@ -29,6 +29,7 @@
     /* CAUTION : Automatic generated code section for ADC channels number: End */
 
     #define FMKCDA_TIME_BTWN_DIAG_MS ((t_uint16)2000) /**< Time between diagnostic for adc & dac channel in cyclic ope mode*/
+    #define FMKCDA_OVR_CONVERSION_MS ((t_uint32)500)    /**< delay after considering there is no conversion in circular mode  */
     // ********************************************************************
     // *                      Types
     // ********************************************************************
