@@ -25,7 +25,6 @@
     /* CAUTION : Automatic generated code section for DMA channels number: Start */
     #define FMKMAC_DMA_1_MAX_CHANNELS ((t_uint8)5)
     /* CAUTION : Automatic generated code section for DMA channels number: End */
-    #define FMKMAC_ADC_DMA_MODE DMA_CIRCULAR /**< DMA Mode for adc's */
     // ********************************************************************
     // *                      Types
     // ********************************************************************

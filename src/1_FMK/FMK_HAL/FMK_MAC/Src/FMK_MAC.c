@@ -1,10 +1,10 @@
 /**
  * @file        FMK_MAC.c
- * @brief       Template_BriefDescription.
+ * @brief       Framework Memory Access Control module.
  * @note        TemplateDetailsDescription.\n
  *
- * @author      xxxxxx
- * @date        jj/mm/yyyy
+ * @author      mba
+ * @date        15/09/2024
  * @version     1.0
  */
 
@@ -60,7 +60,7 @@ typedef union
 typedef struct
 {
     DMA_HandleTypeDef bspDma_ps;            /**< @ref  DMA_HandleTypeDef*/
-    t_eFMKCPU_IRQNType IRQNType_e;                   /**< NVIC channel interruption config*/
+    const t_eFMKCPU_IRQNType c_IRQNType_e;                   /**< NVIC channel interruption config*/
     t_eFMKMAC_DmaChnlErr chnlErr_e;         /**< @ref t_eFMKMAC_DmaChnlErr*/
 } t_sFMKMAC_DmaChnlInfo;
 
@@ -88,34 +88,34 @@ t_sFMKMAC_DmaInfo g_DmaInfo_as[FMKMAC_DMA_CTRL_NB] = {
         .channel_as = {
             [FMKMAC_DMA_CHANNEL_1] = {
                 .bspDma_ps = { .Instance = DMA1_Channel1 },  
-                .IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL1_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL1_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_2] = {
                 .bspDma_ps = { .Instance = DMA1_Channel2 }, 
-                .IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_3] = {
                 .bspDma_ps = { .Instance = DMA1_Channel3 }, 
-                .IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_4] = {
                 .bspDma_ps = { .Instance = DMA1_Channel4 },  
-                .IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_5] = {
                 .bspDma_ps = { .Instance = DMA1_Channel5 },  
-                .IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             }
         }
     }
 };
 
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_WAITING;
+static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -189,6 +189,11 @@ t_eReturnState FMKMAC_Cyclic(void)
         // nothing to do, just wait all module are Ope
         break;
     }
+    case STATE_CYCLIC_PREOPE:
+    {
+        g_state_e = STATE_CYCLIC_WAITING;
+        break;
+    }
     case STATE_CYCLIC_OPE:
     {
         if(Ret_e < RC_OK)
@@ -201,7 +206,6 @@ t_eReturnState FMKMAC_Cyclic(void)
     {
         break;
     }
-    case STATE_CYCLIC_PREOPE:
     case STATE_CYCLIC_BUSY:
     default:
         Ret_e = RC_OK;
@@ -269,7 +273,7 @@ t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
         Ret_e = FMKCPU_Set_HwClock(g_DmaInfo_as[dmaCtrl_e].clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         if(Ret_e == RC_OK)
         {// Configure Dma channel NVIC priority if not done yet
-            Ret_e = FMKCPU_Set_NVICState(DmaChnl_ps->IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+            Ret_e = FMKCPU_Set_NVICState(DmaChnl_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
         if(Ret_e == RC_OK)
         {   

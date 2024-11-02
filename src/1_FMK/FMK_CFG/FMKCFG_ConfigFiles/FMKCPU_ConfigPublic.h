@@ -3,7 +3,7 @@
  * @brief       Template_BriefDescription.
  * @note        TemplateDetailsDescription.\n
  *
- * @author      AUDMBA
+ * @author      mba
  * @date        31/08/2024
  * @version     1.0
  */
@@ -18,6 +18,7 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
+    // flag automatic generate code
     #include "stm32f030x8.h"
     #include "stm32f0xx_hal.h"
     #include "TypeCommon.h"

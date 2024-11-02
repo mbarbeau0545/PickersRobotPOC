@@ -1,10 +1,10 @@
 /**
  * @file        FMK_CPU.c
- * @brief       Template_BriefDescription.
+ * @brief       Framework for Unit Processing Control.
  * @note        TemplateDetailsDescription.\n
  *
- * @author      xxxxxx
- * @date        jj/mm/yyyy
+ * @author      mba
+ * @date        25/08/2024
  * @version     1.0
  */
 
@@ -50,8 +50,8 @@ typedef struct
     TIM_HandleTypeDef BspTimer_ps;                      /**< The Timer structure for HAL STM32*/
     t_eFMKCPU_HwTimerCfg HwCfg_e;                       /**< The hardware configuration of the timer */
     t_sFMKCPU_ChnlInfo Channel_as[FMKCPU_CHANNEL_NB];   /**< Channels info structure */
-    const t_eFMKCPU_IRQNType IRQNType_e;                /**< IRQN type related to the timer */
-    const t_eFMKCPU_ClockPort clock_e;                  /**< RCC clock related to the timer */
+    const t_eFMKCPU_IRQNType c_IRQNType_e;                /**< IRQN type related to the timer */
+    const t_eFMKCPU_ClockPort c_clock_e;                  /**< RCC clock related to the timer */
     t_bool IsTimerRunning_b;                            /**< Flag Timer start function set, and timer running */
     t_bool IsTimerConfigured_b;                         /**< flag timer is configured */  
     t_bool IsNVICTimerEnable_b;                         /**< flag timer NVCIC enable or not */
@@ -74,38 +74,38 @@ t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
     {
         // Timer_1
         .BspTimer_ps.Instance = TIM1,
-        .clock_e = FMKCPU_RCC_CLK_TIM1,
-        .IRQNType_e = FMKCPU_NVIC_TIM1_BRK_UP_TRG_COM_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM1,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_UP_TRG_COM_IRQN,
     },
     {
         // Timer_3
         .BspTimer_ps.Instance = TIM3,
-        .clock_e = FMKCPU_RCC_CLK_TIM3,
-        .IRQNType_e = FMKCPU_NVIC_TIM3_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM3,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM3_IRQN,
     },
     {
         // Timer_14
         .BspTimer_ps.Instance = TIM14,
-        .clock_e = FMKCPU_RCC_CLK_TIM14,
-        .IRQNType_e = FMKCPU_NVIC_TIM14_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM14,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM14_IRQN,
     },
     {
         // Timer_15
         .BspTimer_ps.Instance = TIM15,
-        .clock_e = FMKCPU_RCC_CLK_TIM15,
-        .IRQNType_e = FMKCPU_NVIC_TIM15_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM15,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM15_IRQN,
     },
     {
         // Timer_16
         .BspTimer_ps.Instance = TIM16,
-        .clock_e = FMKCPU_RCC_CLK_TIM16,
-        .IRQNType_e = FMKCPU_NVIC_TIM16_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM16,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM16_IRQN,
     },
     {
         // Timer_17
         .BspTimer_ps.Instance = TIM17,
-        .clock_e = FMKCPU_RCC_CLK_TIM17,
-        .IRQNType_e = FMKCPU_NVIC_TIM17_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_TIM17,
+        .c_IRQNType_e = FMKCPU_NVIC_TIM17_IRQN,
     },
 };
 
@@ -247,22 +247,22 @@ static t_eReturnState s_FMKCPU_PerformDiagnostic(void);
 //********************************************************************************
 t_eReturnState FMKCPU_Init(void)
 {
-    t_uint8 LLI_u8;
-    t_uint8 LLI2_u8;
-    for (LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_eFMKCPU_Timer)FMKCPU_TIMER_NB ; LLI_u8++)
+    t_uint8 timIndex_u8;
+    t_uint8 chnlIndex_u8;
+    for (timIndex_u8 = (t_uint8)0 ; timIndex_u8 < (t_eFMKCPU_Timer)FMKCPU_TIMER_NB ; timIndex_u8++)
     {
-        g_TimerInfo_as[LLI_u8].IsNVICTimerEnable_b = (t_bool)False;
-        g_TimerInfo_as[LLI_u8].IsTimerConfigured_b = (t_bool)False;
-        g_TimerInfo_as[LLI_u8].IsTimerRunning_b    = (t_bool)False;
-        g_TimerInfo_as[LLI_u8].HwCfg_e = FMKCPU_HWTIM_CFG_EVNT;
-        for (LLI2_u8 = (t_uint8)0 ; LLI2_u8 < (t_eFMKCPU_InterruptChnl)FMKCPU_CHANNEL_NB ; LLI2_u8++)
+        g_TimerInfo_as[timIndex_u8].IsNVICTimerEnable_b = (t_bool)False;
+        g_TimerInfo_as[timIndex_u8].IsTimerConfigured_b = (t_bool)False;
+        g_TimerInfo_as[timIndex_u8].IsTimerRunning_b    = (t_bool)False;
+        g_TimerInfo_as[timIndex_u8].HwCfg_e = FMKCPU_HWTIM_CFG_EVNT;
+        for (chnlIndex_u8 = (t_uint8)0 ; chnlIndex_u8 < (t_eFMKCPU_InterruptChnl)FMKCPU_CHANNEL_NB ; chnlIndex_u8++)
         {
-            g_TimerInfo_as[LLI_u8].Channel_as[LLI2_u8].chnl_cb = NULL_FONCTION;
-            g_TimerInfo_as[LLI_u8].Channel_as[LLI2_u8].ErrState_e = FMKCPU_ERRSTATE_OK;
+            g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].chnl_cb = NULL_FONCTION;
+            g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].ErrState_e = FMKCPU_ERRSTATE_OK;
             
-            g_TimerInfo_as[LLI_u8].Channel_as[LLI2_u8].IsChnlConfigure_b =  (t_bool)False;
-            g_TimerInfo_as[LLI_u8].Channel_as[LLI2_u8].RunMode_e = FMKCPU_CNHL_RUNMODE_POLLING;
-            g_TimerInfo_as[LLI_u8].Channel_as[LLI2_u8].State_e = FMKCPU_CHNLST_DISACTIVATED;
+            g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].IsChnlConfigure_b =  (t_bool)False;
+            g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].RunMode_e = FMKCPU_CNHL_RUNMODE_POLLING;
+            g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].State_e = FMKCPU_CHNLST_DISACTIVATED;
         }
     }
     return RC_OK;
@@ -296,6 +296,10 @@ t_eReturnState FMKCPU_Cyclic(void)
         break;
     }
     case STATE_CYCLIC_PREOPE:
+    {
+        g_state_e = STATE_CYCLIC_WAITING;
+        break; 
+    }
     case STATE_CYCLIC_BUSY:
     default:
         Ret_e = RC_OK;
@@ -1372,7 +1376,7 @@ static t_eReturnState s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                     // call the right HAL function Polling or Interrupt mode
                     if (g_TimerInfo_as[f_timer_e].IsNVICTimerEnable_b == (t_bool)False)
                     {
-                        Ret_e = FMKCPU_Set_NVICState(g_TimerInfo_as[f_timer_e].IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+                        Ret_e = FMKCPU_Set_NVICState(g_TimerInfo_as[f_timer_e].c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -1401,7 +1405,7 @@ static t_eReturnState s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                 {
                     if (g_TimerInfo_as[f_timer_e].IsNVICTimerEnable_b == (t_bool)True)
                     {
-                        Ret_e = FMKCPU_Set_NVICState(g_TimerInfo_as[f_timer_e].IRQNType_e, FMKCPU_NVIC_OPE_DISABLE);
+                        Ret_e = FMKCPU_Set_NVICState(g_TimerInfo_as[f_timer_e].c_IRQNType_e, FMKCPU_NVIC_OPE_DISABLE);
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -1463,7 +1467,7 @@ static t_eReturnState s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps
     }
     if(Ret_e == RC_OK)
     {
-        Ret_e = FMKCPU_Set_HwClock(f_timer_ps->clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
+        Ret_e = FMKCPU_Set_HwClock(f_timer_ps->c_clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
     }
     if (Ret_e == RC_OK)
     {
