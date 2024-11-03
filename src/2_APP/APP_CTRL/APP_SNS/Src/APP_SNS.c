@@ -82,12 +82,6 @@ static t_eReturnState s_APPSNS_PreOperational(void);
 
  */
 static t_eReturnState s_APPSNS_Operational(void);
-/**
-*
-*	@brief  Call driver cyclic function
-*
-*/
-static t_eReturnState s_APPSNS_SetValUnity(t_eAPPSNS_SnsMeasType f_measType_e, t_sint16 *f_UnitVal_ps16);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -96,7 +90,22 @@ static t_eReturnState s_APPSNS_SetValUnity(t_eAPPSNS_SnsMeasType f_measType_e, t
  *********************************/
 t_eReturnState APPSNS_Init(void)
 {
-    return RC_OK;
+    t_eReturnState Ret_e = RC_OK;
+    t_uint8 idxSns_u8;
+
+    // check sensors cfg
+    for(idxSns_u8 = (t_uint8)0 ; (idxSns_u8 < APPSNS_SENSOR_NB) && (Ret_e == RC_OK) ; idxSns_u8++)
+    {   
+        if(c_AppSns_SysSns_apf[idxSns_u8].GetValue_pcb == (t_cbAppSns_GetSnsValue *)NULL_FONCTION
+        || c_AppSns_SysSns_apf[idxSns_u8].SetCfg_pcb == (t_cbAppSns_SetSnsCfg *)NULL_FONCTION
+        || c_AppSns_SysSns_apf[idxSns_u8].measTyp_e > APPSNS_MEASTYPE_NB)
+        {
+            Ret_e = RC_ERROR_PARAM_INVALID;
+        }
+    }
+    // check configuration validity 
+
+    return Ret_e;
 }
 /*********************************
  * APPSNS_Init
@@ -192,22 +201,7 @@ t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sint16 *f_SnsVal
             Ret_e = (c_AppSns_SysSns_apf[f_Sns_e].GetValue_pcb)(&valInfo_s);
             if(Ret_e == RC_OK)
             {
-                if(c_AppSns_SnsMeasType_ae[f_Sns_e] != APPSNS_MEASTYPE_RAW)
-                {
-                    Ret_e = s_APPSNS_SetValUnity(f_Sns_e, &valInfo_s.SnsValue_s16);
-                    if(valInfo_s.IsValueOK_b == True)
-                    {
-                        *f_SnsValue_ps16 = valInfo_s.SnsValue_s16;
-                    }
-                    else
-                    {
-                        *f_SnsValue_ps16 = valInfo_s.rawValue_s16;
-                    }
-                }
-                else
-                {
-                    *f_SnsValue_ps16 = valInfo_s.rawValue_s16;
-                }
+                // TO DO
             }
         }
         else 
@@ -297,46 +291,6 @@ static t_eReturnState s_APPSNS_Operational(void)
     return Ret_e;
 }
 
-/*********************************
- * s_APPSNS_SetValUnity
- *********************************/
-static t_eReturnState s_APPSNS_SetValUnity(t_eAPPSNS_SnsMeasType f_measType_e, t_sint16 *f_UnitVal_ps16)
-{
-    t_eReturnState Ret_e = RC_OK;
-
-    if( f_measType_e > APPSNS_MEASTYPE_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(f_UnitVal_ps16 == (t_sint16 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if(Ret_e == RC_OK)
-    {
-        switch(f_measType_e)
-        {
-            case APPSNS_MEASTYPE_ANGLE_RAD:
-            case APPSNS_MEASTYPE_ANGLE_DEGREE:
-            case APPSNS_MEASTYPE_DISTANCE_M:
-            case APPSNS_MEASTYPE_DISTANCE_MM:
-            case APPSNS_MEASTYPE_TEMPERATURE_C:
-            case APPSNS_MEASTYPE_TEMPERATURE_F:
-            case APPSNS_MEASTYPE_PRESSURE_PA:
-            case APPSNS_MEASTYPE_PRESSURE_BAR:
-            case APPSNS_MEASTYPE_HUMIDITY:
-            case APPSNS_MEASTYPE_ACCELERATION_M_S2:
-            case APPSNS_MEASTYPE_VELOCITY_M_S:
-            case APPSNS_MEASTYPE_POWER_W:
-            case APPSNS_MEASTYPE_ENERGY_J:
-            case APPSNS_MEASTYPE_VOLUME:
-            case APPSNS_MEASTYPE_RAW:
-            default:
-                Ret_e = RC_WARNING_NO_OPERATION;
-        }
-    }
-    return Ret_e;
-}
 //************************************************************************************
 // End of File
 //************************************************************************************
