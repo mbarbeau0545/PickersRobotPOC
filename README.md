@@ -31,3 +31,11 @@ The main idea of this project is no matter the MCU used the logic will always wo
 - Go to the sheet FMKIO and filled all tables as asking, for PWM purpose be careful on which timer you choose, some of them are not meant to make pwm signal
 - Go to the sheet CPU and inform the timer used for event timers whhich means periodic timer
 - Save and Generate code from Doc/ConfigPrj/PythonToolmain.py file.
+
+## Left to do
+- Faire un module Diagnostic Event Management
+- Faire un module Supply Voltage Control
+- Faire l'intégration MatLab du projet
+- Faire un module CAN
+- Faire un module USART
+- Mettre à jour la documentation 
