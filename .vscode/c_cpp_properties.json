@@ -8,11 +8,11 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "D:/Project/Software/STM32/fAnalogSignal/include",
-                "D:/Project/Software/STM32/fAnalogSignal/src",
-                "D:/Project/Software/STM32/fAnalogSignal/src/0_Common",
-                "D:/Project/Software/STM32/fAnalogSignal/src/1_FMK",
-                "D:/Project/Software/STM32/fAnalogSignal/src/2_APP",
+                "D:/Project/Software/STM32/f_SnsUnitMngmt/include",
+                "D:/Project/Software/STM32/f_SnsUnitMngmt/src",
+                "D:/Project/Software/STM32/f_SnsUnitMngmt/src/0_Common",
+                "D:/Project/Software/STM32/f_SnsUnitMngmt/src/1_FMK",
+                "D:/Project/Software/STM32/f_SnsUnitMngmt/src/2_APP",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/CMSIS/Include",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/STM32F0xx_HAL_Driver/Inc",
@@ -48,11 +48,11 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "D:/Project/Software/STM32/fAnalogSignal/include",
-                    "D:/Project/Software/STM32/fAnalogSignal/src",
-                    "D:/Project/Software/STM32/fAnalogSignal/src/0_Common",
-                    "D:/Project/Software/STM32/fAnalogSignal/src/1_FMK",
-                    "D:/Project/Software/STM32/fAnalogSignal/src/2_APP",
+                    "D:/Project/Software/STM32/f_SnsUnitMngmt/include",
+                    "D:/Project/Software/STM32/f_SnsUnitMngmt/src",
+                    "D:/Project/Software/STM32/f_SnsUnitMngmt/src/0_Common",
+                    "D:/Project/Software/STM32/f_SnsUnitMngmt/src/1_FMK",
+                    "D:/Project/Software/STM32/f_SnsUnitMngmt/src/2_APP",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/CMSIS/Include",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubef0/Drivers/STM32F0xx_HAL_Driver/Inc",

@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "./APPSNS_ConfigPublic.h"
+    #include "../ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC.h"
     /* CAUTION : Automatic generated code section for Include: Start */
     #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_AirTemperature.h"
     /* CAUTION : Automatic generated code section for Include: End */
