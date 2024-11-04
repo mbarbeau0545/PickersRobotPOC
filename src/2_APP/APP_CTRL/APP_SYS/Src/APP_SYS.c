@@ -229,13 +229,6 @@ static t_eReturnState s_APPSYS_Operational(void)
             // reset whatchdog for fmk/app cycle
             s_previousCnt_u32 = currentCnt_u32;
             Ret_e = s_APPSYS_Set_ModulesCyclic();
-        
-            if(Ret_e == RC_OK)
-            {
-                // reset watchdog for logic cycle
-                //Ret_e = FMKCPU_ResetWwdg();
-                Ret_e = APPLGC_Cyclic();
-            }
             if(Ret_e < RC_OK)
             {
                 // deal with error

@@ -53,7 +53,7 @@
 
         // Warnings
         RC_WARNING_NO_OPERATION = 1,                    /**< No error occurred, but there was no operation to execute. */
-        RC_WARNING_BUSY = 2,                            /**< The operation is accepted, but the process was already busy, */
+        RC_WARNING_BUSY = 2,                            /**< The operation is not accepted but the program could continue, */
                                                         /**< which means the previous operation has been stopped. */
                                                         /**< a previous configuration has been lost. */
         RC_WARNING_WRONG_CONFIG = 3,                     /**< The configuration is not consistent. */
