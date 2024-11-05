@@ -30,8 +30,9 @@
     // flag generated code 
     #define FMKCDA_VDD_ADDRESS ((volatile t_uint16 *)0x1FFFF7BA)
     #define FMKCDA_VREF_CALIB_ADDRESS ((volatile t_uint16 *)0x1FFFF7B8)
-    #define FMKCDA_TIME_BTWN_DIAG_MS ((t_uint16)2000) /**< Time between diagnostic for adc & dac channel in cyclic ope mode*/
-    #define FMKCDA_OVR_CONVERSION_MS ((t_uint32)500)    /**< delay after considering there is no conversion in circular mode  */
+    #define FMKCDA_TIME_BTWN_DIAG_MS ((t_uint16)2000)   /**< Time between diagnostic for adc & dac channel in cyclic ope mode*/
+    #define FMKCDA_OVR_CONVERSION_MS ((t_uint32)500)    /**< Delay after considering there is no conversion in circular mode  */
+    #define FMKCDA_CYCLIC_CALIB      ((t_uint16)2000)   /**< Time between we get the Vref for calibration */
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -71,7 +72,7 @@
     const t_sFMKCDA_HwAdcCfg c_FmkCda_HwSigAdcCfg[FMKCDA_ADC_INTERN_NB] = {
         {FMKCDA_ADC_1 , FMKCDA_ADC_CHANNEL_16}, // FMKCDA_ADC_INTERN_TEMP_CPU
         {FMKCDA_ADC_1 , FMKCDA_ADC_CHANNEL_17}, // FMKCDA_ADC_INTERN_VREF
-    }
+    };
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************
