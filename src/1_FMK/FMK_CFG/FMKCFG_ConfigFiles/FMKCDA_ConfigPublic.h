@@ -57,19 +57,12 @@
         FMKCDA_ADC_CHANNEL_15,                       /**< Reference to HAL adc channel 15 */
         FMKCDA_ADC_CHANNEL_16,                       /**< Reference to HAL adc channel 16 */
         FMKCDA_ADC_CHANNEL_17,                       /**< Reference to HAL adc channel 17 */
-    
+
         FMKCDA_ADC_CHANNEL_NB,
     } t_eFMKCDA_AdcChannel;
 
     /* CAUTION : Automatic generated code section for Enum: End */
 
-    typedef enum 
-    {
-        FMKCDA_ADC_INTERN_TEMP_CPU = 0x0U,
-        FMKCDA_ADC_INTERN_VREF,
-
-        FMKCDA_ADC_INTERN_NB
-    } t_eFMKCDA_HwInternSig;
     //-----------------------------TYPEDEF TYPES---------------------------//
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */

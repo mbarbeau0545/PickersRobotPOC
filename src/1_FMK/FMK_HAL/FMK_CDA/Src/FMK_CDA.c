@@ -446,7 +446,7 @@ static t_eReturnState s_FMKCDA_PreOperational(void)
     t_uint8 AdcInternIndex_u8 = 0;
 
     // set configuration channel for Adc Internal Signal
-    for(AdcInternIndex_u8 = (t_uint8)0 ; (AdcInternIndex_u8 < FMKCDA_ADC_INTERN_NB) && (Ret_e == RC_OK); AdcInternIndex_u8++)
+    for(AdcInternIndex_u8 = (t_uint8)0 ; (AdcInternIndex_u8 < FMKCDA_ADC_NB) && (Ret_e == RC_OK); AdcInternIndex_u8++)
     {
         Ret_e = FMKCDA_Set_AdcChannelCfg(c_FmkCda_HwSigAdcCfg[AdcInternIndex_u8].adc_e,
                                          c_FmkCda_HwSigAdcCfg[AdcInternIndex_u8].chnl_e,
@@ -483,9 +483,8 @@ static t_eReturnState s_FMKCDA_Operational(void)
         &&( (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_OK)
         || (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_PRESENTS)))
         {
-            
             Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
-            if(Ret_e == RC_OK)
+            if(Ret_e == RC_OK) 
             {
                 g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = True;
                 g_AdcInfo_as[adcIndex_u8].Error_e &= ~FMKCDA_ERRSTATE_PRESENTS; // reset present bit
@@ -493,7 +492,9 @@ static t_eReturnState s_FMKCDA_Operational(void)
         }
         else
         {// check last time update to make actions if there is no update from adc
-            if((t_uint32)(currentTime_u32 - g_AdcBuffer_as[adcIndex_u8].lastUpate_u32) > (t_uint32)FMKCDA_OVR_CONVERSION_MS)
+            FMKCPU_Get_Tick(&currentTime_u32); // recharge current_time in case of interruption occured during cycle and value will be negative => ~ 65500
+            // also add 5ms in case interrutpion occured during getting the Tick
+            if((t_uint32)((currentTime_u32 + (t_uint32)5) - g_AdcBuffer_as[adcIndex_u8].lastUpate_u32) > (t_uint32)FMKCDA_OVR_CONVERSION_MS)
             {
                 // update information 
                 g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = False;
@@ -906,8 +907,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
                 g_AdcBuffer_as[IT_Adc_e].savedVal_ua16[LLI_u8] = (t_uint16)g_AdcBuffer_as[IT_Adc_e].rawValue_au32[LLI_u8];
             }
         }
-        // update last time the value has been changed 
+        // update last time the value has been changed and reset bit present error
         FMKCPU_Get_Tick(&g_AdcBuffer_as[IT_Adc_e].lastUpate_u32);
+        g_AdcInfo_as[IT_Adc_e].Error_e &= ~FMKCDA_ERRSTATE_PRESENTS; // reset present bit
     }
     return;
 }
