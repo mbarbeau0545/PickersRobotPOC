@@ -74,6 +74,7 @@ class FMKCDA_CodeGen():
         def_other_calib = ""
         var_other_calib = ""
         def_vref_calib = ""
+        var_other_cfg = ""
         var_vref_calib = ""
         var_rank_counter = ""
         var_adc_max_channel = ""
@@ -88,7 +89,11 @@ class FMKCDA_CodeGen():
         #----------------------------------------------------------------
         #---------------make adc intern channel enum----------------------
         #-----------------------------------------------------------------
-        enum_other_calib = cls.code_gen.make_enum_from_variable(ENUM_ADC_INTERN_SENSOR, [str(adc_intern[0]) for adc_intern in calib_astr],
+        enum_internal_other = []
+        for adc_intern in calib_astr:
+            idx_enum = str(adc_intern[0]).index("_")
+            enum_internal_other.append(adc_intern[0][:idx_enum])
+        enum_other_calib = cls.code_gen.make_enum_from_variable(ENUM_ADC_INTERN_SENSOR, enum_internal_other,
                                                                 "t_eFMKCDA_AdcInternSns", 0, "Internal Sensors manage by the cpu",
                                                                  [f"Refernce to {str(adc_intern[0])}" for adc_intern in calib_astr] )
 
@@ -140,13 +145,13 @@ class FMKCDA_CodeGen():
         #-----------------------------------------------------------
         var_hw_vref += "    /**< Variable for Hardware configuration adc and channel for Voltage Reference for each adc */\n"
         var_hw_vref += "    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwVrefCfg[FMKCDA_ADC_NB] = {\n"
-        var_vref_calib += "    /**<     Variable for voltage ref calibration value */"
+        var_vref_calib += "    /**<     Variable for voltage ref calibration value */\n"
         var_vref_calib += "    const volatile t_uint16* c_FmkCda_VrefCalibAddress_pas16[FMKCDA_ADC_NB] = {\n"
         for idx, vref_info in enumerate(vref_astr):
             def_vref_calib += f"    #define {ENUM_ADC_INTERN_SENSOR}_{vref_info[0]}_ADDRESS ((volatile t_uint16 *){str(vref_info[1])})\n"
 
             var_vref_calib += f"        (volatile t_uint16 *){ENUM_ADC_INTERN_SENSOR}_{vref_info[0]}_ADDRESS," \
-                            + " " * (SPACE_VARIABLE - len(str(f"{ENUM_ADC_INTERN_SENSOR}_{vref_info[0]}_ADDRESS"))) \
+                            + " " * (60 - len(str(f"{ENUM_ADC_INTERN_SENSOR}_{vref_info[0]}_ADDRESS"))) \
                             + f"// {ENUM_ADC_ISCT_ROOT}_{str(adc_astr[idx][0])[4:]}\n"
 
             var_hw_vref += "        {" \
@@ -154,21 +159,32 @@ class FMKCDA_CodeGen():
                         + " " * (SPACE_VARIABLE - len(str(vref_info[2]))) \
                         + f"{ENUM_ADC_CHNL_ROOT}_{str(vref_info[3])[12:]}" + "},"\
                         + " " * (SPACE_VARIABLE - len(str(vref_info[3]))) \
-                        + f"// {ENUM_ADC_INTERN_SENSOR}_{vref_info[0]}\n" 
+                        + f"// for {ENUM_ADC_ISCT_ROOT}_{str(adc_astr[idx][0])[4:]}\n" 
             
         var_vref_calib += "    };\n\n"
         var_hw_vref += "    };\n\n"
         #-----------------------------------------------------------
         #------------make define/ var for interna sensors-----------
         #-----------------------------------------------------------
+        var_other_cfg   += "    /**< Variable for Interna Sensors configuration*/\n"
+        var_other_cfg   += f"    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg[{ENUM_ADC_INTERN_SENSOR}_NB] =" + "{\n"
         var_other_calib += "    /**< Variable for Internal Sensors Calibration address */\n"
-        var_other_calib += "    const volatile t_uint16* c_FmkCda_HwInternalSnsCfg_pas16[FMKCDA_ADC_INTERN_NB] = {\n"
-        for other_calib_info in calib_astr:
+        var_other_calib += "    const volatile t_uint16* c_FmkCda_HwInternalSnsAddress_pas16[FMKCDA_ADC_INTERN_NB] = {\n"
+        for idx, other_calib_info in enumerate(calib_astr):
             def_other_calib += f"    #define {ENUM_ADC_INTERN_SENSOR}_{other_calib_info[0]}_ADDRESS ((volatile t_uint16*){str(other_calib_info[1])})\n"
 
             var_other_calib += f"        (volatile t_uint16 *){ENUM_ADC_INTERN_SENSOR}_{other_calib_info[0]}_ADDRESS,"  \
-                            + " " * (SPACE_VARIABLE - len(str(f"{ENUM_ADC_INTERN_SENSOR}_{other_calib_info[0]}_ADDRESS"))) \
-                            + f"// {ENUM_ADC_INTERN_SENSOR}_{other_calib_info[0]}\n"
+                            + " " * (60 - len(str(f"{ENUM_ADC_INTERN_SENSOR}_{other_calib_info[0]}_ADDRESS"))) \
+                            + f"// {ENUM_ADC_INTERN_SENSOR}_{enum_internal_other[idx]}\n"
+            
+            var_other_cfg += "        {" \
+                        + f"{ENUM_ADC_ISCT_ROOT}_{str(other_calib_info[2])[4:]}," \
+                        + " " * (SPACE_VARIABLE - len(str(other_calib_info[2]))) \
+                        + f"{ENUM_ADC_CHNL_ROOT}_{str(other_calib_info[3])[12:]}" + "},"\
+                        + " " * (SPACE_VARIABLE - len(str(other_calib_info[3]))) \
+                        + f"// for {ENUM_ADC_INTERN_SENSOR}_{enum_internal_other[idx]}\n" 
+            
+        var_other_cfg  += "    };\n\n"
         var_other_calib += "    };\n\n"
         #-----------------------------------------------------------
         #------------code genration for FMKADC module---------------
@@ -188,6 +204,7 @@ class FMKCDA_CodeGen():
         cls.code_gen._write_into_file(def_vref_calib, FMKCDA_CONFIGPRIVATE)
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE, TARGET_T_VARIABLE_END_LINE)
         cls.code_gen._write_into_file(var_other_calib, FMKCDA_CONFIGPRIVATE)
+        cls.code_gen._write_into_file(var_other_cfg, FMKCDA_CONFIGPRIVATE)
         cls.code_gen._write_into_file(var_hw_vref, FMKCDA_CONFIGPRIVATE)
         cls.code_gen._write_into_file(var_vref_calib, FMKCDA_CONFIGPRIVATE)
         cls.code_gen._write_into_file(var_adc_max_channel, FMKCDA_CONFIGPRIVATE)

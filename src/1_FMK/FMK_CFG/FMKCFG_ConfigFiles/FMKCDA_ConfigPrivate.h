@@ -67,18 +67,24 @@
         (t_uint8)FMKCDA_ADC_1_MAX_CHANNELS,
     };
 
-    /**<     Variable for voltage ref calibration value */    const volatile t_uint16* c_FmkCda_VrefCalibAddress_pas16[FMKCDA_ADC_NB] = {
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,// FMKCDA_ADC_1
+    /**<     Variable for voltage ref calibration value */
+    const volatile t_uint16* c_FmkCda_VrefCalibAddress_pas16[FMKCDA_ADC_NB] = {
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
     };
 
     /**< Variable for Hardware configuration adc and channel for Voltage Reference for each adc */
     const t_sFMKCDA_HwAdcCfg c_FmkCda_HwVrefCfg[FMKCDA_ADC_NB] = {
-        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_17},                // FMKCDA_ADC_INTERN_VREFINT_CAL
+        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_1
+    };
+
+    /**< Variable for Interna Sensors configuration*/
+    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg[FMKCDA_ADC_INTERN_NB] ={
+        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_16},                // for FMKCDA_ADC_INTERN_TS
     };
 
     /**< Variable for Internal Sensors Calibration address */
-    const volatile t_uint16* c_FmkCda_HwInternalSnsCfg_pas16[FMKCDA_ADC_INTERN_NB] = {
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL1_ADDRESS,// FMKCDA_ADC_INTERN_TS_CAL1
+    const volatile t_uint16* c_FmkCda_HwInternalSnsAddress_pas16[FMKCDA_ADC_INTERN_NB] = {
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL1_ADDRESS,                           // FMKCDA_ADC_INTERN_TS
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */
