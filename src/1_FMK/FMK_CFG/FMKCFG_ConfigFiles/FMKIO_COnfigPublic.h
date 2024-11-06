@@ -8,8 +8,8 @@
  * @version     1.0
  */
   
-#ifndef FMKIO_CONFIGPUBLIC_H_INCLUDED
-#define FMKIO_CONFIGPUBLIC_H_INCLUDED
+#ifndef FMKIO_ConfigPublic_H_INCLUDED
+#define FMKIO_ConfigPublic_H_INCLUDED
 
 
 
@@ -221,7 +221,7 @@
     //                      Public functions - Prototyupes
     //********************************************************************************
 
-#endif // FMKIO_CONFIGPUBLIC_H_INCLUDED           
+#endif // FMKIO_ConfigPublic_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************

@@ -14,9 +14,9 @@
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
-HARDWARE_CFG_PATH = "Doc\ConfigPrj\ExcelCfg\Hardware_Configuration.xlsx"
+HARDWARE_CFG_PATH = "Doc\ConfigPrj\ExcelCfg\STM32F030R8\STM32F030R8_HwCfg.xlsx"
 FMKIO_CONFIGPRIVATE_PATH = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKIO_ConfigPrivate.h"
-FMKIO_CONFIGPUBLIC_PATH = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKIO_ConfigPublic.h"
+FMKIO_ConfigPublic_PATH = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKIO_ConfigPublic.h"
 FMKIO_PATH = "src\\1_FMK\FMK_HAL\FMK_IO\Src\FMK_IO.c"
 
 FMKCPU_CONFIGPUBLIC = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKCPU_ConfigPublic.h"
@@ -50,6 +50,7 @@ ENUM_FMKCPU_CHANNEL_ROOT = "FMKCPU_CHANNEL"
 ENUM_FMKCPU_RCC_ROOT     ="FMKCPU_RCC_CLK"
 ENUM_GPIO_PIN_ROOT = "FMKIO_GPIO_PIN"
 ENUM_ADC_ISCT_ROOT = "FMKCDA_ADC"
+ENUM_ADC_INTERN_SENSOR = "FMKCDA_ADC_INTERN"
 ENUM_ADC_CHNL_ROOT = "FMKCDA_ADC_CHANNEL"
 # CAUTION : Automatic generated code section: Start #
 

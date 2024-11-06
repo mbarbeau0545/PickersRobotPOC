@@ -91,7 +91,9 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
 };
 
 /**< Rank for each channel add for ADC */
-t_uint32 g_adcCterRank_au8[FMKCDA_ADC_NB];
+t_uint8 g_counterRank_au8[FMKCDA_ADC_NB] = {
+    (t_uint8)0,
+};
 
 /* CAUTION : Automatic generated code section for Variable: End */
 // flag automatatic generated code 
@@ -242,7 +244,7 @@ t_eReturnState FMKCDA_Init(void)
         g_AdcBuffer_as[adcIndex_u8].lastUpate_u32 = (t_uint32)0;
         g_AdcBuffer_as[adcIndex_u8].flagReadBuffer_b = (t_bool)False;
 
-        g_adcCterRank_au8[adcIndex_u8] = (t_uint8)0;
+        g_counterRank_au8[adcIndex_u8] = (t_uint8)0;
 
         for (chnlIndex_u8 = (t_uint8)0; chnlIndex_u8 < (t_uint8)FMKCDA_ADC_CHANNEL_NB; chnlIndex_u8++)
         { // all channel for a adc
@@ -443,13 +445,13 @@ t_eReturnState FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState
 static t_eReturnState s_FMKCDA_PreOperational(void)
 {
     t_eReturnState Ret_e = RC_OK;
-    t_uint8 AdcInternIndex_u8 = 0;
+    t_uint8 AdcIndex_u8 = 0;
 
     // set configuration channel for Adc Internal Signal
-    for(AdcInternIndex_u8 = (t_uint8)0 ; (AdcInternIndex_u8 < FMKCDA_ADC_NB) && (Ret_e == RC_OK); AdcInternIndex_u8++)
+    for(AdcIndex_u8 = (t_uint8)0 ; (AdcIndex_u8 < FMKCDA_ADC_NB) && (Ret_e == RC_OK); AdcIndex_u8++)
     {
-        Ret_e = FMKCDA_Set_AdcChannelCfg(c_FmkCda_HwSigAdcCfg[AdcInternIndex_u8].adc_e,
-                                         c_FmkCda_HwSigAdcCfg[AdcInternIndex_u8].chnl_e,
+        Ret_e = FMKCDA_Set_AdcChannelCfg(c_FmkCda_HwVrefCfg[AdcIndex_u8].adc_e,
+                                         c_FmkCda_HwVrefCfg[AdcIndex_u8].chnl_e,
                                          FMKCDA_ADC_CFG_SCAN_DMA);
     }
     
@@ -532,7 +534,7 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
             {
                 bspRet_e = HAL_ADC_Start_DMA(&g_AdcInfo_as[f_Adc_e].BspInit_s,
                                             (t_uint32 *)g_AdcBuffer_as[f_Adc_e].rawValue_au32,
-                                            (t_uint32)(g_adcCterRank_au8[f_Adc_e])); // corresponing to the number of channel 
+                                            (t_uint32)(g_counterRank_au8[f_Adc_e])); // corresponing to the number of channel 
                                                                         //configured for this adc
                 break;                                                        
             }
@@ -794,9 +796,9 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
         if (Ret_e == RC_OK)
         {
             // For mapping 
-            g_adcCterRank_au8[f_Adc_e] += (t_uint8)1;
+            g_counterRank_au8[f_Adc_e] += (t_uint8)1;
             BspChannelInit_s.Channel = bspChannel_u32;
-            BspChannelInit_s.Rank = g_adcCterRank_au8[f_Adc_e];
+            BspChannelInit_s.Rank = g_counterRank_au8[f_Adc_e];
             // configure adc channel
             BspRet_e = HAL_ADC_ConfigChannel(&g_AdcInfo_as[f_Adc_e].BspInit_s,
                                              &BspChannelInit_s);
@@ -804,7 +806,7 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
             if (BspRet_e == HAL_OK)
             {
                 // update mapping for dma
-                g_AdcBuffer_as[f_Adc_e].BspChnlmapp_ae[(g_adcCterRank_au8[f_Adc_e] - 1)] = f_channel_e;
+                g_AdcBuffer_as[f_Adc_e].BspChnlmapp_ae[(g_counterRank_au8[f_Adc_e] - 1)] = f_channel_e;
                 // update info
                 g_AdcInfo_as[f_Adc_e].Channel_as[f_channel_e].IsChnlConfigured_b = (t_bool)True;
             }
@@ -836,8 +838,8 @@ static t_eReturnState s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e)
     || g_adcCalibInfo_as[f_Adc_e].isValueSet_b == (t_bool)False)
     {
         lastTime_u32 = currentTime_u32;
-        chnl_e = c_FmkCda_HwSigAdcCfg[f_Adc_e].chnl_e;
-        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_adcCterRank_au8[f_Adc_e]) ; LLI_u8++)
+        chnl_e = c_FmkCda_HwVrefCfg[f_Adc_e].chnl_e;
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_counterRank_au8[f_Adc_e]) ; LLI_u8++)
         {
             if(chnl_e == g_AdcBuffer_as[f_Adc_e].BspChnlmapp_ae[LLI_u8])
             {
@@ -846,9 +848,9 @@ static t_eReturnState s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e)
         }
         if(chnl_e != FMKCDA_ADC_CHANNEL_NB)
         {//                         max rank in buffer, cause it's in reverse
-            idxChnl_u8 = (t_uint8)((g_adcCterRank_au8[f_Adc_e] - (t_uint8)1) - (t_uint8)LLI_u8);
+            idxChnl_u8 = (t_uint8)((g_counterRank_au8[f_Adc_e] - (t_uint8)1) - (t_uint8)LLI_u8);
             g_adcCalibInfo_as[f_Adc_e].cabliValue_f32 = (t_float32)(g_AdcBuffer_as[f_Adc_e].savedVal_ua16[idxChnl_u8] 
-                                                            / (t_float32)(*FMKCDA_VREF_CALIB_ADDRESS));
+                                                            / (t_float32)(*c_FmkCda_VrefCalibAddress_pas16[f_Adc_e]));
             g_adcCalibInfo_as[f_Adc_e].isValueSet_b = (t_bool)True;
 
         }
@@ -857,9 +859,9 @@ static t_eReturnState s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e)
     // update flag reading 
     g_AdcBuffer_as[f_Adc_e].flagReadBuffer_b = (t_bool)True;
     //  here the dma load the buffer with FILO method, first in last out.
-    reverseLLI_u8 = (t_uint8)(g_adcCterRank_au8[f_Adc_e] - 1);
+    reverseLLI_u8 = (t_uint8)(g_counterRank_au8[f_Adc_e] - 1);
 
-    for (LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_adcCterRank_au8[f_Adc_e]) ; LLI_u8++)
+    for (LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_counterRank_au8[f_Adc_e]) ; LLI_u8++)
     {
         chnl_e = g_AdcBuffer_as[f_Adc_e].BspChnlmapp_ae[reverseLLI_u8];
         g_AdcInfo_as[f_Adc_e].Channel_as[chnl_e].rawValue_u16 = 
@@ -902,7 +904,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
         if(g_AdcBuffer_as[IT_Adc_e].flagReadBuffer_b == (t_bool)False)
         {
             //                                      number of channel configured
-            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_adcCterRank_au8[IT_Adc_e]) ; LLI_u8++)
+            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)(g_counterRank_au8[IT_Adc_e]) ; LLI_u8++)
             {
                 g_AdcBuffer_as[IT_Adc_e].savedVal_ua16[LLI_u8] = (t_uint16)g_AdcBuffer_as[IT_Adc_e].rawValue_au32[LLI_u8];
             }

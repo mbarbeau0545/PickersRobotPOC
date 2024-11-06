@@ -28,7 +28,15 @@
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* NUmber of ADC in this harware */
+    /* Internal Sensors manage by the cpu */
+    typedef enum
+    {
+        FMKCDA_ADC_INTERN_TS_CAL1 = 0x0,            /**< Refernce to TS_CAL1 */
+    
+        FMKCDA_ADC_INTERN_NB,
+    } t_eFMKCDA_AdcInternSns;
+
+    /* Nmber of ADC in this harware */
     typedef enum
     {
         FMKCDA_ADC_1 = 0x0,                  /**< Reference to HAL ADC1 */
@@ -57,7 +65,7 @@
         FMKCDA_ADC_CHANNEL_15,                       /**< Reference to HAL adc channel 15 */
         FMKCDA_ADC_CHANNEL_16,                       /**< Reference to HAL adc channel 16 */
         FMKCDA_ADC_CHANNEL_17,                       /**< Reference to HAL adc channel 17 */
-
+    
         FMKCDA_ADC_CHANNEL_NB,
     } t_eFMKCDA_AdcChannel;
 
