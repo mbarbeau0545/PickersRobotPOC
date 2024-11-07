@@ -42,6 +42,7 @@ typedef struct
     t_eFMKCPU_ChnlErrorState ErrState_e;                /**< Error state of the channel */
     t_cbFMKCPU_InterruptChnl *chnl_cb;                  /**< Callback function of the channel */
     t_bool IsChnlConfigure_b;                           /**< Wether or not the channel has beeen configured */
+    
 } t_sFMKCPU_ChnlInfo;
 
 /**< Structure of information on a timer*/
@@ -1090,7 +1091,7 @@ static t_eReturnState s_FMKCPU_Operational(void)
         SavedTime_u32 = currentTime_u32;
         Ret_e = s_FMKCPU_PerformDiagnostic();
     }
-        // else do other thing( or nothing for now)
+    // else do other thing( or nothing for now)
     
     return Ret_e;
 }

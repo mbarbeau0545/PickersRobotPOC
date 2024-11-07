@@ -10,6 +10,8 @@
 #------------------------------------------------------------------------------
 #                                       IMPORT
 #------------------------------------------------------------------------------
+import sys,os
+
 from FMK_CodeGen.FMKCPU_CodeGen import FMKCPU_CodeGen as FMKCPU
 from FMK_CodeGen.FMKIO_CodeGen  import FMKIO_CodeGen as FMKIO
 from FMK_CodeGen.FMKCDA_CodeGen  import FMKCDA_CodeGen as FMKCDA
@@ -24,17 +26,31 @@ from App_CodeGen.AppAct_CodeGen import AppAct_CodeGen as APPACT
 #------------------------------------------------------------------------------
 #                                       CLASS
 #------------------------------------------------------------------------------
+class PythonToolArgError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------
 def main()-> None:
-    
-    FMKCPU.code_generation()
-    FMKCDA.code_genration()
-    FMKIO.code_generation()
-    APPSNS.code_generation()
-    APPACT.code_generation()
+    if not len(sys.argv) == 3:
+        raise PythonToolArgError(f"Expected two argument : hardware configuration and software.\n Get {len(sys.argv)} instead")
+    hardware_cfg_path = str(sys.argv[1])
+    software_cfg_path = str(sys.argv[2])
+
+    if not (os.path.isfile(hardware_cfg_path) 
+        or  os.path.isfile(software_cfg_path)):
+        FileNotFoundError("Expected two argument, hardware configuration and software.")
+
+    FMKCPU.code_generation(hardware_cfg_path)
+    FMKCDA.code_genration(hardware_cfg_path)
+    FMKIO.code_generation(hardware_cfg_path)
+    APPSNS.code_generation(software_cfg_path)
+    APPACT.code_generation(software_cfg_path)
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<<<<<Successfuly made code generation for project>>>>>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     return
 #------------------------------------------------------------------------------
 #			                MAIN

@@ -193,7 +193,7 @@ static t_eReturnState s_APPLGC_PreOperational(void)
     //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_12, FMKIO_PULL_MODE_DISABLE);
     //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_9, FMKIO_PULL_MODE_DISABLE);
     //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_10, FMKIO_PULL_MODE_DISABLE);
-    Ret_e = FMKIO_Set_InAnaSigCfg(FMKIO_INPUT_SIGANA_2, FMKIO_PULL_MODE_DISABLE, NULL_FONCTION);
+    Ret_e = FMKIO_Set_InAnaSigCfg(FMKIO_INPUT_SIGANA_3, FMKIO_PULL_MODE_DISABLE, NULL_FONCTION);
     
    
     return Ret_e;
@@ -207,12 +207,25 @@ static t_eReturnState s_APPLGC_Operational(void)
     t_eReturnState Ret_e = RC_OK;
     t_uint16 value_u16;
     t_uint16 vref_u32 = 0;
+    t_uint16 *vdd_pu16 = 0x1FFFF7BA;
+    t_uint16 *vrefcalib = 0x1FFFF7B8;
     //Ret_e = FMKIO_Get_InDigSigValue(FMKIO_INPUT_SIGDIG_10, &value_e);
-    Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_INPUT_SIGANA_2, &value_u16);
-    Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_IINSIG_ANA_VREF, &vref_u32);
-    if(vref_u32 > (t_uint32)value_u16)
+    Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_INPUT_SIGANA_3, &value_u16);
+    if(vref_u32 > (t_uint16)value_u16)
     {
         Ret_e = RC_WARNING_BUSY;
+    }
+    if(*vdd_pu16 > (t_uint16)value_u16)
+    {
+        Ret_e = RC_WARNING_INIT_PROBLEM;
+    }
+    if(*vrefcalib > (t_uint16)value_u16)
+    {
+        Ret_e = RC_WARNING_INIT_PROBLEM;
+    }
+    if(Ret_e != RC_OK)
+    {
+        Ret_e = RC_OK;
     }
     return Ret_e;
 }

@@ -8,13 +8,8 @@
  * @version     1.0
  */
   
-#ifndef FMKIO_CONFIGPUBLIC_H_INCLUDED
-#define FMKIO_CONFIGPUBLIC_H_INCLUDED
-
-
-
-
-
+#ifndef FMKIO_ConfigPublic_H_INCLUDED
+#define FMKIO_ConfigPublic_H_INCLUDED
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
@@ -23,8 +18,7 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    /*Flag automatic generated code */
-    #define FMKIO_IINSIG_ANA_VREF ((t_eFMKCDA_AdcChannel)FMKCDA_ADC_CHANNEL_17) /**< Vref internal input */
+    
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -222,7 +216,7 @@
     //                      Public functions - Prototyupes
     //********************************************************************************
 
-#endif // FMKIO_CONFIGPUBLIC_H_INCLUDED           
+#endif // FMKIO_ConfigPublic_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************

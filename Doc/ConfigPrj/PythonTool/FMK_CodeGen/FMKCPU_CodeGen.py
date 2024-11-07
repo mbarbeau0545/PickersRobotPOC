@@ -37,6 +37,8 @@ TARGET_TIMER_CHNLNB_START = "    /* CAUTION : Automatic generated code section f
 TARGET_TIMER_CHNLNB_END   = "    /* CAUTION : Automatic generated code section for Timer channels number: End */\n"
 TARGET_TIMER_X_IRQH_START = "/* CAUTION : Automatic generated code section for TIMx IRQHandler: Start */\n"
 TARGET_TIMER_X_IRQH_END = "/* CAUTION : Automatic generated code section for TIMx IRQHandler: End */\n"
+TARGET_CPU_CFG_START = "    /* CAUTION : Automatic generated code section for CPU Configuration: Start */\n"
+TARGET_CPU_CFG_END = "    /* CAUTION : Automatic generated code section for CPU Configuration: End */\n"
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #
@@ -79,15 +81,17 @@ class FMKCPU_CodeGen():
     # code_generation
     #-------------------------
     @classmethod
-    def code_generation(cls) -> None:
+    def code_generation(cls, f_hw_cfg) -> None:
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCpu Module>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        cls.code_gen.load_excel_file(HARDWARE_CFG_PATH)
+        cls.code_gen.load_excel_file(f_hw_cfg)
         irqn_cfg_a    = cls.code_gen.get_array_from_excel("GI_IRQN")
         timer_cfg_a   = cls.code_gen.get_array_from_excel("GI_Timer")
         rcclock_cfg_a = cls.code_gen.get_array_from_excel("GI_RCC_CLOCK")
         evnt_cfg_a    = cls.code_gen.get_array_from_excel("FMKCPU_EvntTimer")
+        cpu_cfg       = cls.code_gen.get_array_from_excel("CPU_Config")[1][0]
+        print(cpu_cfg)
         enum_channel = ""
         enum_timer = ""
         enum_rcc = ""
@@ -106,8 +110,16 @@ class FMKCPU_CodeGen():
         var_tim_max_chnl = ""
         switch_irqn = ""
         max_channel: int = 0
+        include_cpu = ""
         nb_evnt_channel = len(evnt_cfg_a[1:])
         timer_number_a = []
+        #----------------------------------------------------------------
+        #-----------------------------make cpu include-------------------
+        #----------------------------------------------------------------
+        # only takes tha family for include function
+        cpu_function = f'    #include "{str(cpu_cfg)[:7]}xx_hal.h"\n'
+        include_cpu_hw = f'    #include "{cpu_cfg}.h"\n'
+        include_cpu = cpu_function + include_cpu_hw
         #----------------------------------------------------------------
         #-----------------------------make rcc enum----------------------
         #-----------------------------------------------------------------
@@ -164,8 +176,8 @@ class FMKCPU_CodeGen():
             var_timinfo += "    {\n" \
                         + f"        // Timer_{idx_timer}\n" \
                         + f"        .BspTimer_ps.Instance = TIM{idx_timer},\n" \
-                        + f"        .clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
-                        + f"        .IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_TIM{idx_timer}_" \
+                        + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
+                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_TIM{idx_timer}_" \
                         +  (f"IRQN,\n" if idx_timer != "1" else f"BRK_UP_TRG_COM_IRQN,\n")  \
                         + "    },\n"
             # make defines timer channel
@@ -254,6 +266,9 @@ class FMKCPU_CodeGen():
         cls.code_gen._write_into_file(enum_channel, FMKCPU_CONFIGPUBLIC)
         print("\t\t- enum for timer")
         cls.code_gen._write_into_file(enum_timer, FMKCPU_CONFIGPUBLIC)
+        print("\t\t include for cpu")
+        cls.code_gen.change_target_balise(TARGET_CPU_CFG_START,TARGET_CPU_CFG_END)
+        cls.code_gen._write_into_file(include_cpu,FMKCPU_CONFIGPUBLIC)
         print("\t- For configPrivate file")
         # For FMKCPU_Config Private
         cls.code_gen.change_target_balise(TARGET_TIMER_CHNLNB_START, TARGET_TIMER_CHNLNB_END)

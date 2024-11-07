@@ -23,7 +23,7 @@
         "fmkcda_configprivate.h": "c",
         "appsys_configpublic.h": "c",
         "fmk_io.h": "c",
-        "fmkio_configpublic.h": "c",
+        "FMKIO_ConfigPublic.h": "c",
         "app_lgc.h": "c",
         "app_act.h": "c",
         "appact_spec_valvesome.h": "c",
@@ -35,7 +35,8 @@
         "fmk_mac.h": "c",
         "fmkmac_configpublic.h": "c",
         "appact_configpublic.h": "c",
-        "fmkmac_configprivate.h": "c"
+        "fmkmac_configprivate.h": "c",
+        "stm32f0xx_hal_cortex.h": "c"
     },
     "stm32-for-vscode.armToolchainPath": false
 }

@@ -45,14 +45,14 @@ class FMKIO_CodeGen():
         """
     code_gen = LCFE()
     @classmethod
-    def code_generation(cls) -> None:
+    def code_generation(cls, f_hw_cfg) -> None:
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkIO Module>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         TARGET_BALISE_SWITCH_GPIO_START = "            /* CAUTION : Automatic generated code section for GPIO switch case: Start */\n"
         TARGET_BALISE_SWITCH_GPIO_END   = "            /* CAUTION : Automatic generated code section for GPIO switch case: End */\n"
         
-        cls.code_gen.load_excel_file(HARDWARE_CFG_PATH)
+        cls.code_gen.load_excel_file(f_hw_cfg)
         
         # load the needed array 
         gpio_astr = cls.code_gen.get_array_from_excel("GI_GPIO")[1:]
@@ -354,21 +354,21 @@ class FMKIO_CodeGen():
         # for FMKIO Config public
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE, TARGET_T_ENUM_END_LINE)
         print("\t\t- enum for PWN output signal")
-        cls.code_gen._write_into_file(enum_OutPWM, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_OutPWM, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for Digital output signal")
-        cls.code_gen._write_into_file(enum_OutDig, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_OutDig, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for Event input signal")
-        cls.code_gen._write_into_file(enum_InEvnt, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_InEvnt, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for Frequency input signal")
-        cls.code_gen._write_into_file(enum_InFreq, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_InFreq, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for Analog input signal")
-        cls.code_gen._write_into_file(enum_InAna, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_InAna, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for Digital input signal")
-        cls.code_gen._write_into_file(enum_InDig, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_InDig, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for pin signal")
-        cls.code_gen._write_into_file(enum_pin, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_pin, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for GPIO available for this stm")
-        cls.code_gen._write_into_file(enum_gpio, FMKIO_CONFIGPUBLIC_PATH)
+        cls.code_gen._write_into_file(enum_gpio, FMKIO_ConfigPublic_PATH)
 
         # for FMKIO
         print("\t- For FMKIO.c file")

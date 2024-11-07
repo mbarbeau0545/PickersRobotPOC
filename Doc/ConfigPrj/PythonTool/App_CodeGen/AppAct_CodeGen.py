@@ -53,12 +53,12 @@ class AppAct_CodeGen():
     code_gen = LCFE()
 
     @classmethod
-    def code_generation(cls) -> None:
+    def code_generation(cls, f_software_cfg) -> None:
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<Start code generation for AppAct Module>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # Load needed excel arrays
-        cls.code_gen.load_excel_file(SOFTWARE_CFG_PATH)
+        cls.code_gen.load_excel_file(f_software_cfg)
         actuators_cfg_a = cls.code_gen.get_array_from_excel("AppAct_Actuators")[1:]
         drivers_cfg_a = cls.code_gen.get_array_from_excel("AppAct_Drivers")[1:]
 
