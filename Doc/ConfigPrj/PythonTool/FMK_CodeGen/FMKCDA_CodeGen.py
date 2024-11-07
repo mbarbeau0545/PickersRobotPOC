@@ -53,12 +53,12 @@ class FMKCDA_CodeGen():
     code_gen = LCFE()
 
     @classmethod
-    def code_genration(cls) -> None:
+    def code_genration(cls, f_hw_cfg) -> None:
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # load array needed
-        cls.code_gen.load_excel_file(HARDWARE_CFG_PATH)
+        cls.code_gen.load_excel_file(f_hw_cfg)
         #irqn_cfg_a = cls.code_gen.get_array_from_excel("GI_IRQN")
         adc_astr   = cls.code_gen.get_array_from_excel("GI_ADC")[1:]
         dac_astr   = cls.code_gen.get_array_from_excel("GI_DAC")[1:]

@@ -45,14 +45,14 @@ class FMKIO_CodeGen():
         """
     code_gen = LCFE()
     @classmethod
-    def code_generation(cls) -> None:
+    def code_generation(cls, f_hw_cfg) -> None:
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkIO Module>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         TARGET_BALISE_SWITCH_GPIO_START = "            /* CAUTION : Automatic generated code section for GPIO switch case: Start */\n"
         TARGET_BALISE_SWITCH_GPIO_END   = "            /* CAUTION : Automatic generated code section for GPIO switch case: End */\n"
         
-        cls.code_gen.load_excel_file(HARDWARE_CFG_PATH)
+        cls.code_gen.load_excel_file(f_hw_cfg)
         
         # load the needed array 
         gpio_astr = cls.code_gen.get_array_from_excel("GI_GPIO")[1:]

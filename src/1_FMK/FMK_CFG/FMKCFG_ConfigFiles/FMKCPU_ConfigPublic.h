@@ -18,9 +18,11 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    // flag automatic generate code
-    #include "stm32f030x8.h"
+    /* CAUTION : Automatic generated code section for CPU Configuration: Start */
     #include "stm32f0xx_hal.h"
+    #include "stm32f030x8.h"
+    /* CAUTION : Automatic generated code section for CPU Configuration: End */
+    // flag automatic generate code
     #include "TypeCommon.h"
     // ********************************************************************
     // *                      Defines
