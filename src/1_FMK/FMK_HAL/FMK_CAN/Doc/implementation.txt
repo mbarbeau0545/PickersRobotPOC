@@ -1,0 +1,17 @@
+Pour gérer efficacement les fonctions de réception CAN et éviter les débordements, il est essentiel d’optimiser la lecture et le traitement des messages reçus. Voici quelques bonnes pratiques :
+
+1. Utiliser les Callbacks d'Interruption
+Configurez le CAN pour générer une interruption dès qu’un message arrive dans la FIFO (HAL_CAN_RxFifo0MsgPendingCallback et HAL_CAN_RxFifo1MsgPendingCallback). Cela permet de traiter les messages dès qu’ils arrivent.
+Dans chaque callback, lisez le message immédiatement pour libérer l’espace dans la FIFO, même si le traitement du message est différé.
+2. Lire les Messages en Bloc
+Lorsqu’une interruption indique qu’un message est dans la FIFO, vérifiez s’il y a d’autres messages en attente dans la FIFO avant de quitter la callback.
+Par exemple, lisez tous les messages dans un boucle jusqu'à ce que la FIFO soit vide. Cela permet de vider rapidement la FIFO et de réduire le risque d’overflow en cas d’arrivées rapides.
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+    while (HAL_CAN_GetRxFifoFillLevel(hcan, CAN_RX_FIFO0) > 0) {
+        CAN_RxHeaderTypeDef rxHeader;
+        uint8_t rxData[8];
+        HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, rxData);
+        // Traiter les données ici ou les stocker pour un traitement ultérieur
+    }
+}

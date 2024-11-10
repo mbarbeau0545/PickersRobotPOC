@@ -137,7 +137,7 @@
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
     const t_sFMKIO_BspEvntSigCfg c_InEvntSigBspMap_as[FMKIO_INPUT_SIGEVNT_NB] = {
         //GPIO_name                     Pin_name                      GPIO_IRQN                     bsp pin name                  
-        {{FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_10},             FMKCPU_NVIC_EXTI0_1_IRQN},             // FMKIO_INPUT_SIGEVNT_1,
+        {{FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_10},             FMKCPU_NVIC_EXTI4_15_IRQN},             // FMKIO_INPUT_SIGEVNT_1,
         {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_1},              FMKCPU_NVIC_EXTI0_1_IRQN},             // FMKIO_INPUT_SIGEVNT_2,
     };
 
