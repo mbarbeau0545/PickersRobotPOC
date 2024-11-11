@@ -1,5 +1,5 @@
 /*********************************************************************
- * @file        TemplateName.h
+ * @file        APPSYS_ConfigPublic.h
  * @brief       Template_BriefDescription.
  * @note        TemplateDetailsDescription.\n
  *
@@ -7,10 +7,9 @@
  * @date        jj/mm/yyyy
  * @version     1.0
  */
-/* CAUTION : Automatic generated code section for ifndef: Start */
-#ifndef APPSNS_SPEC_AIRHUMIDITY
-#define APPSNS_SPEC_AIRHUMIDITY
-/* CAUTION : Automatic generated code section for ifndef: End */
+  
+#ifndef APPSNS_CONFIGSPECIFIC_H_INCLUDED
+#define APPSNS_CONFIGSPECIFIC_H_INCLUDED
 
 
 
@@ -19,10 +18,7 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    /* CAUTION : Automatic generated code section for Include: Start */
     #include "TypeCommon.h"
-    #include "APP_CFG/ConfigFiles/APPSNS_ConfigPublic.h"
-    /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -34,7 +30,7 @@
 
 	/* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-
+    /**< enum for module list */
 
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -44,6 +40,8 @@
 
 	/* CAUTION : Automatic generated code section : End */
 	//-----------------------------TYPEDEF TYPES---------------------------//
+
+    
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -52,34 +50,29 @@
     // *                      Variables
     // ********************************************************************
 
-
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************
-    /* CAUTION : Automatic generated code section for Specific Function Declaration: Start */
     /**
     *
-    * @brief     @ref t_cbAppSns_SetSnsCfg
+    *	@brief      
+    *	@note       
+    *
+    *
+    *	@param[in]      
+    *	@param[in]      
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState APPSNS_SPEC_AirHumidity_SetCfg(void);
+    t_eReturnState APPSNS_SPEC_ConvertTemperature(t_uint8 f_idxTempUnity_u8, 
+                                                    t_sint16 f_rawVal_s16,
+                                                    t_sint16 f_snsVal_s16);
+   
 
-    /**
-    *
-    * @brief     @ref t_cbAppSns_GetSigValue
-    *
-    */
-    t_eReturnState APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
-
-    /**
-    *
-    * @brief     @ref t_cbAppSns_FormatValSI
-    *
-    */
-    t_eReturnState APPSNS_SPEC_AirHumidity_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
-
-    /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
-#endif            
+#endif // APPSYS_CONFIGPUBLIC_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -90,8 +83,8 @@
  *	@note   
  *
  *
- *	@param[in] 
- *	@param[out]
+ *	@params[in] 
+ *	@params[out]
  *	 
  *
  *

@@ -87,12 +87,12 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Carotte_GetValue(t_sAPPACT_ValueInfo *
     if(Ret_e == RC_OK)
     {
         f_value_ps->IsValueOK_b = True;
-        f_value_ps->rawValue_s16 = value_e;
+        f_value_ps->rawValue_f32 = value_e;
     }
     else
     {
         f_value_ps->IsValueOK_b = False;
-        f_value_ps->rawValue_s16 = value_e;
+        f_value_ps->rawValue_f32 = value_e;
     }
 
     return Ret_e;

@@ -65,7 +65,7 @@
 	//-----------------------------STRUCT TYPES---------------------------//
     typedef struct
     {
-        t_sint16 rawValue_s16;      /**< Store the actuators rawValue */
+        t_sint16 rawValue_f32;      /**< Store the actuators rawValue */
         t_bool   IsValueOK_b;       /**< Flag value is OK */
     } t_sAPPACT_ValueInfo;
 	/* CAUTION : Automatic generated code section : Start */

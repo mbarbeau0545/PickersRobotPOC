@@ -189,7 +189,7 @@ t_eReturnState APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * 
         Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].GetValue_pcb)(&actValInfo_s);
         if(actValInfo_s.IsValueOK_b == True)
         {
-            *f_value_ps16 = (t_sint16)actValInfo_s.rawValue_s16;
+            *f_value_ps16 = (t_sint16)actValInfo_s.rawValue_f32;
         }
         else
         {

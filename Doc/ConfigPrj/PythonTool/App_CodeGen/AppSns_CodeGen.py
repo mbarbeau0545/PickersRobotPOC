@@ -102,12 +102,17 @@ class AppSns_CodeGen():
         var_unities += "    /**< Variable for Sensors Unity Management */\n" \
                     + "    const t_eAPPSNS_SnsMeasType c_AppSns_SnsMeasType_ae[APPSNS_SENSOR_NB] = {\n"
         for sns_cfg in sensors_cfg_a:
+            print(sns_cfg[1])
             if str(sns_cfg[0]) != EMPTY_CELL:
                 # make var sensors
                 var_sns += "        {" \
+                            + f"{ENUM_APPSNS_UNITY_RT}_{sns_cfg[1]}," \
+                            + " " * ((SPACE_VARIABLE * 2) - len(f"{ENUM_APPSNS_UNITY_RT}_{str(sns_cfg[1])}")) \
                             + f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_SetCfg," \
                             + " " * ((SPACE_VARIABLE * 2) - len(f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_SetCfg,")) \
-                            + f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_GetValue" \
+                            + f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_GetSigValue," \
+                            + " " * ((SPACE_VARIABLE * 2) - len(f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_GetValue,")) \
+                            + f"{VAR_APPSNS_SPEC}_{sns_cfg[0]}_FormatValue" \
                             + "}, //" + f"{ENUM_APPSNS_SENSORS_RT}_{str(sns_cfg[0]).upper()}\n"
                 # make var state
                 var_sns_state += "    " \
@@ -198,7 +203,9 @@ class AppSns_CodeGen():
         include_h = '    #include "TypeCommon.h"\n' \
                    + '    #include "APP_CFG/ConfigFiles/APPSNS_ConfigPublic.h"\n' 
         include_c = f'#include "./{VAR_APPSNS_SPEC}_{f_sns_name}.h"\n'
-        suffix_func = {"SetCfg" : ["(void)", "t_cbAppSns_SetSnsCfg"], "GetValue" :  ["(t_sAPPSNS_ValueInfo *f_SnsValue_ps)", "t_cbAppSns_GetSnsValue" ]}
+        suffix_func = {"SetCfg" : ["(void)", "t_cbAppSns_SetSnsCfg"], 
+                       "GetSigValue" :  ["(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)", "t_cbAppSns_GetSigValue" ],
+                       "FormatValue" : ["(t_float32  rawValue_f32, t_float32 *SnsValue_f32)", "t_cbAppSns_FormatValSI" ]}
         distination_file_h = os.path.join(SNS_SPEC_FOLDER_FULLPATH, f"{VAR_APPSNS_SPEC}_{f_sns_name}.h")
         distination_file_c = os.path.join(SNS_SPEC_FOLDER_FULLPATH, f"{VAR_APPSNS_SPEC}_{f_sns_name}.c")
         # copy both files with new name

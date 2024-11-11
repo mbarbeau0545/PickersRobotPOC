@@ -1,6 +1,6 @@
 var _a_p_p_s_n_s___config_public_8h =
 [
-    [ "t_sAPPSNS_ValueInfo", "structt__s_a_p_p_s_n_s___value_info.html", "structt__s_a_p_p_s_n_s___value_info" ],
+    [ "t_sAPPSNS_SnsInfo", "structt__s_a_p_p_s_n_s___value_info.html", "structt__s_a_p_p_s_n_s___value_info" ],
     [ "t_eAPPSNS_Drivers", "_a_p_p_s_n_s___config_public_8h.html#ae479a9dbf75dd3ff4f9fad8038aed69c", [
       [ "APPSNS_DRIVER_NB", "_a_p_p_s_n_s___config_public_8h.html#ae479a9dbf75dd3ff4f9fad8038aed69ca5f5543d3ac4b81d604678bf1c80ee8af", null ]
     ] ],

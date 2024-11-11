@@ -37,6 +37,7 @@
 
 	/* CAUTION : Automatic generated code section for Structure: End */
 	//-----------------------------STRUCT TYPES---------------------------//
+    
 	/* CAUTION : Automatic generated code section : Start */
 
 	/* CAUTION : Automatic generated code section : End */
@@ -113,7 +114,7 @@
     *	@param[in]  f_value_ps16   : storage for the value 
     * 
     */
-    t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sint16 *f_SnsValue_ps16);
+    t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *f_SnsValue_ps16);
 
 #endif // APP_SNS_H_INCLUDED           
 //************************************************************************************

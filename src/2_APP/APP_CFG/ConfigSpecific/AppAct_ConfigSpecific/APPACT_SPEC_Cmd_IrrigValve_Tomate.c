@@ -88,7 +88,7 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue(t_sAPPACT_ValueInfo *f
     //    Your code for Cmd_IrrigValve_Tomate_GetActValue here
     t_uint16 value_u16 = 0;
     Ret_e = FMKIO_Get_OutPwmSigValue(c_InputSig_e, &value_u16);
-    f_value_ps->rawValue_s16 = (t_sint16)value_u16;
+    f_value_ps->rawValue_f32 = (t_sint16)value_u16;
 
     return Ret_e;
 }

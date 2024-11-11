@@ -5,7 +5,7 @@ var annotated_dup =
     [ "t_sAPPACT_ValueInfo", "structt__s_a_p_p_a_c_t___value_info.html", "structt__s_a_p_p_a_c_t___value_info" ],
     [ "t_sAPPSNS_SysDrvFunc", "structt__s_a_p_p_s_n_s___sys_drv_func.html", "structt__s_a_p_p_s_n_s___sys_drv_func" ],
     [ "t_sAPPSNS_SysSnsFunc", "structt__s_a_p_p_s_n_s___sys_sns_func.html", "structt__s_a_p_p_s_n_s___sys_sns_func" ],
-    [ "t_sAPPSNS_ValueInfo", "structt__s_a_p_p_s_n_s___value_info.html", "structt__s_a_p_p_s_n_s___value_info" ],
+    [ "t_sAPPSNS_SnsInfo", "structt__s_a_p_p_s_n_s___value_info.html", "structt__s_a_p_p_s_n_s___value_info" ],
     [ "t_sAppSys_SysFunc", "structt__s_app_sys___sys_func.html", "structt__s_app_sys___sys_func" ],
     [ "t_sFMKCDA_AdcBuffer", "structt__s_f_m_k_c_d_a___adc_buffer.html", "structt__s_f_m_k_c_d_a___adc_buffer" ],
     [ "t_sFMKCDA_AdcInfo", "structt__s_f_m_k_c_d_a___adc_info.html", "structt__s_f_m_k_c_d_a___adc_info" ],

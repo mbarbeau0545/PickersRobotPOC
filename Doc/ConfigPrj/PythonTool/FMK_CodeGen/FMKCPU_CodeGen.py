@@ -23,12 +23,12 @@ TARGET_TIMER_INFO_START = "/* CAUTION : Automatic generated code section for Tim
 TARGET_TIMER_INFO_END   = "/* CAUTION : Automatic generated code section for Timer Configuration: End */\n"
 TARGET_TIMER_NVIC_NB_START = "    /* CAUTION : Automatic generated code section for NVIC Number: Start */\n"
 TARGET_TIMER_NVIC_NB_END   = "    /* CAUTION : Automatic generated code section for NVIC Number: End */\n"
-TARGET_CLOCK_ENABLE_IMPL_START  = "/* CAUTION : Automatic generated code section for Enable Clk Implementation: Start */\n"
-TARGET_CLOCK_ENABLE_IMPL_END    = "/* CAUTION : Automatic generated code section for Enable Clk Implementation: End */\n"
+TARGET_c_clock_eNABLE_IMPL_START  = "/* CAUTION : Automatic generated code section for Enable Clk Implementation: Start */\n"
+TARGET_c_clock_eNABLE_IMPL_END    = "/* CAUTION : Automatic generated code section for Enable Clk Implementation: End */\n"
 TARGET_CLOCK_DISABLE_IMPL_START = "/* CAUTION : Automatic generated code section for Disable Clk Implementation: Start */\n"
 TARGET_CLOCK_DISABLE_IMPL_END   = "/* CAUTION : Automatic generated code section for Disable Clk Implementation: End */\n"
-TARGET_CLOCK_ENABLE_DECL_START  = "    /* CAUTION : Automatic generated code section for Enable Clk Declaration: Start */\n"
-TARGET_CLOCK_ENABLE_DECL_END    = "    /* CAUTION : Automatic generated code section for Enable Clk Declaration: End */\n"
+TARGET_c_clock_eNABLE_DECL_START  = "    /* CAUTION : Automatic generated code section for Enable Clk Declaration: Start */\n"
+TARGET_c_clock_eNABLE_DECL_END    = "    /* CAUTION : Automatic generated code section for Enable Clk Declaration: End */\n"
 TARGET_CLOCK_DISABLE_DECL_START = "    /* CAUTION : Automatic generated code section for Disable Clk Declaration: Start */\n"
 TARGET_CLOCK_DISABLE_DECL_END   = "    /* CAUTION : Automatic generated code section for Disable Clk Declaration: End */\n"
 TARGET_SWITCH_NVIC_START = "            /* CAUTION : Automatic generated code section for IRQNType switch case: Start */\n"
@@ -281,12 +281,12 @@ class FMKCPU_CodeGen():
         cls.code_gen._write_into_file(var_clk_state, FMKCPU_CONFIGPRIVATE)
         print("\t\t- Configuration for nvic priority")
         cls.code_gen._write_into_file(var_nvic_prio, FMKCPU_CONFIGPRIVATE)
-        cls.code_gen.change_target_balise(TARGET_CLOCK_ENABLE_IMPL_START, TARGET_CLOCK_ENABLE_IMPL_END)
+        cls.code_gen.change_target_balise(TARGET_c_clock_eNABLE_IMPL_START, TARGET_c_clock_eNABLE_IMPL_END)
         print("\t\t- Function for enable/disable RCC clock")
         cls.code_gen._write_into_file(rcc_ena_imple, FMKCPU_CONFIGSPECIFIC_C)
         cls.code_gen.change_target_balise(TARGET_CLOCK_DISABLE_IMPL_START, TARGET_CLOCK_DISABLE_IMPL_END)
         cls.code_gen._write_into_file(rcc_dis_imple, FMKCPU_CONFIGSPECIFIC_C)
-        cls.code_gen.change_target_balise(TARGET_CLOCK_ENABLE_DECL_START, TARGET_CLOCK_ENABLE_DECL_END)
+        cls.code_gen.change_target_balise(TARGET_c_clock_eNABLE_DECL_START, TARGET_c_clock_eNABLE_DECL_END)
         cls.code_gen._write_into_file(rcc_ena_decl, FMKCPU_CONFIGSPECIFIC_H)
         cls.code_gen.change_target_balise(TARGET_CLOCK_DISABLE_DECL_START, TARGET_CLOCK_DISABLE_DECL_END)
         cls.code_gen._write_into_file(rcc_dis_decl, FMKCPU_CONFIGSPECIFIC_H)

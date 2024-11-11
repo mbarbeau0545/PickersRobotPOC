@@ -1,5 +1,5 @@
 /*********************************************************************
- * @file        TemplateName.c
+ * @file        APPSYS_ConfigPublic.h
  * @brief       Template_BriefDescription.
  * @note        TemplateDetailsDescription.\n
  *
@@ -7,24 +7,15 @@
  * @date        jj/mm/yyyy
  * @version     1.0
  */
-
-
-
-
-
-
+  
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
-/* CAUTION : Automatic generated code section for Include: Start */
-#include "./APPSNS_SPEC_AirTemperature.h"
-/* CAUTION : Automatic generated code section for Include: End */
+#include "./APPSNS_SPEC.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
-/* CAUTION : Automatic generated code section for Include: Start */
 
-/* CAUTION : Automatic generated code section for Include: End */
 // ********************************************************************
 // *                      Types
 // ********************************************************************
@@ -32,7 +23,7 @@
 
 /* CAUTION : Automatic generated code section for Enum: End */
 //-----------------------------ENUM TYPES-----------------------------//
-
+/**< enum for module list */
 
 /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -42,71 +33,28 @@
 
 /* CAUTION : Automatic generated code section : End */
 //-----------------------------TYPEDEF TYPES---------------------------//
+
+
 // ********************************************************************
 // *                      Prototypes
 // ********************************************************************
-	
+    
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
 
-//********************************************************************************
+//****************************************************************************
 //                      Local functions - Prototypes
-//********************************************************************************
+//****************************************************************************
+
 //****************************************************************************
 //                      Public functions - Implementation
-//********************************************************************************
-/* CAUTION : Automatic generated code section for Specific Function Implementation: Start */
+//****************************************************************************
 
-
-/******************************************
-* APPSNS_SPEC_AirTemperature_SetCfg
-******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_SetCfg(void)
-{
-    t_eReturnState Ret_e = RC_OK;
-    //    Your code for AirTemperature_SetSnsCfg here
-
-
-
-    return Ret_e;
-}
-
-
-
-/******************************************
-* APPSNS_SPEC_AirTemperature_GetSigValue
-******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
-{
-    t_eReturnState Ret_e = RC_OK;
-    //    Your code for AirTemperature_GetSigValue here
-
-
-
-    return Ret_e;
-}
-
-
-
-/******************************************
-* APPSNS_SPEC_AirTemperature_FormatValue
-******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
-{
-    t_eReturnState Ret_e = RC_OK;
-    //    Your code for AirTemperature_FormatValSI here
-
-
-
-    return Ret_e;
-}
-
-/* CAUTION : Automatic generated code section for Specific Function Implementation: End */
-//********************************************************************************
+//*****************************************************************************
 //                      Local functions - Implementation
-//********************************************************************************
-           
+//*****************************************************************************
+         
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -117,8 +65,8 @@ t_eReturnState APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t
  *	@note   
  *
  *
- *	@param[in] 
- *	@param[out]
+ *	@params[in] 
+ *	@params[out]
  *	 
  *
  *
