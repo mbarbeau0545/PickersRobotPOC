@@ -35,7 +35,8 @@
         "fmk_mac.h": "c",
         "fmkmac_configpublic.h": "c",
         "appact_configpublic.h": "c",
-        "fmkmac_configprivate.h": "c"
+        "fmkmac_configprivate.h": "c",
+        "appsns_spec_airhumidity.h": "c"
     },
     "stm32-for-vscode.armToolchainPath": false
 }

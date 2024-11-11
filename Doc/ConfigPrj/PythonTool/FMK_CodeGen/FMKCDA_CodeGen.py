@@ -93,8 +93,8 @@ class FMKCDA_CodeGen():
             #make adc info
             var_adc_info += "    {\n" + f"        // ADC_{adc_index}\n" \
                         + f"        .BspInit_s.Instance = ADC{adc_index},\n" \
-                        + f"        .clock_e = {ENUM_FMKCPU_RCC_ROOT}_ADC{adc_index},\n" \
-                        + f"        .IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_ADC{adc_index}_IRQN,\n" \
+                        + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_ADC{adc_index},\n" \
+                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_ADC{adc_index}_IRQN,\n" \
                         + "    }\n"
             #make rank coutner 
             var_rank_counter += "    (t_uint8)1,\n"

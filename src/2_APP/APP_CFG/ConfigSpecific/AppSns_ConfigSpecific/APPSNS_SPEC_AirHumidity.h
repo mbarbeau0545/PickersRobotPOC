@@ -66,10 +66,17 @@
 
     /**
     *
-    * @brief     @ref t_cbAppSns_GetSnsValue
+    * @brief     @ref t_cbAppSns_GetSigValue
     *
     */
-    t_eReturnState APPSNS_SPEC_AirHumidity_GetValue(t_sAPPSNS_ValueInfo *f_SnsValue_ps);
+    t_eReturnState APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+
+    /**
+    *
+    * @brief     @ref t_cbAppSns_FormatValSI
+    *
+    */
+    t_eReturnState APPSNS_SPEC_AirHumidity_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            

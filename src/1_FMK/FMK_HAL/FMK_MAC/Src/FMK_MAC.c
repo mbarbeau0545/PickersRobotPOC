@@ -67,7 +67,7 @@ typedef struct
 typedef struct 
 {
     t_sFMKMAC_DmaChnlInfo channel_as[FMKMAC_DMA_CHANNEL_NB];        /**< @ref  t_sFMKMAC_DmaChnlInfo*/
-    const t_eFMKCPU_ClockPort clock_e;                              /**< constant to store the clock for each ADC */   
+    const t_eFMKCPU_ClockPort c_clock_e;                              /**< constant to store the clock for each ADC */   
     t_bool isConfigured_b;                                          /**< Flag channel is configured */
 } t_sFMKMAC_DmaInfo;
 /* CAUTION : Automatic generated code section : Start */
@@ -83,7 +83,7 @@ typedef struct
 // ********************************************************************
 t_sFMKMAC_DmaInfo g_DmaInfo_as[FMKMAC_DMA_CTRL_NB] = {
     { // DMA1_CONTROLLER
-        .clock_e = FMKCPU_RCC_CLK_DMA1,
+        .c_clock_e = FMKCPU_RCC_CLK_DMA1,
         .isConfigured_b = False,
         .channel_as = {
             [FMKMAC_DMA_CHANNEL_1] = {
@@ -270,7 +270,7 @@ t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
         channel_e = c_FmkMac_DmaRqstCfg_as[f_DmaType].Chnl_e;
         DmaChnl_ps = &g_DmaInfo_as[dmaCtrl_e].channel_as[channel_e];
         // configure hardware clock to access register
-        Ret_e = FMKCPU_Set_HwClock(g_DmaInfo_as[dmaCtrl_e].clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
+        Ret_e = FMKCPU_Set_HwClock(g_DmaInfo_as[dmaCtrl_e].c_clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         if(Ret_e == RC_OK)
         {// Configure Dma channel NVIC priority if not done yet
             Ret_e = FMKCPU_Set_NVICState(DmaChnl_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);

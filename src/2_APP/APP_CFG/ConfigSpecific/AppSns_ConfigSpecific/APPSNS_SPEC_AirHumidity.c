@@ -75,12 +75,27 @@ t_eReturnState APPSNS_SPEC_AirHumidity_SetCfg(void)
 
 
 /******************************************
-* APPSNS_SPEC_AirHumidity_GetValue
+* APPSNS_SPEC_AirHumidity_GetSigValue
 ******************************************/
-t_eReturnState APPSNS_SPEC_AirHumidity_GetValue(t_sAPPSNS_ValueInfo *f_SnsValue_ps)
+t_eReturnState APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
 {
     t_eReturnState Ret_e = RC_OK;
-    //    Your code for AirHumidity_GetSnsValue here
+    //    Your code for AirHumidity_GetSigValue here
+
+
+
+    return Ret_e;
+}
+
+
+
+/******************************************
+* APPSNS_SPEC_AirHumidity_FormatValue
+******************************************/
+t_eReturnState APPSNS_SPEC_AirHumidity_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
+{
+    t_eReturnState Ret_e = RC_OK;
+    //    Your code for AirHumidity_FormatValSI here
 
 
 

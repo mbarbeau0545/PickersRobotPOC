@@ -59,8 +59,8 @@ typedef struct
     ADC_HandleTypeDef BspInit_s;                            /**< Store the bsp information needed */
     t_eFMKCDA_HwAdcCfg HwCfg_e;                             /**< Store in which mode the ADC is currently set */
     t_sFMKCDA_ChnlInfo Channel_as[FMKCDA_ADC_CHANNEL_NB];   /**< Structure channel information for each channel */
-    const t_eFMKCPU_ClockPort clock_e;                      /**< constant to store the clock for each ADC */
-    const t_eFMKCPU_IRQNType IRQNType_e;                    /**< constant to store the IRQN for each ADC */
+    const t_eFMKCPU_ClockPort c_clock_e;                      /**< constant to store the clock for each ADC */
+    const t_eFMKCPU_IRQNType c_IRQNType_e;                    /**< constant to store the IRQN for each ADC */
     t_bool IsAdcConfigured_b;                               /**< Flag to know if the ADC is configured */
     t_bool IsAdcRunning_b;                                  /**< Flag to know if the Adc is running a conversion */
     t_bool flagErrDetected_b;                               /**< Flag in DMA/Interrupt mode Error Callback has been call */                 
@@ -79,14 +79,14 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
     {
         // ADC_1
         .BspInit_s.Instance = ADC1,
-        .clock_e = FMKCPU_RCC_CLK_ADC1,
-        .IRQNType_e = FMKCPU_NVIC_ADC1_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC1,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC1_IRQN,
     }
 };
 
 /**< Rank for each channel add for ADC */
-t_uint32 g_counterRank_au8[FMKCDA_ADC_NB] = {
-    (t_uint32)1,
+t_uint8 g_counterRank_au8[FMKCDA_ADC_NB] = {
+    (t_uint8)1,
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */
@@ -687,10 +687,10 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
                 Ret_e = RC_WARNING_NO_OPERATION;
         }
         // Set hardware clock register to enable
-        Ret_e = FMKCPU_Set_HwClock(g_AdcInfo_as[f_Adc_e].clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
+        Ret_e = FMKCPU_Set_HwClock(g_AdcInfo_as[f_Adc_e].c_clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         if(Ret_e == RC_OK)
         {
-            Ret_e = FMKCPU_Set_NVICState(g_AdcInfo_as[f_Adc_e].IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+            Ret_e = FMKCPU_Set_NVICState(g_AdcInfo_as[f_Adc_e].c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
         if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config

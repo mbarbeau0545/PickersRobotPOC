@@ -4,7 +4,7 @@ var searchData=
   ['setcfg_5fpcb_1',['SetCfg_pcb',['../structt__s_a_p_p_a_c_t___sys_act_func.html#a5f2af9f8e045680d84ef6f462b2b00f8',1,'t_sAPPACT_SysActFunc::SetCfg_pcb'],['../structt__s_a_p_p_s_n_s___sys_sns_func.html#a7ab2d023add644e476ada13c4926132a',1,'t_sAPPSNS_SysSnsFunc::SetCfg_pcb']]],
   ['setvalue_5fpcb_2',['SetValue_pcb',['../structt__s_a_p_p_a_c_t___sys_act_func.html#a57f14e8e737d833630ecf486f4da9b30',1,'t_sAPPACT_SysActFunc']]],
   ['sigerror_5fcb_3',['sigError_cb',['../structt__s_f_m_k_i_o___ana_pwm_sig_info.html#aa8ddc97c735cbb604699fee97fdecfa3',1,'t_sFMKIO_AnaPwmSigInfo::sigError_cb'],['../structt__s_f_m_k_i_o___in_freq_sig_info.html#aa8ddc97c735cbb604699fee97fdecfa3',1,'t_sFMKIO_InFreqSigInfo::sigError_cb'],['../structt__s_f_m_k_i_o___in_evnt_sig_info.html#aa8ddc97c735cbb604699fee97fdecfa3',1,'t_sFMKIO_InEvntSigInfo::sigError_cb']]],
-  ['snsvalue_5fs16_4',['SnsValue_s16',['../structt__s_a_p_p_s_n_s___value_info.html#a9843825a6165fdc7435a7a0e25f6f231',1,'t_sAPPSNS_ValueInfo']]],
+  ['snsvalue_5fs16_4',['SnsValue_f32',['../structt__s_a_p_p_s_n_s___value_info.html#a9843825a6165fdc7435a7a0e25f6f231',1,'t_sAPPSNS_SnsInfo']]],
   ['startfuncinterrupt_5fpcb_5',['StartFuncInterrupt_pcb',['../structt__s_f_m_k_c_p_u___tim_channel_func.html#a333610792b160c6cae30d80a5ae629b8',1,'t_sFMKCPU_TimChannelFunc']]],
   ['startfuncpoll_5fpcb_6',['StartFuncPoll_pcb',['../structt__s_f_m_k_c_p_u___tim_channel_func.html#a0e46c7669651ff214bd88d6ba0dd5e2c',1,'t_sFMKCPU_TimChannelFunc']]],
   ['state_5fcyclic_5fbusy_7',['STATE_CYCLIC_BUSY',['../_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5a92201e5fc4c4091779af8ca19c5e907f',1,'TypeCommon.h']]],
