@@ -1,0 +1,28 @@
+After identifier, CAN 2.0 and CAN-FD have a different action:
+• CAN 2.0 sends an RTR bit to precise the type of frame: data frame (RTR is dominant) or remote frame
+(RTR is recessive).
+• CAN-FD sends always a dominant RRS (reserved) as it only supports data frames.
+
+The features of the FDCAN on STM32 devices are listed below:
+• Compliant with CAN protocol version 2.0 part A, B and ISO 11898-1: 2015, -4
+• Accessible 10-Kbyte RAM memory to allocate up to 2560 words
+• Improved acceptance filtering
+• Two configurable receive FIFOs
+• Up to 64 dedicated receive buffers
+• Separate signaling on reception of high priority messages
+• Up to 32 dedicated transmit buffers
+• Configurable transmit FIFO and transmit queue
+• Configurable transmit event FIFO
+• Clock calibration unit
+• Transceiver delay compensation
+
+------------------Rx CAN------------------
+Possède 2 Rx FIFO -> up to 64 Element each, their position in the RAM are automatically and dynamically managed overwrite possibles
+Rx buffer dedicate -> 64 buffer of one element, user choose the buffer index , option to overwrite or not, user choose the buffer index 
+
+------------------Tx CAN------------------
+Can provide information about a transmission of message CAN on the CAN bus, store ID and timestamp 
+can send msg can from 
+           - 32 element Tx buffer 
+    and/or - 1 Tx queue (First to send = High  Priority)
+    or     - 1 Tx FIFO (first in fisrst out with index) 

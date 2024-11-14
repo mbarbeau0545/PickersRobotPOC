@@ -1,5 +1,0 @@
-- Recevoir et Envoyer des messages CAN via un bus CAN
-- Gérer les mails box et Fifo -> 
-    - Gestion des filtres ID pour chaque fifo 
-    - alternées les fifo pour chaque config msg CAN
-    - Définir un nombre max de msg configurable par fifo ?

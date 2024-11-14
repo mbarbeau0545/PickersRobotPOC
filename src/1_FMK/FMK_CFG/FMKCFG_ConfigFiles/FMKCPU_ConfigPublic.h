@@ -19,8 +19,8 @@
     // *                      Includes
     // ********************************************************************
     /* CAUTION : Automatic generated code section for CPU Configuration: Start */
-    #include "stm32f103x6.h"
-    #include "stm32f1xx_hal.h"
+    #include "stm32g4xx.h"
+    #include "stm32g4xx_hal.h"
     /* CAUTION : Automatic generated code section for CPU Configuration: End */
     // flag automatic generate code
     #include "TypeCommon.h"

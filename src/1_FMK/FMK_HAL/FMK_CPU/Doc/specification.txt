@@ -1,0 +1,6 @@
+POur rendre ce module indépendant de l'ecu, il faut faire comme paramètre d'enter$
+de chaque fonction public un enum FMKCPU_INTERRUPT_LINE_0_99 = PWM 
+                                  FMKCPU_INTERRUPT_LINE_100_199 = IC or ...
+                                  FMKCPU_INTERRUPT_LINE_200_299 = Event etc
+mapper ces enums sur des channels et timer dans la configPrivate en fonction de l'excel 
+dans les autres configPrivate utiliser les Timer et Channel ou INTerrupt Line ??

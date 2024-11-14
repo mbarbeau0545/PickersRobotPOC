@@ -1,0 +1,18 @@
+- Recevoir et Envoyer des messages CAN via un bus CAN
+- revevoir un ensemble de message CAN en fonction d'un filtre
+- Gérer les mails box et Fifo -> 
+    - Gestion des filtres ID pour chaque fifo 
+    - alternées les fifo pour chaque config msg CAN
+    - Définir un nombre max de msg configurable par fifo ?
+
+- Gestion des mask et des id's
+    - On peut configurer jussqu'à 8 filtres distincts en mode extend et 28 en modes standards sur les deux fifos
+    - Chaque Config de filtre peut se faire de 4 sortes différents 
+        - range -> une plage d'ID pour id standar et étendu 
+        - dual -> deux id sont acceptée
+        - mask -> on configure un id et un mask pour chaque index
+        - range_esi comme range mais (pour étendu il compara donc seulement les 3 premiers hexa 0x330 par exemple)
+
+    - On peut se servir des config filter mode mask ou range pour consacré un range à une ou plusieurs informations regroupé sous un module
+        exemple tout ce qui concerne la les roues (encoder + vitesse) = un module, le diag = un module etc etc
+    - 
