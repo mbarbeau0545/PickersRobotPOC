@@ -12,7 +12,7 @@
 // *                      Includes
 // ********************************************************************
 
-#include "stm32f0xx_hal.h"
+#include "stm32g4xx_hal.h"
 #include "./FMK_IO.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPrivate.h"
 #include "FMK_HAL/FMK_CDA/Src/FMK_CDA.h"

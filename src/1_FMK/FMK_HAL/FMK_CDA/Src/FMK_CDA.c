@@ -15,7 +15,7 @@
 #include "FMK_HAL/FMK_MAC/Src/FMK_MAC.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKCDA_ConfigPrivate.h"
-#include "stm32f0xx_hal.h"
+#include "stm32g4xx_hal.h"
 
 // ********************************************************************
 // *                      Defines

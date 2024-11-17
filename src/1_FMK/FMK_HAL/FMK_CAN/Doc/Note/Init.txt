@@ -98,6 +98,29 @@ FDCAN_TX_FIFO_OPERATION : Mode FIFO pour la transmission.
 FDCAN_TX_QUEUE_OPERATION : Mode file d’attente.
 Exemple : hfdcan.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
 
+
+---------------------------- Baudrate--------------------------------------------------------
+Clock FDCAN : La fréquence d'entrée de l'horloge pour le FDCAN, configurée dans le système d'horloge (par exemple, 64 MHz).
+
+NominalPrescaler : Divise la fréquence d'entrée de l'horloge pour obtenir une base de temps adaptée aux spécifications du bus CAN.
+
+NominalSyncJumpWidth (SJW) :
+
+Définit la largeur de saut de synchronisation.
+C'est une période pendant laquelle le nœud peut ajuster son horloge pour rester synchronisé avec le bus (par exemple, en cas de jitter).
+NominalTimeSeg1 :
+
+Combine le segment de propagation et le segment de phase 1.
+Définit le temps avant l'échantillonnage du bit CAN.
+NominalTimeSeg2 :
+
+Correspond au segment de phase 2.
+Définit le temps après l'échantillonnage pour effectuer des ajustements de synchronisation si nécessaire.
+SyncSeg (Segment de synchronisation) :
+
+Ce segment est fixe et toujours égal à 1 TQ.
+
+
 -------------- FD_CAN-----------------------------
 #include "stm32g4xx_hal.h"
 

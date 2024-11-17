@@ -26,3 +26,9 @@ can send msg can from
            - 32 element Tx buffer 
     and/or - 1 Tx queue (First to send = High  Priority)
     or     - 1 Tx FIFO (first in fisrst out with index) 
+
+
+
+--------------------- CLOCK----------------------
+pour le FDCAN, il faut activer plus d'horlohe dans le system_clock_config
+Tout les can ont la même RCC clock 
