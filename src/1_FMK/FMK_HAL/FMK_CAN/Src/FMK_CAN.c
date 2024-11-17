@@ -19,6 +19,8 @@
 #include "./FMK_CAN.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKCAN_ConfigPrivate.h"
+#include "FMK_CFG/FMKCFG_ConfigSpecific/FMKCANSPEC_CAN.h"
+#include "FMK_CFG/FMKCFG_ConfigSpecific/FMKCANSPEC_FDCAN.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -40,17 +42,7 @@
 
 /* CAUTION : Automatic generated code section : End */
 //-----------------------------TYPEDEF TYPES---------------------------//
-typedef struct 
-{
-    CAN_HandleTypeDef bspCan_s;
-    const t_eFMKCPU_IRQNType c_IRQNType_e;
-    const t_eFMKCPU_ClockPort c_clock_e;  
-    t_eFMKCAN_Errostatus Error_e;
-    t_eFMKCAN_FifoStatus fifoState_ae[FIFO_NB];
-    t_eFMKCAN_FifoStatus mailBoxState_ae[MAILBOX_NB];
-    t_bool isConfigured_b;
-    t_bool isActibe_b
-}
+
 // ********************************************************************
 // *                      Prototypes
 // ********************************************************************
@@ -58,7 +50,7 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-     
+t_sFMKCAN_NodeInfo g_NodeInfo_as[3];
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -80,9 +72,14 @@ typedef struct
  *	@note   
  *
  *
- *	@params[in] 
- *	@params[out]
+ *	@param[in] 
+ *	@param[out]
  *	 
  *
  *
  */
+void cacaboudin(void)
+{
+    g_NodeInfo_as[0].bspNode_s.Lock
+
+}
