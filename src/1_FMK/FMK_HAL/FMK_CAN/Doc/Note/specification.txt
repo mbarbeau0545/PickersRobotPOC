@@ -6,6 +6,12 @@
     pour ce faire, il faut renseigner un ID et un mask, combien on attend de byte, est-ce c'est un remote et data frame
     si tout les champs match, le module vous appelle avec l'id, l'état du bus, le nombre de données reçu ,et les données 
 
+# lorsqu'on essaye d'envoyer un message CAN et qu'on le met dans la fifo et que la fifo est pleine, il faut mettre à jour un flag pour dire que 
+il y a un message dans la TxQueue, il faut activer les callbacks de transmission complete pour réenvoyer les messagfes depuis les callbacks
+Les Callback stockes les messages sous la strcuture du bsp, prêt à être envoyé par soucis de rapidité.\n
+
+
+
 
 - Gérer les mails box et Fifo -> por l'instant pas de filtre, tout est acceptée
     - Gestion des filtres ID pour chaque fifo 
