@@ -19,8 +19,6 @@
 #include "./FMK_CAN.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKCAN_ConfigPrivate.h"
-#include "FMK_CFG/FMKCFG_ConfigSpecific/FMKCANSPEC_CAN.h"
-#include "FMK_CFG/FMKCFG_ConfigSpecific/FMKCANSPEC_FDCAN.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -50,7 +48,6 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-t_sFMKCAN_NodeInfo g_NodeInfo_as[3];
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -78,8 +75,3 @@ t_sFMKCAN_NodeInfo g_NodeInfo_as[3];
  *
  *
  */
-void cacaboudin(void)
-{
-    g_NodeInfo_as[0].bspNode_s.Lock
-
-}

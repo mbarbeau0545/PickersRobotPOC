@@ -22,7 +22,6 @@
     #include "../ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC.h"
     /* CAUTION : Automatic generated code section for Include: Start */
     #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_AirTemperature.h"
-    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_AirHumidity.h"
     /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
@@ -118,14 +117,12 @@
 
     /**< Variable for System Sensors functions*/
     const t_sAPPSNS_SysSnsFunc c_AppSns_SysSns_apf[APPSNS_SENSOR_NB] = {
-        {APPSNS_MEASTYPE_TEMPERATURE,                                 APPSNS_SPEC_AirTemperature_SetCfg,                          APPSNS_SPEC_AirTemperature_GetSigValue,                        APPSNS_SPEC_AirTemperature_FormatValue}, //APPSNS_SENSOR_AIRTEMPERATURE
-        {APPSNS_MEASTYPE_PRESSURE,                                    APPSNS_SPEC_AirHumidity_SetCfg,                             APPSNS_SPEC_AirHumidity_GetSigValue,                           APPSNS_SPEC_AirHumidity_FormatValue}, //APPSNS_SENSOR_AIRHUMIDITY
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_AirTemperature_SetCfg,                          APPSNS_SPEC_AirTemperature_GetSigValue,                        APPSNS_SPEC_AirTemperature_FormatValue}, //APPSNS_SENSOR_AIRTEMPERATURE
     };
 
     /**< Variable for Sensors Unity Management */
     const t_eAPPSNS_SnsMeasType c_AppSns_SnsMeasType_ae[APPSNS_SENSOR_NB] = {
-        APPSNS_MEASTYPE_TEMPERATURE,                                 // APPSNS_SENSOR_AIRTEMPERATURE
-        APPSNS_MEASTYPE_PRESSURE,                                    // APPSNS_SENSOR_AIRHUMIDITY
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_AIRTEMPERATURE
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

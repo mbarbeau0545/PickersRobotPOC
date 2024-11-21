@@ -27,8 +27,10 @@ The main idea of this project is no matter the MCU used the logic will always wo
 - Open the Hardware_Configuration file
 - Go to the General Info sheet
 - Put the hardware configuration as ask by the arrays on this sheet, the first array, you just have to copied/pasted the enum IRQn_Type in file stm32fXXYY
+- For RCC Clock, go to the stm32_hal_rcc.h file and find 'RCC_Exported_Macros', copy every clock in the excel array.
 - For timer/adc/dac/dma etc put the right infomation and keep it as so for example for timers it's 'timer' + '_' + 'number'
-- Go to the sheet FMKIO and filled all tables as asking, for PWM purpose be careful on which timer you choose, some of them are not meant to make pwm signal
+- Go to the sheet FMKIO and filled all tables as asking, Find The alternate Function in Datasheet, alll information are in the array
+	for PWM purpose be careful on which timer you choose, some of them are not meant to make pwm signal
 - Go to the sheet CPU and inform the timer used for event timers whhich means periodic timer
 - Save and Generate code from Doc/ConfigPrj/PythonToolmain.py file.
 

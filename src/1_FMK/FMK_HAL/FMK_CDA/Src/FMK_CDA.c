@@ -59,8 +59,8 @@ typedef struct
     ADC_HandleTypeDef BspInit_s;                            /**< Store the bsp information needed */
     t_eFMKCDA_HwAdcCfg HwCfg_e;                             /**< Store in which mode the ADC is currently set */
     t_sFMKCDA_ChnlInfo Channel_as[FMKCDA_ADC_CHANNEL_NB];   /**< Structure channel information for each channel */
-    const t_eFMKCPU_ClockPort clock_e;                      /**< constant to store the clock for each ADC */
-    const t_eFMKCPU_IRQNType IRQNType_e;                    /**< constant to store the IRQN for each ADC */
+    const t_eFMKCPU_ClockPort c_clock_e;                      /**< constant to store the clock for each ADC */
+    const t_eFMKCPU_IRQNType c_IRQNType_e;                    /**< constant to store the IRQN for each ADC */
     t_bool IsAdcConfigured_b;                               /**< Flag to know if the ADC is configured */
     t_bool IsAdcRunning_b;                                  /**< Flag to know if the Adc is running a conversion */
     t_bool flagErrDetected_b;                               /**< Flag in DMA/Interrupt mode Error Callback has been call */                 
@@ -85,13 +85,41 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
     {
         // ADC_1
         .BspInit_s.Instance = ADC1,
-        .clock_e = FMKCPU_RCC_CLK_ADC1,
-        .IRQNType_e = FMKCPU_NVIC_ADC1_IRQN,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC12,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC1_2_IRQN,
+    },
+    {
+        // ADC_2
+        .BspInit_s.Instance = ADC2,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC12,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC1_2_IRQN,
+    },
+    {
+        // ADC_3
+        .BspInit_s.Instance = ADC3,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC3_IRQN,
+    },
+    {
+        // ADC_4
+        .BspInit_s.Instance = ADC4,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC4_IRQN,
+    },
+    {
+        // ADC_5
+        .BspInit_s.Instance = ADC5,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC5_IRQN,
     }
 };
 
 /**< Rank for each channel add for ADC */
 t_uint8 g_counterRank_au8[FMKCDA_ADC_NB] = {
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
     (t_uint8)0,
 };
 
@@ -688,62 +716,84 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
     if (Ret_e == RC_OK)
     {
         bspAdcInit_s = &g_AdcInfo_as[f_Adc_e].BspInit_s.Init;
-        // Set shared Init varaible
+
+        // Configuration générique
         bspAdcInit_s->ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
         bspAdcInit_s->Overrun = ADC_OVR_DATA_OVERWRITTEN;
         bspAdcInit_s->Resolution = ADC_RESOLUTION_12B;
         bspAdcInit_s->DataAlign = ADC_DATAALIGN_RIGHT;
-        bspAdcInit_s->SamplingTimeCommon = ADC_SAMPLETIME_55CYCLES_5; // Assuming a default value
         bspAdcInit_s->EOCSelection = ADC_EOC_SEQ_CONV;
-        bspAdcInit_s->LowPowerAutoPowerOff = DISABLE;
-        
-        if(FMKMAC_ADC_DMA_MODE == DMA_CIRCULAR)
-        {
+
+        // Configuration spécifique aux familles
+        #ifdef FMKCPU_STM32_ECU_FAMILY_F
+            bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
+            bspAdcInit_s->SamplingTimeCommon = ADC_SAMPLETIME_55CYCLES_5; // Valeur par défaut
+        #elif defined FMKCPU_STM32_ECU_FAMILY_G
+            bspAdcInit_s->ScanConvMode = ADC_SCAN_ENABLE;
+            bspAdcInit_s->LowPowerAutoWait = DISABLE; // Désactiver l'attente automatique par défaut
+            bspAdcInit_s->OversamplingMode = DISABLE; // Désactiver le suréchantillonnage par défaut
+            bspAdcInit_s->SamplingMode = ADC_SAMPLING_MODE_NORMAL; // Mode d'échantillonnage normal
+            bspAdcInit_s->GainCompensation = 0; // Pas de compensation de gain par défaut
+
+            // Over samppling parameter
+            bspAdcInit_s->OversamplingMode = ENABLE;
+            bspAdcInit_s->Oversampling.Ratio = ADC_OVERSAMPLING_RATIO_16; // Exemple : suréchantillonnage x16
+            bspAdcInit_s->Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_4;
+            bspAdcInit_s->Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
+        #else
+            #error("Famille STM32 non supportée. Vérifiez la configuration.")
+        #endif
+
+        // Gestion du mode DMA
+        if (FMKMAC_ADC_DMA_MODE == DMA_CIRCULAR) {
             bspAdcInit_s->DMAContinuousRequests = ENABLE;
-        }
-        else // DMA_NORMAL
-        {
+        } else {
             bspAdcInit_s->DMAContinuousRequests = DISABLE;
         }
-        switch (f_HwAdcCfg_e)
+
+        // Gestion des modes ADC
+        switch (f_HwAdcCfg_e) 
         {
             case FMKCDA_ADC_CFG_PERIODIC_DMA:
-            {
-                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
                 bspAdcInit_s->ContinuousConvMode = ENABLE;
                 bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
                 break;
-            }
+
             case FMKCDA_ADC_CFG_SCAN_DMA:
-            {
-                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
                 bspAdcInit_s->ContinuousConvMode = ENABLE;
                 bspAdcInit_s->ExternalTrigConv = ADC_SOFTWARE_START;
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
                 break;
-            }
+
             case FMKCDA_ADC_CFG_TRIGGERED_DMA:
-            {
-                bspAdcInit_s->ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
                 bspAdcInit_s->DiscontinuousConvMode = DISABLE;
-                bspAdcInit_s->ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4; // Example trigger source
+
+                #ifdef FMKCPU_STM32_ECU_FAMILY_F
+                    bspAdcInit_s->ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC4; // Exemple de déclencheur
+                #elif defined FMKCPU_STM32_ECU_FAMILY_G
+                    //bspAdcInit_s->ExternalTrigConv = ADC_EXTERNALTRIG1_T21_CC2; // Exemple de déclencheur
+                #else
+                    #error("Famille STM32 non supportée. Vérifiez la configuration.")
+                #endif
+                
                 bspAdcInit_s->ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
                 break;
-            }
-            case FMKCDA_ADC_CFG_NB:
+
             default:
                 Ret_e = RC_WARNING_NO_OPERATION;
+                break;
         }
+
         // Set hardware clock register to enable
-        Ret_e = FMKCPU_Set_HwClock(g_AdcInfo_as[f_Adc_e].clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
+        Ret_e = FMKCPU_Set_HwClock(g_AdcInfo_as[f_Adc_e].c_clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         if(Ret_e == RC_OK)
         {
-            Ret_e = FMKCPU_Set_NVICState(g_AdcInfo_as[f_Adc_e].IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+            Ret_e = FMKCPU_Set_NVICState(g_AdcInfo_as[f_Adc_e].c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
         if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config
-            
+            #warning("Only ADC1 managed in DMARequest")
             Ret_e = FMKMAC_RqstDmaInit(FMKMAC_DMA_RQSTYPE_ADC1, (void *)&g_AdcInfo_as[f_Adc_e].BspInit_s);
             
         }
@@ -777,8 +827,29 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
     t_eReturnState Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     t_uint32 bspChannel_u32 = 0;
-
-    ADC_ChannelConfTypeDef BspChannelInit_s = {.SamplingTime = ADC_SAMPLETIME_13CYCLES_5}; // all channel ave this cfg
+        
+    #ifdef FMKCPU_STM32_ECU_FAMILY_F
+        ADC_ChannelConfTypeDef BspChannelInit_s = {
+            .SamplingTime = ADC_SAMPLETIME_13CYCLES_5, // Configuration spécifique à la famille F
+            .SingleDiff = ADC_SINGLE_ENDED,           // Single-ended par défaut
+            .OffsetNumber = ADC_OFFSET_NONE,         // Pas d'offset initial
+            .Offset = 0,                             // Offset à 0
+            .OffsetSign = ADC_OFFSET_SIGN_POSITIVE,  // Offset positif par défaut
+            .OffsetSaturation = DISABLE              // Saturation désactivée
+        };
+    #elif defined FMKCPU_STM32_ECU_FAMILY_G
+        ADC_ChannelConfTypeDef BspChannelInit_s = {
+            .SamplingTime = ADC_SAMPLETIME_47CYCLES_5, // Configuration spécifique à la famille G
+            .SingleDiff = ADC_SINGLE_ENDED,           // Single-ended par défaut
+            .OffsetNumber = ADC_OFFSET_NONE,         // Pas d'offset initial
+            .Offset = 0,                             // Offset à 0
+            .OffsetSign = ADC_OFFSET_SIGN_POSITIVE,  // Offset positif par défaut
+            .OffsetSaturation = DISABLE              // Saturation désactivée
+        };
+    #else
+        #error("Famille STM32 non supportée. Vérifiez la configuration.")
+    #endif
+    
 
     if (f_Adc_e > FMKCDA_ADC_NB)
     {
@@ -978,10 +1049,51 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
 /*********************************
  * HAL_ADC_ErrorCallback
  *********************************/
-void ADC1_IRQHandler(void) 
-{
-    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
-}
+#ifdef FMKCPU_STM32_ECU_FAMILY_F
+    /*********************************
+     * HAL_ADC_ErrorCallback
+     *********************************/
+    void ADC1_IRQHandler(void) 
+    {
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
+    }
+#elif defined FMKCPU_STM32_ECU_FAMILY_G
+    /*********************************
+     * ADC1_2_IRQHandler
+     *********************************/
+    void ADC1_2_IRQHandler(void) 
+    {
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_2].BspInit_s);
+    }
+    /*********************************
+     * ADC3_IRQHandler
+     *********************************/
+    void ADC3_IRQHandler(void) 
+    {
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_3].BspInit_s);
+    }
+    /*********************************
+     * ADC4_IRQHandler
+     *********************************/
+    void ADC4_IRQHandler(void) 
+    {
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_4].BspInit_s);
+    }
+    /*********************************
+     * ADC5_IRQHandler
+     *********************************/
+    void ADC5_IRQHandler(void) 
+    {
+        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_5].BspInit_s);
+    }
+#else 
+    #error("Famille STM32 non supportée. Vérifiez la configuration.")
+
+#endif
+
+
+
 //************************************************************************************
 // End of File
 //************************************************************************************

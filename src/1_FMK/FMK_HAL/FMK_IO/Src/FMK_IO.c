@@ -96,7 +96,9 @@ t_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB] = {
     FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_B
     FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_C
     FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_D
+    FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_E
     FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_F
+    FMKCPU_CLOCKPORT_OPE_DISABLE, // FMKIO_GPIO_PORT_G
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */
@@ -386,7 +388,7 @@ t_eReturnState FMKIO_Set_InDigSigCfg(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_Pull
         gpioPort_e = c_InDigSigBspMap_as[f_signal_e].HwGpio_e;
         Ret_e = s_FMKIO_Set_BspSigCfg(gpioPort_e,
                                       c_InDigSigBspMap_as[f_signal_e].HwPin_e,
-                                      (t_uint32)MODE_INPUT,
+                                      (t_uint32)FMKIO_BSP_MODE_INPUT,
                                       f_pull_e,
                                       FMKIO_SPD_MODE_LOW, // irrevelent for a input sig dig
                                       FMKIO_AF_UNUSED);
@@ -419,7 +421,7 @@ t_eReturnState FMKIO_Set_InAnaSigCfg(t_eFMKIO_InAnaSig f_signal_e,
     {
         Ret_e = s_FMKIO_Set_BspSigCfg(c_InAnaSigBspMap_as[f_signal_e].BasicCfg.HwGpio_e,
                                       c_InAnaSigBspMap_as[f_signal_e].BasicCfg.HwPin_e,
-                                      (t_uint32)MODE_ANALOG,
+                                      (t_uint32)FMKIO_BSP_MODE_ANALOG,
                                       f_pull_e,
                                       FMKIO_SPD_MODE_LOW, // irrevelent for a input sig dig
                                       FMKIO_AF_UNUSED);
@@ -1249,8 +1251,14 @@ static t_eReturnState s_FMKIO_Get_BspGpioPort(t_eFMKIO_GpioPort f_GpioPort_e, GP
             case FMKIO_GPIO_PORT_D:
                 *f_BspGpio_ps = GPIOD;
                 break;
+            case FMKIO_GPIO_PORT_E:
+                *f_BspGpio_ps = GPIOE;
+                break;
             case FMKIO_GPIO_PORT_F:
                 *f_BspGpio_ps = GPIOF;
+                break;
+            case FMKIO_GPIO_PORT_G:
+                *f_BspGpio_ps = GPIOG;
                 break;
             /* CAUTION : Automatic generated code section for GPIO switch case: End */
             case FMKIO_GPIO_PORT_NB:
@@ -1398,28 +1406,81 @@ static void s_FMKIO_BspRqst_InterruptMngmt(void)
 //********************************************************************************
 //                      HAL_Callback Implementation
 //********************************************************************************
-/*********************************
- * EXTI0_1_IRQHandler
- *********************************/
-void EXTI0_1_IRQHandler(void)
-{
-    s_FMKIO_BspRqst_InterruptMngmt();
-}
-/*********************************
- * EXTI2_3_IRQHandler
- *********************************/
-void EXTI2_3_IRQHandler(void)
-{
-    s_FMKIO_BspRqst_InterruptMngmt();
-}
-/*********************************
- * EXTI4_15_IRQHandler
- *********************************/
-void EXTI4_15_IRQHandler(void)
-{
-    s_FMKIO_BspRqst_InterruptMngmt();
-}
-
+#ifdef FMKCPU_STM32_ECU_FAMILY_F
+    /*********************************
+     * EXTI0_1_IRQHandler
+     *********************************/
+    void EXTI0_1_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI2_3_IRQHandler
+     *********************************/
+    void EXTI2_3_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI4_15_IRQHandler
+     *********************************/
+    void EXTI4_15_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+#elif defined FMKCPU_STM32_ECU_FAMILY_G
+    /*********************************
+     * EXTI0_IRQHandler
+     *********************************/
+    void EXTI0_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI1_IRQHandler
+     *********************************/
+    void EXTI1_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI2_IRQHandler
+     *********************************/
+    void EXTI2_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI3_IRQHandler
+     *********************************/
+    void EXTI3_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI4_IRQHandler
+     *********************************/
+    void EXTI4_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI9_5_IRQHandler
+     *********************************/
+    void EXTI9_5_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+    /*********************************
+     * EXTI15_10_IRQHandler
+     *********************************/
+    void EXTI15_10_IRQHandler(void)
+    {
+        s_FMKIO_BspRqst_InterruptMngmt();
+    }
+#else 
+    #error('ecu family is currently not available')
+#endif
 //************************************************************************************
 // End of File
 //************************************************************************************

@@ -30,8 +30,7 @@
     /* Enum for Sensors list */
     typedef enum
     {
-        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Température local de l'air */
-        APPSNS_SENSOR_AIRHUMIDITY,              /**< Humidité de l'air */
+        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Tempï¿½rature local de l'air */
     
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
@@ -58,7 +57,8 @@
     
         APPSNS_MEASTYPE_NB,
     } t_eAPPSNS_SnsMeasType;
-
+/* Enum for sensor conversion list */
+    
     /* CAUTION : Automatic generated code section for Enum: End */
 	
     //-----------------------------ENUM TYPES-----------------------------//

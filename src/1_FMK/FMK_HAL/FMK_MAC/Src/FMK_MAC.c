@@ -93,22 +93,22 @@ t_sFMKMAC_DmaInfo g_DmaInfo_as[FMKMAC_DMA_CTRL_NB] = {
             },
             [FMKMAC_DMA_CHANNEL_2] = {
                 .bspDma_ps = { .Instance = DMA1_Channel2 }, 
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_3] = {
                 .bspDma_ps = { .Instance = DMA1_Channel3 }, 
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_3_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL3_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_4] = {
                 .bspDma_ps = { .Instance = DMA1_Channel4 },  
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             },
             [FMKMAC_DMA_CHANNEL_5] = {
                 .bspDma_ps = { .Instance = DMA1_Channel5 },  
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_5_IRQN,
+                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_IRQN,
                 .chnlErr_e = FMKMAC_ERRSTATE_OK,
             }
         }
