@@ -21,7 +21,9 @@
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPrivate.h"
 
+
 #include "Library/Queue/Src/LIBQueue.h"
+#include "Library/SafeMem/SafeMem.h"
 #include "stm32g4xx_hal.h"
 // ********************************************************************
 // *                      Defines
@@ -44,6 +46,8 @@ typedef enum
 
     FMKFDCAN_BSP_RX_CB_FIFO_0,
     FMKFDCAN_BSP_RX_CB_FIFO_1,
+
+    FMKFDCAN_BSP_CB_PROTOCOL_ERR,
 
     FMKFDCAN_BSP_CB_NB
 } t_eFMKFDCAN_BspCallbackList;
@@ -81,8 +85,13 @@ typedef struct
 
 } t_sFMKFDCAN_NodeInfo;
 
-// Création d'un alias de type pour simplifier l'utilisation
-typedef FDCAN_RxHeaderTypeDef t_sFMKFDCAN_RxItemBuffer;
+
+typedef struct 
+{
+    FDCAN_RxHeaderTypeDef bspRxItem_s;
+    t_uint8 data_ua8[FMKFDCAN_DLC_8];
+} t_sFMKFDCAN_RxItemBuffer;
+
 
 typedef struct 
 {
@@ -115,28 +124,27 @@ typedef struct
 static t_eCyclicFuncState g_Modulestate_e = STATE_CYCLIC_WAITING;
 /* Store information about node*/
 t_sFMKFDCAN_NodeInfo g_NodeInfo_as[FMKFDCAN_NODE_NB];
-
+/*------------------------Tx FIFO MANAGEMENT-------------------------------*/
 /**< Transmission software Buffer*/
 t_sFMKFDCAN_TxItemBuffer g_TxSoftBuffer_as[FMKFDCAN_NODE_NB][FMKFDCAN_TX_SOFT_BUFF_SIZE];
 /**< Transmission Queue management*/
 t_sLIBQUEUE_QueueCore g_TxSoftQueue_as[FMKFDCAN_NODE_NB];
-
-/**< Reception software Buffer*/
-t_sFMKFDCAN_RxItemBuffer g_RxSoftBuffer_as[FMKFDCAN_NODE_NB][FMKFDCAN_RX_SOFT_BUFF_SIZE];
+/*------------------------WITH CALLBACK (EVENT) MANAGMENT-------------------------------*/
+t_sFMKFDCAN_RxItemBuffer g_RxBufferEvnt_as[FMKFDCAN_NODE_NB][FMKFDCAN_RX_SOFT_BUFF_SIZE];
 /**< Reception Queue management*/
 t_sLIBQUEUE_QueueCore g_RxSoftQueue_as[FMKFDCAN_NODE_NB];
-
 /**< User Item Registration Managment */
-t_sFMKFDCAN_UserItemRegister g_UserRegister_as[FMKFDCAN_NODE_NB][FMKFDCAN_RX_NUM_REGISTRATION];
+t_sFMKFDCAN_UserItemRegister g_UserRegisterEvnt_as[FMKFDCAN_NODE_NB][FMKFDCAN_RX_NUM_REGISTRATION_EVNT];
 /**< Save the number of register already received */
-t_uint8 g_CounterUserRegister_ua8[FMKFDCAN_NODE_NB];
+t_uint8 g_CtrUserRegisterEvnt_ua8[FMKFDCAN_NODE_NB];
+
 
 /**< Hardware Interrupt Management */
 t_eFMKFDCAN_BspStatusCb g_BspCbMngmt_ae[FMKFDCAN_NODE_NB][FMKFDCAN_BSP_CB_NB];
-
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
+static t_eReturnCode s_FMKFDCAN_MspInit(void);
 /**
  *	@brief
  *	@note   
@@ -200,7 +208,35 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
  *
  *
  */
-static t_eReturnCode s_FMKFDCAN_PreOpe(void);
+static t_eReturnCode s_FMKFDCAN_RetrieveRxItem(t_eFMKFDCAN_NodeList f_Node_e,
+                                                  t_eFMKFDCAN_HwRxFifoList f_RxFifo_e,
+                                                  FDCAN_RxHeaderTypeDef * f_bspRxItem_ps,
+                                                  t_uint8 * f_bspData_pu8);
+
+/**
+ *	@brief
+ *	@note       Activate Interrupt line 
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_PreOperational(void);
+/**
+ *	@brief
+ *	@note       Activate Interrupt line 
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_Operational(void);
 /**
  *	@brief
  *	@note       
@@ -213,6 +249,48 @@ static t_eReturnCode s_FMKFDCAN_PreOpe(void);
  *
  */
 static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg f_TxItemCfg_s, FDCAN_TxHeaderTypeDef *f_bspTxItem_ps);
+/**
+ *	@brief
+ *	@note       
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_CopyBspRxItem(t_eFMKFDCAN_NodeList f_Node_e,
+                                              FDCAN_RxHeaderTypeDef *f_bspRxItem_ps,
+                                              t_sFMKFDCAN_RxItemEvent * f_RxItem_ps,
+                                              t_uint8 * f_bspData_pu8);
+/**
+ *	@brief
+ *	@note       
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
+                                                     t_sFMKFDCAN_UserItemRegister * f_NodeRegister_pas,
+                                                     t_uint8 f_RegistrationCtr_u8,
+                                                     t_uint8 * f_idxUserRegister_pu8);
+/**
+ *	@brief
+ *	@note       
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_GetRxItemFromSoftBuffer(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEvent * f_RxItem_ps);
 /**
  *	@brief
  *	@note       
@@ -347,6 +425,30 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
  *
  */
 static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_BitRateSwitchStatus f_Dlc_e, t_uint32 *f_BspDlc_pu32);
+/**
+ *	@brief
+ *	@note       
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_BitRateSwitchStatus *f_Dlc_pe);
+/**
+ *	@brief
+ *	@note       
+ *
+ *
+ *	@param[in] 
+ *	@param[in]
+ *	 
+ *
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_GetBspFDFormat(t_eFMKFDCAN_FrameFormat f_formatType_e, t_uint32 *f_BspFormatType_pu32);
 //********************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -388,7 +490,7 @@ t_eReturnCode FMKFDCAN_Init(void)
         g_NodeInfo_as[idxNode_u8].isNodeConfigured_b          = (t_bool)False;
         
         // Init countor register 
-        g_CounterUserRegister_ua8[idxNode_u8] = (t_uint8)0;
+        g_CtrUserRegisterEvnt_ua8[idxNode_u8] = (t_uint8)0;
 
         // Init Rx, Tx Management 
         for(idxBspCallback_u8 = (t_uint8)0 ; idxBspCallback_u8 < FMKFDCAN_BSP_CB_NB ; idxBspCallback_u8++)
@@ -399,15 +501,20 @@ t_eReturnCode FMKFDCAN_Init(void)
         // Init Tx, Rx Software Queue
         for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_RX_SOFT_BUFF_SIZE ; LLI_u8++)
         {// Rx buffer
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].BitRateSwitch = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].DataLength = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].ErrorStateIndicator = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].FDFormat = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].Identifier = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].IdType = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].IsFilterMatchingFrame = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].RxFrameType = (t_uint32)0;
-            g_RxSoftBuffer_as[idxNode_u8][LLI_u8].RxTimestamp = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.BitRateSwitch = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.DataLength = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.ErrorStateIndicator = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.FDFormat = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.Identifier = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IdType = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IsFilterMatchingFrame = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxFrameType = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxTimestamp = (t_uint32)0;
+            // init buffer data
+            for (LLI2_u8 = (t_uint8)0; LLI2_u8 < FMKFDCAN_DLC_8 ; LLI2_u8++)
+            {
+                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].data_ua8[LLI2_u8] = (t_uint8)0;
+            }
         }
 
         for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_TX_SOFT_BUFF_SIZE ; LLI_u8++)
@@ -428,16 +535,16 @@ t_eReturnCode FMKFDCAN_Init(void)
             }
         }
         // Initialize RxItem Registration 
-        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKFDCAN_RX_NUM_REGISTRATION ; LLI_u8++)
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKFDCAN_RX_NUM_REGISTRATION_EVNT ; LLI_u8++)
         {
-            g_UserRegister_as[idxNode_u8][LLI_u8].itemId_s.Identifier_u32 = (t_uint32)0;
-            g_UserRegister_as[idxNode_u8][LLI_u8].itemId_s.FramePurpose_e = FMKFDCAN_FRAME_TYPE_NB;
-            g_UserRegister_as[idxNode_u8][LLI_u8].itemId_s.IdType_e = FMKFDCAN_IDTYPE_NB;
-            g_UserRegister_as[idxNode_u8][LLI_u8].maskId_u32 = (t_uint32)0;
-            g_UserRegister_as[idxNode_u8][LLI_u8].rcvItem_cb = (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.Identifier_u32 = (t_uint32)0;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_NB;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.IdType_e = FMKFDCAN_IDTYPE_NB;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].maskId_u32 = (t_uint32)0;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].rcvItem_cb = (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION;
         }
         // Configure the Rx, Tx Queue
-        RxBufferCfg_s.bufferHead_pv = g_RxSoftBuffer_as[idxNode_u8];
+        RxBufferCfg_s.bufferHead_pv = g_RxBufferEvnt_as[idxNode_u8];
         // Configure Rx Buffer Queue
         Ret_e = LIBQUEUE_Create(&g_RxSoftQueue_as[idxNode_u8], RxBufferCfg_s);
         // Configure Tx Buffer Queue
@@ -464,7 +571,79 @@ t_eReturnCode FMKFDCAN_Init(void)
 
 /***********************
 * FMKFDCAN_InitDriver
-***********************/
+************************/
+t_eReturnCode FMKFDCAN_Cyclic(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    switch (g_Modulestate_e)
+    {
+        case STATE_CYCLIC_PREOPE:
+        {
+            Ret_e = s_FMKFDCAN_PreOperational();
+            if(Ret_e  == RC_OK)
+            {
+                g_Modulestate_e = STATE_CYCLIC_WAITING;
+            }
+        }
+        case STATE_CYCLIC_WAITING:
+        {
+            // nothing to do just wait AppSys Signal
+            break;
+        }
+        case STATE_CYCLIC_OPE:
+        {
+            Ret_e = s_FMKFDCAN_Operational();
+            if(Ret_e < RC_OK)
+            {
+                g_Modulestate_e = STATE_CYCLIC_ERROR;
+            }
+            break;
+        }
+        
+        case STATE_CYCLIC_ERROR:
+        {
+            break;
+        }
+        case STATE_CYCLIC_BUSY:
+        default:
+            Ret_e = RC_OK;
+            break;
+    }
+    return Ret_e;
+}
+
+/*********************************
+ * FMKCDA_GetState
+ *********************************/
+t_eReturnCode FMKFDCAN_GetState(t_eCyclicFuncState *f_State_pe)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    
+    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        *f_State_pe = g_Modulestate_e;
+    }
+
+    return Ret_e;
+}
+
+/*********************************
+ * FMKCDA_SetState
+ *********************************/
+t_eReturnCode FMKFDCAN_SetState(t_eCyclicFuncState f_State_e)
+{
+
+    g_Modulestate_e = f_State_e;
+    return RC_OK;
+}
+/***********************
+* FMKFDCAN_InitDriver
+************************/
 t_eReturnCode FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s)
 {
     t_eReturnCode Ret_e = RC_OK;
@@ -476,6 +655,8 @@ t_eReturnCode FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_Drv
     }
     if(Ret_e == RC_OK)
     {
+        Ret_e = s_FMKFDCAN_MspInit();
+
         Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
         if(Ret_e == RC_OK)
         {
@@ -515,21 +696,21 @@ t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFM
     {
         Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
     }
-    if(g_CounterUserRegister_ua8[f_Node_e] >= FMKFDCAN_RX_NUM_REGISTRATION)
+    if(g_CtrUserRegisterEvnt_ua8[f_Node_e] >= FMKFDCAN_RX_NUM_REGISTRATION_EVNT)
     {
         Ret_e = RC_ERROR_LIMIT_REACHED;
     }
     if(Ret_e == RC_OK)
     {
-        idxCounter_u8 = g_CounterUserRegister_ua8[f_Node_e];
-        g_UserRegister_as[f_Node_e][idxCounter_u8].itemId_s.Identifier_u32 = f_RxItemCfg_s.ItemId_s.Identifier_u32;
-        g_UserRegister_as[f_Node_e][idxCounter_u8].itemId_s.FramePurpose_e = f_RxItemCfg_s.ItemId_s.FramePurpose_e;
-        g_UserRegister_as[f_Node_e][idxCounter_u8].itemId_s.IdType_e = f_RxItemCfg_s.ItemId_s.IdType_e;
-        g_UserRegister_as[f_Node_e][idxCounter_u8].maskId_u32 = f_RxItemCfg_s.maskId_u32;
-        g_UserRegister_as[f_Node_e][idxCounter_u8].rcvItem_cb = f_RxItemCfg_s.callback_cb;
+        idxCounter_u8 = g_CtrUserRegisterEvnt_ua8[f_Node_e];
+        g_UserRegisterEvnt_as[f_Node_e][idxCounter_u8].itemId_s.Identifier_u32 = f_RxItemCfg_s.ItemId_s.Identifier_u32;
+        g_UserRegisterEvnt_as[f_Node_e][idxCounter_u8].itemId_s.FramePurpose_e = f_RxItemCfg_s.ItemId_s.FramePurpose_e;
+        g_UserRegisterEvnt_as[f_Node_e][idxCounter_u8].itemId_s.IdType_e = f_RxItemCfg_s.ItemId_s.IdType_e;
+        g_UserRegisterEvnt_as[f_Node_e][idxCounter_u8].maskId_u32 = f_RxItemCfg_s.maskId_u32;
+        g_UserRegisterEvnt_as[f_Node_e][idxCounter_u8].rcvItem_cb = f_RxItemCfg_s.callback_cb;
 
         // update countor Register
-        g_CounterUserRegister_ua8[f_Node_e] += (t_uint8)1;
+        g_CtrUserRegisterEvnt_ua8[f_Node_e] += (t_uint8)1;
     }
 
     return Ret_e;
@@ -543,7 +724,6 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     t_eReturnCode Ret_e = RC_OK;
     FDCAN_TxHeaderTypeDef bspTxItem_s;
     t_sFMKFDCAN_TxItemBuffer SoTxitem_s;
-    HAL_StatusTypeDef bspRet_e = HAL_OK;
 
     t_uint32 fifoLevel_u32 = 0;
 
@@ -554,7 +734,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     }
     if(g_Modulestate_e != STATE_CYCLIC_OPE)
     {
-        Ret_e = RC_ERROR_BUSY;
+        Ret_e = RC_WARNING_BUSY;
     }
     if(Ret_e == RC_OK)
     {
@@ -580,7 +760,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
                 // update flag Tx Item to send
                 if(Ret_e == RC_OK)
                 {
-                    g_NodeInfo_as[f_Node_e].Flag_s.TxQueuePending_b |= True;
+                    g_NodeInfo_as[f_Node_e].Flag_s.TxQueuePending_b = True;
                     // Activate Notification 
                     Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(f_Node_e, 
                                                             FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
@@ -596,21 +776,156 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     }
     return Ret_e;
 }
+
+/*********************************
+* FMKFDCAN_GetRxItem
+*********************************/
+t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEvent *f_RxItem_ps)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    //t_uint8 LLI_u8;
+    //t_sFMKFDCAN_RxItemBuffer *itemBuff_ps;
+
+    if(f_RxItem_ps == (t_sFMKFDCAN_RxItemEvent * )NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(g_Modulestate_e != STATE_CYCLIC_OPE)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
+    if((g_NodeInfo_as[f_Node_e].isNodeConfigured_b == (t_bool)False)
+    || g_NodeInfo_as[f_Node_e].isNodeActive_b == (t_bool)False)
+    {
+        Ret_e = RC_ERROR_WRONG_STATE;
+    }
+    if(Ret_e == RC_OK)
+    {
+        #warning('Not Implemented')
+    }
+
+}
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
+static t_eReturnCode s_FMKFDCAN_MspInit(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    
+    /* Enable the peripheral clock */
+    __HAL_RCC_FDCAN_CLK_ENABLE();
+
+    /* Enable GPIO clocks */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* Configure FDCAN TX (PA12) and RX (PA11) pins */
+    GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_11;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF9_FDCAN1;  // Alternate Function for FDCAN1
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    return RC_OK;
+    
+}
+/*********************************
+* s_FMKFDCAN_PreOperational
+*********************************/
+static t_eReturnCode s_FMKFDCAN_PreOperational(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    HAL_StatusTypeDef bspRet_e;
+    t_uint8 idxNode_u8;
+    // Activate Notification 
+
+    for(idxNode_u8 = (t_uint8)0; idxNode_u8 < FMKFDCAN_NODE_NB ; idxNode_u8++)
+    {
+        if(g_NodeInfo_as[idxNode_u8].isNodeConfigured_b ==(t_bool)True)
+        {
+            bspRet_e = HAL_FDCAN_Start(&g_NodeInfo_as[idxNode_u8].bspNode_s);
+            if(bspRet_e != HAL_OK)
+            {
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+            else 
+            {        
+                Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                        FMKFDCAN_BSP_RX_CB_FIFO_0,
+                                                        FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                            FMKFDCAN_BSP_RX_CB_FIFO_1,
+                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+
+                }
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                            FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
+                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+                }
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                            FMKFDCAN_BSP_CB_PROTOCOL_ERR,
+                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+                }
+                if(Ret_e == RC_OK)
+                {
+                    g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
+                }
+            }
+        }
+    }
+    
+    return Ret_e;
+}
+
+/*********************************
+* s_FMKFDCAN_Operational
+*********************************/
+static t_eReturnCode s_FMKFDCAN_Operational(void)
+{
+    t_eReturnCode Ret_e =  RC_OK;
+    t_uint8 idxNode_u8;
+    t_sFMKFDCAN_NodeInfo *nodeInfo_ps;
+
+    for(idxNode_u8 = (t_uint8)0 ; idxNode_u8 < FMKFDCAN_NODE_NB ; idxNode_u8++)
+    {
+        if(g_NodeInfo_as[idxNode_u8].isNodeConfigured_b == (t_bool)True)
+        {
+            nodeInfo_ps = &g_NodeInfo_as[idxNode_u8];
+            // check flags for this Node
+            if(nodeInfo_ps->Flag_s.ErrorDetected_b == (t_bool)True)
+            {
+                // PerformDiagnosticEvent
+            }
+            else if(nodeInfo_ps->Flag_s.RxQueuePending_b == (t_bool)True)
+            {
+                // Manage Calling some Callback until Qeuue is off or MAX COUNTOR attien
+            }
+            else if(nodeInfo_ps->Flag_s.TxQueuePending_b == (t_bool)True)
+            {
+                // see if flag are already been reach 
+            }
+        }
+    }
+
+    return Ret_e;
+}
 /*****************************
 * s_FMKFDCAN_BspTxEventCb
 ******************************/
 static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
                                               t_uint32 f_EvntCbInfo_u32, 
-                                              t_eFMKFDCAN_BspStatusCb f_bspTxCallback_e)
+                                              t_eFMKFDCAN_BspCallbackList f_bspTxCallback_e)
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 TxQueueSize_u8;
     t_uint8 idxNode_u8;
-    t_uint8 msgSendCount_u8 = (t_uint8)0;
     t_sFMKFDCAN_TxItemBuffer SoftTxItem_s;
 
     if(f_bspInfo_ps == (FDCAN_HandleTypeDef *)NULL)
@@ -692,6 +1007,7 @@ static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
 
                 case FMKFDCAN_BSP_RX_CB_FIFO_0:
                 case FMKFDCAN_BSP_RX_CB_FIFO_1:
+                case FMKFDCAN_BSP_CB_PROTOCOL_ERR:
                 default:
                     break;
             }
@@ -704,10 +1020,17 @@ static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
 ******************************/
 static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
                                     t_uint32 f_EvntCbInfo_u32, 
-                                    t_eFMKFDCAN_BspStatusCb f_bspRxCallback_e)
+                                    t_eFMKFDCAN_BspCallbackList f_bspRxCallback_e)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxNode_u8;
+    t_uint8 LLI_u8;
+    t_uint8 bspData_ua8[FMKFDCAN_64_BYTES];
+    t_uint8 idxUserRegister_u8 = 0;
+    /**< Structure that contains Bsp Information */
+    t_sFMKFDCAN_RxItemBuffer RxItemBuffer_s;
+    t_eFMKFDCAN_HwRxFifoList RxFifo_e;
+    t_sFMKFDCAN_RxItemEvent RxItemEvent_s;
 
     if(f_bspInfo_ps == (FDCAN_HandleTypeDef *)NULL)
     {
@@ -727,11 +1050,15 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
             switch(f_bspRxCallback_e)
             {
                 case FMKFDCAN_BSP_RX_CB_FIFO_0:
+                    RxFifo_e = FMKFDCAN_HW_RX_FIFO_0;
+                   
+                    break;
                 case FMKFDCAN_BSP_RX_CB_FIFO_1:
-                {
-
+                {   
+                    RxFifo_e = FMKFDCAN_HW_RX_FIFO_1;
                     break;
                 }
+                case FMKFDCAN_BSP_CB_PROTOCOL_ERR:
                 case FMKFDCAN_BSP_TX_CB_EVENT:
                 case FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE:
                 case FMKFDCAN_BSP_TX_CB_BUFFER_ABORT:
@@ -740,10 +1067,104 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                 default: 
                     break;
             }
-            
+            if(RxFifo_e != FMKFDCAN_HW_RX_FIFO_NB)
+            {
+                switch(f_EvntCbInfo_u32)
+                {
+                    case FDCAN_IT_RX_FIFO0_FULL:
+                    case FDCAN_IT_RX_FIFO1_FULL:
+                    {
+                        for(LLI_u8 = (t_uint8)0; (LLI_u8 < FMKFDCAN_MAX_ITEM_ON_QUEUE_PER_IT) 
+                            && (Ret_e == RC_OK) ; LLI_u8++)
+                        {
+                            Ret_e = s_FMKFDCAN_RetrieveRxItem(idxNode_u8, 
+                                                            RxFifo_e,
+                                                            &RxItemBuffer_s.bspRxItem_s,
+                                                            bspData_ua8);
+                            // Copy into buffer only if DataLenght <= 8                                
+                            if((Ret_e == RC_OK )
+                            &&( RxItemBuffer_s.bspRxItem_s.DataLength <= FDCAN_DLC_BYTES_8))
+                            {
+                                Ret_e = SafeMem_memcpy(RxItemBuffer_s.data_ua8, bspData_ua8, (t_uint16)FMKFDCAN_DLC_8);
+                                if(Ret_e == RC_OK)
+                                {
+                                    Ret_e = LIBQUEUE_WriteElement(&g_RxSoftQueue_as[idxNode_u8], &RxItemBuffer_s);
+                                }
+                            }
+                        }
+                        // Flag RxFrame Pending 
+                        g_NodeInfo_as[idxNode_u8].Flag_s.RxQueuePending_b = (t_bool)True;
+                        break;
+                    }
+                    
+                    case FDCAN_IT_RX_FIFO0_NEW_MESSAGE:
+                    case FDCAN_IT_RX_FIFO1_NEW_MESSAGE:
+                    {
+                        Ret_e = s_FMKFDCAN_RetrieveRxItem(idxNode_u8, 
+                                                            RxFifo_e,
+                                                            &RxItemBuffer_s.bspRxItem_s,
+                                                            RxItemBuffer_s.data_ua8);
+                        if(Ret_e == RC_OK)
+                        {
+                            Ret_e = s_FMKFDCAN_CopyBspRxItem(idxNode_u8,
+                                                            &RxItemBuffer_s.bspRxItem_s, 
+                                                            &RxItemEvent_s,
+                                                            RxItemBuffer_s.data_ua8);
+                        }
+                        if(Ret_e == RC_OK)
+                        {
+                            // Find in Registration the Registerindex of the ItemId
+                            Ret_e = s_FMKFDCAN_GetUserRegisterIndex(RxItemBuffer_s.bspRxItem_s.Identifier,
+                                                                    g_UserRegisterEvnt_as[idxNode_u8],
+                                                                    g_CtrUserRegisterEvnt_ua8[idxNode_u8],
+                                                                    &idxUserRegister_u8);
+                        }
+                        if(Ret_e == RC_OK)
+                        {
+                            g_UserRegisterEvnt_as[idxNode_u8][idxUserRegister_u8].rcvItem_cb(RxItemEvent_s, 0);
+                            #warning('No diagnostic on NodeStatus')
+                        }
+                        break;
+                    }
+                    case FDCAN_IT_RX_FIFO0_MESSAGE_LOST:
+                    case FDCAN_IT_RX_FIFO1_MESSAGE_LOST:
+                    {
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
         }
-
     }
+}
+
+/*****************************
+* s_FMKFDCAN_RetrieveRxItem
+******************************/
+static t_eReturnCode s_FMKFDCAN_RetrieveRxItem(t_eFMKFDCAN_NodeList f_Node_e,
+                                                  t_eFMKFDCAN_HwRxFifoList f_RxFifo_e,
+                                                  FDCAN_RxHeaderTypeDef * f_bspRxItem_ps,
+                                                  t_uint8 * f_bspData_pu8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
+    t_uint32 bspRxFifo_u32;
+
+    Ret_e = s_FMKFDCAN_GetBspFifoId(f_RxFifo_e, &bspRxFifo_u32);
+    if(Ret_e == RC_OK)
+    {
+        bspRet_e = HAL_FDCAN_GetRxMessage(&g_NodeInfo_as[f_Node_e].bspNode_s, 
+                                bspRxFifo_u32,
+                                &f_bspRxItem_ps,
+                                f_bspData_pu8);
+
+        if(bspRet_e != HAL_OK)
+        {
+            Ret_e = RC_ERROR_WRONG_RESULT;
+        }
+    }
+    return Ret_e;
 }
 /*****************************
 * s_FMKFDCAN_SetBspNodeInit
@@ -811,6 +1232,57 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
 }
 
 /*********************************
+* s_FMKFDCAN_CopyBspRxItem
+*********************************/
+static t_eReturnCode s_FMKFDCAN_CopyBspRxItem(t_eFMKFDCAN_NodeList f_Node_e,
+                                              FDCAN_RxHeaderTypeDef *f_bspRxItem_ps,
+                                              t_sFMKFDCAN_RxItemEvent * f_RxItem_ps,
+                                              t_uint8 * f_bspData_pu8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_eFMKFDCAN_DataLength Dlc_e;
+
+    if(f_RxItem_ps == (t_sFMKFDCAN_RxItemEvent *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        
+        // assemble the User Message
+        f_RxItem_ps->ItemId_s.Identifier_u32 = f_bspRxItem_ps->Identifier;
+        f_RxItem_ps->timeStamp_32 = f_bspRxItem_ps->RxTimestamp;
+        if(f_bspRxItem_ps->RxFrameType == FDCAN_REMOTE_FRAME)
+        {
+            f_RxItem_ps->ItemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_REMOTE;
+            f_RxItem_ps->CanMsg_s.data_pu8 = NULL;
+            f_RxItem_ps->CanMsg_s.Dlc_e = FMKFDCAN_DLC_0;
+            f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+        }
+        else
+        {
+            Ret_e = s_FMKFDCAN_GetDlcFromBsp(f_bspRxItem_ps->DataLength, &Dlc_e);
+            if(Ret_e == RC_OK)
+            {
+                f_RxItem_ps->ItemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_DATA;
+                f_RxItem_ps->CanMsg_s.data_pu8 = f_bspData_pu8;
+                f_RxItem_ps->CanMsg_s.Dlc_e = Dlc_e;
+                f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+            }  
+        }
+        if(f_bspRxItem_ps->IdType == FDCAN_EXTENDED_ID)
+        {
+            f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_EXTENDED;
+        }
+        else 
+        {
+            f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_STANDARD;
+        }
+
+        return Ret_e;
+    }
+}
+/*********************************
 * FMKFDCAN_SendTxItem
 *********************************/
 static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg f_TxItemCfg_s, FDCAN_TxHeaderTypeDef *f_bspTxItem_ps)
@@ -829,7 +1301,7 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg f_TxItemCfg_
     if(Ret_e == RC_OK)
     {   
         Ret_e = s_FMKFDCAN_GetBspDlc(f_TxItemCfg_s.CanMsg_s.Dlc_e, &bspDlc_u32);
-        if(Ret_e = RC_OK)
+        if(Ret_e == RC_OK)
         {
             Ret_e = s_FMKFDCAN_GetBspFDFormat(f_TxItemCfg_s.frameFormat_e, &bspFDFormat_u32);
         }
@@ -839,11 +1311,11 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg f_TxItemCfg_
         }
         if(Ret_e == RC_OK)
         {
-            s_FMKFDCAN_GetBspFramePurpose(f_TxItemCfg_s.ItemId_s.FramePurpose_e, &bspFramePurpose_u32);
+            Ret_e = s_FMKFDCAN_GetBspFramePurpose(f_TxItemCfg_s.ItemId_s.FramePurpose_e, &bspFramePurpose_u32);
         }
         if(Ret_e == RC_OK)
         {
-            s_FMKFDCAN_GetBspBitRateStatus(f_TxItemCfg_s.BitRate_e, &bspBitRateStatus_u32);
+            Ret_e = s_FMKFDCAN_GetBspBitRateStatus(f_TxItemCfg_s.BitRate_e, &bspBitRateStatus_u32);
         }
         if(Ret_e == RC_OK)
         {
@@ -858,6 +1330,47 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg f_TxItemCfg_
             f_bspTxItem_ps->ErrorStateIndicator = (t_uint32)0;
         }
         
+    }
+
+    return Ret_e;
+}
+
+/*********************************
+* s_FMKFDCAN_GetUserRegisterIndex
+*********************************/
+static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
+                                                     t_sFMKFDCAN_UserItemRegister * f_NodeRegister_pas,
+                                                     t_uint8 f_RegistrationCtr_u8,
+                                                     t_uint8 * f_idxUserRegister_pu8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxUserRgstr_u8;
+
+    if(f_NodeRegister_pas == (t_uint8 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        // find user information 
+        for(idxUserRgstr_u8 = (t_uint8)0; idxUserRgstr_u8 < f_RegistrationCtr_u8 ; idxUserRgstr_u8++)
+        {
+            if ((f_Identifier_u32 & f_NodeRegister_pas[idxUserRgstr_u8].maskId_u32) == 
+                (f_NodeRegister_pas[idxUserRgstr_u8].itemId_s.Identifier_u32 & f_NodeRegister_pas[idxUserRgstr_u8].maskId_u32)
+                )
+            {
+                break;
+            }
+        }
+        if(idxUserRgstr_u8 == f_RegistrationCtr_u8)
+        {
+            Ret_e = RC_ERROR_LIMIT_REACHED;
+            *f_idxUserRegister_pu8 = (t_uint8)0;
+        }
+        else 
+        {
+            *f_idxUserRegister_pu8 = idxUserRgstr_u8;
+        }
     }
 
     return Ret_e;
@@ -887,7 +1400,7 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
     }
     if(Ret_e == RC_OK)
     {
-        if ((g_BspCbMngmt_ae[f_Node_e][f_bspCb_e] & f_status_e) == 0)
+        if (g_BspCbMngmt_ae[f_Node_e][f_bspCb_e] != f_status_e)
         {
             
             switch(f_status_e)
@@ -902,7 +1415,7 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
                     {
                         for(idxTxFifo_u8 = (t_uint8)0 ; idxTxFifo_u8 < FMKFDCAN_HW_TX_FIFO_NB ; idxTxFifo_u8++)
                         {
-                            Ret_e = s_FMKFDCAN_GetBspTxFifoId(idxTxFifo_u8, &bspFifo_u32);
+                            Ret_e = s_FMKFDCAN_GetBspFifoId(idxTxFifo_u8, &bspFifo_u32);
                             if(Ret_e == RC_OK)
                             {
                                 bspRet_e = HAL_FDCAN_ActivateNotification(&g_NodeInfo_as[f_Node_e].bspNode_s,
@@ -930,11 +1443,58 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
                     Ret_e = RC_ERROR_NOT_SUPPORTED;
                     break;
             }
+            if(bspRet_e != HAL_OK)
+            {
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+            if(Ret_e == RC_OK)
+            {
+                g_BspCbMngmt_ae[f_Node_e][f_bspCb_e] = f_status_e;
+            }
         }
     }
 
     return Ret_e;
 }
+
+/*****************************
+* s_FMKFDCAN_SetHwFifoOpeMode
+******************************/
+static t_eReturnCode s_FMKFDCAN_SetHwFifoOpeMode(t_eFMKFDCAN_NodeList f_Node_e ,t_eFMKFDCAN_FifoOpeMode f_fifoMode_e)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxFifo_u8 = 0;
+    t_uint32 bspFifo_u32;
+    t_uint32 bspFifoOpeMode_u32;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
+
+    if(f_fifoMode_e > FMKFDCAN_FIFO_OPEMODE_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        for (idxFifo_u8 = (t_uint8)0 ; (idxFifo_u8 < FMKFDCAN_HW_RX_FIFO_NB) && (Ret_e == RC_OK); idxFifo_u8++)    
+        {
+            Ret_e = s_FMKFDCAN_GetBspHwFifo(idxFifo_u8, &bspFifo_u32);
+            if(Ret_e == RC_OK)
+            {
+                Ret_e = s_FMKFDCAN_GetBspFifoOpeMode(f_fifoMode_e, &bspFifoOpeMode_u32);
+                
+            }
+            if(Ret_e == RC_OK)
+            {
+                bspRet_e = HAL_FDCAN_ConfigRxFifoOverwrite(&g_NodeInfo_as[f_Node_e].bspNode_s, bspFifo_u32, bspFifoOpeMode_u32);
+            }
+            if(bspRet_e != HAL_OK)
+            {
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+        }
+    }
+    return Ret_e;
+}
+
 /*****************************
 * s_FMKFDCAN_GetBspFramePurpose
 ******************************/
@@ -942,7 +1502,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFramePurpose(t_eFMKFDCAN_FramePurpose f_fr
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_frameType_e > FMKFDCAN_FRAME_TYPE_NB)
+    if(f_frameType_e > FMKFDCAN_FRAME_PURPOSE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -954,15 +1514,15 @@ static t_eReturnCode s_FMKFDCAN_GetBspFramePurpose(t_eFMKFDCAN_FramePurpose f_fr
     {
         switch(f_frameType_e)
         {
-            case FMKFDCAN_FRAME_TYPE_DATA:
+            case FMKFDCAN_FRAME_PURPOSE_DATA:
                 *f_bspFramePurpose_pu32 = FDCAN_DATA_FRAME;
                 break;
 
-            case FMKFDCAN_FRAME_TYPE_REMOTE:
+            case FMKFDCAN_FRAME_PURPOSE_REMOTE:
                 *f_bspFramePurpose_pu32 = FDCAN_REMOTE_FRAME;
                 break;
 
-            case FMKFDCAN_FRAME_TYPE_NB:
+            case FMKFDCAN_FRAME_PURPOSE_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
         }
@@ -997,7 +1557,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspIdType(t_eFMKFDCAN_IdentifierType f_IdType
                 *f_bspIdType_pu32 = FDCAN_EXTENDED_ID;
                 break;
 
-            case FMKFDCAN_FRAME_TYPE_NB:
+            case FMKFDCAN_FRAME_PURPOSE_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
         }
@@ -1033,7 +1593,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
                 *f_BspBitRate_pu32 = FDCAN_BRS_OFF;
                 break;
 
-            case FMKFDCAN_FRAME_TYPE_NB:
+            case FMKFDCAN_FRAME_PURPOSE_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
         }
@@ -1045,7 +1605,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
 /*****************************
 * s_FMKFDCAN_GetBspDlc
 ******************************/
-static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_BitRateSwitchStatus f_Dlc_e, t_uint32 *f_BspDlc_pu32)
+static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_DataLength f_Dlc_e, t_uint32 *f_BspDlc_pu32)
 {
     t_eReturnCode Ret_e = RC_OK;
 
@@ -1117,6 +1677,78 @@ static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_BitRateSwitchStatus f_Dlc_
     return Ret_e;
 }
 
+/*****************************
+* s_FMKFDCAN_GetDlcFromBsp
+******************************/
+static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_BitRateSwitchStatus *f_Dlc_pe)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_Dlc_pe == (t_eFMKFDCAN_BitRateSwitchStatus *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    else
+    {
+        switch (f_BspDlc_u32)
+        {
+            case FDCAN_DLC_BYTES_0:
+                *f_Dlc_pe = FMKFDCAN_DLC_0;
+                break;
+            case FDCAN_DLC_BYTES_1:
+                *f_Dlc_pe = FMKFDCAN_DLC_1;
+                break;
+            case FDCAN_DLC_BYTES_2:
+                *f_Dlc_pe = FMKFDCAN_DLC_2;
+                break;
+            case FDCAN_DLC_BYTES_3:
+                *f_Dlc_pe = FMKFDCAN_DLC_3;
+                break;
+            case FDCAN_DLC_BYTES_4:
+                *f_Dlc_pe = FMKFDCAN_DLC_4;
+                break;
+            case FDCAN_DLC_BYTES_5:
+                *f_Dlc_pe = FMKFDCAN_DLC_5;
+                break;
+            case FDCAN_DLC_BYTES_6:
+                *f_Dlc_pe = FMKFDCAN_DLC_6;
+                break;
+            case FDCAN_DLC_BYTES_7:
+                *f_Dlc_pe = FMKFDCAN_DLC_7;
+                break;
+            case FDCAN_DLC_BYTES_8:
+                *f_Dlc_pe = FMKFDCAN_DLC_8;
+                break;
+            case FDCAN_DLC_BYTES_16:
+                *f_Dlc_pe = FMKFDCAN_DLC_16;
+                break;
+            case FDCAN_DLC_BYTES_20:
+                *f_Dlc_pe = FMKFDCAN_DLC_20;
+                break;
+            case FDCAN_DLC_BYTES_24:
+                *f_Dlc_pe = FMKFDCAN_DLC_24;
+                break;
+            case FDCAN_DLC_BYTES_32:
+                *f_Dlc_pe = FMKFDCAN_DLC_32;
+                break;
+            case FDCAN_DLC_BYTES_48:
+                *f_Dlc_pe = FMKFDCAN_DLC_48;
+                break;
+            case FDCAN_DLC_BYTES_64:
+                *f_Dlc_pe = FMKFDCAN_DLC_64;
+                break;
+            default:
+                Ret_e = RC_ERROR_NOT_SUPPORTED;
+                break;
+        }
+    }
+    
+    return Ret_e;
+}
+
+/*****************************
+* s_FMKFDCAN_GetBspCallbackId
+******************************/
 static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_Callback_e, t_uint32 *f_bspCallback_u32)
 {
     t_eReturnCode Ret_e = RC_OK;
@@ -1151,6 +1783,9 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
             case FMKFDCAN_BSP_RX_CB_FIFO_1:
                 *f_bspCallback_u32 =FDCAN_IT_LIST_RX_FIFO1;
                 break;
+            case FMKFDCAN_BSP_CB_PROTOCOL_ERR:
+                *f_bspCallback_u32 =FDCAN_IT_LIST_PROTOCOL_ERROR;
+                break;
             case FMKFDCAN_BSP_CB_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
@@ -1179,11 +1814,11 @@ static t_eReturnCode s_FMKFDCAN_GetBspFifoId(t_eFMKFDCAN_HwRxFifoList f_FifoId_e
     {
         switch(f_FifoId_e)
         {
-            case FMKFDCAN_HW_RX_FIFO_1: 
+            case FMKFDCAN_HW_RX_FIFO_0: 
                 *f_bspFifoId_u32 =FDCAN_RX_FIFO0;
                 break;
 
-            case FMKFDCAN_HW_RX_FIFO_2:
+            case FMKFDCAN_HW_RX_FIFO_1:
                 *f_bspFifoId_u32 =FDCAN_RX_FIFO1;
                 break;
 
@@ -1223,7 +1858,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFDFormat(t_eFMKFDCAN_FrameFormat f_formatT
                 *f_BspFormatType_pu32 = FDCAN_FD_CAN;
                 break;
 
-            case FMKFDCAN_FRAME_TYPE_NB:
+            case FMKFDCAN_FRAME_PURPOSE_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
         }
@@ -1322,55 +1957,17 @@ static t_eReturnCode s_FMKFDCAN_GetBspHwFifo(t_eFMKFDCAN_HwRxFifoList f_RxFifo_e
     {
         switch(f_RxFifo_e)
         {
-            case FMKFDCAN_HW_RX_FIFO_1:
+            case FMKFDCAN_HW_RX_FIFO_0:
                 *f_bspRxFifo_pu32 = FDCAN_RX_FIFO0;
                 break;
 
-            case FMKFDCAN_HW_RX_FIFO_2:
+            case FMKFDCAN_HW_RX_FIFO_1:
                 *f_bspRxFifo_pu32 = FDCAN_RX_FIFO1;
                 break;
             
             case FMKFDCAN_HW_RX_FIFO_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
-        }
-    }
-    return Ret_e;
-}
-
-/*****************************
-* s_FMKFDCAN_SetHwFifoOpeMode
-******************************/
-static t_eReturnCode s_FMKFDCAN_SetHwFifoOpeMode(t_eFMKFDCAN_NodeList f_Node_e ,t_eFMKFDCAN_FifoOpeMode f_fifoMode_e)
-{
-    t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxFifo_u8 = 0;
-    t_uint32 bspFifo_u32;
-    t_uint32 bspFifoOpeMode_u32;
-    HAL_StatusTypeDef bspRet_e = HAL_OK;
-
-    if(f_fifoMode_e > FMKFDCAN_FIFO_OPEMODE_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(Ret_e == RC_OK)
-    {
-        for (idxFifo_u8 = (t_uint8)0 ; (idxFifo_u8 < FMKFDCAN_HW_RX_FIFO_NB) && (Ret_e == RC_OK); idxFifo_u8++)    
-        {
-            Ret_e = s_FMKFDCAN_GetBspHwFifo(idxFifo_u8, &bspFifo_u32);
-            if(Ret_e == RC_OK)
-            {
-                Ret_e = s_FMKFDCAN_GetBspFifoOpeMode(f_fifoMode_e, &bspFifoOpeMode_u32);
-                
-            }
-            if(Ret_e == RC_OK)
-            {
-                bspRet_e = HAL_FDCAN_ConfigRxFifoOverwrite(&g_NodeInfo_as[f_Node_e].bspNode_s, bspFifo_u32, bspFifoOpeMode_u32);
-            }
-            if(bspRet_e != HAL_OK)
-            {
-                Ret_e = RC_ERROR_WRONG_RESULT;
-            }
         }
     }
     return Ret_e;

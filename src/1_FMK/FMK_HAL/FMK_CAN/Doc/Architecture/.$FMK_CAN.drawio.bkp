@@ -148,13 +148,13 @@
         <mxCell id="aw8gZfFloG_0qlvviHqQ-82" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;Enum:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-align: center;&quot;&gt;t_eFMKFDCAN_FramePurpose&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;Location : FMKFDCAN&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap; background-color: initial;&quot;&gt;.h&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontSize=16;align=left;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
           <mxGeometry width="260" height="125.57" as="geometry" />
         </mxCell>
-        <mxCell id="aw8gZfFloG_0qlvviHqQ-83" value="FMKFDCAN_FRAME_TYPE_REMOTE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
+        <mxCell id="aw8gZfFloG_0qlvviHqQ-83" value="FMKFDCAN_FRAME_PURPOSE_REMOTE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
           <mxGeometry y="45.57076923076926" width="260" height="26.53846153846154" as="geometry" />
         </mxCell>
-        <mxCell id="aw8gZfFloG_0qlvviHqQ-84" value="FMKFDCAN_FRAME_TYPE_DATA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
+        <mxCell id="aw8gZfFloG_0qlvviHqQ-84" value="FMKFDCAN_FRAME_PURPOSE_DATA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
           <mxGeometry y="72.11076923076928" width="260" height="26.53846153846154" as="geometry" />
         </mxCell>
-        <mxCell id="aw8gZfFloG_0qlvviHqQ-85" value="FMKFDCAN_FRAME_TYPE_NB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
+        <mxCell id="aw8gZfFloG_0qlvviHqQ-85" value="FMKFDCAN_FRAME_PURPOSE_NB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="aw8gZfFloG_0qlvviHqQ-81" vertex="1">
           <mxGeometry y="98.6507692307693" width="260" height="26.53846153846154" as="geometry" />
         </mxCell>
         <mxCell id="aw8gZfFloG_0qlvviHqQ-104" value="" style="group" parent="1" vertex="1" connectable="0">

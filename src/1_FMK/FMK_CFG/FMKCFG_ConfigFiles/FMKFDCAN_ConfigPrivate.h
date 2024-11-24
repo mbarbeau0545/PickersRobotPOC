@@ -22,12 +22,20 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define FMKFDCAN_RX_SOFT_BUFF_SIZE ((t_uint8)30)        /**< Buffer size for Reception FDCan software queue */
+    #define FMKFDCAN_RX_NO_CB_BUFF_SIZE ((t_uint8)15)        /**< Buffer size for Reception FDCan software queue */
+    #define FMKFDCAN_RX_SOFT_BUFF_SIZE ((t_uint8)20)        /**< Buffer size for Reception FDCan software queue */
     #define FMKFDCAN_TX_SOFT_BUFF_SIZE ((t_uint8)20)        /**< Buffer size for Transmission FDCan software queue */
-    #define FMKFDCAN_RX_NUM_REGISTRATION ((t_uint8)40)
-    #define FMKFDCAN_NODE_MODE FDCAN_MODE_NORMAL
+
+    #define FMKFDCAN_RX_NUM_REGISTRATION_EVNT ((t_uint8)30)
+//    #define FMKFDCAN_RX_NUM_REGISTRATION_POLL ((t_uint8)20)
+
+    #define FMKFDCAN_NODE_MODE (FDCAN_MODE_NORMAL)
+
 
     #define FMKFDCAN_MAX_TX_ITEM_SEND_PER_IT ((t_uint8)5)
+    #define FMKFDCAN_MAX_ITEM_ON_QUEUE_PER_IT ((t_uint8)5)
+
+    #define FMKFDCAN_64_BYTES ((t_uint8)64)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -35,8 +43,8 @@
     // Flag Automatic Generate Code
     typedef enum 
     {
-        FMKFDCAN_HW_RX_FIFO_1 = 0x00,
-        FMKFDCAN_HW_RX_FIFO_2,
+        FMKFDCAN_HW_RX_FIFO_0 = 0x00,
+        FMKFDCAN_HW_RX_FIFO_1,
 
         FMKFDCAN_HW_RX_FIFO_NB,
     } t_eFMKFDCAN_HwRxFifoList;
@@ -55,12 +63,6 @@
     //-----------------------------TYPEDEF TYPES---------------------------//
     
     //-----------------------------STRUCT TYPES---------------------------//
-    typedef struct 
-    {
-        t_uint8 HwRxFifoNb_u8;
-        t_uint8 HwTxFifoNb_u8;
-    } t_sFMKFDCAN_HwFifoCfg;
-
     typedef struct 
     {
         t_uint16 prescaler_u16;
@@ -104,10 +106,16 @@
     };
 
     const t_bool c_FmkCan_IsNodeActive[FMKFDCAN_NODE_NB] = {
-        (t_bool)True,// FMKFDCAN_NODE_1
-        (t_bool)False,// FMKFDCAN_NODE_2
-        (t_bool)False,// FMKFDCAN_NODE_3
+        (t_bool)True,  // FMKFDCAN_NODE_1
+        (t_bool)False, // FMKFDCAN_NODE_2
+        (t_bool)False, // FMKFDCAN_NODE_3
     };
+
+    const t_uint32 c_FmkCan_NodeItLine[FMKFDCAN_NODE_NB] = {
+        FDCAN_INTERRUPT_LINE0,        // FMKFDCAN_NODE_1
+        FDCAN_INTERRUPT_LINE1,        // FMKFDCAN_NODE_2
+        FDCAN_INTERRUPT_LINE1,        // FMKFDCAN_NODE_3
+    }
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

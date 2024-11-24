@@ -451,21 +451,52 @@
     *
     */
     t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    #ifdef FMKCPU_STM32_ECU_FAMILY_F
     /**
-    *
     *	@brief       @brief This function handles EXTI line 0 to 1 interrupts.\n
     */
     void EXTI0_1_IRQHandler(void);
     /**
-    *
     *	@brief       @brief This function handles EXTI line 2 to 3 interrupts.\n
     */
     void EXTI2_3_IRQHandler(void);
     /**
-    *
     *	@brief       @brief This function handles EXTI line 4 to 15 interrupts.\n
     */
     void EXTI4_15_IRQHandler(void);
+    #elif defined FMKCPU_STM32_ECU_FAMILY_G
+    /**
+    *	@brief       @brief This function handles EXTI line 0  interrupts.\n
+    */
+    void EXTI0_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 1 interrupts.\n
+    */
+    void EXTI1_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 2 interrupts.\n
+    */
+    void EXTI2_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 3 interrupts.\n
+    */
+    void EXTI3_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 4 interrupts.\n
+    */
+    void EXTI4_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 5 to 9  interrupts.\n
+    */
+    void EXTI9_5_IRQHandler(void);
+    /**
+    *	@brief       @brief This function handles EXTI line 10 to 15 interrupts.\n
+    */
+    void EXTI15_10_IRQHandler(void);
+
+    #else 
+        #error('ecu family is currently not available')
+    #endif
 #endif // FMKIO_H_INCLUDED           
 //************************************************************************************
 // End of File

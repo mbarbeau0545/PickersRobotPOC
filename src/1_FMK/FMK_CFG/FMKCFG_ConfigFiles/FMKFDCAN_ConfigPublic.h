@@ -78,7 +78,7 @@
         FMKFDCAN_FRAME_BAUDRATE_4M,
         FMKFDCAN_FRAME_BAUDRATE_8M,
 
-         FMKFDCAN_FRAME_BAUDRATE_NB,
+        FMKFDCAN_FRAME_BAUDRATE_NB,
 
     } t_eFMKFDCAN_Baudrate;
 
@@ -135,10 +135,10 @@
 
     typedef enum 
     {
-        FMKFDCAN_FRAME_TYPE_REMOTE = 0x00,
-        FMKFDCAN_FRAME_TYPE_DATA,
+        FMKFDCAN_FRAME_PURPOSE_REMOTE = 0x00,
+        FMKFDCAN_FRAME_PURPOSE_DATA,
 
-        FMKFDCAN_FRAME_TYPE_NB,
+        FMKFDCAN_FRAME_PURPOSE_NB,
     } t_eFMKFDCAN_FramePurpose;
     //-----------------------------ENUM TYPES-----------------------------//
     

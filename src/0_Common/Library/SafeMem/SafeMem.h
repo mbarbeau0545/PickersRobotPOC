@@ -8,8 +8,8 @@
  * @version     1.0
  */
   
-#ifndef LIBQUEUE_H_INCLUDED
-#define LIBQUEUE_H_INCLUDED
+#ifndef SAFEMEM_H_INCLUDED
+#define SAFEMEM_H_INCLUDED
 
 
 
@@ -69,7 +69,7 @@
      * @param[in] f_size_u16 Size of the memory to initialize (in bytes).
      * @return t_eReturnCode Return code indicating success or failure.
      */
-    t_eReturnCode SafeMem_memset(void *f_destination_pv, int f_value_i, t_uint16 f_size_u16);
+    t_eReturnCode SafeMem_memset(void *f_destination_pv, t_uint16 f_value_u16, t_uint16 f_size_u16);
 
     /**
      * @brief Moves a memory region safely (supports overlapping regions).
@@ -88,7 +88,7 @@
      * @param[out] f_result_pi Result of the comparison (-1, 0, 1).
      * @return t_eReturnCode Return code indicating success or failure.
      */
-    t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16, int *f_result_pi);
+    t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16, t_uint32 *f_result_pi);
 
     /**
      * @brief Clears a memory region securely (useful for sensitive data).
@@ -97,7 +97,7 @@
      * @return t_eReturnCode Return code indicating success or failure.
      */
     t_eReturnCode SafeMem_memclear(void *f_buffer_pv, t_uint16 f_size_u16);
-#endif // LIBQUEUE_H_INCLUDED           
+#endif // SAFEMEM_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************

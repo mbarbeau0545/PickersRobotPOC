@@ -69,6 +69,12 @@
     /* CAUTION : Automatic generated code section for Enum: Start */
 
     /* CAUTION : Automatic generated code section for Enum: End */
+    typedef struct 
+    {
+        t_uint32 Identifier_u32;
+        t_eFMKFDCAN_IdentifierType IdType_e;
+        t_eFMKFDCAN_FramePurpose FramePurpose_e;
+    } t_sFMKFDCAN_ItemIdentifier;
 
     typedef struct 
     {
@@ -77,6 +83,14 @@
         t_uint8 *data_pu8;
 
     } t_sFMKFDCAN_NodeMessage;
+    
+    typedef struct
+    {
+        t_sFMKFDCAN_ItemIdentifier ItemId_s;
+        t_sFMKFDCAN_NodeMessage CanMsg_s;
+        t_uint32 timeStamp_32;
+        t_eFMKFDCAN_NodeStatus Nodetatus_e;
+    } t_sFMKFDCAN_RxItemEvent;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -90,7 +104,7 @@
     *   @retval HAL_OK                     @ref HAL_OK
     *   @retval HAL_ERROR                  @ref HAL_ERROR
     */
-    typedef t_eReturnCode t_cbFMKFDCAN_RcvItem(t_uint32 Identifier_u32, t_sFMKFDCAN_NodeMessage CanMsg_s, t_eFMKFDCAN_NodeStatus f_NodeStatus_e);
+    typedef t_eReturnCode t_cbFMKFDCAN_RcvItem(t_sFMKFDCAN_RxItemEvent f_RxItem_s, t_eFMKFDCAN_NodeStatus f_NodeStatus_e);
                                               /**
     *
     *	@brief      HAL Timer function in Interruption way  
@@ -106,23 +120,7 @@
     //-----------------------------STRUCT TYPES---------------------------//
     
 
-    typedef struct 
-    {
-        t_uint32 Identifier_u32;
-        t_eFMKFDCAN_IdentifierType IdType_e;
-        t_eFMKFDCAN_FramePurpose FramePurpose_e;
-    } t_sFMKFDCAN_ItemIdentifier;
-
     
-
-    typedef struct
-    {
-        t_uint32 Identifier_u32;
-        t_sFMKFDCAN_NodeMessage CanMsg_s;
-        t_uint32 timeStamp_32;
-        t_eFMKFDCAN_NodeStatus Nodetatus_e;
-    } t_sRxItemEvent;
-
     typedef struct 
     {
         t_sFMKFDCAN_ItemIdentifier ItemId_s;
@@ -237,8 +235,8 @@
     *
     *
     */
-    t_eReturnCode FMKFDCAN_GetRxItem(t_sRxItemEvent f_RxItem_s);
-;
+    t_eReturnCode FMKFDCAN_GetRxItem(t_sFMKFDCAN_RxItemEvent * f_RxItem_ps);
+
 #endif // FMKFDCAN_H_INCLUDED           
 //************************************************************************************
 // End of File

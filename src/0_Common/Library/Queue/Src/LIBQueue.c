@@ -167,7 +167,7 @@ void LIBQUEUE_GetSizeLeft(t_sLIBQUEUE_QueueCore *f_Queue_ps, t_uint8 *f_SizeLeft
 {
     *f_SizeLeft_u8 =  (t_uint8)(f_Queue_ps->QueueCfg_s.bufferSize_u8 - f_Queue_ps->actualSize_u8);
 
-    return RC_OK;
+    return;
 }
 //**************************
 // LIBQUEUE_GetQueueSize
@@ -176,7 +176,7 @@ void LIBQUEUE_GetActualSize(t_sLIBQUEUE_QueueCore *f_Queue_ps, t_uint8 *f_acutal
 {
     *f_acutalSize_u8 =  f_Queue_ps->actualSize_u8;
 
-    return RC_OK;
+    return;
 }
 //********************************************************************************
 //                      Local functions - Implementation

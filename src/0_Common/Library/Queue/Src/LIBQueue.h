@@ -127,7 +127,7 @@
     *
     *
     */
-    t_eReturnCode LIBQUEUE_GetSizeLeft(t_sLIBQUEUE_QueueCore *f_Queue_ps, t_uint8 *f_SizeLeft_u8);
+    void LIBQUEUE_GetSizeLeft(t_sLIBQUEUE_QueueCore *f_Queue_ps, t_uint8 *f_SizeLeft_u8);
     /**
     *	@brief
     *	@note   

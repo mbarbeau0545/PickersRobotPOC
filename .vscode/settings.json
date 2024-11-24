@@ -55,7 +55,10 @@
     "stm32g4xx.h": "c",
     "stm32g474xx.h": "c",
     "fmkcan_configpublic.h": "c",
-    "fmk_fdcan.h": "c"
+    "fmk_fdcan.h": "c",
+    "safemem.h": "c",
+    "libqueue.h": "c",
+    "string.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",
