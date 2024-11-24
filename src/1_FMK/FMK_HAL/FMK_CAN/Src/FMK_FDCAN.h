@@ -83,7 +83,7 @@
         t_uint8 *data_pu8;
 
     } t_sFMKFDCAN_NodeMessage;
-    
+
     typedef struct
     {
         t_sFMKFDCAN_ItemIdentifier ItemId_s;
@@ -235,7 +235,7 @@
     *
     *
     */
-    t_eReturnCode FMKFDCAN_GetRxItem(t_sFMKFDCAN_RxItemEvent * f_RxItem_ps);
+    t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEvent *f_RxItem_ps);
 
 #endif // FMKFDCAN_H_INCLUDED           
 //************************************************************************************

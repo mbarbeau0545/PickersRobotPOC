@@ -7,17 +7,10 @@
  * @date        15/09/2024
  * @version     1.0
  */
-
-
-
-
-
-
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
 #include "./LIBQueue.h"
-#include "string.h"
 #include "./Library/SafeMem/SafeMem.h"
 // ********************************************************************
 // *                      Defines
@@ -147,9 +140,12 @@ t_eReturnCode LIBQUEUE_ReadElement(t_sLIBQUEUE_QueueCore *f_Queue_ps, void * f_e
         if(Ret_e == RC_OK)
         {
             // reset the element to null
-            memset(startRead_pv, 0, f_Queue_ps->QueueCfg_s.elementSize_u8);
-            f_Queue_ps->head_u8 = LIBQUEUE_QUEUE_NEXT_INDEX(f_Queue_ps->head_u8, f_Queue_ps->QueueCfg_s.bufferSize_u8);
-            f_Queue_ps->actualSize_u8 -= (t_uint8)1;
+            Ret_e = SafeMem_memset(startRead_pv, 0, f_Queue_ps->QueueCfg_s.elementSize_u8);
+            if(Ret_e == RC_OK)
+            {
+                f_Queue_ps->head_u8 = LIBQUEUE_QUEUE_NEXT_INDEX(f_Queue_ps->head_u8, f_Queue_ps->QueueCfg_s.bufferSize_u8);
+                f_Queue_ps->actualSize_u8 -= (t_uint8)1;
+            }
         }
         else 
         {
@@ -178,6 +174,7 @@ void LIBQUEUE_GetActualSize(t_sLIBQUEUE_QueueCore *f_Queue_ps, t_uint8 *f_acutal
 
     return;
 }
+
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************

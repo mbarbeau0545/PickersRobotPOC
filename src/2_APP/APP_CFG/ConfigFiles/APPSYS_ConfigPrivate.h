@@ -24,6 +24,7 @@
     #include "1_FMK/FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
     #include "2_APP/APP_CTRL/APP_ACT/Src/APP_ACT.h"
     #include "2_APP/APP_CTRL/APP_SNS/Src/APP_SNS.h"
+    #include "1_FMK/FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
     #include "2_APP/APP_LGC/Src/APP_LGC.h"
     // ********************************************************************
     // *                      Defines
@@ -99,14 +100,15 @@
     /**< variable to store modules functions */
     t_sAppSys_SysFunc c_AppSys_ModuleFunc_apf[APPSYS_MODULE_NB] = {
         // FrameWork module 
-        {FMKCPU_Init,    FMKCPU_Cyclic,     FMKCPU_GetState, FMKCPU_SetState},
-        {FMKCDA_Init,    FMKCDA_Cyclic,     FMKCDA_GetState, FMKCDA_SetState},
-        {FMKIO_Init,     FMKIO_Cyclic,      FMKIO_GetState,  FMKIO_SetState},
+        {FMKCPU_Init,    FMKCPU_Cyclic,     FMKCPU_GetState,   FMKCPU_SetState},
+        {FMKFDCAN_Init,  FMKFDCAN_Cyclic,   FMKFDCAN_GetState, FMKFDCAN_SetState},
+        {FMKCDA_Init,    FMKCDA_Cyclic,     FMKCDA_GetState,   FMKCDA_SetState},
+        {FMKIO_Init,     FMKIO_Cyclic,      FMKIO_GetState,    FMKIO_SetState},
 
         // Application module
-        {APPSNS_Init,    APPSNS_Cyclic,     APPSNS_GetState, APPSNS_SetState},
-        {APPACT_Init,    APPACT_Cyclic,     APPACT_GetState, APPACT_SetState},
-        {APPLGC_Init,    APPLGC_Cyclic,     APPLGC_GetState, APPLGC_SetState},
+        {APPSNS_Init,    APPSNS_Cyclic,     APPSNS_GetState,   APPSNS_SetState},
+        {APPACT_Init,    APPACT_Cyclic,     APPACT_GetState,   APPACT_SetState},
+        {APPLGC_Init,    APPLGC_Cyclic,     APPLGC_GetState,   APPLGC_SetState},
     };
 
     //********************************************************************************

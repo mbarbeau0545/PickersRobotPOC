@@ -1,5 +1,5 @@
 /**
- * @file        FMK_MAC.h
+ * @file        LibQueue.h
  * @brief       Memomry access control for DMA & user access\n.
  * @note        TemplateDetailsDescription.\n
  *
@@ -11,10 +11,6 @@
 #ifndef LIBQUEUE_H_INCLUDED
 #define LIBQUEUE_H_INCLUDED
 
-
-
-
-
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
@@ -22,7 +18,6 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    
 
     // ********************************************************************
     // *                      Types
@@ -35,6 +30,7 @@
     /* CAUTION : Automatic generated code section for Enum: End */
    
     //-----------------------------STRUCT TYPES---------------------------//
+    ;
     typedef struct 
     {
         void     *bufferHead_pv;        /**< Head of the buffer */

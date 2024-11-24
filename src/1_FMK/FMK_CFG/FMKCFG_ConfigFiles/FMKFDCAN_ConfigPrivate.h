@@ -115,7 +115,7 @@
         FDCAN_INTERRUPT_LINE0,        // FMKFDCAN_NODE_1
         FDCAN_INTERRUPT_LINE1,        // FMKFDCAN_NODE_2
         FDCAN_INTERRUPT_LINE1,        // FMKFDCAN_NODE_3
-    }
+    };
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

@@ -64,7 +64,7 @@
 t_eReturnCode SafeMem_memcpy(void *f_destination_pv, const void *f_src_pv, t_uint16 f_size_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint32 result_u32 = 0;
+    void * memcpy_pv = NULL;
     // Vérification des pointeurs NULL
     if (f_destination_pv == NULL || f_src_pv == NULL)
     {
@@ -73,13 +73,11 @@ t_eReturnCode SafeMem_memcpy(void *f_destination_pv, const void *f_src_pv, t_uin
     else
     {
         // Effectuer la copie avec memcpy
-        void *memcpy_pv = memcpy(f_destination_pv, f_src_pv, (size_t)f_size_u16);
-        Ret_e = SafeMem_memcmp(f_destination_pv, f_src_pv, (t_uint16)f_size_u16, &result_u32);
+        memcpy_pv = memcpy(f_destination_pv, f_src_pv, f_size_u16);
         if(Ret_e == RC_OK)
         {
             // Vérification que memcpy renvoie bien le pointeur destination
-            if((memcpy_pv != f_destination_pv)
-            || (result_u32 != 0))
+            if(memcpy_pv != f_destination_pv)
             {
                 Ret_e = RC_WARNING_MEM_FAILED;
             }
@@ -146,22 +144,22 @@ t_eReturnCode SafeMem_memmove(void *f_destination_pv, const void *f_src_pv, t_ui
 //**********************
 // SafeMem_memcmp
 //**********************
-t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16, t_uint32 *f_result_u32)
+t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
-
+    t_uint32 result_u32;
     // Vérification des pointeurs NULL
-    if (f_buffer1_pv == NULL || f_buffer2_pv == NULL || f_result_u32 == NULL)
+    if (f_buffer1_pv == NULL || f_buffer2_pv == NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     else
     {
         // Comparaison avec memcmp
-        *f_result_u32 = memcmp(f_buffer1_pv, f_buffer2_pv, (size_t)f_size_u16);
+        result_u32 = memcmp(f_buffer1_pv, f_buffer2_pv, (size_t)f_size_u16);
 
         // Vérification du résultat
-        if (*f_result_u32 != 0)
+        if (result_u32 != 0)
         {
             Ret_e = RC_WARNING_MEM_FAILED;
         }

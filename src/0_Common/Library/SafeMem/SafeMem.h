@@ -88,7 +88,7 @@
      * @param[out] f_result_pi Result of the comparison (-1, 0, 1).
      * @return t_eReturnCode Return code indicating success or failure.
      */
-    t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16, t_uint32 *f_result_pi);
+    t_eReturnCode SafeMem_memcmp(const void *f_buffer1_pv, const void *f_buffer2_pv, t_uint16 f_size_u16);
 
     /**
      * @brief Clears a memory region securely (useful for sensitive data).

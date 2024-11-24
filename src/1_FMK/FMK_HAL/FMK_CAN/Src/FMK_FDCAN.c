@@ -78,7 +78,8 @@ typedef struct
 {
     FDCAN_HandleTypeDef bspNode_s;
     const t_eFMKCPU_ClockPort c_Clock_e;
-    const t_eFMKCPU_IRQNType c_IrqnType_e;
+    const t_eFMKCPU_IRQNType c_IrqnLine1_e;
+    const t_eFMKCPU_IRQNType c_IrqnLine2_e;
     t_sFMKFDCAN_FlagSoft Flag_s;
     t_bool isNodeConfigured_b;
     t_bool isNodeActive_b;
@@ -121,9 +122,28 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static t_eCyclicFuncState g_Modulestate_e = STATE_CYCLIC_WAITING;
+static t_eCyclicFuncState g_Modulestate_e = STATE_CYCLIC_PREOPE;
 /* Store information about node*/
-t_sFMKFDCAN_NodeInfo g_NodeInfo_as[FMKFDCAN_NODE_NB];
+t_sFMKFDCAN_NodeInfo g_NodeInfo_as[FMKFDCAN_NODE_NB] = {
+    {
+        .bspNode_s.Instance = FDCAN1,
+        .c_Clock_e = FMKCPU_RCC_CLK_FDCAN,
+        .c_IrqnLine1_e = FMKCPU_NVIC_FDCAN1_IT0_IRQN,
+        .c_IrqnLine2_e = FMKCPU_NVIC_FDCAN1_IT1_IRQN,
+    },
+    {
+        .bspNode_s.Instance = FDCAN2,
+        .c_Clock_e = FMKCPU_RCC_CLK_FDCAN,
+        .c_IrqnLine1_e = FMKCPU_NVIC_FDCAN2_IT0_IRQN,
+        .c_IrqnLine2_e = FMKCPU_NVIC_FDCAN2_IT1_IRQN,
+    },
+    {
+        .bspNode_s.Instance = FDCAN3,
+        .c_Clock_e = FMKCPU_RCC_CLK_FDCAN,
+        .c_IrqnLine1_e = FMKCPU_NVIC_FDCAN3_IT0_IRQN,
+        .c_IrqnLine2_e = FMKCPU_NVIC_FDCAN3_IT1_IRQN,
+    }
+};
 /*------------------------Tx FIFO MANAGEMENT-------------------------------*/
 /**< Transmission software Buffer*/
 t_sFMKFDCAN_TxItemBuffer g_TxSoftBuffer_as[FMKFDCAN_NODE_NB][FMKFDCAN_TX_SOFT_BUFF_SIZE];
@@ -168,21 +188,9 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
  *
  *
  */
-static t_eReturnCode s_FMKFDCAN_SetBspTxItem(FDCAN_HandleTypeDef *f_bspInit_ps, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
-/**
- *	@brief
- *	@note   
- *
- *
- *	@param[in] 
- *	@param[in]
- *	 
- *
- *
- */
 static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
                                               t_uint32 f_EvntCbInfo_u32, 
-                                              t_eFMKFDCAN_BspStatusCb f_bspTxCallback_e);
+                                              t_eFMKFDCAN_BspCallbackList f_bspTxCallback_e);
 /**
  *	@brief
  *	@note   
@@ -196,7 +204,7 @@ static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
  */
 static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
                                               t_uint32 f_EvntCbInfo_u32, 
-                                              t_eFMKFDCAN_BspStatusCb f_bspRxCallback_e);
+                                              t_eFMKFDCAN_BspCallbackList f_bspRxCallback_e);
 /**
  *	@brief
  *	@note       Activate Interrupt line 
@@ -279,18 +287,7 @@ static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
                                                      t_sFMKFDCAN_UserItemRegister * f_NodeRegister_pas,
                                                      t_uint8 f_RegistrationCtr_u8,
                                                      t_uint8 * f_idxUserRegister_pu8);
-/**
- *	@brief
- *	@note       
- *
- *
- *	@param[in] 
- *	@param[in]
- *	 
- *
- *
- */
-static t_eReturnCode s_FMKFDCAN_GetRxItemFromSoftBuffer(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEvent * f_RxItem_ps);
+
 /**
  *	@brief
  *	@note       
@@ -424,7 +421,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
  *
  *
  */
-static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_BitRateSwitchStatus f_Dlc_e, t_uint32 *f_BspDlc_pu32);
+static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_DataLength f_Dlc_e, t_uint32 *f_BspDlc_pu32);
 /**
  *	@brief
  *	@note       
@@ -436,7 +433,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_BitRateSwitchStatus f_Dlc_
  *
  *
  */
-static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_BitRateSwitchStatus *f_Dlc_pe);
+static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_DataLength *f_Dlc_pe);
 /**
  *	@brief
  *	@note       
@@ -461,7 +458,6 @@ t_eReturnCode FMKFDCAN_Init(void)
     RCC_PeriphCLKInitTypeDef periphNodeInit_s;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxBspCallback_u8;
-    t_uint8 idxTxCb_u8;
     t_uint8 idxNode_u8 = (t_uint8)0;
     t_uint8 LLI_u8 = (t_uint8)0;
     t_uint8 LLI2_u8 = (t_uint8)0;
@@ -476,6 +472,14 @@ t_eReturnCode FMKFDCAN_Init(void)
         .enableOverwrite_b = False,
     };
     
+    t_sFMKFDCAN_DrvNodeCfg NodeCfg_s = {
+        .clockDivider_u32 = FDCAN_CLOCK_DIV1,
+        .DataBaudrate_e = FMKFDCAN_FRAME_BAUDRATE_250K,
+        .FifoMode_e = FMKFDCAN_FIFO_OPEMODE_BLOCKING,
+        .FrameBaudrate_e = FMKFDCAN_FRAME_BAUDRATE_250K,
+        .ProtocolUse_e = FMKFDCAN_PROTOCOL_CAN2_0B,
+        .QueueType_e = FMKFDCAN_HWQUEUE_TYPE_FIFO,
+    };
 
     for (idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
     {   
@@ -564,6 +568,10 @@ t_eReturnCode FMKFDCAN_Init(void)
     if(bspRet_e != HAL_OK)
     {
         Ret_e = RC_ERROR_WRONG_RESULT;
+    }
+    else 
+    {
+        Ret_e = FMKFDCAN_InitDriver(FMKFDCAN_NODE_1, NodeCfg_s);
     }
 
     return Ret_e;
@@ -655,25 +663,42 @@ t_eReturnCode FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_Drv
     }
     if(Ret_e == RC_OK)
     {
+        // Configure Pin Init
         Ret_e = s_FMKFDCAN_MspInit();
-
+        // Copy Bsp Init from Config
         Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
         if(Ret_e == RC_OK)
         {
+            // Set hardware clock RCC
             Ret_e = FMKCPU_Set_HwClock(g_NodeInfo_as[f_Node_e].c_Clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         }
         if(Ret_e == RC_OK)
         {
+            // set enable the INterruption 
+            Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine1_e, FMKCPU_NVIC_OPE_ENABLE);
+            if(Ret_e == RC_OK)
+            {
+                Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine2_e, FMKCPU_NVIC_OPE_ENABLE);
+            }
+        }
+        if(Ret_e == RC_OK)
+        {
+            // Call Bsp Init for FDCAN
             bspRet_e = HAL_FDCAN_Init(&g_NodeInfo_as[f_Node_e].bspNode_s);
         }
         if(bspRet_e == HAL_OK)
         {
+            // Set Hrdware FIFO mode for FDCAN
             Ret_e = s_FMKFDCAN_SetHwFifoOpeMode(f_Node_e, f_NodeCfg_s.FifoMode_e);
         }
     }
     if(bspRet_e != HAL_OK)
     {
         Ret_e = RC_ERROR_WRONG_RESULT;
+    }
+    else 
+    {
+        g_NodeInfo_as[f_Node_e].isNodeConfigured_b = (t_bool)True;
     }
     
     return Ret_e;
@@ -722,9 +747,9 @@ t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFM
 t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxItemCfg f_TxItemCfg_s)
 {
     t_eReturnCode Ret_e = RC_OK;
-    FDCAN_TxHeaderTypeDef bspTxItem_s;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_sFMKFDCAN_TxItemBuffer SoTxitem_s;
-
+    t_uint8 idxData_u8;
     t_uint32 fifoLevel_u32 = 0;
 
 
@@ -738,7 +763,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     }
     if(Ret_e == RC_OK)
     {
-        Ret_e = s_FMKFDCAN_CopyBspTxItem(f_TxItemCfg_s, &bspTxItem_s);
+        Ret_e = s_FMKFDCAN_CopyBspTxItem(f_TxItemCfg_s, &SoTxitem_s.bspTxItem_s);
         if(Ret_e == RC_OK)
         {
             fifoLevel_u32 = HAL_FDCAN_GetTxFifoFreeLevel(&g_NodeInfo_as[f_Node_e].bspNode_s);
@@ -749,13 +774,22 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
             if(fifoLevel_u32 > (t_uint32)0)
             {
                 bspRet_e = HAL_FDCAN_AddMessageToTxFifoQ(&g_NodeInfo_as[f_Node_e].bspNode_s,
-                                                        &bspTxItem_s,
+                                                        &SoTxitem_s.bspTxItem_s,
                                                         f_TxItemCfg_s.CanMsg_s.data_pu8);
+                if(bspRet_e != HAL_OK)
+                {
+                    Ret_e = RC_WARNING_WRONG_RESULT;
+                }
             }
             // if hardware fifo Tx full, put in in software fifo if dlc <= 8
             else if (f_TxItemCfg_s.CanMsg_s.Dlc_e <= FMKFDCAN_DLC_8)
             {
                 // copy structure into SoTxitem_s
+                // get data 
+                for(idxData_u8 = (t_uint8)0 ; idxData_u8 < FMKFDCAN_DLC_8 ; idxData_u8++)
+                {
+                    SoTxitem_s.data_ua8[idxData_u8] = f_TxItemCfg_s.CanMsg_s.data_pu8[idxData_u8];
+                }
                 Ret_e = LIBQUEUE_WriteElement(&g_TxSoftQueue_as[f_Node_e], &SoTxitem_s);
                 // update flag Tx Item to send
                 if(Ret_e == RC_OK)
@@ -801,8 +835,9 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     }
     if(Ret_e == RC_OK)
     {
-        #warning('Not Implemented')
+        #warning('FMKFDCAN_GetRxItem Not Implemented')
     }
+    return Ret_e;
 
 }
 //********************************************************************************
@@ -1029,7 +1064,7 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
     t_uint8 idxUserRegister_u8 = 0;
     /**< Structure that contains Bsp Information */
     t_sFMKFDCAN_RxItemBuffer RxItemBuffer_s;
-    t_eFMKFDCAN_HwRxFifoList RxFifo_e;
+    t_eFMKFDCAN_HwRxFifoList RxFifo_e = FMKFDCAN_HW_RX_FIFO_NB;
     t_sFMKFDCAN_RxItemEvent RxItemEvent_s;
 
     if(f_bspInfo_ps == (FDCAN_HandleTypeDef *)NULL)
@@ -1156,7 +1191,7 @@ static t_eReturnCode s_FMKFDCAN_RetrieveRxItem(t_eFMKFDCAN_NodeList f_Node_e,
     {
         bspRet_e = HAL_FDCAN_GetRxMessage(&g_NodeInfo_as[f_Node_e].bspNode_s, 
                                 bspRxFifo_u32,
-                                &f_bspRxItem_ps,
+                                f_bspRxItem_ps,
                                 f_bspData_pu8);
 
         if(bspRet_e != HAL_OK)
@@ -1187,45 +1222,47 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
         frameBaudrate_e = f_NodeCfg_s.FrameBaudrate_e;
         // Get the  Type
         Ret_e = s_FMKFDCAN_GetBspQueueType(f_NodeCfg_s.QueueType_e, &bspTxQueueType_u32);
-
-        // Global configuration Init 
-        f_bspInit_ps->Init.ClockDivider = (t_uint32)f_NodeCfg_s.clockDivider_u32;
-        f_bspInit_ps->Init.Mode = FMKFDCAN_NODE_MODE;
-        f_bspInit_ps->Init.AutoRetransmission = ENABLE;
-        f_bspInit_ps->Init.TransmitPause = DISABLE;
-        f_bspInit_ps->Init.ProtocolException = ENABLE;
-        f_bspInit_ps->Init.StdFiltersNbr = (t_uint32)0;
-        f_bspInit_ps->Init.ExtFiltersNbr = (t_uint32)0;
-        f_bspInit_ps->Init.TxFifoQueueMode = bspTxQueueType_u32;
-
-        // Init for nominal baudrate
-        f_bspInit_ps->Init.NominalPrescaler = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].prescaler_u16;
-        f_bspInit_ps->Init.NominalSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].syncSeg_u8;
-        f_bspInit_ps->Init.NominalTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg1_u8;
-        f_bspInit_ps->Init.NominalTimeSeg2 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg2_u8;
-
-        // depending on complete configuration 
-        switch(f_NodeCfg_s.ProtocolUse_e)
+        if(Ret_e == RC_OK)
         {
-            case FMKFDCAN_PROTOCOL_CAN2_0B:
-                f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_CLASSIC;
-                break;
+            // Global configuration Init 
+            f_bspInit_ps->Init.ClockDivider = (t_uint32)f_NodeCfg_s.clockDivider_u32;
+            f_bspInit_ps->Init.Mode = FMKFDCAN_NODE_MODE;
+            f_bspInit_ps->Init.AutoRetransmission = ENABLE;
+            f_bspInit_ps->Init.TransmitPause = DISABLE;
+            f_bspInit_ps->Init.ProtocolException = ENABLE;
+            f_bspInit_ps->Init.StdFiltersNbr = (t_uint32)0;
+            f_bspInit_ps->Init.ExtFiltersNbr = (t_uint32)0;
+            f_bspInit_ps->Init.TxFifoQueueMode = bspTxQueueType_u32;
 
-            case FMKFDCAN_PROTOCOL_FDCAN_BRS:
-                f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_FD_BRS;
-                // Init for Data Baudrate
-                f_bspInit_ps->Init.DataPrescaler = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].prescaler_u16;
-                f_bspInit_ps->Init.DataSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].syncSeg_u8;
-                f_bspInit_ps->Init.DataTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].timeSeg1_u8;
-                f_bspInit_ps->Init.DataTimeSeg2 = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].timeSeg2_u8;
-                break;
+            // Init for nominal baudrate
+            f_bspInit_ps->Init.NominalPrescaler = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].prescaler_u16;
+            f_bspInit_ps->Init.NominalSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].syncSeg_u8;
+            f_bspInit_ps->Init.NominalTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg1_u8;
+            f_bspInit_ps->Init.NominalTimeSeg2 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg2_u8;
 
-            case  FMKFDCAN_PROTOCOL_FDCAN_NO_BRS:
-                f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_FD_NO_BRS;
-                break;
+            // depending on complete configuration 
+            switch(f_NodeCfg_s.ProtocolUse_e)
+            {
+                case FMKFDCAN_PROTOCOL_CAN2_0B:
+                    f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+                    break;
 
-            default:
-                Ret_e = RC_ERROR_NOT_SUPPORTED;
+                case FMKFDCAN_PROTOCOL_FDCAN_BRS:
+                    f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_FD_BRS;
+                    // Init for Data Baudrate
+                    f_bspInit_ps->Init.DataPrescaler = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].prescaler_u16;
+                    f_bspInit_ps->Init.DataSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].syncSeg_u8;
+                    f_bspInit_ps->Init.DataTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].timeSeg1_u8;
+                    f_bspInit_ps->Init.DataTimeSeg2 = c_FmkCan_BspBaudrateCfg_as[dataBaudrate_e].timeSeg2_u8;
+                    break;
+
+                case  FMKFDCAN_PROTOCOL_FDCAN_NO_BRS:
+                    f_bspInit_ps->Init.FrameFormat = FDCAN_FRAME_FD_NO_BRS;
+                    break;
+
+                default:
+                    Ret_e = RC_ERROR_NOT_SUPPORTED;
+            }
         }
     }
     return Ret_e;
@@ -1278,9 +1315,9 @@ static t_eReturnCode s_FMKFDCAN_CopyBspRxItem(t_eFMKFDCAN_NodeList f_Node_e,
         {
             f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_STANDARD;
         }
-
-        return Ret_e;
     }
+
+    return Ret_e;
 }
 /*********************************
 * FMKFDCAN_SendTxItem
@@ -1346,7 +1383,7 @@ static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxUserRgstr_u8;
 
-    if(f_NodeRegister_pas == (t_uint8 *)NULL)
+    if(f_NodeRegister_pas == (t_sFMKFDCAN_UserItemRegister *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -1680,11 +1717,11 @@ static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_DataLength f_Dlc_e, t_uint
 /*****************************
 * s_FMKFDCAN_GetDlcFromBsp
 ******************************/
-static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_BitRateSwitchStatus *f_Dlc_pe)
+static t_eReturnCode s_FMKFDCAN_GetDlcFromBsp(t_uint32 f_BspDlc_u32, t_eFMKFDCAN_DataLength *f_Dlc_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Dlc_pe == (t_eFMKFDCAN_BitRateSwitchStatus *)NULL)
+    if(f_Dlc_pe == (t_eFMKFDCAN_DataLength *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -1753,7 +1790,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Callback_e > FMKFDCAN_FRAME_FORMAT_NB)
+    if(f_Callback_e > FMKFDCAN_BSP_CB_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1986,8 +2023,8 @@ void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t TxEvent
 * HAL_FDCAN_TxFifoEmptyCallback
 **********************************/
 void HAL_FDCAN_TxFifoEmptyCallback(FDCAN_HandleTypeDef *hfdcan)
-{
-    s_FMKFDCAN_BspTxEventCb(hfdcan, NULL, FMKFDCAN_BSP_TX_CB_FIFO_EMPTY);
+{                           // not take in charge
+    s_FMKFDCAN_BspTxEventCb(hfdcan, 0xFF, FMKFDCAN_BSP_TX_CB_FIFO_EMPTY);
 }
 /**********************************
 * HAL_FDCAN_TxBufferCompleteCallback
