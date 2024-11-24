@@ -110,7 +110,7 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnState (t_cbFMKIO_EventFunc)(void);
+    typedef t_eReturnCode (t_cbFMKIO_EventFunc)(void);
     /**
     *
     *	@brief      This function is a callback function for dignostic/ error
@@ -129,7 +129,7 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnState (t_cbFMKIO_SigErrorMngmt)(t_uint8 f_debugInfo1_u8, t_uint8 f_debugInfo2_u8);
+    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_uint8 f_debugInfo1_u8, t_uint8 f_debugInfo2_u8);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -154,7 +154,7 @@
     *                store information for each signals.\n
     *
     */
-    t_eReturnState FMKIO_Init(void);
+    t_eReturnCode FMKIO_Init(void);
     /**
     *
     *	@brief      Perform all Cyclic action for this module.\n
@@ -163,7 +163,7 @@
     *               to reference error.\n
     *
     */
-    t_eReturnState FMKIO_Cyclic(void);
+    t_eReturnCode FMKIO_Cyclic(void);
     /**
     *
     *	@brief Function to know the module state 
@@ -172,7 +172,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKIO_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKIO_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state 
@@ -181,7 +181,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKIO_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKIO_SetState(t_eCyclicFuncState f_State_e);
     /**
     *
     *	@brief      Set an input in Digital configuration.\n
@@ -197,7 +197,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState FMKIO_Set_InDigSigCfg(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_PullMode f_pull_e);
+    t_eReturnCode FMKIO_Set_InDigSigCfg(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_PullMode f_pull_e);
     /**
     *
     *	@brief      Set an input in Analog configuration.\n
@@ -216,7 +216,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState FMKIO_Set_InAnaSigCfg(t_eFMKIO_InAnaSig f_signal_e, 
+    t_eReturnCode FMKIO_Set_InAnaSigCfg(t_eFMKIO_InAnaSig f_signal_e, 
                                             t_eFMKIO_PullMode f_pull_e,
                                             t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
     /**
@@ -237,7 +237,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState FMKIO_Set_InFreqSigCfg(t_eFMKIO_InFreqSig f_signal_e, 
+    t_eReturnCode FMKIO_Set_InFreqSigCfg(t_eFMKIO_InFreqSig f_signal_e, 
                                             t_eFMKIO_SigTrigCptr f_trigger_e,
                                             t_eFMKIO_FreqMeas f_freqMeas_e,
                                             t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
@@ -263,7 +263,7 @@
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnState FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e, 
+    t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e, 
                                           t_eFMKIO_PullMode f_pull_e,
                                           t_eFMKIO_SigTrigCptr f_trigger_e,
                                           t_uint32 f_debouncDelay_u32,
@@ -294,7 +294,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
+    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
                                           t_eFMKIO_PullMode        f_pull_e,
                                           t_uint32                 f_frequency_u32,
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
@@ -314,7 +314,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnState FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e, 
+    t_eReturnCode FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e, 
                                           t_eFMKIO_PullMode  f_pull_e,
                                           t_eFMKIO_SpdMode   f_spd_e);
     /**
@@ -333,7 +333,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Set_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue f_value_e);
+    t_eReturnCode FMKIO_Set_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue f_value_e);
     /**
     *
     *	@brief      Get the digital input.\n
@@ -350,7 +350,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
     /**
     *
     *	@brief      Get the analog input.\n
@@ -374,7 +374,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Get_InAnaSigValue(t_eFMKIO_InAnaSig f_signal_e, t_uint16 *f_value_pu16);
+    t_eReturnCode FMKIO_Get_InAnaSigValue(t_eFMKIO_InAnaSig f_signal_e, t_uint16 *f_value_pu16);
     /**
     *
     *	@brief      Get the frequency input.\n
@@ -398,7 +398,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Get_InFreqSigValue(t_eFMKIO_InFreqSig f_signal_e, t_uint32 *f_value_pu32);
+    t_eReturnCode FMKIO_Get_InFreqSigValue(t_eFMKIO_InFreqSig f_signal_e, t_uint32 *f_value_pu32);
     /**
     *
     *	@brief      Update the dutyCycle for a PWM.\n
@@ -416,7 +416,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Set_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_dutyCycle_u16);
+    t_eReturnCode FMKIO_Set_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_dutyCycle_u16);
     /**
     *
     *	@brief      Get the PWM output generation.\n
@@ -433,7 +433,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Get_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 *f_value_pu16);
+    t_eReturnCode FMKIO_Get_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 *f_value_pu16);
     /**
     *
     *	@brief      Get the digital output.\n
@@ -450,7 +450,7 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnState FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
     /**
     *
     *	@brief       @brief This function handles EXTI line 0 to 1 interrupts.\n

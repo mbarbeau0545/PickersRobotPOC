@@ -38,7 +38,7 @@ var _type_common_8h =
       [ "STATE_CYCLIC_WAITING", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5ac75c81c5a990cb85ab5e288d8cd5b5e8", null ],
       [ "STATE_CYCLIC_ERROR", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5a1ed5da612e9bc49385f2f82fb514d6aa", null ]
     ] ],
-    [ "t_eReturnState", "_type_common_8h.html#af3fc622932488c58b80868c563cdd969", [
+    [ "t_eReturnCode", "_type_common_8h.html#af3fc622932488c58b80868c563cdd969", [
       [ "RC_ERROR_ALREADY_CONFIGURED", "_type_common_8h.html#af3fc622932488c58b80868c563cdd969a35dfc2905249b743ca050424b612e63c", null ],
       [ "RC_ERROR_COPY_FAILED", "_type_common_8h.html#af3fc622932488c58b80868c563cdd969a95b387ea5507de13f2e25c3f8c05d2aa", null ],
       [ "RC_ERROR_PTR_NULL", "_type_common_8h.html#af3fc622932488c58b80868c563cdd969a07c50b18043a705e83c24862045206b6", null ],

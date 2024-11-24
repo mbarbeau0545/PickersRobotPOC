@@ -50,5 +50,5 @@ var searchData=
   ['t_5fefmkmac_5fdmarqsttype_47',['t_eFMKMAC_DmaRqstType',['../_f_m_k_m_a_c___config_public_8h.html#a07165ae3baf8fc5ef60c24bbcaf65220',1,'FMKMAC_ConfigPublic.h']]],
   ['t_5fefmkmac_5fdmatransferdir_48',['t_eFMKMAC_DmaTransferDir',['../_f_m_k_m_a_c___config_public_8h.html#a4344db74ca1acc43e6f774a4e9c46f8d',1,'FMKMAC_ConfigPublic.h']]],
   ['t_5fefmkmac_5fdmatransferpriority_49',['t_eFMKMAC_DmaTransferPriority',['../_f_m_k_m_a_c___config_public_8h.html#aaf32efa565ee8e98c00c8c3d1c311f21',1,'FMKMAC_ConfigPublic.h']]],
-  ['t_5fereturnstate_50',['t_eReturnState',['../_type_common_8h.html#af3fc622932488c58b80868c563cdd969',1,'TypeCommon.h']]]
+  ['t_5fereturnstate_50',['t_eReturnCode',['../_type_common_8h.html#af3fc622932488c58b80868c563cdd969',1,'TypeCommon.h']]]
 ];

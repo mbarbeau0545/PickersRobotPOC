@@ -63,9 +63,9 @@ static const t_eFMKIO_OutDigSig c_InputSig_e = FMKIO_INPUT_SIGDIG_2;
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for Cmd_IrrigValve_Carotte_SetActCfg here
     //Ret_e = FMKIO_Set_OutDigSigCfg(c_InputSig_e, FMKIO_PULL_MODE_DISABLE, FMKIO_SPD_MODE_LOW);
 
@@ -78,9 +78,9 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void)
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_DigValue value_e;
     //    Your code for Cmd_IrrigValve_Carotte_GetActValue here
     Ret_e = FMKIO_Get_OutDigSigValue(c_InputSig_e, &value_e);
@@ -103,9 +103,9 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue(t_sint16 f_value_s16)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue(t_sint16 f_value_s16)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_DigValue value_e;
     //    Your code for Cmd_IrrigValve_Carotte_GetActValue here
     value_e = (t_eFMKIO_DigValue)f_value_s16;

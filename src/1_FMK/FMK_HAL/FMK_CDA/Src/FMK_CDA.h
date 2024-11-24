@@ -86,7 +86,7 @@
     * @retval RC_OK                             @ref RC_OK
     *
     */
-    t_eReturnState FMKCDA_Init(void);
+    t_eReturnCode FMKCDA_Init(void);
     /**
     *
     *	@brief      Perform all cyclic action to this module   
@@ -101,7 +101,7 @@
     * @retval RC_WARNING_WRONG_STATE              @ref RC_ERROR_WARNING_STATE
     * @retval RC_WARNING_BUSY                     @ref RC_WARNING_BUSY
     */
-    t_eReturnState FMKCDA_Cyclic(void);
+    t_eReturnCode FMKCDA_Cyclic(void);
     /**
     *
     *	@brief Function to know the module state 
@@ -110,7 +110,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKCDA_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKCDA_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state 
@@ -120,7 +120,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKCDA_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKCDA_SetState(t_eCyclicFuncState f_State_e);
     /**
     *
     *	@brief      Function to add a adc channel configuration to an adc instance
@@ -137,7 +137,7 @@
     *   @retval RC_WARNING_WRONG_STATE              @ref RC_ERROR_WARNING_STATE
     *   @retval RC_ERROR_ALREADY_CONFIGURED             @ref RC_ERROR_ALREADY_CONFIGURED
     */
-    t_eReturnState FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e, 
+    t_eReturnCode FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e, 
                                        t_eFMKCDA_AdcChannel f_channel_e,
                                        t_eFMKCDA_HwAdcCfg   f_adcCfg_e);
     /**
@@ -159,7 +159,7 @@
     *   @retval RC_WARNING_NO_OPERATION             @ref RC_WARNING_NO_OPERATION
     *   @retval RC_ERROR_MODULE_NOT_INITIALIZED     @ref RC_ERROR_MODULE_NOT_INITIALIZED
     */
-    t_eReturnState FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e, t_uint16 *f_AnaMeasure_u16);
+    t_eReturnCode FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e, t_uint16 *f_AnaMeasure_u16);
     /**
     *
     *	@brief      Function to get the error code for a adc_channel
@@ -172,7 +172,7 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnState FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState *f_chnlErrInfo_pe);
+    t_eReturnCode FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState *f_chnlErrInfo_pe);
     
 #endif // FMKCPU_H_INCLUDED           
 //************************************************************************************

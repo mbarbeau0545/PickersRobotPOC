@@ -62,21 +62,21 @@
     * @brief     @ref t_cbAppAct_SetActCfg
     *
     */
-    t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Carotte_SetCfg(void);
+    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Carotte_SetCfg(void);
 
     /**
     *
     * @brief     @ref t_cbAppAct_GetActValue
     *
     */
-    t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Carotte_GetValue(t_sAPPACT_ValueInfo *f_value_ps);
+    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Carotte_GetValue(t_sAPPACT_ValueInfo *f_value_ps);
 
     /**
     *
     * @brief     @ref t_cbAppAct_SetActValue
     *
     */
-    t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Carotte_SetValue(t_sint16 f_value_s16);
+    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Carotte_SetValue(t_sint16 f_value_s16);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            

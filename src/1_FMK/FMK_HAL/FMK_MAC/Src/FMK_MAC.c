@@ -132,7 +132,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static t_eReturnState s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
+static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
                                                 DMA_HandleTypeDef * f_bspDma_ps,
                                                 t_eFMKMAC_DmaTransferPriority f_dmaPrio_e,
                                                 t_uFMKMAC_DmaHandleType * f_modHandle_pu);
@@ -149,7 +149,7 @@ static t_eReturnState s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static t_eReturnState s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f_priority_e, t_uint32 * f_bspPriority_pu32);
+static t_eReturnCode s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f_priority_e, t_uint32 * f_bspPriority_pu32);
 /**
 *
 *	@brief      Function to get the bsp dma priority
@@ -170,7 +170,7 @@ static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e);
 /*********************************
  * FMKMAC_Init
  *********************************/
-t_eReturnState FMKMAC_Init(void)
+t_eReturnCode FMKMAC_Init(void)
 {
     
     return RC_OK;
@@ -178,9 +178,9 @@ t_eReturnState FMKMAC_Init(void)
 /*********************************
  * FMKMAC_Cyclic
  *********************************/
-t_eReturnState FMKMAC_Cyclic(void)
+t_eReturnCode FMKMAC_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     switch (g_state_e)
     {
@@ -216,9 +216,9 @@ t_eReturnState FMKMAC_Cyclic(void)
 /*********************************
  * FMKMAC_GetState
  *********************************/
-t_eReturnState FMKMAC_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKMAC_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -235,7 +235,7 @@ t_eReturnState FMKMAC_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKMAC_SetState
  *********************************/
-t_eReturnState FMKMAC_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKMAC_SetState(t_eCyclicFuncState f_State_e)
 {
     g_state_e = f_State_e;
     return RC_OK;
@@ -243,10 +243,10 @@ t_eReturnState FMKMAC_SetState(t_eCyclicFuncState f_State_e)
 /***********************************
  * FMKMAC_RqstDmaInit
  ***********************************/
-t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, 
+t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, 
                                     void *f_ModuleHandle_pv)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_eFMKMAC_DmaChnl channel_e;
     t_eFMKMAC_DmaController dmaCtrl_e;
@@ -310,7 +310,7 @@ t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
  ***********************************/
 static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_eFMKMAC_DmaChnl chnl_e;
     t_eFMKMAC_DmaController dmaCtrl_e;
 
@@ -329,12 +329,12 @@ static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
 /***********************************
  * s_FMKMAC_SetDmaBspCfg
  ***********************************/
-static t_eReturnState s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
+static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
                                                 DMA_HandleTypeDef * f_bspDma_ps,
                                                 t_eFMKMAC_DmaTransferPriority f_dmaPrio_e,
                                                 t_uFMKMAC_DmaHandleType * f_modHandle_pu)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPriority_u32 = 0;
 
     if(f_RqstType_e > FMKMAC_DMA_RQSTYPE_NB)
@@ -381,9 +381,9 @@ static t_eReturnState s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
 /***********************************
  * s_FMKMAC_Get_DmaBspPriority
  ***********************************/
-static t_eReturnState s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f_priority_e, t_uint32 * f_bspPriority_pu32)
+static t_eReturnCode s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f_priority_e, t_uint32 * f_bspPriority_pu32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_priority_e > FMKMAC_DMA_TRANSPRIO_NB)
     {

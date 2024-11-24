@@ -216,8 +216,8 @@ class AppSns_CodeGen():
             var_func_impl += "\n\n/******************************************\n" \
                             + f"* {func_name}\n"  \
                             + "******************************************/\n" \
-                            + f"t_eReturnState {func_name}{val[0]}\n" \
-                            + "{\n" + "    t_eReturnState Ret_e = RC_OK;\n" \
+                            + f"t_eReturnCode {func_name}{val[0]}\n" \
+                            + "{\n" + "    t_eReturnCode Ret_e = RC_OK;\n" \
                             + f"    //    Your code for {f_sns_name}_{val[1][11:]} here\n\n\n\n" \
                             + "    return Ret_e;\n" + "}\n\n"
             var_func_decl += "    /**\n" \
@@ -225,7 +225,7 @@ class AppSns_CodeGen():
                             + f"    * @brief     @ref {val[1]}\n" \
                             + "    *\n" \
                             + "    */\n" \
-                            + f"    t_eReturnState {func_name}{val[0]};\n\n"
+                            + f"    t_eReturnCode {func_name}{val[0]};\n\n"
         # write down information declaration 
         cls.code_gen.change_target_balise(TARGET_FUNCTION_DECL_START, TARGET_FUNCTION_DECL_END)
         cls.code_gen._write_into_file(var_func_decl, distination_file_h)

@@ -3,7 +3,7 @@
 d'appleler la callback du timer ou la callback de la channel
 
 
-t_eReturnState FMKCPU_ReqstInterruptMngmt(TIM_HandleTypeDef *htim, t_eInterruptType interruptType)
+t_eReturnCode FMKCPU_ReqstInterruptMngmt(TIM_HandleTypeDef *htim, t_eInterruptType interruptType)
 {
     for(int i = 0; i < TIM_NB; i++)
     {

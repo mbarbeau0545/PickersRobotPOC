@@ -77,7 +77,7 @@ var searchData=
   ['t_5fefmkmac_5fdmarqsttype_74',['t_eFMKMAC_DmaRqstType',['../_f_m_k_m_a_c___config_public_8h.html#a07165ae3baf8fc5ef60c24bbcaf65220',1,'FMKMAC_ConfigPublic.h']]],
   ['t_5fefmkmac_5fdmatransferdir_75',['t_eFMKMAC_DmaTransferDir',['../_f_m_k_m_a_c___config_public_8h.html#a4344db74ca1acc43e6f774a4e9c46f8d',1,'FMKMAC_ConfigPublic.h']]],
   ['t_5fefmkmac_5fdmatransferpriority_76',['t_eFMKMAC_DmaTransferPriority',['../_f_m_k_m_a_c___config_public_8h.html#aaf32efa565ee8e98c00c8c3d1c311f21',1,'FMKMAC_ConfigPublic.h']]],
-  ['t_5fereturnstate_77',['t_eReturnState',['../_type_common_8h.html#af3fc622932488c58b80868c563cdd969',1,'TypeCommon.h']]],
+  ['t_5fereturnstate_77',['t_eReturnCode',['../_type_common_8h.html#af3fc622932488c58b80868c563cdd969',1,'TypeCommon.h']]],
   ['t_5ffloat32_78',['t_float32',['../_type_common_8h.html#a935272e5890178387e1e8e59e34b10a6',1,'TypeCommon.h']]],
   ['t_5fsappact_5fsysactfunc_79',['t_sAPPACT_SysActFunc',['../structt__s_a_p_p_a_c_t___sys_act_func.html',1,'']]],
   ['t_5fsappact_5fsysdrvfunc_80',['t_sAPPACT_SysDrvFunc',['../structt__s_a_p_p_a_c_t___sys_drv_func.html',1,'']]],

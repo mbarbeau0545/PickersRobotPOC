@@ -61,7 +61,7 @@
     *
     *
     */
-    t_eReturnState APPLGC_Init(void);
+    t_eReturnCode APPLGC_Init(void);
     /**
     *
     *	@brief
@@ -74,7 +74,7 @@
     *
     *
     */
-    t_eReturnState APPLGC_Cyclic(void);
+    t_eReturnCode APPLGC_Cyclic(void);
     /**
     *
     *	@brief
@@ -87,7 +87,7 @@
     *
     *
     */
-    t_eReturnState APPLGC_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode APPLGC_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief
@@ -100,7 +100,7 @@
     *
     *
     */
-    t_eReturnState APPLGC_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e);
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

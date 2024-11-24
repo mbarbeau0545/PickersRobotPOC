@@ -172,7 +172,7 @@ t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
  *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
  *
  */
-static t_eReturnState s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
+static t_eReturnCode s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
                                                 t_eFMKCPU_HwTimerCfg f_hwTimCfg_e,
                                                   t_uint32 f_prescaler_u32,
                                                   t_uint32 f_period_u32,
@@ -192,7 +192,7 @@ static t_eReturnState s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static t_eReturnState s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32);
+static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32);
 /**
  *
  *	@brief      Function to get the bsp NVIC priority init
@@ -206,7 +206,7 @@ static t_eReturnState s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_
  *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
  *
  */
-static t_eReturnState s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *BspNVICPriority_pu32);
+static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *BspNVICPriority_pu32);
 /**
  *
  *	@brief      Function to get the bsp IRQN enum
@@ -220,7 +220,7 @@ static t_eReturnState s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_prio
  *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
  *
  */
-static t_eReturnState s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe);
+static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe);
 /**
  *
  *	@brief      Function to set the state ON/OFF of timer channel
@@ -235,7 +235,7 @@ static t_eReturnState s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn
  *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
  *
  */
-static t_eReturnState s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
+static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                                                   t_eFMKCPU_InterruptChnl f_channel_e,
                                                   t_eFMKCPU_ChnlState f_chnlState_e);
 
@@ -264,7 +264,7 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
  *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
  *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
  */
-static t_eReturnState s_FMKCPU_Operational(void);
+static t_eReturnCode s_FMKCPU_Operational(void);
 
 
 /**
@@ -278,11 +278,11 @@ static t_eReturnState s_FMKCPU_Operational(void);
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_FMKCPU_PerformDiagnostic(void);
+static t_eReturnCode s_FMKCPU_PerformDiagnostic(void);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
-t_eReturnState FMKCPU_Init(void)
+t_eReturnCode FMKCPU_Init(void)
 {
     t_uint8 timIndex_u8;
     t_uint8 chnlIndex_u8;
@@ -307,9 +307,9 @@ t_eReturnState FMKCPU_Init(void)
 /*********************************
  * FMKCPU_Set_Delay
  *********************************/
-t_eReturnState FMKCPU_Cyclic(void)
+t_eReturnCode FMKCPU_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     switch (g_state_e)
     {
@@ -348,9 +348,9 @@ t_eReturnState FMKCPU_Cyclic(void)
 /*********************************
  * FMKCPU_GetState
  *********************************/
-t_eReturnState FMKCPU_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -367,7 +367,7 @@ t_eReturnState FMKCPU_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKCPU_SetState
  *********************************/
-t_eReturnState FMKCPU_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e)
 {
 
     g_state_e = f_State_e;
@@ -388,7 +388,7 @@ void FMKCPU_Set_Delay(t_uint32 f_delayms_u32)
  *********************************/
 void FMKCPU_Get_Tick(t_uint32 * f_tickms_pu32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if( f_tickms_pu32 == (t_uint32 *)NULL)
     {
@@ -404,9 +404,9 @@ void FMKCPU_Get_Tick(t_uint32 * f_tickms_pu32)
 /*********************************
  * FMKCPU_Set_SysClockCfg
  *********************************/
-t_eReturnState FMKCPU_Set_SysClockCfg(void)
+t_eReturnCode FMKCPU_Set_SysClockCfg(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -438,9 +438,9 @@ t_eReturnState FMKCPU_Set_SysClockCfg(void)
 /*********************************
  * FMKCPU_Set_SysClockCfg
  *********************************/
-t_eReturnState FMKCPU_Set_HardwareInit(void)
+t_eReturnCode FMKCPU_Set_HardwareInit(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
     bspRet_e = HAL_Init();
@@ -456,9 +456,9 @@ t_eReturnState FMKCPU_Set_HardwareInit(void)
 /*********************************
  * FMKCPU_Set_NVICState
  *********************************/
-t_eReturnState FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_Ope f_OpeState_e)
+t_eReturnCode FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_Ope f_OpeState_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 BspPriority_u32 = 0;
     IRQn_Type bspIRQN_e;
 
@@ -503,10 +503,10 @@ t_eReturnState FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_
 /*********************************
  * FMKCPU_Set_HwClock
  *********************************/
-t_eReturnState FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
+t_eReturnCode FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
                                   t_eFMKCPU_ClockPortOpe f_OpeState_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_clkPort_e > FMKCPU_RCC_CLK_NB || f_OpeState_e > FMKCPU_CLOCKPORT_OPE_NB)
     {
@@ -552,9 +552,9 @@ t_eReturnState FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
 /*********************************
  * FMKCPU_Set_WwdgCfg
  *********************************/
-t_eReturnState FMKCPU_Set_WwdgCfg(t_eFMKCPu_WwdgResetPeriod f_period_e)
+t_eReturnCode FMKCPU_Set_WwdgCfg(t_eFMKCPu_WwdgResetPeriod f_period_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
     Ret_e = FMKCPU_Set_HwClock(FMKCPU_RCC_CLK_WWDG, FMKCPU_CLOCKPORT_OPE_ENABLE);
@@ -583,10 +583,10 @@ t_eReturnState FMKCPU_Set_WwdgCfg(t_eFMKCPu_WwdgResetPeriod f_period_e)
 /*********************************
  * FMKCPU_ResetWwdg
  *********************************/
-t_eReturnState FMKCPU_ResetWwdg(void)
+t_eReturnCode FMKCPU_ResetWwdg(void)
 {
     HAL_StatusTypeDef bspRet_e = HAL_OK;
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     bspRet_e = HAL_WWDG_Refresh(&g_wwdgInfos_s);
 
     if(bspRet_e != HAL_OK)
@@ -598,7 +598,7 @@ t_eReturnState FMKCPU_ResetWwdg(void)
 /*********************************
  * FMKCPU_Set_PWMChannelCfg
  *********************************/
-t_eReturnState FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                          t_eFMKCPU_InterruptChnl f_channel_e,
                                           t_uint32 f_pwmFreq_u32)
 {
@@ -608,7 +608,7 @@ t_eReturnState FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
      *   For a dutycyle E [0 - 1000]
      *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> (DutyCyle/ 1000) * (ARR +1)
      ********************************/
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     HAL_TIM_ChannelStateTypeDef bspChannelState_e = HAL_TIM_CHANNEL_STATE_BUSY;
     TIM_MasterConfigTypeDef masterCfg_s = {0};
@@ -694,7 +694,7 @@ t_eReturnState FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Set_PWMChannelDuty
  *********************************/
-t_eReturnState FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
                                          t_eFMKCPU_InterruptChnl f_channel_e,
                                          t_uint16 f_dutyCycle_u16)
 /********************************
@@ -704,7 +704,7 @@ t_eReturnState FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
  *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> CCR = (DutyCyle/ 1000) * (ARR +1)
  ********************************/
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 BspChannel_u32 = 0;
     t_uint32 CCRxValue_u32 = 0;
 
@@ -762,7 +762,7 @@ t_eReturnState FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Get_PWMChannelDuty
  *********************************/
-t_eReturnState FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
                                          t_eFMKCPU_InterruptChnl f_channel_e,
                                          t_uint16 *f_dutyCycle_u16)
 {
@@ -772,7 +772,7 @@ t_eReturnState FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
      *   For a dutycyle E [0 - 1000]
      *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> CCR = (DutyCyle/ 1000) * (ARR +1)
      ********************************/
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 BspChannel_u32 = 0;
     t_uint32 comparedValue_u32 = 0;
 
@@ -816,12 +816,12 @@ t_eReturnState FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Set_ICChannelCfg
  *********************************/
-t_eReturnState FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                          t_eFMKCPU_InterruptChnl f_channel_e, 
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
                                          t_cbFMKCPU_InterruptChnl f_ITChannel_cb)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     HAL_TIM_ChannelStateTypeDef bspChannelState_e = HAL_TIM_CHANNEL_STATE_BUSY;
     TIM_IC_InitTypeDef BspICInit_s;
@@ -899,7 +899,7 @@ t_eReturnState FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Set_EvntTimerCfg
  *********************************/
-t_eReturnState FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
                                          t_uint32 f_periodms_u32,
                                          t_cbFMKCPU_InterruptChnl f_ITChannel_cb)
 {
@@ -908,7 +908,7 @@ t_eReturnState FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
      *   In FMKCPU_ConfigPrivate, 
      * 
      ********************************/
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPeriod_u32 = 0; 
     t_uint32 prescaler_u32 = 0;
 
@@ -962,11 +962,11 @@ t_eReturnState FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_AddTimerChnlCallback
  *********************************/
-t_eReturnState FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e,
                                            t_eFMKCPU_InterruptChnl f_channel_e,
                                            t_cbFMKCPU_InterruptChnl *f_ITChannel_cb)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_timer_e > FMKCPU_TIMER_NB || f_channel_e > FMKCPU_CHANNEL_NB)
     {
@@ -993,9 +993,9 @@ t_eReturnState FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Set_EventTimerState
  *********************************/
-t_eReturnState FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_EvntTimState f_TimState_e)
+t_eReturnCode FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_EvntTimState f_TimState_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_ChnlState chnlOpe_e;
     if (f_timer_e > FMKCPU_TIMER_NB
     || f_TimState_e > FMKCPU_TIMST_NB)
@@ -1032,11 +1032,11 @@ t_eReturnState FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_E
 /*********************************
  * FMKCPU_Set_ChannelState
  *********************************/
-t_eReturnState FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e,
+t_eReturnCode FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e,
                                        t_eFMKCPU_InterruptChnl f_channel_e,
                                        t_eFMKCPU_ChnlState f_channelState_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_timer_e > FMKCPU_TIMER_NB 
     || f_channel_e > FMKCPU_CHANNEL_NB 
@@ -1054,11 +1054,11 @@ t_eReturnState FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * FMKCPU_Get_ChannelErrorStatus
  *********************************/
-t_eReturnState FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e, 
+t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e, 
                                         t_eFMKCPU_InterruptChnl f_channel_e, 
                                         t_eFMKCPU_ChnlErrorState *f_chnlErrInfo_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_timer_e > FMKCPU_TIMER_NB 
     || f_channel_e > FMKCPU_CHANNEL_NB)
@@ -1081,11 +1081,11 @@ t_eReturnState FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e,
     return Ret_e;
 }
 
-t_eReturnState FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e, 
+t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e, 
                                         t_eFMKCPU_InterruptChnl f_channel_e,
                                         t_uint32 * f_CCRxValue_pu32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspChannel_u32 = 0;
 
     if(f_timer_e > FMKCPU_TIMER_NB 
@@ -1114,9 +1114,9 @@ t_eReturnState FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * s_FMKCPU_Operational
  *********************************/
-static t_eReturnState s_FMKCPU_Operational(void)
+static t_eReturnCode s_FMKCPU_Operational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_uint32 SavedTime_u32 = 0;
     t_uint32 currentTime_u32 = 0;
 
@@ -1135,9 +1135,9 @@ static t_eReturnState s_FMKCPU_Operational(void)
 /*********************************
  * s_FMKCPU_PerformDiagnostic
  *********************************/
-static t_eReturnState s_FMKCPU_PerformDiagnostic(void)
+static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_TIM_StateTypeDef bspTimerState_e;
     t_eFMKCPU_ChnlErrorState channelErr_e = FMKCPU_ERRSTATE_OK;
     HAL_TIM_ChannelStateTypeDef bspChnlState_e = HAL_TIM_CHANNEL_STATE_READY;
@@ -1203,9 +1203,9 @@ static t_eReturnState s_FMKCPU_PerformDiagnostic(void)
 /*********************************
  * s_FMKCPU_Get_BspChannel
  *********************************/
-static t_eReturnState s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32)
+static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_bspChnl_pu32 == (t_uint32 *)NULL)
     {
@@ -1243,9 +1243,9 @@ static t_eReturnState s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_
 /*********************************
  * s_FMKCPU_Get_BspTimer
  *********************************/
-static t_eReturnState s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe)
+static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_IRQN_e > FMKCPU_NVIC_NB)
     {
@@ -1577,9 +1577,9 @@ static t_eReturnState s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn
 /*********************************
  * s_FMKCPU_Get_BspTimer
  *********************************/
-static t_eReturnState s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *f_BspNVICPriority_pu32)
+static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *f_BspNVICPriority_pu32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_BspNVICPriority_pu32 == (t_uint32 *)NULL)
     {
@@ -1615,11 +1615,11 @@ static t_eReturnState s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_prio
 /*********************************
  * s_FMKCPU_Set_HwChannelState
  *********************************/
-static t_eReturnState s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
+static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                                                   t_eFMKCPU_InterruptChnl f_channel_e,
                                                   t_eFMKCPU_ChnlState f_chnlStateOpe_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspChannel_u32 = 0;
     t_sFMKCPU_ChnlInfo  * channel_ps;
     t_sFMKCPU_TimerInfo * timer_ps;
@@ -1715,7 +1715,7 @@ static t_eReturnState s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
 /*********************************
  * s_FMKCPU_Set_BspTimerInit
  *********************************/
-static t_eReturnState s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
+static t_eReturnCode s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
                                                 t_eFMKCPU_HwTimerCfg f_hwTimCfg_e,
                                                   t_uint32 f_prescaler_u32,
                                                   t_uint32 f_period_u32,
@@ -1723,7 +1723,7 @@ static t_eReturnState s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps
                                                   t_uint32 f_clockDivision_u32,
                                                   t_uint32 f_autoRePreload_u32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
     if (f_timer_ps == (t_sFMKCPU_TimerInfo *)NULL)

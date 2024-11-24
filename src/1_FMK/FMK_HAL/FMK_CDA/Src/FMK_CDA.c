@@ -148,7 +148,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
  *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
  *
  */
-static t_eReturnState s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, t_uint32 *f_bspChannel_32);
+static t_eReturnCode s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, t_uint32 *f_bspChannel_32);
 /**
  *
  *	@brief      Function to set the bsp adc Init.\n
@@ -164,7 +164,7 @@ static t_eReturnState s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, 
  * @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
  *
  */
-static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
+static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
                                              t_eFMKCDA_HwAdcCfg f_HwAdcCfg_e);
 /**
  *
@@ -184,7 +184,7 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
  * @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
  *
  */
-static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e);
+static t_eReturnCode s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e);
 /**
  *
  *	@brief      Perform cyclic operation for this module.\n
@@ -199,7 +199,7 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
  * @retval RC_WARNING_BUSY                     @ref RC_WARNING_BUSY
  *
  */
-static t_eReturnState s_FMKCDA_Operational(void);
+static t_eReturnCode s_FMKCDA_Operational(void);
 /**
  *
  *	@brief      Perform cyclic pre-operation for this module.\n
@@ -210,7 +210,7 @@ static t_eReturnState s_FMKCDA_Operational(void);
  * @retval RC_WARNING_BUSY                     @ref RC_WARNING_BUSY
  *
  */
-static t_eReturnState s_FMKCDA_PreOperational(void);
+static t_eReturnCode s_FMKCDA_PreOperational(void);
 /**
  *
  *	@brief      Perform Diagnostic on adc & dac
@@ -223,7 +223,7 @@ static t_eReturnState s_FMKCDA_PreOperational(void);
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e);
+static t_eReturnCode s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e);
 /**
  *
  *	@brief      Start adc ocnversion
@@ -235,7 +235,7 @@ static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e);
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_HwAdcCfg f_hwAdc_e);
+static t_eReturnCode s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_HwAdcCfg f_hwAdc_e);
 /**
  *
  *	@brief      Perform cyclic pre-operation for this module.\n
@@ -246,14 +246,14 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
  * @retval RC_WARNING_BUSY                     @ref RC_WARNING_BUSY
  *
  */
-static t_eReturnState s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e);
+static t_eReturnCode s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
 /*********************************
  * FMKCDA_Init
  *********************************/
-t_eReturnState FMKCDA_Init(void)
+t_eReturnCode FMKCDA_Init(void)
 {
     t_uint8 adcIndex_u8 = 0;
     t_uint8 chnlIndex_u8 = 0;
@@ -291,9 +291,9 @@ t_eReturnState FMKCDA_Init(void)
 /*********************************
  * FMKCDA_Init
  *********************************/
-t_eReturnState FMKCDA_Cyclic(void)
+t_eReturnCode FMKCDA_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     switch (g_state_e)
     {
@@ -335,9 +335,9 @@ t_eReturnState FMKCDA_Cyclic(void)
 /*********************************
  * FMKCDA_GetState
  *********************************/
-t_eReturnState FMKCDA_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKCDA_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -354,7 +354,7 @@ t_eReturnState FMKCDA_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKCDA_SetState
  *********************************/
-t_eReturnState FMKCDA_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKCDA_SetState(t_eCyclicFuncState f_State_e)
 {
 
     g_state_e = f_State_e;
@@ -364,11 +364,11 @@ t_eReturnState FMKCDA_SetState(t_eCyclicFuncState f_State_e)
 /*********************************
  * FMKCDA_Set_AdcChannelCfg
  *********************************/
-t_eReturnState FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e,
+t_eReturnCode FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e,
                                         t_eFMKCDA_AdcChannel f_channel_e,
                                         t_eFMKCDA_HwAdcCfg f_hwAdcCfg_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_Adc_e > FMKCDA_ADC_NB 
     || f_channel_e > c_FmkCda_AdcMaxChnl_ua8[f_Adc_e])
@@ -398,9 +398,9 @@ t_eReturnState FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e,
 /*********************************
  * FMKCDA_Get_AnaChannelMeasure
  *********************************/
-t_eReturnState FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e, t_uint16 *f_AnaMeasure_u16)
+t_eReturnCode FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e, t_uint16 *f_AnaMeasure_u16)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_Adc_e > FMKCDA_ADC_NB 
     || f_channel_e > c_FmkCda_AdcMaxChnl_ua8[f_Adc_e])
@@ -445,9 +445,9 @@ t_eReturnState FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_Adc
 /*********************************
  * FMKCDA_Get_AnaChannelMeasure
  *********************************/
-t_eReturnState FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState *f_chnlErrInfo_pe)
+t_eReturnCode FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState *f_chnlErrInfo_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_adc_e > FMKCDA_ADC_NB)
     {
@@ -470,9 +470,9 @@ t_eReturnState FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState
 /*********************************
  * s_FMKCDA_Operational
  *********************************/
-static t_eReturnState s_FMKCDA_PreOperational(void)
+static t_eReturnCode s_FMKCDA_PreOperational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint8 AdcIndex_u8 = 0;
 
     // set configuration channel for Adc Internal Signal
@@ -489,11 +489,11 @@ static t_eReturnState s_FMKCDA_PreOperational(void)
 /*********************************
  * s_FMKCDA_Operational
  *********************************/
-static t_eReturnState s_FMKCDA_Operational(void)
+static t_eReturnCode s_FMKCDA_Operational(void)
 {
     static t_uint32 s_SavedTime_u32 = 0;
 
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 currentTime_u32 = 0;
     t_uint8 adcIndex_u8 = 0;
 
@@ -543,9 +543,9 @@ static t_eReturnState s_FMKCDA_Operational(void)
 /*********************************
  * s_FMKCDA_PerformDiagnostic
  *********************************/
-static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_HwAdcCfg f_hwAdc_e)
+static t_eReturnCode s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_HwAdcCfg f_hwAdc_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
 
@@ -590,9 +590,9 @@ static t_eReturnState s_FMKCDA_StartAdcConversion(t_eFMKCDA_Adc f_Adc_e, t_eFMKC
 /*********************************
  * s_FMKCDA_PerformDiagnostic
  *********************************/
-static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e)
+static t_eReturnCode s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 adcErr_u32 = HAL_ADC_ERROR_NONE;
     t_sFMKCDA_AdcInfo * adcInfo_ps;
 
@@ -620,9 +620,9 @@ static t_eReturnState s_FMKCDA_PerformDiagnostic(t_eFMKCDA_Adc f_adc_e)
 /*********************************
  * s_FMKCDA_Get_BspChannel
  *********************************/
-static t_eReturnState s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, t_uint32 *f_bspChannel_32)
+static t_eReturnCode s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, t_uint32 *f_bspChannel_32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     if (f_channel_e > FMKCDA_ADC_CHANNEL_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -702,10 +702,10 @@ static t_eReturnState s_FMKCDA_Get_BspChannel(t_eFMKCDA_AdcChannel f_channel_e, 
 /*********************************
  * s_FMKCDA_Set_BspAdcCfg
  *********************************/
-static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
+static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
                                              t_eFMKCDA_HwAdcCfg f_HwAdcCfg_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     ADC_InitTypeDef *bspAdcInit_s;
 
@@ -822,9 +822,9 @@ static t_eReturnState s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
 /*********************************
  * s_FMKCDA_Set_BspChannelCfg
  *********************************/
-static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e)
+static t_eReturnCode s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     t_uint32 bspChannel_u32 = 0;
         
@@ -893,9 +893,9 @@ static t_eReturnState s_FMKCDA_Set_BspChannelCfg(t_eFMKCDA_Adc f_Adc_e, t_eFMKCD
 /******************************************
  * s_FMKCDA_UpdateChannelValue
  *****************************************/
-static t_eReturnState s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e)
+static t_eReturnCode s_FMKCDA_UpdateChannelValue(t_eFMKCDA_Adc f_Adc_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_eFMKCDA_AdcChannel chnl_e = FMKCDA_ADC_CHANNEL_NB;
     t_uint8 LLI_u8 = 0;
     t_uint8 reverseLLI_u8 = 0;

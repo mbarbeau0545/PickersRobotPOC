@@ -121,7 +121,7 @@
     *	 
     *
     */
-   typedef t_eReturnState (t_cbFMKCPU_InterruptChnl)(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_InterruptChnl f_channel_e);
+   typedef t_eReturnCode (t_cbFMKCPU_InterruptChnl)(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_InterruptChnl f_channel_e);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -147,7 +147,7 @@
     *                store information for each signals.\n
     *
     */
-    t_eReturnState FMKCPU_Init(void);
+    t_eReturnCode FMKCPU_Init(void);
     /**
     *
     *	@brief      Perform all Cyclic action for this module.\n
@@ -158,7 +158,7 @@
     *               to reference error.\n
     *
     */
-    t_eReturnState FMKCPU_Cyclic(void);
+    t_eReturnCode FMKCPU_Cyclic(void);
     /**
     *
     *	@brief Function to know the module state.\n 
@@ -168,7 +168,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKCPU_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state.\n
@@ -177,7 +177,7 @@
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    t_eReturnState FMKCPU_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e);
     /**
     *
     *	@brief      Set the system clock configuration.\n
@@ -188,7 +188,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_Set_SysClockCfg(void);
+    t_eReturnCode FMKCPU_Set_SysClockCfg(void);
     /**
     *
     *	@brief      Set a Delay.\n
@@ -215,7 +215,7 @@
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-   t_eReturnState FMKCPU_Set_HardwareInit(void);
+   t_eReturnCode FMKCPU_Set_HardwareInit(void);
     /**
     *
     *	@brief      Set the priority for a NVIC and the state ON/OFF\n
@@ -233,7 +233,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
     */
-    t_eReturnState FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_Ope f_OpeState_e);
+    t_eReturnCode FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_Ope f_OpeState_e);
     /**
     *
     *	@brief      Set the RCC clock state.\n
@@ -250,7 +250,7 @@
     *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnState FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e, 
+    t_eReturnCode FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e, 
                                        t_eFMKCPU_ClockPortOpe f_OpeState_e);
     /**
     *
@@ -263,7 +263,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_Set_WwdgCfg(t_eFMKCPu_WwdgResetPeriod f_period_e);
+    t_eReturnCode FMKCPU_Set_WwdgCfg(t_eFMKCPu_WwdgResetPeriod f_period_e);
     /**
     *
     *	@brief      Reset the watchdogs counter.\n
@@ -271,7 +271,7 @@
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_ResetWwdg(void);
+    t_eReturnCode FMKCPU_ResetWwdg(void);
     /**
     *
     *	@brief      Configure a timer channel in PWM configuration.\n
@@ -290,7 +290,7 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnState FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
+    t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                             t_eFMKCPU_InterruptChnl f_channel_e,
                                             t_uint32 f_pwmFreq_u32);
     /**
@@ -310,7 +310,7 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED           @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnState FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
+    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
                                              t_eFMKCPU_InterruptChnl f_channel_e,
                                              t_uint16 f_dutyCycle_u16);
     /**
@@ -328,7 +328,7 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED           @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnState FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
+    t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
                                              t_eFMKCPU_InterruptChnl f_channel_e,
                                              t_uint16 *f_dutyCycle_u16);
     /**
@@ -355,7 +355,7 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnState FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
+    t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                          t_eFMKCPU_InterruptChnl f_channel_e, 
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
                                          t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
@@ -380,7 +380,7 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnState FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
+    t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
                                          t_uint32 f_periodms_u32,
                                          t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
     /**
@@ -400,7 +400,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e, 
+    t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e, 
                                              t_eFMKCPU_InterruptChnl f_channel_e,
                                              t_cbFMKCPU_InterruptChnl *f_ITChannel_cb);
     /**
@@ -417,7 +417,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e, 
+    t_eReturnCode FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e, 
                                            t_eFMKCPU_InterruptChnl f_channel_e,
                                            t_eFMKCPU_ChnlState f_channelState_e);
     /**
@@ -433,7 +433,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnState FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_EvntTimState f_TimState_e);
+    t_eReturnCode FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_EvntTimState f_TimState_e);
     /**
     *
     *	@brief      Function to get the error code for a timer_channel
@@ -447,7 +447,7 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnState FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e,
+    t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e,
                                              t_eFMKCPU_InterruptChnl f_channel_e, 
                                              t_eFMKCPU_ChnlErrorState *f_chnlErrInfo_pe);
     /**
@@ -463,7 +463,7 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnState FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e, 
+    t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e, 
                                         t_eFMKCPU_InterruptChnl f_channel_e,
                                         t_uint32 * f_CCRxValue_pu32);
     /**

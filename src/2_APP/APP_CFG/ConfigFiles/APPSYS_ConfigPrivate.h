@@ -52,13 +52,13 @@
     *	@brief      Set a module function init 
 
     */
-    typedef t_eReturnState (t_cbAppSys_FuncInit)(void);
+    typedef t_eReturnCode (t_cbAppSys_FuncInit)(void);
     /**
     *
     *	@brief      Set a module cyclic function
 
     */
-    typedef t_eReturnState (t_cbAppSys_FuncCyclic)(void);
+    typedef t_eReturnCode (t_cbAppSys_FuncCyclic)(void);
     /**
     *
     *	@brief Function to know the module state.\n 
@@ -68,7 +68,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    typedef t_eReturnState (t_cbAppSys_GetState)(t_eCyclicFuncState *f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_GetState)(t_eCyclicFuncState *f_state_pe);
     /**
     *
     *	@brief Function to update the module state.\n
@@ -77,7 +77,7 @@
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    typedef t_eReturnState (t_cbAppSys_SetState)(t_eCyclicFuncState f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_SetState)(t_eCyclicFuncState f_state_pe);
 
     /* Structure to store Init and Cyclic Func*/
     typedef struct 

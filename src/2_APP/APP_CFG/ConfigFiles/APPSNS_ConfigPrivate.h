@@ -46,7 +46,7 @@
     *	@brief      Set a sensor configuration 
 
     */
-    typedef t_eReturnState (t_cbAppSns_SetSnsCfg)(void);
+    typedef t_eReturnCode (t_cbAppSns_SetSnsCfg)(void);
     /**
     *
     *	@brief      get value for a sensor
@@ -54,7 +54,7 @@
     *	@param[in] f_SnsValue_ps : structure to store value and validity
     *
     */
-    typedef t_eReturnState (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+    typedef t_eReturnCode (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
     /**
     *
     *	@brief      Format the value sensors depdning on how it will be treated in Logic
@@ -65,24 +65,24 @@
     *	@param[in] SnsValue_f32 : the value which will be used in logic
     *
     */
-    typedef t_eReturnState (t_cbAppSns_FormatValSI)(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
+    typedef t_eReturnCode (t_cbAppSns_FormatValSI)(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
     /**
     *
     *	@brief      Set the driver init function
     */
-    typedef t_eReturnState (t_cbAppSns_DrvInit)(void);
+    typedef t_eReturnCode (t_cbAppSns_DrvInit)(void);
     /**
     *
     *	@brief      Set the driver cyclic function
     *
     */
-    typedef t_eReturnState (t_cbAppSns_DrvCyclic)(void);
+    typedef t_eReturnCode (t_cbAppSns_DrvCyclic)(void);
     /**
     *
     *	@brief      Conversion Management function.\n
     *
     */
-   typedef t_eReturnState (t_cbAppSns_ConversionMngmt)(t_float32 f_rawValue_f32, t_float32 *f_snsValue_ps16);
+   typedef t_eReturnCode (t_cbAppSns_ConversionMngmt)(t_float32 f_rawValue_f32, t_float32 *f_snsValue_ps16);
 	
 	/* CAUTION : Automatic generated code section : Start */
 

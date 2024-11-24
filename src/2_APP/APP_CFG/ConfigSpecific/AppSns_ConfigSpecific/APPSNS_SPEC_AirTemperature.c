@@ -62,9 +62,9 @@
 /******************************************
 * APPSNS_SPEC_AirTemperature_SetCfg
 ******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_SetCfg(void)
+t_eReturnCode APPSNS_SPEC_AirTemperature_SetCfg(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for AirTemperature_SetSnsCfg here
 
 
@@ -77,9 +77,9 @@ t_eReturnState APPSNS_SPEC_AirTemperature_SetCfg(void)
 /******************************************
 * APPSNS_SPEC_AirTemperature_GetSigValue
 ******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
+t_eReturnCode APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for AirTemperature_GetSigValue here
 
 
@@ -92,9 +92,9 @@ t_eReturnState APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_p
 /******************************************
 * APPSNS_SPEC_AirTemperature_FormatValue
 ******************************************/
-t_eReturnState APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
+t_eReturnCode APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for AirTemperature_FormatValSI here
 
 
