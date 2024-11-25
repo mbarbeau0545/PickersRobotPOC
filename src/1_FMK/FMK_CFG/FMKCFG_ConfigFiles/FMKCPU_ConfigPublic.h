@@ -31,6 +31,9 @@
     #define FMKCPU_STM32_ECU_FAMILY_G
 
     #define FMKCPU_WWDG_RESET_CFG  FMKCPU_WWDG_RESET_100MS /**< default watchdogs configuration */
+
+    #define FMKCPU_PLLQ_CLOCK_OSC_MHZ    ((t_uint8)64)       /**< LLP oscillator equals to 64 MHz */
+    #define FMKCPU_HSI_CLOCK_OSC_MHZ     ((t_uint8)8)        /**<  HSI oscillatator equals to 8 MHz */
     // ********************************************************************
     // *                      Types
     // ********************************************************************

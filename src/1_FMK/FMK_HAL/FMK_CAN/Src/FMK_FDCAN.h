@@ -199,18 +199,6 @@
     *
     *
     */
-    t_eReturnCode FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
-    /**
-    *	@brief
-    *	@note   
-    *
-    *
-    *	@param[in] 
-    *	@param[in]
-    *	 
-    *
-    *
-    */
     t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEventCfg f_RxItemCfg_s);
     /**
     *	@brief

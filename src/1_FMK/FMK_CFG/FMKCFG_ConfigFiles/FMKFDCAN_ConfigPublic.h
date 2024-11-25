@@ -19,7 +19,7 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    #include "./FMKCPU_ConfigPublic.h"
+
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -84,6 +84,27 @@
 
     typedef enum 
     {
+        FMKFDCAN_CLOCK_KERNEL_DIV1  = 0x01,   /**< FDCAN Clock Source Divided  1  */ 
+        FMKFDCAN_CLOCK_KERNEL_DIV2  = 0x02,   /**< FDCAN Clock Source Divided  2  */  
+        FMKFDCAN_CLOCK_KERNEL_DIV4  = 0x04,   /**< FDCAN Clock Source Divided  4  */  
+        FMKFDCAN_CLOCK_KERNEL_DIV6  = 0x06,   /**< FDCAN Clock Source Divided  6  */  
+        FMKFDCAN_CLOCK_KERNEL_DIV8  = 0x08,   /**< FDCAN Clock Source Divided  8  */  
+        FMKFDCAN_CLOCK_KERNEL_DIV10 = 0x0A,   /**< FDCAN Clock Source Divided  10 */
+        FMKFDCAN_CLOCK_KERNEL_DIV12 = 0x0C,   /**< FDCAN Clock Source Divided  12 */
+        FMKFDCAN_CLOCK_KERNEL_DIV14 = 0x0E,   /**< FDCAN Clock Source Divided  14 */
+        FMKFDCAN_CLOCK_KERNEL_DIV16 = 0x10,   /**< FDCAN Clock Source Divided  16 */
+        FMKFDCAN_CLOCK_KERNEL_DIV18 = 0x12,   /**< FDCAN Clock Source Divided  18 */
+        FMKFDCAN_CLOCK_KERNEL_DIV20 = 0x14,   /**< FDCAN Clock Source Divided  20 */
+        FMKFDCAN_CLOCK_KERNEL_DIV22 = 0x16,   /**< FDCAN Clock Source Divided  22 */
+        FMKFDCAN_CLOCK_KERNEL_DIV24 = 0x18,   /**< FDCAN Clock Source Divided  24 */
+        FMKFDCAN_CLOCK_KERNEL_DIV26 = 0x1A,   /**< FDCAN Clock Source Divided  26 */
+        FMKFDCAN_CLOCK_KERNEL_DIV28 = 0x1C,   /**< FDCAN Clock Source Divided  28 */
+        FMKFDCAN_CLOCK_KERNEL_DIV30 = 0x1E,   /**< FDCAN Clock Source Divided  30 */
+
+        FMKFDCAN_CLOCK_KERNEL_DIV_NB = 0x1F   /**< FDCAN Clock Source Divider Number */
+    } t_eFMKFDCAN_ClockKernelDiv;
+    typedef enum 
+    {
         FMKFDCAN_HWQUEUE_TYPE_NORMAL = 0x00,   /**< Hardware Queue is a queue */
         FMKFDCAN_HWQUEUE_TYPE_FIFO,
 
@@ -140,6 +161,8 @@
 
         FMKFDCAN_FRAME_PURPOSE_NB,
     } t_eFMKFDCAN_FramePurpose;
+
+
     //-----------------------------ENUM TYPES-----------------------------//
     
     /* CAUTION : Automatic generated code section for Enum: Start */
@@ -154,9 +177,9 @@
     /* CAUTION : Automatic generated code section for Structure: End */
     typedef struct
     {
+        t_eFMKFDCAN_ClockKernelDiv clockDivider_e;
         t_eFMKFDCAN_ProtocolType ProtocolUse_e;
         t_eFMKFDCAN_Baudrate FrameBaudrate_e;
-        t_uint32 clockDivider_u32;
         t_eFMKFDCAN_Baudrate DataBaudrate_e;
         t_eFMKFDCAN_HwTxQueueType QueueType_e;
         t_eFMKFDCAN_FifoOpeMode FifoMode_e;

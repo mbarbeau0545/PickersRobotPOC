@@ -410,18 +410,34 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
+    RCC_OscInitStruct.PLL.PLLN = 8;
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+#elif defined FMKCPU_STM32_ECU_FAMILY_F
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-
+#else 
+    #error("Unknwon Stm32 Family")
+#endif
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                                    |RCC_CLOCKTYPE_PCLK1;
+                                    |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    
+    bspRet_e = HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 
+    if(bspRet_e == HAL_OK)
     bspRet_e = HAL_RCC_OscConfig(&RCC_OscInitStruct);
     if(bspRet_e == HAL_OK)
     {
@@ -447,6 +463,22 @@ t_eReturnCode FMKCPU_Set_HardwareInit(void)
     if(bspRet_e != HAL_OK)
     {
         Ret_e = RC_ERROR_WRONG_RESULT;
+    }
+
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
+    
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = FMKCPU_Set_HwClock(FMKCPU_RCC_CLK_SYSCFG, FMKCPU_CLOCKPORT_OPE_ENABLE);
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = FMKCPU_Set_HwClock(FMKCPU_RCC_CLK_PWR, FMKCPU_CLOCKPORT_OPE_ENABLE);
+    }
+#endif
+
+    if(Ret_e != RC_OK)
+    {
         g_state_e = STATE_CYCLIC_ERROR;
     }
 
@@ -1594,13 +1626,13 @@ static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_prior
         switch (f_priority_e)
         {
             case FMKCPU_NVIC_PRIORITY_LOW:
-                *f_BspNVICPriority_pu32 = 1;
+                *f_BspNVICPriority_pu32 = 6;
                 break;
             case FMKCPU_NVIC_PRIORITY_MEDIUM:
                 *f_BspNVICPriority_pu32 = 3;
                 break;
             case FMKCPU_NVIC_PRIORITY_HIGH:
-                *f_BspNVICPriority_pu32 = 5;
+                *f_BspNVICPriority_pu32 = 0;
                 break;
 
             case FMKCPU_NVIC_PRIORITY_NB:
