@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-11-24T17:47:04.053Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="GoBKoRBRd3xg29mU8luh" version="24.6.1" type="device" pages="17">
+<mxfile host="Electron" modified="2024-11-26T18:19:28.627Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="KK-y1fTnSYguqkwJvzmU" version="24.6.1" type="device" pages="17">
   <diagram name="Type" id="aFIQa6v2kjURIp6YYnzp">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
@@ -1952,7 +1952,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="RL8b5klmQW41GJaUQXk2" name="sFDCAN_SendTxItem">
-    <mxGraphModel dx="414" dy="1412" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1884" dy="2273" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />

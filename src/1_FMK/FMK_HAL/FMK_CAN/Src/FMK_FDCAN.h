@@ -29,113 +29,131 @@
     // ********************************************************************
 
     //-----------------------------ENUM TYPES-----------------------------//
-    typedef enum
-    {
-        FMKFDCAN_DLC_0 = 0x00,
-        FMKFDCAN_DLC_1,
-        FMKFDCAN_DLC_2,
-        FMKFDCAN_DLC_3,
-        FMKFDCAN_DLC_4,
-        FMKFDCAN_DLC_5,
-        FMKFDCAN_DLC_6,
-        FMKFDCAN_DLC_7,
-        FMKFDCAN_DLC_8,
-        FMKFDCAN_DLC_16,
-        FMKFDCAN_DLC_20,
-        FMKFDCAN_DLC_24,
-        FMKFDCAN_DLC_32,
-        FMKFDCAN_DLC_48,
-        FMKFDCAN_DLC_64,
+    /**
+ * @brief Enumeration for FDCAN data length codes (DLC).
+ */
+typedef enum
+{
+    FMKFDCAN_DLC_0 = 0x00, /**< Data length of 0 bytes. */
+    FMKFDCAN_DLC_1,        /**< Data length of 1 byte. */
+    FMKFDCAN_DLC_2,        /**< Data length of 2 bytes. */
+    FMKFDCAN_DLC_3,        /**< Data length of 3 bytes. */
+    FMKFDCAN_DLC_4,        /**< Data length of 4 bytes. */
+    FMKFDCAN_DLC_5,        /**< Data length of 5 bytes. */
+    FMKFDCAN_DLC_6,        /**< Data length of 6 bytes. */
+    FMKFDCAN_DLC_7,        /**< Data length of 7 bytes. */
+    FMKFDCAN_DLC_8,        /**< Data length of 8 bytes. */
+    FMKFDCAN_DLC_16,       /**< Data length of 16 bytes. */
+    FMKFDCAN_DLC_20,       /**< Data length of 20 bytes. */
+    FMKFDCAN_DLC_24,       /**< Data length of 24 bytes. */
+    FMKFDCAN_DLC_32,       /**< Data length of 32 bytes. */
+    FMKFDCAN_DLC_48,       /**< Data length of 48 bytes. */
+    FMKFDCAN_DLC_64,       /**< Data length of 64 bytes. */
 
-        FMKFDCAN_DLC_NB
-    } t_eFMKFDCAN_DataLength;
+    FMKFDCAN_DLC_NB        /**< Total number of DLC options. */
+} t_eFMKFDCAN_DataLength;
 
-    typedef enum 
-    {
-        FMKFDCAN_NODE_STATE_OK = 0x00,
-        FMKFDCAN_NODE_STATE_QUEUE,
-        FMKFDCAN_NODE_STATE_PROTOCOL,
+/**
+ * @brief Enumeration for FDCAN node statuses.
+ */
+typedef enum 
+{
+    FMKFDCAN_NODE_STATE_OK = 0x00, /**< Node is in a healthy state. */
+    FMKFDCAN_NODE_STATE_QUEUE,     /**< Node is queuing messages. */
+    FMKFDCAN_NODE_STATE_PROTOCOL,  /**< Protocol error detected in the node. */
 
-        FMKFDCAN_NODE_STATE_NB
-    } t_eFMKFDCAN_NodeStatus;
+    FMKFDCAN_NODE_STATE_NB         /**< Total number of node statuses. */
+} t_eFMKFDCAN_NodeStatus;
 
-    typedef enum 
-    {
-        FMKFDCAN_NODE_DIRECTION_RX = 0X00,
-        FMKFDCAN_NODE_DIRECTION_TX,
+/**
+ * @brief Enumeration for FDCAN message directions.
+ */
+typedef enum 
+{
+    FMKFDCAN_NODE_DIRECTION_RX = 0X00, /**< Message direction is receive. */
+    FMKFDCAN_NODE_DIRECTION_TX,        /**< Message direction is transmit. */
 
-        FMKFDCAN_NODE_DIRECTION_NB
-    } t_eFMKFDCAN_MsgDirection;
-    /* CAUTION : Automatic generated code section for Enum: Start */
+    FMKFDCAN_NODE_DIRECTION_NB         /**< Total number of message directions. */
+} t_eFMKFDCAN_MsgDirection;
 
-    /* CAUTION : Automatic generated code section for Enum: End */
-    typedef struct 
-    {
-        t_uint32 Identifier_u32;
-        t_eFMKFDCAN_IdentifierType IdType_e;
-        t_eFMKFDCAN_FramePurpose FramePurpose_e;
-    } t_sFMKFDCAN_ItemIdentifier;
+/**
+ * @brief Structure for identifying FDCAN items.
+ */
+typedef struct 
+{
+    t_uint32 Identifier_u32;                    /**< Identifier of the FDCAN item (standard or extended). */
+    t_eFMKFDCAN_IdentifierType IdType_e;        /**< Type of identifier (e.g., standard or extended). */
+    t_eFMKFDCAN_FramePurpose FramePurpose_e;    /**< Purpose of the frame (e.g., data, remote). */
+} t_sFMKFDCAN_ItemIdentifier;
 
-    typedef struct 
-    {
-        t_eFMKFDCAN_DataLength Dlc_e;
-        t_eFMKFDCAN_MsgDirection Direction_e;
-        t_uint8 *data_pu8;
+/**
+ * @brief Structure for representing FDCAN node messages.
+ */
+typedef struct 
+{
+    t_eFMKFDCAN_DataLength Dlc_e;               /**< Data length code (DLC) for the message. */
+    t_eFMKFDCAN_MsgDirection Direction_e;       /**< Direction of the message (Rx or Tx). */
+    t_uint8 *data_pu8;                          /**< Pointer to the message data buffer. */
+} t_sFMKFDCAN_NodeMessage;
 
-    } t_sFMKFDCAN_NodeMessage;
-
-    typedef struct
-    {
-        t_sFMKFDCAN_ItemIdentifier ItemId_s;
-        t_sFMKFDCAN_NodeMessage CanMsg_s;
-        t_uint32 timeStamp_32;
-        t_eFMKFDCAN_NodeStatus Nodetatus_e;
-    } t_sFMKFDCAN_RxItemEvent;
+/**
+ * @brief Structure for managing FDCAN Rx item events.
+ */
+typedef struct
+{
+    t_sFMKFDCAN_ItemIdentifier ItemId_s; /**< Identifier of the received item. */
+    t_sFMKFDCAN_NodeMessage CanMsg_s;    /**< Message details associated with the event. */
+    t_uint32 timeStamp_32;               /**< Timestamp of the received event. */
+} t_sFMKFDCAN_RxItemEvent;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
     *	@brief      Callback function to be called when a Can Message is received.\n
-    *	@note       If a can message is received and it matches
+    *	@note       If a can message is received and it matches Identifer & Mask which has been
+    *               Register in FMKFDCAN_ConfigureRxItemEvent software will call you with this function
     *               is used in blocking mode t_sFMKFDCAN_RxItemEventCfg @ref t_sFMKFDCAN_RxItemEventCfg
     *
-    *	@param[in]      
-    *	@param[in]      
+    *   @param[in] f_Node_e       : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
+    *	@param[in] f_RxItem_s     : strcuture that contains Identifer, Trame_Purpose etc @ref t_sFMKFDCAN_RxItemEvent
+    *	@param[in] f_NodeStatus_e : Node health when the Msg has benn received
     *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
     */
-    typedef t_eReturnCode t_cbFMKFDCAN_RcvItem(t_sFMKFDCAN_RxItemEvent f_RxItem_s, t_eFMKFDCAN_NodeStatus f_NodeStatus_e);
+    typedef t_eReturnCode t_cbFMKFDCAN_RcvItem(t_eFMKFDCAN_NodeList f_Node_e,
+                                                t_sFMKFDCAN_RxItemEvent f_RxItem_s, 
+                                                t_eFMKFDCAN_NodeStatus f_NodeStatus_e);
                                               /**
     *
-    *	@brief      HAL Timer function in Interruption way  
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
+    *	@brief      Callback Function called when a Message has been succressfully send
+
     *
-    *	@param[in]     
-    *	@param[in ]     
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
+    *	@param[in] f_NodeStatus_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
+    *	@param[in] f_IsMsgTransmit : Wether or not the TxItem has been send (True) or abort (False)
     */
     typedef t_eReturnCode t_cbFMKFDCAN_TxItemStatus(t_eFMKFDCAN_NodeStatus f_NodeStatus_e, t_bool f_IsMsgTransmit);
     //-----------------------------STRUCT TYPES---------------------------//
     
 
     
+    /**
+     * @brief Configuration structure for FDCAN Rx item events.
+     */
     typedef struct 
     {
-        t_sFMKFDCAN_ItemIdentifier ItemId_s;
-        t_uint32 maskId_u32;
-        t_eFMKFDCAN_DataLength Dlc_e;
-        t_cbFMKFDCAN_RcvItem *callback_cb;
+        t_sFMKFDCAN_ItemIdentifier ItemId_s; /**< Identifier for the Rx item, including ID type and purpose. */
+        t_uint32 maskId_u32;                 /**< Mask applied to the identifier for filtering purposes. */
+        t_eFMKFDCAN_DataLength Dlc_e;        /**< Data length code (DLC) for the expected Rx message. */
+        t_cbFMKFDCAN_RcvItem *callback_cb;   /**< Pointer to the callback function triggered on receiving this item. */
     } t_sFMKFDCAN_RxItemEventCfg;
 
+    /**
+     * @brief Configuration structure for FDCAN Tx items.
+     */
     typedef struct
     {
-        t_sFMKFDCAN_ItemIdentifier ItemId_s;
-        t_sFMKFDCAN_NodeMessage CanMsg_s;
-        t_eFMKFDCAN_FrameFormat frameFormat_e;
-        t_eFMKFDCAN_BitRateSwitchStatus BitRate_e;
-
+        t_sFMKFDCAN_ItemIdentifier ItemId_s;   /**< Identifier for the Tx item, including ID type and purpose. */
+        t_sFMKFDCAN_NodeMessage CanMsg_s;      /**< Message structure containing data and direction for transmission. */
+        t_eFMKFDCAN_FrameFormat frameFormat_e; /**< Format of the CAN frame (standard or extended). */
+        t_eFMKFDCAN_BitRateSwitchStatus BitRate_e; /**< Bit rate switching status (enabled or disabled). */
     } t_sFMKFDCAN_TxItemCfg;
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -152,7 +170,7 @@
 
 
     //********************************************************************************
-    //                      Public functions - Prototyupes
+    //                      Public functions - Prototypes
     //********************************************************************************
     /**
     *
@@ -189,31 +207,44 @@
     */
     t_eReturnCode FMKFDCAN_SetState(t_eCyclicFuncState f_State_e);
     /**
-    *	@brief
-    *	@note   
+    *	@brief      Configure a RxItem to be received.\n
+    *	@note       This Function is used for registration to received a message CAN.\n
+    *               If a Can message is received on the node f_Node_e, and the identifier 
+    *               matches the identifer & mask from registration, software will call you with 
+    *               t_cbFMKFDCAN_RcvItem.\n
+    *               The registration has a limitation, if the Registration buffer is pass,*
+    *               RC_ERROR_LIMIT_REACHED is return.\n
     *
     *
-    *	@param[in] 
-    *	@param[in]
+    *	@param[in] f_NodeStatus_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
+    *	@param[in] f_RxItemCfg_s  : Structure for registration @ref t_sFMKFDCAN_RxItemEventCfg
     *	 
-    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_NOT_CONFIGURED           @ref RC_ERROR_NOT_CONFIGURED
+    *  @retval RC_ERROR_LIMIT_REACHED            @ref RC_ERROR_LIMIT_REACHED
     *
     */
     t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEventCfg f_RxItemCfg_s);
     /**
-    *	@brief
-    *	@note
+    *	@brief      Send a TxITem into a Node CAN
+    *	@note       This Function is used To send a message CAn threw a node with
+    *               f_TxItemCfg_s information.\n
+    *               If the Hardware TxFiFo is full and cannot accept this TxItem, the software will
+    *               put the TxItem into software Buffer and try later on ONLY IF DLC (data_len) IS <= 8.\n
     *
     *
-    *	@param[in] 
-    *	@param[in]
+    *	@param[in] f_NodeStatus_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
+    *	@param[in] f_TxItemCfg_s  : Structure for TxItem @ref t_sFMKFDCAN_TxItemCfg
     *	 
-    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_WARNING_BUSY                   @ref RC_WARNING_BUSY
+    *  @retval RC_WARNING_WRONG_RESULT           @ref RC_WARNING_WRONG_RESULT
     *
     */
     t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxItemCfg f_TxItemCfg_s);
     /**
-    *	@brief
+    *	@brief      Not Implemented Yet
     *	@note
     *
     *

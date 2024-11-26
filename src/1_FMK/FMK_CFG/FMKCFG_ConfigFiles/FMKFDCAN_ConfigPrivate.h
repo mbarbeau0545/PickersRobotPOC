@@ -23,41 +23,77 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
+    /**
+     * @brief Source clock for FDCAN kernel (in MHz).
+     */
     #define FMKFDCAN_SRC_CLOCK ((t_uint8)FMKCPU_PLLQ_CLOCK_OSC_MHZ)
 
-    #define FMKFDCAN_RX_NO_CB_BUFF_SIZE ((t_uint8)15)        /**< Buffer size for Reception FDCan software queue */
-    #define FMKFDCAN_RX_SOFT_BUFF_SIZE ((t_uint8)20)        /**< Buffer size for Reception FDCan software queue */
-    #define FMKFDCAN_TX_SOFT_BUFF_SIZE ((t_uint8)20)        /**< Buffer size for Transmission FDCan software queue */
+    /**
+     * @brief Buffer size for reception without callback queue.
+     */
+    #define FMKFDCAN_RX_NO_CB_BUFF_SIZE ((t_uint8)15)
 
+    /**
+     * @brief Buffer size for reception software queue.
+     */
+    #define FMKFDCAN_RX_SOFT_BUFF_SIZE ((t_uint8)20)
+
+    /**
+     * @brief Buffer size for transmission software queue.
+     */
+    #define FMKFDCAN_TX_SOFT_BUFF_SIZE ((t_uint8)20)
+
+    /**
+     * @brief Maximum number of RX event registrations.
+     */
     #define FMKFDCAN_RX_NUM_REGISTRATION_EVNT ((t_uint8)30)
-//    #define FMKFDCAN_RX_NUM_REGISTRATION_POLL ((t_uint8)20)
 
+    // #define FMKFDCAN_RX_NUM_REGISTRATION_POLL ((t_uint8)20) /**< Uncomment for polling-based registrations. */
+
+    /**
+     * @brief Operating mode for FDCAN nodes.
+     */
     #define FMKFDCAN_NODE_MODE (FDCAN_MODE_NORMAL)
 
-
+    /**
+     * @brief Maximum number of items to send from TX queue per interrupt.
+     */
     #define FMKFDCAN_MAX_TX_ITEM_SEND_PER_IT ((t_uint8)5)
+
+    /**
+     * @brief Maximum number of queue items processed per interrupt.
+     */
     #define FMKFDCAN_MAX_ITEM_ON_QUEUE_PER_IT ((t_uint8)5)
 
+    /**
+     * @brief Buffer size in bytes for FDCAN (64 bytes).
+     */
     #define FMKFDCAN_64_BYTES ((t_uint8)64)
+
     // ********************************************************************
     // *                      Types
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
     // Flag Automatic Generate Code
+    /**
+     * @brief List of hardware RX FIFOs.
+     */
     typedef enum 
     {
-        FMKFDCAN_HW_RX_FIFO_0 = 0x00,
-        FMKFDCAN_HW_RX_FIFO_1,
+        FMKFDCAN_HW_RX_FIFO_0 = 0x00, /**< RX FIFO 0 for receiving messages. */
+        FMKFDCAN_HW_RX_FIFO_1,        /**< RX FIFO 1 for receiving messages. */
 
-        FMKFDCAN_HW_RX_FIFO_NB,
+        FMKFDCAN_HW_RX_FIFO_NB,       /**< Number of RX FIFOs available. */
     } t_eFMKFDCAN_HwRxFifoList;
 
-
+    /**
+     * @brief List of hardware TX FIFOs.
+     */
     typedef enum 
     {
-        FMKFDCAN_HW_TX_FIFO_1 = 0x00,
+        FMKFDCAN_HW_TX_FIFO_1 = 0x00, /**< TX FIFO 1 for transmitting messages. */
 
-        FMKFDCAN_HW_TX_FIFO_NB,
+        FMKFDCAN_HW_TX_FIFO_NB,       /**< Number of TX FIFOs available. */
     } t_eFMKFDCAN_HwTxFifoList;
     /* CAUTION : Automatic generated code section for Enum: Start */
 
@@ -66,12 +102,15 @@
     //-----------------------------TYPEDEF TYPES---------------------------//
     
     //-----------------------------STRUCT TYPES---------------------------//
+    /**
+     * @brief Configuration structure for baud rate parameters.
+     */
     typedef struct 
     {
-        t_uint16 prescaler_u16;
-        t_uint8 syncSeg_u8;
-        t_uint8 timeSeg1_u8;
-        t_uint8 timeSeg2_u8;
+        t_uint16 prescaler_u16; /**< Prescaler value for the FDCAN clock. */
+        t_uint8 syncSeg_u8;     /**< Synchronization segment value. */
+        t_uint8 timeSeg1_u8;    /**< Time segment 1 value. */
+        t_uint8 timeSeg2_u8;    /**< Time segment 2 value. */
     } t_sFMKFDCAN_BaudrateCfg;
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -114,7 +153,7 @@
         {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_NO_BRS,     FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_1M,      FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_3
         {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_BRS,        FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_4M,      FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_4
     };
-    /* /!\/!\/!\ This configration has been calculated for CLOCK FDCAN equals 64MHz  /!\/!\/!\*/
+    /* /!\/!\/!\ This configration has been calculated for CLOCK FDCAN equals 64MHz but works for every divider /!\/!\/!\*/
     /*  Formule :
     *                                  Fclock (FMKFDCAN_SRC_CLOCK)
     *  Baudrate =     -----------------------------------------

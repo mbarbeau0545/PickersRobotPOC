@@ -37,25 +37,31 @@
 /* CAUTION : Automatic generated code section for Enum: End */
 
 
+/**
+ * @brief Enumeration for the list of FDCAN BSP callback events.
+ */
 typedef enum 
 {
-    FMKFDCAN_BSP_TX_CB_EVENT = 0x00,
-    FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
-    FMKFDCAN_BSP_TX_CB_BUFFER_ABORT, 
-    FMKFDCAN_BSP_TX_CB_FIFO_EMPTY,
+    FMKFDCAN_BSP_TX_CB_EVENT = 0x00,       /**< General Tx callback event. */
+    FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,    /**< Tx buffer transmission completed. */
+    FMKFDCAN_BSP_TX_CB_BUFFER_ABORT,       /**< Tx buffer transmission aborted. */
+    FMKFDCAN_BSP_TX_CB_FIFO_EMPTY,         /**< Tx FIFO is empty. */
 
-    FMKFDCAN_BSP_RX_CB_FIFO_0,
-    FMKFDCAN_BSP_RX_CB_FIFO_1,
+    FMKFDCAN_BSP_RX_CB_FIFO_0,             /**< Rx FIFO 0 event. */
+    FMKFDCAN_BSP_RX_CB_FIFO_1,             /**< Rx FIFO 1 event. */
 
-    FMKFDCAN_BSP_CB_PROTOCOL_ERR,
+    FMKFDCAN_BSP_CB_PROTOCOL_ERR,          /**< Protocol error detected. */
 
-    FMKFDCAN_BSP_CB_NB
+    FMKFDCAN_BSP_CB_NB                     /**< Total number of callbacks (for bounds checking). */
 } t_eFMKFDCAN_BspCallbackList;
 
+/**
+ * @brief Bsp Callback Status
+ */
 typedef enum 
 {
-    FMKFDCAN_CALLBACK_STATUS_ACTIVATE = 0x00,
-    FMKFDCAN_CALLBACK_STATUS_DEACTIVATE,
+    FMKFDCAN_CALLBACK_STATUS_ACTIVATE = 0x00,       /**< The Callback needs activated by software */
+    FMKFDCAN_CALLBACK_STATUS_DEACTIVATE,            /**< The Callback needs deactivated by software */
 
     FMKFDCAN_CALLBACK_STATUS_NB,
 } t_eFMKFDCAN_BspStatusCb;
@@ -65,49 +71,59 @@ typedef enum
 
 /* CAUTION : Automatic generated code section for Structure: End */
 //-----------------------------STRUCT TYPES---------------------------//
+/**
+ * @brief Soft flags structure to manage various FDCAN software flags.
+ */
 typedef struct 
 {
-    t_bool TxQueuePending_b;
-    t_bool RxQueuePending_b;
-    t_bool TxFramePrioPending_b;
-    t_bool ErrorDetected_b;
+    t_bool TxQueuePending_b;       /**< Indicates if there are pending frames in the Tx queue. */
+    t_bool RxQueuePending_b;       /**< Indicates if there are pending frames in the Rx queue. */
+    t_bool TxFramePrioPending_b;   /**< Indicates if a prioritized Tx frame is pending. */
+    t_bool ErrorDetected_b;        /**< Indicates if an error has been detected. */
 } t_sFMKFDCAN_FlagSoft;
 
-
+/**
+ * @brief Node information structure for FDCAN configuration and status.
+ */
 typedef struct
 {
-    FDCAN_HandleTypeDef bspNode_s;
-    const t_eFMKCPU_ClockPort c_Clock_e;
-    const t_eFMKCPU_IRQNType c_IrqnLine1_e;
-    const t_eFMKCPU_IRQNType c_IrqnLine2_e;
-    t_sFMKFDCAN_FlagSoft Flag_s;
-    t_bool isNodeConfigured_b;
-    t_bool isNodeActive_b;
-
+    FDCAN_HandleTypeDef bspNode_s;         /**< BSP handle for FDCAN peripheral. */
+    const t_eFMKCPU_ClockPort c_Clock_e;   /**< Clock port associated with the FDCAN node. */
+    const t_eFMKCPU_IRQNType c_IrqnLine1_e;/**< IRQ line 1 associated with the FDCAN peripheral. */
+    const t_eFMKCPU_IRQNType c_IrqnLine2_e;/**< IRQ line 2 associated with the FDCAN peripheral. */
+    t_sFMKFDCAN_FlagSoft Flag_s;           /**< Software flags related to the FDCAN node. */
+    t_bool isNodeConfigured_b;             /**< Indicates if the FDCAN node has been configured. */
+    t_bool isNodeActive_b;                 /**< Indicates if the FDCAN node is active and operational. */
 } t_sFMKFDCAN_NodeInfo;
 
-
+/**
+ * @brief Rx item buffer structure for receiving FDCAN frames.
+ */
 typedef struct 
 {
-    FDCAN_RxHeaderTypeDef bspRxItem_s;
-    t_uint8 data_ua8[FMKFDCAN_DLC_8];
+    FDCAN_RxHeaderTypeDef bspRxItem_s; /**< FDCAN BSP Rx header structure for frame details. */
+    t_uint8 data_ua8[FMKFDCAN_DLC_8];  /**< Data buffer for the received frame. */
 } t_sFMKFDCAN_RxItemBuffer;
 
-
+/**
+ * @brief Tx item buffer structure for transmitting FDCAN frames.
+ */
 typedef struct 
 {
-    FDCAN_TxHeaderTypeDef bspTxItem_s;
-    t_uint8 data_ua8[FMKFDCAN_DLC_8];
+    FDCAN_TxHeaderTypeDef bspTxItem_s; /**< FDCAN BSP Tx header structure for frame details. */
+    t_uint8 data_ua8[FMKFDCAN_DLC_8];  /**< Data buffer for the frame to transmit. */
 } t_sFMKFDCAN_TxItemBuffer;
 
-
-/**< User register Structure */
+/**
+ * @brief User register structure for managing FDCAN items and callbacks.
+ */
 typedef struct
 {
-    t_sFMKFDCAN_ItemIdentifier itemId_s;
-    t_uint32 maskId_u32;
-    t_cbFMKFDCAN_RcvItem *rcvItem_cb;
+    t_sFMKFDCAN_ItemIdentifier itemId_s; /**< Identifier structure for the FDCAN item. */
+    t_uint32 maskId_u32;                 /**< Mask identifier for the FDCAN item. */
+    t_cbFMKFDCAN_RcvItem *rcvItem_cb;    /**< Callback function to handle received items. */
 } t_sFMKFDCAN_UserItemRegister;
+
 
 
 /* CAUTION : Automatic generated code section : Start */
@@ -163,7 +179,7 @@ t_uint8 g_CtrUserRegisterEvnt_ua8[FMKFDCAN_NODE_NB];
 t_eFMKFDCAN_BspStatusCb g_BspCbMngmt_ae[FMKFDCAN_NODE_NB][FMKFDCAN_BSP_CB_NB];
 //********************************************************************************
 //                      Local functions - Prototypes
-//********************************************************************************
+//*********************************************************************************
 /**
  *	@brief
  *	@note       Activate Interrupt line 
@@ -187,15 +203,20 @@ static t_eReturnCode s_FMKFDCAN_PreOperational(void);
  *
  *
  */
+static t_eReturnCode s_FMKFDCAN_Operational(void);
 /**
-*	@brief
-*	@note   
+*	@brief      Configure The Initiation of the Hardware
+*	@note       Set the pin, Set the bsp Init Strucuture, 
+*               Set the hardware clock, set the Interruption Enabling
+*               Call FDCAN_Init and configure Fifo Mode.\n
 *
-*
-*	@param[in] 
-*	@param[in]
-*	 
-*
+ *	@param[in]  f_Node_e     : The Node where the RxMsg is Pending -> enum value from @ref t_eFMKFDCAN_NodeList
+ *	@param[in]  f_NodeCfg_s  : software init structure @ref t_sFMKFDCAN_DrvNodeCfg
+ *	 
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 *
 */
 static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
@@ -203,49 +224,71 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
  *	@brief
  *	@note   
  *
- *
- *	@param[in] 
- *	@param[in]
+ *	@param[in]  f_Node_e     : The Node where the RxMsg is Pending -> enum value from @ref t_eFMKFDCAN_NodeList
+ *	@param[in]  f_NodeCfg_s  : software init structure @ref t_sFMKFDCAN_DrvNodeCfg
  *	 
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
  *
- *
- */    
+ */
 static t_eReturnCode s_FMKFDCAN_MspInit(void);
 /**
- *	@brief
- *	@note   
+ *	@brief      Set the initiation of the Node.\n
+ *	@note       We extract from software confgiuration the bsp configuration
+ *              and copy it into bsp init structure. Then we call HAL_FDCAN.\n
  *
- *
- *	@param[in] 
- *	@param[in]
+ *	@param[in]  f_bspInit_ps : bsp init structrue @ref FDCAN_HandleTypeDef
+ *	@param[in]  f_NodeCfg_s  : software init structure @ref t_sFMKFDCAN_DrvNodeCfg
  *	 
- *
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
  *
  */
 static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
 /**
- *	@brief
- *	@note   
+ *	@brief      Function called when Bsp Tx Interruption occured.\n
+ *	@note       In this function, We firstly see if the flag TxItemPending is raised.\n
+ *              If it's the case, that means there is messages waiting to be sent in the 
+ *              software buffer, we send FMKFDCAN_MAX_TX_ITEM_SEND_PER_IT messages per Interruption
+ *              or at least the amount of TxItem in the Queue.\n
+ *              If the Queu Size equals 0, reset the flag and Reset The Interruption for this function
+ *              because it's no longer required as there isn't message to send.\n
  *
- *
- *	@param[in] 
- *	@param[in]
+ *	@param[in] f_bspInfo_ps : a pointor to bsp Node, @ref FDCAN_HandleTypeDef
+ *	@param[in] f_EvntCbInfo_u32 : information and the bsp interruption
+ *	@param[in] f_bspRxCallback_e : information about the callback that raise the interruption
  *	 
- *
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
  *
  */
 static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
                                               t_uint32 f_EvntCbInfo_u32, 
                                               t_eFMKFDCAN_BspCallbackList f_bspTxCallback_e);
 /**
- *	@brief
- *	@note   
- *
- *
- *	@param[in] 
- *	@param[in]
+ *	@brief      Function called When Bsp Rx Interruption occured.\n
+ *	@note       In this function, We firstly trying to know which node and which Bsp Rx Fifo
+ *              Causes the intetrruption with f_bspInfo_ps and f_EvntCbInfo_u32.\n
+ *              Then if f_EvntCbInfo_u32 says that a message has been received we treat wether 
+ *              we call user if the Identifier is register with the callback or we store it into the dedicate 
+ *              Software Buffer.\n 
+ *              If the flag is Fifo Full we rapidly put FMKFDCAN_MAX_ITEM_ON_QUEUE_PER_IT messages into a Software Buffer 
+ *              and raise flag so that message will be treated in cyclic.\n
+ *              
+ *	@param[in] f_bspInfo_ps : a pointor to bsp Node, @ref FDCAN_HandleTypeDef
+ *	@param[in] f_EvntCbInfo_u32 : information and the bsp interruption
+ *	@param[in] f_bspRxCallback_e : information about the callback that raise the interruption
  *	 
- *
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
  *
  */
 static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
@@ -270,11 +313,8 @@ static t_eReturnCode s_FMKFDCAN_RetrieveRxItem(t_eFMKFDCAN_NodeList f_Node_e,
                                                   t_eFMKFDCAN_HwRxFifoList f_RxFifo_e,
                                                   FDCAN_RxHeaderTypeDef * f_bspRxItem_ps,
                                                   t_uint8 * f_bspData_pu8);
-
-
-static t_eReturnCode s_FMKFDCAN_Operational(void);
 /**
- *	@brief      Copy a Software RxItem into a Bsp RxItem.\n
+ *	@brief      Copy a Software TxItem into a Bsp TxItem.\n
  *
  *	@param[in] f_bspTxItem_ps   : a pointer to bsp RxITem to copy Data Strucutre -> @ref FDCAN_TxHeaderTypeDef
  *	@param[in] f_TxItemCfg_s    : a pointer to software TxITem  -> @ref t_sFMKFDCAN_TxItemCfg
@@ -286,7 +326,7 @@ static t_eReturnCode s_FMKFDCAN_Operational(void);
  */
 static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg *f_TxItemCfg_s, FDCAN_TxHeaderTypeDef *f_bspTxItem_ps);
 /**
- *	@brief      Copy a Software TxItem into a Bsp TxItem.\n
+ *	@brief      Copy a Software RxItem into a Bsp RxItem.\n
  *
  *	@param[in] f_bspRxItem_ps : a pointer to bsp TxITem to copy Data Strucutre -> @ref FDCAN_RxHeaderTypeDef
  *	@param[in] f_RxItem_ps    : a pointer to oftware TxITem  -> @ref t_sFMKFDCAN_RxItemEvent
@@ -771,7 +811,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     if(Ret_e == RC_OK)
     {
         //------------------- Copy Bsp TxItem in BspTxItem-------------------//
-        Ret_e = s_FMKFDCAN_CopyBspTxItem(f_TxItemCfg_s, &SoTxitem_s.bspTxItem_s);
+        Ret_e = s_FMKFDCAN_CopyBspTxItem(&f_TxItemCfg_s, &SoTxitem_s.bspTxItem_s);
         if(Ret_e == RC_OK)
         {
             fifoLevel_u32 = HAL_FDCAN_GetTxFifoFreeLevel(&g_NodeInfo_as[f_Node_e].bspNode_s);
@@ -844,7 +884,7 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     }
     if(Ret_e == RC_OK)
     {
-        #warning('FMKFDCAN_GetRxItem Not Implemented')
+        #warning('FMKFDCAN_GetRxItem No Callback Not Implemented')
     }
     return Ret_e;
 
@@ -1234,7 +1274,7 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                         if(Ret_e == RC_OK)
                         {
                             //--------- Call Callback User with RxItem---------//
-                            g_UserRegisterEvnt_as[idxNode_u8][idxUserRegister_u8].rcvItem_cb(RxItemEvent_s, 0);
+                            g_UserRegisterEvnt_as[idxNode_u8][idxUserRegister_u8].rcvItem_cb(idxNode_u8, RxItemEvent_s, 0);
                             #warning('No diagnostic on NodeStatus')
                         }
                         break;
@@ -1434,7 +1474,7 @@ static t_eReturnCode s_FMKFDCAN_CopyBspRxItem(FDCAN_RxHeaderTypeDef *f_bspRxItem
     return Ret_e;
 }
 /*********************************
-* FMKFDCAN_SendTxItem
+* s_FMKFDCAN_CopyBspTxItem
 *********************************/
 static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg *f_TxItemCfg_s, FDCAN_TxHeaderTypeDef *f_bspTxItem_ps)
 {
@@ -1451,7 +1491,7 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg *f_TxItemCfg
     }
     if(Ret_e == RC_OK)
     {   
-        //-------------------Get all Bsp Varaible from enum-------------------//
+        //-------------------Get all Bsp Variable from enum-------------------//
         Ret_e = s_FMKFDCAN_GetBspDlc(f_TxItemCfg_s->CanMsg_s.Dlc_e, &bspDlc_u32);
         if(Ret_e == RC_OK)
         {
