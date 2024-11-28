@@ -58,11 +58,14 @@ typedef enum
  */
 typedef enum 
 {
-    FMKFDCAN_NODE_STATE_OK = 0x00, /**< Node is in a healthy state. */
-    FMKFDCAN_NODE_STATE_QUEUE,     /**< Node is queuing messages. */
-    FMKFDCAN_NODE_STATE_PROTOCOL,  /**< Protocol error detected in the node. */
+    FMKFDCAN_NODE_STATE_OK             = 0x00,     /**< Node is in a healthy state. */
+    FMKFDCAN_NODE_STATE_ERR_PARAM_INIT = 0x01,     /**< An error occured in the intialization*/
+    FMKFDCAN_NODE_STATE_ERR_FIFO       = 0x02,     /**< Node is queuing messages. */
+    FMKFDCAN_NODE_STATE_ERR_TIMEOUT    = 0x04,     /**< Timeout occured  on the Node */
+    FMKFDCAN_NODE_STATE_ERR_PROTOCOL   = 0x08,     /**< Protocol error detected in the node. */
+    FMKFDCAN_NODE_STATE_ERR_RAM        = 0x10,     /**< Protocol error detected in the node. */
 
-    FMKFDCAN_NODE_STATE_NB         /**< Total number of node statuses. */
+    FMKFDCAN_NODE_STATE_NB                         /**< Total number of node statuses. */
 } t_eFMKFDCAN_NodeStatus;
 
 /**

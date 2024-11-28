@@ -795,7 +795,6 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         {// set NVIC state and Dma Request if DMA is in hardware config
             #warning("Only ADC1 managed in DMARequest")
             Ret_e = FMKMAC_RqstDmaInit(FMKMAC_DMA_RQSTYPE_ADC1, (void *)&g_AdcInfo_as[f_Adc_e].BspInit_s);
-            
         }
         if (Ret_e == RC_OK)
         {// Init hardware ADC

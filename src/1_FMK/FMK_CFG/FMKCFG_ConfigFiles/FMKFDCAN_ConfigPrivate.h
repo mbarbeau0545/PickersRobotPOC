@@ -24,6 +24,10 @@
     // *                      Defines
     // ********************************************************************
     /**
+     * @brief Operating mode for FDCAN nodes.
+     */
+    #define FMKFDCAN_NODE_MODE (FDCAN_MODE_INTERNAL_LOOPBACK)
+    /**
      * @brief Source clock for FDCAN kernel (in MHz).
      */
     #define FMKFDCAN_SRC_CLOCK ((t_uint8)FMKCPU_PLLQ_CLOCK_OSC_MHZ)
@@ -49,11 +53,6 @@
     #define FMKFDCAN_RX_NUM_REGISTRATION_EVNT ((t_uint8)30)
 
     // #define FMKFDCAN_RX_NUM_REGISTRATION_POLL ((t_uint8)20) /**< Uncomment for polling-based registrations. */
-
-    /**
-     * @brief Operating mode for FDCAN nodes.
-     */
-    #define FMKFDCAN_NODE_MODE (FDCAN_MODE_NORMAL)
 
     /**
      * @brief Maximum number of items to send from TX queue per interrupt.
@@ -91,9 +90,11 @@
      */
     typedef enum 
     {
-        FMKFDCAN_HW_TX_FIFO_1 = 0x00, /**< TX FIFO 1 for transmitting messages. */
+        FMKFDCAN_HW_TX_BUFFER_1 = 0x00,    /**< TX Buffer 1 for transmitting messages. */
+        FMKFDCAN_HW_TX_BUFFER_2,           /**< TX Buffer 2 for transmitting messages. */ 
+        FMKFDCAN_HW_TX_BUFFER_3,           /**< TX Buffer 3  for transmitting messages. */ 
 
-        FMKFDCAN_HW_TX_FIFO_NB,       /**< Number of TX FIFOs available. */
+        FMKFDCAN_HW_TX_BUFFER_NB,       /**< Number of TX FIFOs available. */
     } t_eFMKFDCAN_HwTxFifoList;
     /* CAUTION : Automatic generated code section for Enum: Start */
 
@@ -148,10 +149,10 @@
 
     const t_sFMKFDCAN_DrvNodeCfg c_FmkCan_BspNodeCfgList_as[FMKFDCAN_NODE_CFG_NB] = 
     {// clockDivider_e                      ProtocolUse_e                       FrameBaudrate_e                 DataBaudrate_e                    QueueType_e                       FifoMode_e
-        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_CAN2_0B,          FMKFDCAN_FRAME_BAUDRATE_250K,   FMKFDCAN_FRAME_BAUDRATE_250K,    FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_1
-        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_CAN2_0B,          FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_1M,      FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_2
-        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_NO_BRS,     FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_1M,      FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_3
-        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_BRS,        FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_4M,      FMKFDCAN_HWQUEUE_TYPE_NORMAL,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_4
+        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_CAN2_0B,          FMKFDCAN_FRAME_BAUDRATE_250K,   FMKFDCAN_FRAME_BAUDRATE_250K,    FMKFDCAN_HWQUEUE_TYPE_FIFO,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_1
+        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_CAN2_0B,          FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_1M,      FMKFDCAN_HWQUEUE_TYPE_FIFO,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_2
+        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_NO_BRS,     FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_1M,      FMKFDCAN_HWQUEUE_TYPE_FIFO,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_3
+        {FMKFDCAN_CLOCK_KERNEL_DIV1,        FMKFDCAN_PROTOCOL_FDCAN_BRS,        FMKFDCAN_FRAME_BAUDRATE_1M,     FMKFDCAN_FRAME_BAUDRATE_4M,      FMKFDCAN_HWQUEUE_TYPE_FIFO,      FMKFDCAN_FIFO_OPEMODE_BLOCKING}, // FMKFDCAN_NODE_CFG_4
     };
     /* /!\/!\/!\ This configration has been calculated for CLOCK FDCAN equals 64MHz but works for every divider /!\/!\/!\*/
     /*  Formule :

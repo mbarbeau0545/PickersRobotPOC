@@ -94,6 +94,7 @@ typedef struct
     t_sFMKFDCAN_FlagSoft Flag_s;           /**< Software flags related to the FDCAN node. */
     t_bool isNodeConfigured_b;             /**< Indicates if the FDCAN node has been configured. */
     t_bool isNodeActive_b;                 /**< Indicates if the FDCAN node is active and operational. */
+    t_eFMKFDCAN_NodeStatus nodeHealth_e;    /**< Node status */
 } t_sFMKFDCAN_NodeInfo;
 
 /**
@@ -295,6 +296,16 @@ static void s_FMKFDCAN_BspRxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                                               t_uint32 f_EvntCbInfo_u32, 
                                               t_eFMKFDCAN_BspCallbackList f_bspRxCallback_e);
 /**
+ *	@brief      Receive Error From Bsp, Save them, and raise a flag 'Error Pending'
+ *
+ *	@param[in] f_bspInfo_ps : a pointor to bsp Node, @ref FDCAN_HandleTypeDef
+ *	@param[in] f_EvntCbInfo_u32 : information and the bsp interruption
+ *
+ *
+ */
+static void s_FMKFDCAN_BspErrorEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
+                                              t_uint32 f_EvntCbInfo_u32);
+/**
  *	@brief      Get a RX Message strcuture from bsp fifo
  *
  *	@param[in] f_Node_e        : The Node where the RxMsg is Pending -> enum value from @ref t_eFMKFDCAN_NodeList
@@ -366,6 +377,21 @@ static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
                                                      t_uint8 * f_idxUserRegister_pu8);
 
 /**
+ *	@brief      Configure the Global Filter for All Node And FIFO
+ *  @note       At this point, all Id are acdepted there are not filters.
+ *              To not let the filter floating we set them to accept every id
+ *
+ *
+ *	@param[in] f_Node_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
+ *	@param[in] f_bspCb_e : bsp calback -> enum value from @ref t_eFMKFDCAN_BspCallbackList
+ *	@param[in] f_status_e : status bsp calback -> enum value from @ref t_eFMKFDCAN_BspStatusCb
+ *	 
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
+ */
+static t_eReturnCode s_FMKFDCAN_SetNodeFilters(void);
+/**
  *	@brief      Set the Hardware Bsp Callback Status -> Active or Inactive.\n
  *	@note       The Hal_FDCAN Library allows us to dynamically set the callback status 
  *              of interrutpion.\n
@@ -416,8 +442,8 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
 /**
  *	@brief          Get the Bsp FIFO Identifier from Software enum.\n
  *
- *	@param[in]      f_FifoId_e : enum value for FIFO, value from @ref t_eFMKFDCAN_HwRxFifoList.\n
- *	@param[out]     f_bspFifoId_u32 : Storage for Bsp FIFO Identifier.\n
+ *	@param[in]      f_FiRxfoId_e : enum value for FIFO, value from @ref t_eFMKFDCAN_HwRxFifoList.\n
+ *	@param[out]     f_bspRxFifoId_u32 : Storage for Bsp FIFO Identifier.\n
  *	 
  *  @retval RC_OK                             @ref RC_OK
  *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
@@ -425,7 +451,20 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
  *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
  *
  */
-static t_eReturnCode s_FMKFDCAN_GetBspFifoId(t_eFMKFDCAN_HwRxFifoList f_FifoId_e, t_uint32 *f_bspFifoId_u32);
+static t_eReturnCode s_FMKFDCAN_GetBspRxFifoId(t_eFMKFDCAN_HwRxFifoList f_FiRxfoId_e, t_uint32 *f_bspRxFifoId_u32);
+/**
+ *	@brief          Get the Bsp Buffer Identifier from Software enum.\n
+ *
+ *	@param[in]      f_TxFifoId_e : enum value for FIFO, value from @ref t_eFMKFDCAN_HwRxFifoList.\n
+ *	@param[out]     f_bspTxFifoId_u32 : Storage for Bsp FIFO Identifier.\n
+ *	 
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
+ *
+ */
+static t_eReturnCode s_FMKFDCAN_GetBspTxFifoId(t_eFMKFDCAN_HwTxFifoList f_TxFifoId_e, t_uint32 *f_bspTxFifoId_u32);
 /**
  *	@brief          Get the Bsp Frame Purpose from Software enum.\n
  *
@@ -552,10 +591,7 @@ static t_eReturnCode s_FMKFDCAN_GetClockKernelDivider(t_eFMKFDCAN_ClockKernelDiv
 t_eReturnCode FMKFDCAN_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
-        .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
-        .FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL,
-    };
+   
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxBspCallback_u8;
     t_uint8 idxNode_u8 = (t_uint8)0;
@@ -574,18 +610,87 @@ t_eReturnCode FMKFDCAN_Init(void)
     
     t_sFMKFDCAN_DrvNodeCfg nodeCfg_s;
     t_uint8 idxBspNodeCfg_u8;
-    //-------------------Init FDCAN Clock Config----------------//
-    bspRet_e = HAL_RCCEx_PeriphCLKConfig(&periphNodeInit_s);
-    if(bspRet_e != HAL_OK)
-    {
-        Ret_e = RC_ERROR_WRONG_RESULT;
-    }
-    if(Ret_e == RC_OK)
-    {
 
-        //-----------------For Every Node in FDCAN----------------//
-        for (idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
-        {   
+
+    //-----------------For Every Node in FDCAN----------------//
+    for (idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
+    {   
+        // init bufferHead_p
+        RxBufferCfg_s.bufferHead_pv = (void *)NULL;
+        // init Node Global Inforamtion
+        g_NodeInfo_as[idxNode_u8].Flag_s.ErrorDetected_b      = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].Flag_s.RxQueuePending_b     = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].Flag_s.TxQueuePending_b     = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].Flag_s.TxFramePrioPending_b = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].isNodeActive_b              = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].isNodeConfigured_b          = (t_bool)False;
+        g_NodeInfo_as[idxNode_u8].nodeHealth_e                = FMKFDCAN_NODE_STATE_OK;
+
+        
+        // Init countor register 
+        g_CtrUserRegisterEvnt_ua8[idxNode_u8] = (t_uint8)0;
+        //-------------------Init Bsp Callback To Deactivate----------------//
+        for(idxBspCallback_u8 = (t_uint8)0 ; idxBspCallback_u8 < FMKFDCAN_BSP_CB_NB ; idxBspCallback_u8++)
+        {
+            g_BspCbMngmt_ae[idxNode_u8][idxBspCallback_u8] = FMKFDCAN_CALLBACK_STATUS_DEACTIVATE;
+        }
+        //-------------------Init Tx, Rx Software Queue ----------------//
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_RX_SOFT_BUFF_SIZE ; LLI_u8++)
+        {// Rx buffer
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.BitRateSwitch = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.DataLength = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.ErrorStateIndicator = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.FDFormat = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.Identifier = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IdType = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IsFilterMatchingFrame = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxFrameType = (t_uint32)0;
+            g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxTimestamp = (t_uint32)0;
+            // init buffer data
+            for (LLI2_u8 = (t_uint8)0; LLI2_u8 < FMKFDCAN_DLC_8 ; LLI2_u8++)
+            {
+                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].data_ua8[LLI2_u8] = (t_uint8)0;
+            }
+        }
+
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_TX_SOFT_BUFF_SIZE ; LLI_u8++)
+        {// TxBuffer
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.BitRateSwitch = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.DataLength = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.ErrorStateIndicator = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.FDFormat = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.Identifier = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.IdType = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.MessageMarker = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.TxEventFifoControl = (t_uint32)0;
+            g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.TxFrameType = (t_uint32)0;
+            // init buffer data
+            for (LLI2_u8 = (t_uint8)0; LLI2_u8 < FMKFDCAN_DLC_8 ; LLI2_u8++)
+            {
+                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].data_ua8[LLI2_u8] = (t_uint8)0;
+            }
+        }
+        //-------------------Initialize RxItem Registration ----------------//
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKFDCAN_RX_NUM_REGISTRATION_EVNT ; LLI_u8++)
+        {
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.Identifier_u32 = (t_uint32)0;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_NB;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.IdType_e = FMKFDCAN_IDTYPE_NB;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].maskId_u32 = (t_uint32)0;
+            g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].rcvItem_cb = (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION;
+        }
+        //-------------------Configure the Rx, Tx Queue----------------//
+        RxBufferCfg_s.bufferHead_pv = g_RxBufferEvnt_as[idxNode_u8];
+        // Configure Rx Buffer Queue
+        Ret_e = LIBQUEUE_Create(&g_RxSoftQueue_as[idxNode_u8], RxBufferCfg_s);
+        // Configure Tx Buffer Queue
+        if(Ret_e == RC_OK)
+        {
+            TxBufferCfg_s.bufferHead_pv = g_TxSoftBuffer_as[idxNode_u8];
+            Ret_e = LIBQUEUE_Create(&g_TxSoftQueue_as[idxNode_u8], TxBufferCfg_s);
+        }
+        if(Ret_e == RC_OK)
+        {
             //-----------------Init driver if it used ----------------//
             if(c_FmkCan_IsNodeActive[idxNode_u8] == (t_bool)True)
             {
@@ -600,80 +705,9 @@ t_eReturnCode FMKFDCAN_Init(void)
 
                 Ret_e = s_FMKFDCAN_InitDriver((t_eFMKFDCAN_NodeList)idxNode_u8, nodeCfg_s);
             }
-            // init bufferHead_p
-            RxBufferCfg_s.bufferHead_pv = (void *)NULL;
-            // init Node Global Inforamtion
-            g_NodeInfo_as[idxNode_u8].Flag_s.ErrorDetected_b      = (t_bool)False;
-            g_NodeInfo_as[idxNode_u8].Flag_s.RxQueuePending_b     = (t_bool)False;
-            g_NodeInfo_as[idxNode_u8].Flag_s.TxQueuePending_b     = (t_bool)False;
-            g_NodeInfo_as[idxNode_u8].Flag_s.TxFramePrioPending_b = (t_bool)False;
-            g_NodeInfo_as[idxNode_u8].isNodeActive_b              = (t_bool)False;
-            g_NodeInfo_as[idxNode_u8].isNodeConfigured_b          = (t_bool)False;
-            
-            // Init countor register 
-            g_CtrUserRegisterEvnt_ua8[idxNode_u8] = (t_uint8)0;
-            //-------------------Init Bsp Callback To Deactivate----------------//
-            for(idxBspCallback_u8 = (t_uint8)0 ; idxBspCallback_u8 < FMKFDCAN_BSP_CB_NB ; idxBspCallback_u8++)
-            {
-                g_BspCbMngmt_ae[idxNode_u8][idxBspCallback_u8] = FMKFDCAN_CALLBACK_STATUS_DEACTIVATE;
-            }
-            //-------------------Init Tx, Rx Software Queue ----------------//
-            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_RX_SOFT_BUFF_SIZE ; LLI_u8++)
-            {// Rx buffer
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.BitRateSwitch = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.DataLength = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.ErrorStateIndicator = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.FDFormat = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.Identifier = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IdType = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.IsFilterMatchingFrame = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxFrameType = (t_uint32)0;
-                g_RxBufferEvnt_as[idxNode_u8][LLI_u8].bspRxItem_s.RxTimestamp = (t_uint32)0;
-                // init buffer data
-                for (LLI2_u8 = (t_uint8)0; LLI2_u8 < FMKFDCAN_DLC_8 ; LLI2_u8++)
-                {
-                    g_RxBufferEvnt_as[idxNode_u8][LLI_u8].data_ua8[LLI2_u8] = (t_uint8)0;
-                }
-            }
-
-            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKFDCAN_TX_SOFT_BUFF_SIZE ; LLI_u8++)
-            {// TxBuffer
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.BitRateSwitch = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.DataLength = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.ErrorStateIndicator = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.FDFormat = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.Identifier = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.IdType = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.MessageMarker = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.TxEventFifoControl = (t_uint32)0;
-                g_TxSoftBuffer_as[idxNode_u8][LLI_u8].bspTxItem_s.TxFrameType = (t_uint32)0;
-                // init buffer data
-                for (LLI2_u8 = (t_uint8)0; LLI2_u8 < FMKFDCAN_DLC_8 ; LLI2_u8++)
-                {
-                    g_TxSoftBuffer_as[idxNode_u8][LLI_u8].data_ua8[LLI2_u8] = (t_uint8)0;
-                }
-            }
-            //-------------------Initialize RxItem Registration ----------------//
-            for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKFDCAN_RX_NUM_REGISTRATION_EVNT ; LLI_u8++)
-            {
-                g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.Identifier_u32 = (t_uint32)0;
-                g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_NB;
-                g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].itemId_s.IdType_e = FMKFDCAN_IDTYPE_NB;
-                g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].maskId_u32 = (t_uint32)0;
-                g_UserRegisterEvnt_as[idxNode_u8][LLI_u8].rcvItem_cb = (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION;
-            }
-            //-------------------Configure the Rx, Tx Queue----------------//
-            RxBufferCfg_s.bufferHead_pv = g_RxBufferEvnt_as[idxNode_u8];
-            // Configure Rx Buffer Queue
-            Ret_e = LIBQUEUE_Create(&g_RxSoftQueue_as[idxNode_u8], RxBufferCfg_s);
-            // Configure Tx Buffer Queue
-            if(Ret_e == RC_OK)
-            {
-                TxBufferCfg_s.bufferHead_pv = g_TxSoftBuffer_as[idxNode_u8];
-                Ret_e = LIBQUEUE_Create(&g_TxSoftQueue_as[idxNode_u8], TxBufferCfg_s);
-            }
         }
     }
+    
     return Ret_e;
 }
 
@@ -868,6 +902,11 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     t_eReturnCode Ret_e = RC_OK;
     //t_uint8 LLI_u8;
     //t_sFMKFDCAN_RxItemBuffer *itemBuff_ps;
+    t_uint8 fifoLevel_u8;
+    t_uint32 FIFO_Id_u32;
+    FDCAN_RxHeaderTypeDef bspRxITem_s;
+    t_uint8 data_pu8[8];
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
 
     if(f_RxItem_ps == (t_sFMKFDCAN_RxItemEvent * )NULL)
     {
@@ -885,6 +924,33 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     if(Ret_e == RC_OK)
     {
         #warning('FMKFDCAN_GetRxItem No Callback Not Implemented')
+        fifoLevel_u8 = HAL_FDCAN_GetRxFifoFillLevel(&g_NodeInfo_as[f_Node_e].bspNode_s, FDCAN_RX_FIFO0);
+        FIFO_Id_u32 = FDCAN_RX_FIFO0;
+        if(fifoLevel_u8 == 0)
+        {
+            fifoLevel_u8 = HAL_FDCAN_GetRxFifoFillLevel(&g_NodeInfo_as[f_Node_e].bspNode_s, FDCAN_RX_FIFO1);
+            FIFO_Id_u32 = FDCAN_RX_FIFO1;
+        }
+        if(fifoLevel_u8 != 0)
+        {
+            bspRet_e = HAL_FDCAN_GetRxMessage(&g_NodeInfo_as[f_Node_e].bspNode_s, 
+                                    FIFO_Id_u32, 
+                                    &bspRxITem_s,
+                                    data_pu8);
+
+            if(bspRet_e == HAL_OK)
+            {
+                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[2];
+                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[3];
+                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[4];
+                f_RxItem_ps->CanMsg_s.data_pu8[0] = data_pu8[0];
+                f_RxItem_ps->CanMsg_s.data_pu8[1] = data_pu8[1];
+                f_RxItem_ps->CanMsg_s.Direction_e = 1;
+                f_RxItem_ps->CanMsg_s.Dlc_e = FMKFDCAN_DLC_8;
+                f_RxItem_ps->ItemId_s.Identifier_u32 = bspRxITem_s.Identifier;
+                f_RxItem_ps->ItemId_s.IdType_e = bspRxITem_s.IdType;
+            }
+        }
     }
     return Ret_e;
 
@@ -899,6 +965,10 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
+    RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
+        .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
+        .FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1,
+    };
 
     if(f_Node_e > FMKFDCAN_NODE_NB)
     {
@@ -906,8 +976,18 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     }
     if(Ret_e == RC_OK)
     {
+        //-------------------Init FDCAN Clock Config----------------//
+        bspRet_e = HAL_RCCEx_PeriphCLKConfig(&periphNodeInit_s);
+        if(bspRet_e != HAL_OK)
+        {
+            Ret_e = RC_ERROR_WRONG_RESULT;
+        }
+        if(Ret_e == RC_OK)
+        {
         //----------Configure Pin Init----------//
-        Ret_e = s_FMKFDCAN_MspInit();
+            Ret_e = s_FMKFDCAN_MspInit();
+        }
+        if(Ret_e == RC_OK)
         ///----------Copy Bsp Init from Config/----------//
         Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
         if(Ret_e == RC_OK)
@@ -931,7 +1011,7 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
         }
         if(bspRet_e == HAL_OK)
         {
-            //----------Set Hrdware FIFO mode for FDCAN----------//
+            //----------Set Hardware FIFO mode for FDCAN----------//
             Ret_e = s_FMKFDCAN_SetHwFifoOpeMode(f_Node_e, f_NodeCfg_s.FifoMode_e);
         }
     }
@@ -984,44 +1064,49 @@ static t_eReturnCode s_FMKFDCAN_PreOperational(void)
     {
         if(g_NodeInfo_as[idxNode_u8].isNodeConfigured_b ==(t_bool)True)
         {
-            bspRet_e = HAL_FDCAN_Start(&g_NodeInfo_as[idxNode_u8].bspNode_s);
+                  
+            //---------- CallBack for every FIFO_0 Event----------//
+            Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                    FMKFDCAN_BSP_RX_CB_FIFO_0,
+                                                    FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+            if(Ret_e == RC_OK)
+            {
+                //---------- CallBack for every FIFO_1 Event----------//
+                Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                        FMKFDCAN_BSP_RX_CB_FIFO_1,
+                                                        FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+
+            }
+            if(Ret_e == RC_OK)
+            {
+                //---------- CallBack for every Tx Send A Msg Event----------//
+                Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                        FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
+                                                        FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+            }
+            if(Ret_e == RC_OK)
+            {
+                //---------- CallBack for Protocol Error----------//
+                Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
+                                                        FMKFDCAN_BSP_CB_PROTOCOL_ERR,
+                                                        FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
+            }
+            if(Ret_e == RC_OK)
+            {
+                Ret_e = s_FMKFDCAN_SetNodeFilters();
+            }
+            if(Ret_e == RC_OK)
+            {
+                //---------- Update Flag----------//
+                g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
+            }
+            if(Ret_e == RC_OK)
+            {
+                bspRet_e = HAL_FDCAN_Start(&g_NodeInfo_as[idxNode_u8].bspNode_s);
+            }
             if(bspRet_e != HAL_OK)
             {
                 Ret_e = RC_ERROR_WRONG_RESULT;
-            }
-            else 
-            {        
-                //---------- CallBack for every FIFO_0 Event----------//
-                Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
-                                                        FMKFDCAN_BSP_RX_CB_FIFO_0,
-                                                        FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
-                if(Ret_e == RC_OK)
-                {
-                    //---------- CallBack for every FIFO_1 Event----------//
-                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
-                                                            FMKFDCAN_BSP_RX_CB_FIFO_1,
-                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
-
-                }
-                if(Ret_e == RC_OK)
-                {
-                    //---------- CallBack for every Tx Send A Msg Event----------//
-                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
-                                                            FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
-                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
-                }
-                if(Ret_e == RC_OK)
-                {
-                    //---------- CallBack for Protocol Error----------//
-                    Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8,
-                                                            FMKFDCAN_BSP_CB_PROTOCOL_ERR,
-                                                            FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
-                }
-                if(Ret_e == RC_OK)
-                {
-                    //---------- Update Flag----------//
-                    g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
-                }
             }
         }
     }
@@ -1048,11 +1133,11 @@ static t_eReturnCode s_FMKFDCAN_Operational(void)
             {
                 // PerformDiagnosticEvent
             }
-            else if(nodeInfo_ps->Flag_s.RxQueuePending_b == (t_bool)True)
+            if(nodeInfo_ps->Flag_s.RxQueuePending_b == (t_bool)True)
             {
                 // Manage Calling some Callback until Qeuue is off or MAX COUNTOR attien
             }
-            else if(nodeInfo_ps->Flag_s.TxQueuePending_b == (t_bool)True)
+            if(nodeInfo_ps->Flag_s.TxQueuePending_b == (t_bool)True)
             {
                 // see if flag are already been reach 
             }
@@ -1304,7 +1389,7 @@ static t_eReturnCode s_FMKFDCAN_RetrieveRxItem(t_eFMKFDCAN_NodeList f_Node_e,
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint32 bspRxFifo_u32;
 
-    Ret_e = s_FMKFDCAN_GetBspFifoId(f_RxFifo_e, &bspRxFifo_u32);
+    Ret_e = s_FMKFDCAN_GetBspRxFifoId(f_RxFifo_e, &bspRxFifo_u32);
     if(Ret_e == RC_OK)
     {
         //--------- Get Rx Msg From Hardware Fifo---------//
@@ -1355,8 +1440,10 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
             f_bspInit_ps->Init.AutoRetransmission = ENABLE;
             f_bspInit_ps->Init.TransmitPause = DISABLE;
             f_bspInit_ps->Init.ProtocolException = ENABLE;
-            f_bspInit_ps->Init.StdFiltersNbr = (t_uint32)0;
+            //--------------One per FIFO to allowed every ID----------//
+            f_bspInit_ps->Init.StdFiltersNbr = (t_uint32)2; 
             f_bspInit_ps->Init.ExtFiltersNbr = (t_uint32)0;
+
             f_bspInit_ps->Init.TxFifoQueueMode = bspTxQueueType_u32;
 
             //-------------------Init for nominal baudrate-------------------//
@@ -1473,6 +1560,71 @@ static t_eReturnCode s_FMKFDCAN_CopyBspRxItem(FDCAN_RxHeaderTypeDef *f_bspRxItem
 
     return Ret_e;
 }
+
+/*********************************
+* s_FMKFDCAN_BspErrorEventCb
+*********************************/
+static void s_FMKFDCAN_BspErrorEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps, 
+                                              t_uint32 f_EvntCbInfo_u32)
+
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxNode_u8 = 0;
+
+    if(f_bspInfo_ps == (FDCAN_HandleTypeDef *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        for(idxNode_u8 = (t_uint8)0 ; idxNode_u8 < FMKFDCAN_NODE_NB ; idxNode_u8++)
+        {
+            if(&g_NodeInfo_as[idxNode_u8].bspNode_s == f_bspInfo_ps)
+            {
+                break;
+            }
+        }
+        if(idxNode_u8 != FMKFDCAN_NODE_NB)
+        {
+            // update flag 
+            g_NodeInfo_as[idxNode_u8].Flag_s.ErrorDetected_b = (t_bool)True;
+            switch(f_EvntCbInfo_u32)
+            {
+                case HAL_FDCAN_ERROR_NONE:
+                    Ret_e = RC_OK;
+                    break;
+                case HAL_FDCAN_ERROR_NOT_STARTED:
+                case HAL_FDCAN_ERROR_NOT_INITIALIZED:
+                case HAL_FDCAN_ERROR_NOT_READY:
+                case HAL_FDCAN_ERROR_PARAM:
+                case HAL_FDCAN_ERROR_NOT_SUPPORTED:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_PARAM_INIT;
+                    break;
+                case HAL_FDCAN_ERROR_TIMEOUT:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_TIMEOUT;
+                    break;
+                case HAL_FDCAN_ERROR_FIFO_EMPTY:
+                case HAL_FDCAN_ERROR_FIFO_FULL:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_FIFO;
+                    break;
+                case HAL_FDCAN_ERROR_PROTOCOL_ARBT:
+                case HAL_FDCAN_ERROR_PROTOCOL_DATA:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_PROTOCOL;
+                    break;
+                case HAL_FDCAN_ERROR_LOG_OVERFLOW:
+                case HAL_FDCAN_ERROR_RAM_ACCESS:
+                case HAL_FDCAN_ERROR_RAM_WDG:
+                case HAL_FDCAN_ERROR_PENDING:
+                case HAL_FDCAN_ERROR_RESERVED_AREA:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_RAM;
+                    break;
+                default:
+                    Ret_e = RC_OK;
+            }   
+        }
+    }
+
+}
 /*********************************
 * s_FMKFDCAN_CopyBspTxItem
 *********************************/
@@ -1581,6 +1733,43 @@ static t_eReturnCode s_FMKFDCAN_GetUserRegisterIndex(t_uint32 f_Identifier_u32,
 /************************************
 * s_FMKFDCAN_SetHwBspCallbackStatus
 ***********************************/
+static t_eReturnCode s_FMKFDCAN_SetNodeFilters(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    FDCAN_FilterTypeDef bspFilter_s;
+    t_uint8 idxNode_u8;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
+
+    #warning('Filter are for Standard ID, please change following line if Node is use in Extended Mode, Think to also changed bspInit FilerNb')
+    bspFilter_s.IdType = FDCAN_STANDARD_ID;
+    bspFilter_s.FilterIndex = 0;                 // Index du filtre
+    bspFilter_s.FilterType = FDCAN_FILTER_RANGE;  // Type de filtre
+    bspFilter_s.FilterID1 = 0x000;               // ID accepté
+    bspFilter_s.FilterID2 = 0x7FF;               // Masque (toutes les trames)
+
+    for( idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
+    {
+        if(g_NodeInfo_as[idxNode_u8].isNodeConfigured_b == (t_bool)True)
+        {
+            bspFilter_s.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+            bspRet_e = HAL_FDCAN_ConfigFilter(&g_NodeInfo_as[idxNode_u8].bspNode_s, &bspFilter_s);
+            if(bspRet_e == HAL_OK)
+            {
+                bspFilter_s.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
+                bspRet_e = HAL_FDCAN_ConfigFilter(&g_NodeInfo_as[idxNode_u8].bspNode_s, &bspFilter_s);
+            }
+        }
+        if(bspRet_e != HAL_OK)
+        {
+            Ret_e = RC_ERROR_WRONG_RESULT;
+        }
+    }   
+
+    return Ret_e;
+}
+/************************************
+* s_FMKFDCAN_SetHwBspCallbackStatus
+***********************************/
 static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_Node_e ,
                                                         t_eFMKFDCAN_BspCallbackList f_bspCb_e,
                                                         t_eFMKFDCAN_BspStatusCb f_status_e)
@@ -1615,9 +1804,9 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
                     if((bspCbId_u32 == FDCAN_IT_TX_COMPLETE)
                     || bspCbId_u32 == FDCAN_IT_TX_ABORT_COMPLETE)
                     {
-                        for(idxTxFifo_u8 = (t_uint8)0 ; idxTxFifo_u8 < FMKFDCAN_HW_TX_FIFO_NB ; idxTxFifo_u8++)
+                        for(idxTxFifo_u8 = (t_uint8)0 ; idxTxFifo_u8 < FMKFDCAN_HW_TX_BUFFER_NB ; idxTxFifo_u8++)
                         {
-                            Ret_e = s_FMKFDCAN_GetBspFifoId(idxTxFifo_u8, &bspFifo_u32);
+                            Ret_e = s_FMKFDCAN_GetBspTxFifoId(idxTxFifo_u8, &bspFifo_u32);
                             if(Ret_e == RC_OK)
                             {
                                 bspRet_e = HAL_FDCAN_ActivateNotification(&g_NodeInfo_as[f_Node_e].bspNode_s,
@@ -1680,7 +1869,7 @@ static t_eReturnCode s_FMKFDCAN_SetHwFifoOpeMode(t_eFMKFDCAN_NodeList f_Node_e ,
         //---------We loop for every Hardware Can FIfo and set the same Fifo Operation Mode---------//
         for (idxFifo_u8 = (t_uint8)0 ; (idxFifo_u8 < FMKFDCAN_HW_RX_FIFO_NB) && (Ret_e == RC_OK); idxFifo_u8++)    
         {
-            Ret_e = s_FMKFDCAN_GetBspFifoId(idxFifo_u8, &bspFifo_u32);
+            Ret_e = s_FMKFDCAN_GetBspRxFifoId(idxFifo_u8, &bspFifo_u32);
             if(Ret_e == RC_OK)
             {
                 Ret_e = s_FMKFDCAN_GetBspFifoOpeMode(f_fifoMode_e, &bspFifoOpeMode_u32);
@@ -2003,33 +2192,71 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
 }
 
 /*****************************
-* s_FMKFDCAN_GetBspFifoId
+* s_FMKFDCAN_GetBspRxFifoId
 ********************************/
-static t_eReturnCode s_FMKFDCAN_GetBspFifoId(t_eFMKFDCAN_HwRxFifoList f_FifoId_e, t_uint32 *f_bspFifoId_u32)
+static t_eReturnCode s_FMKFDCAN_GetBspRxFifoId(t_eFMKFDCAN_HwRxFifoList f_RxFifoId_e, t_uint32 *f_bspRxFifoId_u32)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_FifoId_e > FMKFDCAN_HW_RX_FIFO_NB)
+    if(f_RxFifoId_e > FMKFDCAN_HW_RX_FIFO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(f_bspFifoId_u32 == (t_uint32 *)NULL)
+    if(f_bspRxFifoId_u32 == (t_uint32 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        switch(f_FifoId_e)
+        switch(f_RxFifoId_e)
         {
             case FMKFDCAN_HW_RX_FIFO_0: 
-                *f_bspFifoId_u32 =FDCAN_RX_FIFO0;
+                *f_bspRxFifoId_u32 =FDCAN_RX_FIFO0;
                 break;
 
             case FMKFDCAN_HW_RX_FIFO_1:
-                *f_bspFifoId_u32 =FDCAN_RX_FIFO1;
+                *f_bspRxFifoId_u32 =FDCAN_RX_FIFO1;
                 break;
 
             case FMKFDCAN_HW_RX_FIFO_NB:
+            default:
+                Ret_e = RC_ERROR_NOT_SUPPORTED;
+        }
+    }
+    
+    return Ret_e;
+}
+/*****************************
+* s_FMKFDCAN_GetBspRxFifoId
+********************************/
+static t_eReturnCode s_FMKFDCAN_GetBspTxFifoId(t_eFMKFDCAN_HwTxFifoList f_TxFifoId_e, t_uint32 *f_bspTxFifoId_u32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_TxFifoId_e > FMKFDCAN_HW_TX_BUFFER_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(f_bspTxFifoId_u32 == (t_uint32 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        switch(f_TxFifoId_e)
+        {
+            case FMKFDCAN_HW_TX_BUFFER_1: 
+                *f_bspTxFifoId_u32 =FDCAN_TX_BUFFER0;
+                break;
+
+            case FMKFDCAN_HW_TX_BUFFER_2:
+                *f_bspTxFifoId_u32 =FDCAN_TX_BUFFER1;
+                break;
+
+            case FMKFDCAN_HW_TX_BUFFER_3:
+                *f_bspTxFifoId_u32 =FDCAN_TX_BUFFER2;
+                break;
+            case FMKFDCAN_HW_TX_BUFFER_NB:
             default:
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
         }
@@ -2306,6 +2533,20 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
     s_FMKFDCAN_BspRxEventCb(hfdcan, RxFifo0ITs, FMKFDCAN_BSP_RX_CB_FIFO_0);
+}
+/**********************************
+* HAL_FDCAN_RxFifo0Callback
+**********************************/
+void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *hfdcan)
+{
+    s_FMKFDCAN_BspErrorEventCb(hfdcan, hfdcan->ErrorCode);
+}
+/**********************************
+* HAL_FDCAN_RxFifo0Callback
+**********************************/
+void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorStatusITs)
+{
+    s_FMKFDCAN_BspErrorEventCb(hfdcan, ErrorStatusITs);
 }
 //************************************************************************************
 // End of File

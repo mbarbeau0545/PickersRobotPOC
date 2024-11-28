@@ -67,7 +67,6 @@ t_eReturnCode APPLGC_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    
     return Ret_e;
 }
 
@@ -152,9 +151,7 @@ t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e)
 static t_eReturnCode s_APPLGC_callback(t_sFMKFDCAN_RxItemEvent f_rxEvent_s, t_eFMKFDCAN_NodeStatus f_status)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_uint32 last_tick_u32;
-    t_uint32 current_tick_u23;
-    t_uint32 elasped_time_u32;
+
     t_uint8 data_ua[8];
     if (f_status == 0)
     {
@@ -176,13 +173,13 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
     t_sFMKFDCAN_RxItemEventCfg caca = 
     {
         .callback_cb = s_APPLGC_callback, 
-        .Dlc_e = FMKFDCAN_DLC_4,
+        .Dlc_e = FMKFDCAN_DLC_8,
         .ItemId_s = {
             .FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_DATA,
-            .Identifier_u32 = 0x18FF1234,
-            .IdType_e = FMKFDCAN_IDTYPE_EXTENDED,
+            .Identifier_u32 = 0x123,
+            .IdType_e = FMKFDCAN_IDTYPE_STANDARD,
         },
-        .maskId_u32 = 0xFFF00000,
+        .maskId_u32 = 0xFF0,
     };
     Ret_e = FMKFDCAN_ConfigureRxItemEvent(FMKFDCAN_NODE_1, caca);
    
@@ -195,6 +192,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_sFMKFDCAN_RxItemEvent rxItem_s;
     t_uint8 datapue[8] = {0,1,3,4,5,6,7,2};
     t_sFMKFDCAN_TxItemCfg Txitem_s = {
         .BitRate_e = FMKFDCAN_BITRATE_SWITCH_OFF,
@@ -210,6 +208,11 @@ static t_eReturnCode s_APPLGC_Operational(void)
 
     };
     Ret_e = FMKFDCAN_SendTxItem(FMKFDCAN_NODE_1, Txitem_s);
+    Ret_e = FMKFDCAN_GetRxItem(FMKFDCAN_NODE_1, &rxItem_s);
+    if(Ret_e == RC_OK)
+    {
+        rxItem_s.timeStamp_32 = 45;
+    }
     return RC_OK;
 }
 //************************************************************************************
