@@ -58,7 +58,7 @@
     *	@brief      Perform all Init action for this module.\n
     *
     */
-    t_eReturnState APPSNS_Init(void);
+    t_eReturnCode APPSNS_Init(void);
     /**
     *
     *	@brief      Perform all Cyclic action for this module.\n
@@ -68,7 +68,7 @@
     *               In Ope mode -> call driver cyclic
     *
     */
-    t_eReturnState APPSNS_Cyclic(void);
+    t_eReturnCode APPSNS_Cyclic(void);
     /**
     *
     *	@brief Function to know the module state.\n 
@@ -78,7 +78,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState APPSNS_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode APPSNS_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state.\n
@@ -87,7 +87,7 @@
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    t_eReturnState APPSNS_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode APPSNS_SetState(t_eCyclicFuncState f_State_e);
     /**
     *
     *	@brief  Set sensor state enable/disable
@@ -96,7 +96,7 @@
     *	@param[in]  f_SnsState_pe   : storage for the value 
     * 
     */
-    t_eReturnState APPSNS_Set_SensorState(t_eAPPSNS_Sensors f_Sns_e, t_eAPPSNS_SensorState f_SnsState_e);
+    t_eReturnCode APPSNS_Set_SensorState(t_eAPPSNS_Sensors f_Sns_e, t_eAPPSNS_SensorState f_SnsState_e);
     /**
     *
     *	@brief  Get sensor state enable/disable
@@ -105,7 +105,7 @@
     *	@param[in]  f_SnsState_pe   : storage for the value 
     *
     */
-    t_eReturnState APPSNS_Get_SensorState(t_eAPPSNS_Sensors f_Sns_e, t_eAPPSNS_SensorState *f_SnsState_pe);
+    t_eReturnCode APPSNS_Get_SensorState(t_eAPPSNS_Sensors f_Sns_e, t_eAPPSNS_SensorState *f_SnsState_pe);
     /**
     *
     *	@brief  Get sensor value 
@@ -114,7 +114,7 @@
     *	@param[in]  f_value_ps16   : storage for the value 
     * 
     */
-    t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *f_SnsValue_ps16);
+    t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *f_SnsValue_ps16);
 
 #endif // APP_SNS_H_INCLUDED           
 //************************************************************************************

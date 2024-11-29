@@ -63,9 +63,9 @@ static const t_eFMKIO_OutDigSig c_InputSig_e = FMKIO_OUTPUT_SIGPWM_5;
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Tomate_SetCfg
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_SetCfg(void)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Tomate_SetCfg(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for Cmd_IrrigValve_Tomate_SetActCfg here
     //Ret_e = FMKIO_Set_OutPwmSigCfg(c_InputSig_e, 
     //                                FMKIO_PULL_MODE_DISABLE,
@@ -82,9 +82,9 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_SetCfg(void)
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for Cmd_IrrigValve_Tomate_GetActValue here
     t_uint16 value_u16 = 0;
     Ret_e = FMKIO_Get_OutPwmSigValue(c_InputSig_e, &value_u16);
@@ -98,9 +98,9 @@ t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue(t_sAPPACT_ValueInfo *f
 /******************************************
 * APPACT_SPEC_Cmd_IrrigValve_Tomate_SetValue
 ******************************************/
-t_eReturnState APPACT_SPEC_Cmd_IrrigValve_Tomate_SetValue(t_sint16 f_value_s16)
+t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Tomate_SetValue(t_sint16 f_value_s16)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     //    Your code for Cmd_IrrigValve_Tomate_SetActValue here
     Ret_e = FMKIO_Set_OutPwmSigValue(c_InputSig_e, 500);
 

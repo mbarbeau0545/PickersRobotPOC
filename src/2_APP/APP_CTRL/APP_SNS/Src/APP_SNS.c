@@ -52,7 +52,6 @@
 /**< Variable for Sensors Drivers State*/
 t_eAPPSNS_SensorState g_snsState_ae[APPSNS_SENSOR_NB] = {
     APPSNS_SENSOR_STATE_ENABLE, // APPSNS_SENSOR_AIRTEMPERATURE
-    APPSNS_SENSOR_STATE_ENABLE, // APPSNS_SENSOR_AIRHUMIDITY
 };
 
 /**< Variable for Sensors Drivers State*/
@@ -76,7 +75,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 *
 *
 */
-static t_eReturnState s_APPSNS_PreOperational(void);
+static t_eReturnCode s_APPSNS_PreOperational(void);
 /**
  *
  *	@brief      Perform preOperationnal action.\n
@@ -91,7 +90,7 @@ static t_eReturnState s_APPSNS_PreOperational(void);
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_APPSNS_Operational(void);
+static t_eReturnCode s_APPSNS_Operational(void);
 /**
 *
 *	@brief  Convert Management.\n
@@ -103,7 +102,7 @@ static t_eReturnState s_APPSNS_Operational(void);
 *
 *
 */
-t_eReturnState s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSNS_SnsInfo *f_snsInfo_ps);
+t_eReturnCode s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSNS_SnsInfo *f_snsInfo_ps);
 /**
 *
 *	@brief  Convert Temperature Management
@@ -116,7 +115,7 @@ t_eReturnState s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSN
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -130,7 +129,7 @@ static t_eReturnState s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e,
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -144,7 +143,7 @@ static t_eReturnState s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -159,7 +158,7 @@ static t_eReturnState s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e,
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertAngularSpeed(t_eAPPSNS_AngularSpdUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertAngularSpeed(t_eAPPSNS_AngularSpdUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 
@@ -175,7 +174,7 @@ static t_eReturnState s_APPSNS_ConvertAngularSpeed(t_eAPPSNS_AngularSpdUnity f_u
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -190,7 +189,7 @@ static t_eReturnState s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e,
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -205,7 +204,7 @@ static t_eReturnState s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 /**
@@ -220,7 +219,7 @@ static t_eReturnState s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e,
 *
 *
 */
-static t_eReturnState s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32);
 //****************************************************************************
@@ -229,9 +228,9 @@ static t_eReturnState s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e,
 /*********************************
  * APPSNS_Init
  *********************************/
-t_eReturnState APPSNS_Init(void)
+t_eReturnCode APPSNS_Init(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxSns_u8;
 
     // check sensors cfg
@@ -252,9 +251,9 @@ t_eReturnState APPSNS_Init(void)
 /*********************************
  * APPSNS_Init
  *********************************/
-t_eReturnState APPSNS_Cyclic(void)
+t_eReturnCode APPSNS_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     switch (g_state_e)
     {
@@ -292,9 +291,9 @@ t_eReturnState APPSNS_Cyclic(void)
 /*********************************
  * APPSNS_GetState
  *********************************/
-t_eReturnState APPSNS_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPSNS_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -309,7 +308,7 @@ t_eReturnState APPSNS_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * APPSNS_GetState
  *********************************/
-t_eReturnState APPSNS_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPSNS_SetState(t_eCyclicFuncState f_State_e)
 {
     g_state_e = f_State_e;
     return RC_OK;
@@ -318,9 +317,9 @@ t_eReturnState APPSNS_SetState(t_eCyclicFuncState f_State_e)
 /*********************************
  * APPSNS_Get_SnsValue
  *********************************/
-t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *f_SnsInfo_ps)
+t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *f_SnsInfo_ps)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(g_state_e != STATE_CYCLIC_OPE)
     {
@@ -359,9 +358,9 @@ t_eReturnState APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo 
 /*********************************
  * s_APPSNS_PreOperational
  *********************************/
-static t_eReturnState s_APPSNS_PreOperational(void)
+static t_eReturnCode s_APPSNS_PreOperational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_LLDRV_u8 = 0;
     static t_uint8 s_LLSNS_u8 = 0;
     // driver init
@@ -400,9 +399,9 @@ static t_eReturnState s_APPSNS_PreOperational(void)
 /*********************************
  * s_APPSNS_Operational
  *********************************/
-static t_eReturnState s_APPSNS_Operational(void)
+static t_eReturnCode s_APPSNS_Operational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_bool s_IsDrvCylic_b = True;
     t_uint8 DrvCyclicCnt_u8 = 0;
     t_uint8 LLI_u8; 
@@ -434,9 +433,9 @@ static t_eReturnState s_APPSNS_Operational(void)
 /*********************************
  * s_APPSNS_ConvertingManagement
  *********************************/
-t_eReturnState s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSNS_SnsInfo *f_snsInfo_ps)
+t_eReturnCode s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSNS_SnsInfo *f_snsInfo_ps)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     // see if there is a ConvertValSI for this sensors
 
@@ -500,11 +499,11 @@ t_eReturnState s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSN
 /*********************************
  * s_APPSNS_ConvertTemperature
  *********************************/
-static t_eReturnState s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e, 
                                                     t_sint16 f_snsValueSI_s16, 
                                                     t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e > APPSNS_TEMP_UNIT_NB)
     {
@@ -540,11 +539,11 @@ static t_eReturnState s_APPSNS_ConvertTemperature(t_eAPPSNS_TempUnity f_unity_e,
 /*********************************
  * s_APPSNS_ConvertFlow
  *********************************/
-static t_eReturnState s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e, 
                                            t_sint16 f_snsValueSI_s16, 
                                            t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e > APPSNS_FLOW_UNIT_NB)
     {
@@ -579,11 +578,11 @@ static t_eReturnState s_APPSNS_ConvertFlow(t_eAPPSNS_FlowUnity f_unity_e,
 /*********************************
  * s_APPSNS_ConvertForce
  *********************************/
-static t_eReturnState s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e, 
                                             t_sint16 f_snsValueSI_s16, 
                                             t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e > APPSNS_FORCE_UNIT_NB)
     {
@@ -618,11 +617,11 @@ static t_eReturnState s_APPSNS_ConvertForce(t_eAPPSNS_ForceUnity f_unity_e,
 /*********************************
  * s_APPSNS_ConvertDistance
  *********************************/
-static t_eReturnState s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e, 
                                                t_sint16 f_snsValueSI_s16, 
                                                t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e > APPSNS_DISTANCE_UNIT_NB)
     {
@@ -660,11 +659,11 @@ static t_eReturnState s_APPSNS_ConvertDistance(t_eAPPSNS_DistanceUnity f_unity_e
 /*********************************
  * s_APPSNS_ConvertAngle
  *********************************/
-static t_eReturnState s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e, 
                                             t_sint16 f_snsValueSI_s16, 
                                             t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e >= APPSNS_ANGLE_UNIT_NB)
     {
@@ -697,11 +696,11 @@ static t_eReturnState s_APPSNS_ConvertAngle(t_eAPPSNS_AngleUnity f_unity_e,
 /*********************************
  * s_APPSNS_ConvertPressure
  *********************************/
-static t_eReturnState s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e, 
                                                t_sint16 f_snsValueSI_s16, 
                                                t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e > APPSNS_PRESSURE_UNIT_NB)
     {
@@ -736,11 +735,11 @@ static t_eReturnState s_APPSNS_ConvertPressure(t_eAPPSNS_PressureUnity f_unity_e
 /*********************************
  * s_APPSNS_ConvertSpeed
  *********************************/
-static t_eReturnState s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e, 
                                             t_sint16 f_snsValueSI_s16, 
                                             t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_unity_e >= APPSNS_SPEED_UNIT_NB)
     {
@@ -775,11 +774,11 @@ static t_eReturnState s_APPSNS_ConvertSpeed(t_eAPPSNS_SpeedUnity f_unity_e,
 /*********************************
  * s_APPSNS_ConvertAngularSpeed
  *********************************/
-static t_eReturnState s_APPSNS_ConvertAngularSpeed(t_eAPPSNS_AngularSpdUnity f_unity_e, 
+static t_eReturnCode s_APPSNS_ConvertAngularSpeed(t_eAPPSNS_AngularSpdUnity f_unity_e, 
                                                    t_sint16 f_snsValueSI_s16, 
                                                    t_float32 * f_snsValue_pf32)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if (f_unity_e >= APPSNS_ANGULARSPD_NB)
     {

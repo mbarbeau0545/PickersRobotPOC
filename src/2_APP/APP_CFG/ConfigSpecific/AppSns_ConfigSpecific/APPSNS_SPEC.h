@@ -53,23 +53,7 @@
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************
-    /**
-    *
-    *	@brief      
-    *	@note       
-    *
-    *
-    *	@param[in]      
-    *	@param[in]      
-    *	 
-    *   @retval RC_OK                             @ref RC_OK
-    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
-    *
-    */
-    t_eReturnState APPSNS_SPEC_ConvertTemperature(t_uint8 f_idxTempUnity_u8, 
-                                                    t_sint16 f_rawVal_s16,
-                                                    t_sint16 f_snsVal_s16);
+
    
 
 #endif // APPSYS_CONFIGPUBLIC_H_INCLUDED           

@@ -22,7 +22,6 @@
     #include "../ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC.h"
     /* CAUTION : Automatic generated code section for Include: Start */
     #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_AirTemperature.h"
-    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_AirHumidity.h"
     /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
@@ -47,7 +46,7 @@
     *	@brief      Set a sensor configuration 
 
     */
-    typedef t_eReturnState (t_cbAppSns_SetSnsCfg)(void);
+    typedef t_eReturnCode (t_cbAppSns_SetSnsCfg)(void);
     /**
     *
     *	@brief      get value for a sensor
@@ -55,7 +54,7 @@
     *	@param[in] f_SnsValue_ps : structure to store value and validity
     *
     */
-    typedef t_eReturnState (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+    typedef t_eReturnCode (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
     /**
     *
     *	@brief      Format the value sensors depdning on how it will be treated in Logic
@@ -66,24 +65,24 @@
     *	@param[in] SnsValue_f32 : the value which will be used in logic
     *
     */
-    typedef t_eReturnState (t_cbAppSns_FormatValSI)(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
+    typedef t_eReturnCode (t_cbAppSns_FormatValSI)(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
     /**
     *
     *	@brief      Set the driver init function
     */
-    typedef t_eReturnState (t_cbAppSns_DrvInit)(void);
+    typedef t_eReturnCode (t_cbAppSns_DrvInit)(void);
     /**
     *
     *	@brief      Set the driver cyclic function
     *
     */
-    typedef t_eReturnState (t_cbAppSns_DrvCyclic)(void);
+    typedef t_eReturnCode (t_cbAppSns_DrvCyclic)(void);
     /**
     *
     *	@brief      Conversion Management function.\n
     *
     */
-   typedef t_eReturnState (t_cbAppSns_ConversionMngmt)(t_float32 f_rawValue_f32, t_float32 *f_snsValue_ps16);
+   typedef t_eReturnCode (t_cbAppSns_ConversionMngmt)(t_float32 f_rawValue_f32, t_float32 *f_snsValue_ps16);
 	
 	/* CAUTION : Automatic generated code section : Start */
 
@@ -118,14 +117,12 @@
 
     /**< Variable for System Sensors functions*/
     const t_sAPPSNS_SysSnsFunc c_AppSns_SysSns_apf[APPSNS_SENSOR_NB] = {
-        {APPSNS_MEASTYPE_TEMPERATURE,                                 APPSNS_SPEC_AirTemperature_SetCfg,                          APPSNS_SPEC_AirTemperature_GetSigValue,                        APPSNS_SPEC_AirTemperature_FormatValue}, //APPSNS_SENSOR_AIRTEMPERATURE
-        {APPSNS_MEASTYPE_PRESSURE,                                    APPSNS_SPEC_AirHumidity_SetCfg,                             APPSNS_SPEC_AirHumidity_GetSigValue,                           APPSNS_SPEC_AirHumidity_FormatValue}, //APPSNS_SENSOR_AIRHUMIDITY
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_AirTemperature_SetCfg,                          APPSNS_SPEC_AirTemperature_GetSigValue,                        APPSNS_SPEC_AirTemperature_FormatValue}, //APPSNS_SENSOR_AIRTEMPERATURE
     };
 
     /**< Variable for Sensors Unity Management */
     const t_eAPPSNS_SnsMeasType c_AppSns_SnsMeasType_ae[APPSNS_SENSOR_NB] = {
-        APPSNS_MEASTYPE_TEMPERATURE,                                 // APPSNS_SENSOR_AIRTEMPERATURE
-        APPSNS_MEASTYPE_PRESSURE,                                    // APPSNS_SENSOR_AIRHUMIDITY
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_AIRTEMPERATURE
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

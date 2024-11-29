@@ -56,19 +56,19 @@ static t_eCyclicFuncState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
 *	@brief  Call driver cyclic function
 *
 */
-static t_eReturnState s_APPSYS_PreOperational();
+static t_eReturnCode s_APPSYS_PreOperational();
 /**
 *
 *	@brief  Call driver cyclic function
 *
 */
-static t_eReturnState s_APPSYS_Operational();
+static t_eReturnCode s_APPSYS_Operational();
 /**
 *
 *	@brief  Call driver cyclic function
 *
 */
-static t_eReturnState s_APPSYS_Set_ModulesCyclic();
+static t_eReturnCode s_APPSYS_Set_ModulesCyclic();
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -77,7 +77,7 @@ static t_eReturnState s_APPSYS_Set_ModulesCyclic();
  *********************************/
 void APPSYS_Init(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_bool s_IsSysCfgDone_b = False;
     t_uint8 modIndex_u8 = 0;
     // set sys confgiguration 
@@ -115,7 +115,7 @@ void APPSYS_Init(void)
  *********************************/
 void APPSYS_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
      
     switch(g_AppSysModuleState_e)
     {
@@ -154,9 +154,9 @@ void APPSYS_Cyclic(void)
 /*********************************
  * s_APPSYS_Set_ModulesCyclic
  *********************************/
-static t_eReturnState s_APPSYS_Set_ModulesCyclic(void)
+static t_eReturnCode s_APPSYS_Set_ModulesCyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint8 modIndex_u8;
 
     for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 < (t_uint8)APPSYS_MODULE_NB) && (Ret_e >= RC_OK) ; modIndex_u8++)
@@ -172,9 +172,9 @@ static t_eReturnState s_APPSYS_Set_ModulesCyclic(void)
 /*********************************
  * s_APPSYS_PreOperational
  *********************************/
-static t_eReturnState s_APPSYS_PreOperational(void)
+static t_eReturnCode s_APPSYS_PreOperational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint8 modIndex_u8;
     t_uint8 ModuleInitCnt_u8 = 0;
 
@@ -210,9 +210,9 @@ static t_eReturnState s_APPSYS_PreOperational(void)
 /*********************************
  * s_APPSYS_Operational
  *********************************/
-static t_eReturnState s_APPSYS_Operational(void)
+static t_eReturnCode s_APPSYS_Operational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_uint32 currentCnt_u32 = 0;
     static t_uint32 s_previousCnt_u32 = 0;
     t_uint32 elapsedTime_u32 =  0;

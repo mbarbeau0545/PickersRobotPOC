@@ -20,6 +20,7 @@
 #include "./APP_LGC.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
+#include "FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -52,20 +53,19 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
-static t_eReturnState s_APPLGC_Operational(void);
-static t_eReturnState s_APPLGC_PreOperational(void);
+static t_eReturnCode s_APPLGC_Operational(void);
+static t_eReturnCode s_APPLGC_PreOperational(void);
 
-static t_eReturnState s_APPLGC_callback(void);
+static t_eReturnCode s_APPLGC_callback(t_sFMKFDCAN_RxItemEvent f_rxEvent_s, t_eFMKFDCAN_NodeStatus f_status);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
 /*********************************
  * APPLGC_Init
  *********************************/
-t_eReturnState APPLGC_Init(void)
+t_eReturnCode APPLGC_Init(void)
 {
-    t_eReturnState Ret_e = RC_OK;
-    
+    t_eReturnCode Ret_e = RC_OK;
     
     return Ret_e;
 }
@@ -73,9 +73,9 @@ t_eReturnState APPLGC_Init(void)
 /*********************************
  * APPLGC_Init
  *********************************/
-t_eReturnState APPLGC_Cyclic(void)
+t_eReturnCode APPLGC_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     // code to run every x milliseconds, config in APPSYS_ConfigPrivate.h
 
     switch (g_state_e)
@@ -119,9 +119,9 @@ t_eReturnState APPLGC_Cyclic(void)
 /*********************************
  * APPLGC_GetState
  *********************************/
-t_eReturnState APPLGC_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPLGC_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -138,7 +138,7 @@ t_eReturnState APPLGC_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * APPLGC_SetState
  *********************************/
-t_eReturnState APPLGC_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e)
 {
 
     g_state_e = f_State_e;
@@ -148,36 +148,17 @@ t_eReturnState APPLGC_SetState(t_eCyclicFuncState f_State_e)
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
-static t_eReturnState s_APPLGC_callback(void)
+static t_eReturnCode s_APPLGC_callback(t_sFMKFDCAN_RxItemEvent f_rxEvent_s, t_eFMKFDCAN_NodeStatus f_status)
 {
-    t_eReturnState Ret_e = RC_OK;
-    static t_uint32 last_tick_u32;
-    t_uint32 current_tick_u23;
-    t_uint32 elasped_time_u32;
-    static t_eFMKIO_DigValue s_digval_e = FMKIO_DIG_VALUE_HIGH;
+    t_eReturnCode Ret_e = RC_OK;
 
-    if(s_digval_e == FMKIO_DIG_VALUE_HIGH)
+    t_uint8 data_ua[8];
+    if (f_status == 0)
     {
-        s_digval_e = FMKIO_DIG_VALUE_LOW;
-    }
-    else
-    {
-        s_digval_e = FMKIO_DIG_VALUE_HIGH;
-    }
-
-    FMKCPU_Get_Tick(&current_tick_u23);
-
-    Ret_e = FMKIO_Set_OutDigSigValue(FMKIO_OUTPUT_SIGDIG_3, s_digval_e);
-    
-    if(Ret_e == RC_OK)
-    {
-        elasped_time_u32 = (current_tick_u23 - last_tick_u32);
-        if(elasped_time_u32 > (t_uint32)0)
-        {
-            last_tick_u32 = current_tick_u23;
-            elasped_time_u32 += 1;
-            Ret_e = RC_WARNING_BUSY;
-        }
+        data_ua[0] = f_rxEvent_s.CanMsg_s.data_pu8[0];
+        data_ua[1] = f_rxEvent_s.CanMsg_s.data_pu8[2];
+        data_ua[2] = f_rxEvent_s.CanMsg_s.data_pu8[1];
+        data_ua[3] = f_rxEvent_s.CanMsg_s.data_pu8[3];
     }
     return Ret_e;
 }
@@ -185,16 +166,22 @@ static t_eReturnState s_APPLGC_callback(void)
 /*********************************
  * s_APPLGC_PreOperational
  *********************************/
-static t_eReturnState s_APPLGC_PreOperational(void)
+static t_eReturnCode s_APPLGC_PreOperational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
-    //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_10, FMKIO_PULL_MODE_DISABLE);
-    //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_11, FMKIO_PULL_MODE_DISABLE);
-    //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_12, FMKIO_PULL_MODE_DISABLE);
-    //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_9, FMKIO_PULL_MODE_DISABLE);
-    //Ret_e = FMKIO_Set_InDigSigCfg(FMKIO_INPUT_SIGDIG_10, FMKIO_PULL_MODE_DISABLE);
-    Ret_e = FMKIO_Set_InAnaSigCfg(FMKIO_INPUT_SIGANA_3, FMKIO_PULL_MODE_DISABLE, NULL_FONCTION);
-    
+    t_eReturnCode Ret_e = RC_OK;
+
+    t_sFMKFDCAN_RxItemEventCfg caca = 
+    {
+        .callback_cb = s_APPLGC_callback, 
+        .Dlc_e = FMKFDCAN_DLC_8,
+        .ItemId_s = {
+            .FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_DATA,
+            .Identifier_u32 = 0x123,
+            .IdType_e = FMKFDCAN_IDTYPE_STANDARD,
+        },
+        .maskId_u32 = 0xFF0,
+    };
+    Ret_e = FMKFDCAN_ConfigureRxItemEvent(FMKFDCAN_NODE_1, caca);
    
     return Ret_e;
 }
@@ -202,32 +189,31 @@ static t_eReturnState s_APPLGC_PreOperational(void)
 /*********************************
  * s_APPLGC_Operational
  *********************************/
-static t_eReturnState s_APPLGC_Operational(void)
+static t_eReturnCode s_APPLGC_Operational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
-    t_uint16 value_u16;
-    t_uint16 vref_u32 = 0;
-    t_uint16 *vdd_pu16 = 0x1FFFF7BA;
-    t_uint16 *vrefcalib = 0x1FFFF7B8;
-    //Ret_e = FMKIO_Get_InDigSigValue(FMKIO_INPUT_SIGDIG_10, &value_e);
-    Ret_e = FMKIO_Get_InAnaSigValue(FMKIO_INPUT_SIGANA_3, &value_u16);
-    if(vref_u32 > (t_uint16)value_u16)
+    t_eReturnCode Ret_e = RC_OK;
+    t_sFMKFDCAN_RxItemEvent rxItem_s;
+    t_uint8 datapue[8] = {0,1,3,4,5,6,7,2};
+    t_sFMKFDCAN_TxItemCfg Txitem_s = {
+        .BitRate_e = FMKFDCAN_BITRATE_SWITCH_OFF,
+        .frameFormat_e = FMKFDCAN_FRAME_FORMAT_CLASSIC,
+
+        .ItemId_s.Identifier_u32 = 0x123,
+        .ItemId_s.FramePurpose_e = FMKFDCAN_FRAME_PURPOSE_DATA,
+        .ItemId_s.IdType_e = FMKFDCAN_IDTYPE_STANDARD,
+
+        .CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_TX,
+        .CanMsg_s.Dlc_e = FMKFDCAN_DLC_8,
+        .CanMsg_s.data_pu8 = datapue
+
+    };
+    Ret_e = FMKFDCAN_SendTxItem(FMKFDCAN_NODE_1, Txitem_s);
+    Ret_e = FMKFDCAN_GetRxItem(FMKFDCAN_NODE_1, &rxItem_s);
+    if(Ret_e == RC_OK)
     {
-        Ret_e = RC_WARNING_BUSY;
+        rxItem_s.timeStamp_32 = 45;
     }
-    if(*vdd_pu16 > (t_uint16)value_u16)
-    {
-        Ret_e = RC_WARNING_INIT_PROBLEM;
-    }
-    if(*vrefcalib > (t_uint16)value_u16)
-    {
-        Ret_e = RC_WARNING_INIT_PROBLEM;
-    }
-    if(Ret_e != RC_OK)
-    {
-        Ret_e = RC_OK;
-    }
-    return Ret_e;
+    return RC_OK;
 }
 //************************************************************************************
 // End of File

@@ -52,7 +52,7 @@
     *	@brief      Set a actuator configuration 
 
     */
-    typedef t_eReturnState (t_cbAppAct_SetActCfg)(void);
+    typedef t_eReturnCode (t_cbAppAct_SetActCfg)(void);
     /**
     *
     *	@brief  Get actuator value 
@@ -60,7 +60,7 @@
     *	@param[in]  f_value_ps : structure to store value and validity
     *
     */
-    typedef t_eReturnState (t_cbAppAct_GetActValue)(t_sAPPACT_ValueInfo *f_value_ps);
+    typedef t_eReturnCode (t_cbAppAct_GetActValue)(t_sAPPACT_ValueInfo *f_value_ps);
     /**
     *
     *	@brief      Set value for an actuator
@@ -68,18 +68,18 @@
     *	@param[in] f_value_s16 : value to set
     *
     */
-    typedef t_eReturnState (t_cbAppAct_SetActValue)(t_sint16 f_value_s16);
+    typedef t_eReturnCode (t_cbAppAct_SetActValue)(t_sint16 f_value_s16);
     /**
     *
     *	@brief      Set the driver init function
     */
-    typedef t_eReturnState (t_cbAppAct_DrvInit)(void);
+    typedef t_eReturnCode (t_cbAppAct_DrvInit)(void);
     /**
     *
     *	@brief      Set the driver cyclic function
     *
     */
-    typedef t_eReturnState (t_cbAppAct_DrvCyclic)(void);
+    typedef t_eReturnCode (t_cbAppAct_DrvCyclic)(void);
 
 	
 	/* CAUTION : Automatic generated code section : Start */

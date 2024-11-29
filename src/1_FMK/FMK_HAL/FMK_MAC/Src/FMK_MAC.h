@@ -39,7 +39,7 @@
 
     /* CAUTION : Automatic generated code section for Structure: End */
 
-    typedef t_eReturnState (t_cbFMKMAC_DmaError)(t_uint8 debugInfo1, t_uint8 debugInfo2);
+    typedef t_eReturnCode (t_cbFMKMAC_DmaError)(t_uint8 debugInfo1, t_uint8 debugInfo2);
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -60,7 +60,7 @@
     *                store information for each signals.\n
     *
     */
-    t_eReturnState FMKMAC_Init(void);
+    t_eReturnCode FMKMAC_Init(void);
     /**
     *
     *	@brief      Perform all Cyclic action for this module.\n
@@ -69,7 +69,7 @@
     *               to reference error.\n
     *
     */
-    t_eReturnState FMKMAC_Cyclic(void);
+    t_eReturnCode FMKMAC_Cyclic(void);
     /**
     *
     *	@brief Function to know the module state 
@@ -78,7 +78,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKMAC_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKMAC_GetState(t_eCyclicFuncState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state 
@@ -87,7 +87,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnState FMKMAC_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKMAC_SetState(t_eCyclicFuncState f_State_e);
     /**
     *
     *	@brief
@@ -100,7 +100,7 @@
     *
     *
     */
-    t_eReturnState FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, void *f_ModuleHandle_pv);
+    t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, void *f_ModuleHandle_pv);
 #endif // FMKMAC_H_INCLUDED           
 //************************************************************************************
 // End of File

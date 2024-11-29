@@ -78,20 +78,20 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnState s_APPACT_PreOperational(void);
+static t_eReturnCode s_APPACT_PreOperational(void);
 /**
 *
 *	@brief  Call driver cyclic function
 *
 */
-static t_eReturnState s_APPACT_Operational(void);
+static t_eReturnCode s_APPACT_Operational(void);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
 /*********************************
  * APPACT_Init
  *********************************/
-t_eReturnState APPACT_Init(void)
+t_eReturnCode APPACT_Init(void)
 {
     return RC_OK;
 }
@@ -99,9 +99,9 @@ t_eReturnState APPACT_Init(void)
 /*********************************
  * APPACT_Cyclic
  *********************************/
-t_eReturnState APPACT_Cyclic(void)
+t_eReturnCode APPACT_Cyclic(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     switch (g_state_e)
     {
@@ -139,9 +139,9 @@ t_eReturnState APPACT_Cyclic(void)
 /*********************************
  * APPACT_GetState
  *********************************/
-t_eReturnState APPACT_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPACT_GetState(t_eCyclicFuncState *f_State_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_State_pe == (t_eCyclicFuncState *)NULL)
     {
@@ -157,7 +157,7 @@ t_eReturnState APPACT_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * APPACT_SetState
  *********************************/
-t_eReturnState APPACT_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPACT_SetState(t_eCyclicFuncState f_State_e)
 {
     g_state_e = f_State_e;
     return RC_OK;
@@ -166,9 +166,9 @@ t_eReturnState APPACT_SetState(t_eCyclicFuncState f_State_e)
 /*********************************
  * APPACT_Get_ActValue
  *********************************/
-t_eReturnState APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f_value_ps16)
+t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f_value_ps16)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     t_sAPPACT_ValueInfo actValInfo_s = {0};
 
     if(f_actuator_e > APPACT_ACTUATOR_NB)
@@ -203,9 +203,9 @@ t_eReturnState APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * 
 /*********************************
  * APPACT_Set_ActValue
  *********************************/
-t_eReturnState APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_value_s16)
+t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_value_s16)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_actuator_e > APPACT_ACTUATOR_NB)
     {
@@ -227,9 +227,9 @@ t_eReturnState APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_
 /*********************************
  * APPACT_Get_ActuatorState
  *********************************/
-t_eReturnState APPACT_Set_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPACT_ActuatorState f_ActState_e)
+t_eReturnCode APPACT_Set_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPACT_ActuatorState f_ActState_e)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_Actuator_e > APPACT_ACTUATOR_NB
     || f_ActState_e > APPACT_ACTUATOR_STATE_NB)
@@ -246,9 +246,9 @@ t_eReturnState APPACT_Set_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPP
 /*********************************
  * APPSNS_Get_SensorState
  *********************************/
-t_eReturnState APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPACT_ActuatorState *f_ActState_pe)
+t_eReturnCode APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPACT_ActuatorState *f_ActState_pe)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
 
     if(f_Actuator_e > APPACT_ACTUATOR_NB)
     {
@@ -270,9 +270,9 @@ t_eReturnState APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPP
 /*********************************
  * s_APPACT_PreOperational
  *********************************/
-static t_eReturnState s_APPACT_PreOperational(void)
+static t_eReturnCode s_APPACT_PreOperational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_LLDRV_u8 = 0;
     static t_uint8 s_LLACT_u8 = 0;
     // first call drv init function 
@@ -310,9 +310,9 @@ static t_eReturnState s_APPACT_PreOperational(void)
 /*********************************
  * s_APPACT_Operational
  *********************************/
-static t_eReturnState s_APPACT_Operational(void)
+static t_eReturnCode s_APPACT_Operational(void)
 {
-    t_eReturnState Ret_e = RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
     static t_bool s_IsDrvCylic_b = True;
     t_bool DrvCyclicCnt_u8 = 0;
     t_uint8 LLI_u8; 
