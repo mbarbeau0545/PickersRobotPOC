@@ -252,7 +252,7 @@
     *
     *	@param[in]      f_signal_e          : the input frequency signal, a value from @ref t_eFMKIO_InEvntSig
     *	@param[in]      f_pull_e            : the input pull mode, value from @ref t_eFMKIO_PullMode
-    *	@param[in]      f_debouncDelay_u32  : the input pull mode, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_debouncDelay_u32  : time in which interrupt will be ignore due to indertemine state
     *	@param[in]      f_trigger_e         : time in ms to ignore fluctuation from signal after a interruption happened
     *	@param[in]      f_Evnt_cb           : Function to call when the edge is detected by hardware
     *	@param[in]      f_sigErr_cb         : callbback function that will be called if an error occured, NULL_FONCTION if not used
@@ -294,7 +294,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
+    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig        f_signal_e, 
                                           t_eFMKIO_PullMode        f_pull_e,
                                           t_uint32                 f_frequency_u32,
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);

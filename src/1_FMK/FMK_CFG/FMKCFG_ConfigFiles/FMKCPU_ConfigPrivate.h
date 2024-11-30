@@ -47,6 +47,9 @@
     #define FMKCPU_TIMER_EVNT_PSC_HIGH          ((t_uint16)(FMKCPU_TIMER_CLOCK_OSC_MHZ * 1000)- (t_uint16)1) /**<  The prescaler use for evnt timer, having 1000Hz (1ms) */
     #define FMKCPU_TIMER_EVNT_PSC_LOW           ((t_uint16)65534)
     #define FMKCPU_TIME_BTWN_DIAG_MS            ((t_uint16)2000)   /**< Time between diagnostic for timer and channel in cyclic ope mode*/
+
+    #define FMKCPU_MASK_CHNL_RUN  ((t_uint16)1) /**< Mask to indicate that the channel is running */
+    #define FMKCPU_MASK_CHNL_STOP ((t_uint16)0) /**< Mask to indicate that the channel is stopped */
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -245,49 +248,49 @@
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< General Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITGpLineMapp_as[FMKCPU_INTERRUPT_LINE_IO_NB] = {
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_01
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_02
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_03
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_04
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_11
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_12
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_13
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_14
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_21
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_22
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_23
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_24
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_31
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_32
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_33
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_34
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_41
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_42
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_43
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_44
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_51
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_52
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_53
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_54
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_61
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_62
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_63
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_64
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineIOMapp_as[FMKCPU_INTERRUPT_LINE_IO_NB] = {
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_11
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_12
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_13
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_14
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_21
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_22
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_23
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_24
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_31
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_32
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_33
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_34
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_41
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_42
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_43
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_44
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_51
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_52
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_53
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_54
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_61
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_62
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_63
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_64
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_71
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_72
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_73
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_74
     };
 
     /**< Event Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITEvntLineMapp_as[FMKCPU_INTERRUPT_LINE_EVNT_NB] = {
-        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_0
-        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_EVNT_0
-        {FMKCPU_TIMER_16,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_1
-        {FMKCPU_TIMER_17,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_2
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineEvntMapp_as[FMKCPU_INTERRUPT_LINE_EVNT_NB] = {
+        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_1
+        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_EVNT_1
+        {FMKCPU_TIMER_16,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_3
+        {FMKCPU_TIMER_17,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_4
     };
 
     /**< Dac Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITDacLineMapp_as[FMKCPU_INTERRUPT_LINE_DAC_NB] = {
-        {FMKCPU_TIMER_6,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_DAC_0
-        {FMKCPU_TIMER_7,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_DAC_1
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineDacMapp_as[FMKCPU_INTERRUPT_LINE_DAC_NB] = {
+        {FMKCPU_TIMER_6,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_DAC_1
+        {FMKCPU_TIMER_7,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_DAC_2
     };
 
     /**< Set the NVIC Priority for all NVIC_IRqn Priority */
@@ -435,8 +438,8 @@
         {FMKCPU_Enable_SPI3_Clock,      FMKCPU_Disable_SPI3_Clock},     // FMKCPU_RCC_CLK_SPI3
         {FMKCPU_Enable_USART2_Clock,    FMKCPU_Disable_USART2_Clock},   // FMKCPU_RCC_CLK_USART2
         {FMKCPU_Enable_USART3_Clock,    FMKCPU_Disable_USART3_Clock},   // FMKCPU_RCC_CLK_USART3
-        {FMKCPU_Enable_USART4_Clock,    FMKCPU_Disable_USART4_Clock},   // FMKCPU_RCC_CLK_USART4
-        {FMKCPU_Enable_USART5_Clock,    FMKCPU_Disable_USART5_Clock},   // FMKCPU_RCC_CLK_USART5
+        {FMKCPU_Enable_UART4_Clock,     FMKCPU_Disable_UART4_Clock},    // FMKCPU_RCC_CLK_UART4
+        {FMKCPU_Enable_UART5_Clock,     FMKCPU_Disable_UART5_Clock},    // FMKCPU_RCC_CLK_UART5
         {FMKCPU_Enable_I2C2_Clock,      FMKCPU_Disable_I2C2_Clock},     // FMKCPU_RCC_CLK_I2C2
         {FMKCPU_Enable_USB_Clock,       FMKCPU_Disable_USB_Clock},      // FMKCPU_RCC_CLK_USB
         {FMKCPU_Enable_FDCAN_Clock,     FMKCPU_Disable_FDCAN_Clock},    // FMKCPU_RCC_CLK_FDCAN

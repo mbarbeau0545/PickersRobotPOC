@@ -88,14 +88,14 @@
 
     /**< Variable for Interna Sensors configuration*/
     const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg[FMKCDA_ADC_INTERN_NB] ={
-        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_16},                // for FMKCDA_ADC_INTERN_TS
-        {FMKCDA_ADC_5,                         FMKCDA_ADC_CHANNEL_4},                 // for FMKCDA_ADC_INTERN_TS
+        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_16},                // for FMKCDA_ADC_INTERN_TS_CAL1
+        {FMKCDA_ADC_5,                         FMKCDA_ADC_CHANNEL_4},                 // for FMKCDA_ADC_INTERN_TS_CAL2
     };
 
     /**< Variable for Internal Sensors Calibration address */
     const volatile t_uint16* c_FmkCda_HwInternalSnsAddress_pas16[FMKCDA_ADC_INTERN_NB] = {
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL1_ADDRESS,                           // FMKCDA_ADC_INTERN_TS
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL2_ADDRESS,                           // FMKCDA_ADC_INTERN_TS
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL1_ADDRESS,                           // FMKCDA_ADC_INTERN_TS_CAL1
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_TS_CAL2_ADDRESS,                           // FMKCDA_ADC_INTERN_TS_CAL2
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

@@ -20,7 +20,6 @@
     // ********************************************************************
     #include "TypeCommon.h"
     #include "./FMKIO_ConfigPublic.h"
-    #include "./FMKCPU_ConfigPrivate.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -128,9 +127,9 @@
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
     const t_sFMKIO_BspTimerSigCfg c_InFreqSigBspMap_as[FMKIO_INPUT_SIGFREQ_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_2},              GPIO_AF9_TIM15,                FMKCPU_INTERRUPT_LINE_IO_21},    // FMKIO_INPUT_SIGFREQ_1,
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_3},              GPIO_AF1_TIM16,                FMKCPU_INTERRUPT_LINE_IO_22},    // FMKIO_INPUT_SIGFREQ_2,
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_4},              GPIO_AF1_TIM17,                FMKCPU_INTERRUPT_LINE_IO_23},    // FMKIO_INPUT_SIGFREQ_3,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_2},              GPIO_AF9_TIM15,                FMKCPU_INTERRUPT_LINE_IO_31},    // FMKIO_INPUT_SIGFREQ_1,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_3},              GPIO_AF1_TIM16,                FMKCPU_INTERRUPT_LINE_IO_32},    // FMKIO_INPUT_SIGFREQ_2,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_4},              GPIO_AF1_TIM17,                FMKCPU_INTERRUPT_LINE_IO_33},    // FMKIO_INPUT_SIGFREQ_3,
     };
 
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
@@ -157,14 +156,14 @@
     /**< Variable for bsp_Gpio_Pin PWM output signal mapping */
     const t_sFMKIO_BspTimerSigCfg c_OutPwmSigBspMap_as[FMKIO_OUTPUT_SIGPWM_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_8},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_43},    // FMKIO_OUTPUT_SIGPWM_1,
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_9},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_44},    // FMKIO_OUTPUT_SIGPWM_2,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_12},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_61},    // FMKIO_OUTPUT_SIGPWM_3,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_13},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_62},    // FMKIO_OUTPUT_SIGPWM_4,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_14},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_63},    // FMKIO_OUTPUT_SIGPWM_5,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_15},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_64},    // FMKIO_OUTPUT_SIGPWM_6,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_6},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_41},    // FMKIO_OUTPUT_SIGPWM_7,
-        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_7},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_42},    // FMKIO_OUTPUT_SIGPWM_8,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_8},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_53},    // FMKIO_OUTPUT_SIGPWM_1,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_9},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_54},    // FMKIO_OUTPUT_SIGPWM_2,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_12},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_71},    // FMKIO_OUTPUT_SIGPWM_3,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_13},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_72},    // FMKIO_OUTPUT_SIGPWM_4,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_14},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_73},    // FMKIO_OUTPUT_SIGPWM_5,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_15},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_74},    // FMKIO_OUTPUT_SIGPWM_6,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_6},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_51},    // FMKIO_OUTPUT_SIGPWM_7,
+        {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_7},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_52},    // FMKIO_OUTPUT_SIGPWM_8,
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

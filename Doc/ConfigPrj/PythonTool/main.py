@@ -43,6 +43,12 @@ def main()-> None:
         or  os.path.isfile(software_cfg_path)):
         FileNotFoundError("Expected two argument, hardware configuration and software.")
 
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print('Start Python tool with')
+    print(f'\tHardware Confiougration Path -> {hardware_cfg_path}')
+    print(f'\tSoftware Confiougration Path -> {software_cfg_path}')
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
     FMKCPU.code_generation(hardware_cfg_path)
     FMKCDA.code_genration(hardware_cfg_path)
     FMKIO.code_generation(hardware_cfg_path)

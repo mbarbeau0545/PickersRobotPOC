@@ -135,7 +135,7 @@ class FMKCPU_CodeGen():
         enum_rcc = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_RCC_ROOT, [str(rcclock_cfg[0]) for rcclock_cfg in rcclock_cfg_a[1:]], 
                                                             "t_eFMKCPU_ClockPort", 0, 
                                                             "Enum for rcc clock state reference",
-                                                            [str(rcclock_cfg[1]) for rcclock_cfg in rcclock_cfg_a[1:]])
+                                                            [f'Reference to RCC Clock {rcclock_cfg[0]}' for rcclock_cfg in rcclock_cfg_a[1:]])
         #----------------------------------------------------------------
         #----------make rcc implementation/Declaration--------------------
         #-----------------------------------------------------------------
@@ -174,9 +174,9 @@ class FMKCPU_CodeGen():
         #-----------------------------------------------------------------
         suffix_dac_tim = []
         suffix_evnt_tim = []
-        idx_tim_pg = 0
-        idx_tim_evnt = 0
-        idx_dac_tim = 0
+        idx_tim_pg = 1
+        idx_tim_evnt = 1
+        idx_dac_tim = 1
         description_pg_tim   = []
         description_dac_tim  = []
         description_evnt_tim = []
@@ -187,13 +187,13 @@ class FMKCPU_CodeGen():
                             + "    const t_uint8 c_FMKCPU_TimMaxChnl_ua8[FMKCPU_TIMER_NB] = {\n"
         
         const_mapp_gp_tim += "    /**< General Purpose Timer Channel Mapping */\n" \
-                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITGpLineMapp_as[{ENUM_FMKCPU_IT_GP_ROOT}_NB] = " \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineIOMapp_as[{ENUM_FMKCPU_IT_GP_ROOT}_NB] = " \
                             + "{\n"
         const_mapp_evnt_tim += "    /**< Event Purpose Timer Channel Mapping */\n" \
-                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITEvntLineMapp_as[{ENUM_FMKCPU_IT_EVNT_ROOT}_NB] = " \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineEvntMapp_as[{ENUM_FMKCPU_IT_EVNT_ROOT}_NB] = " \
                             + "{\n"
         const_mapp_dac_tim += "    /**< Dac Purpose Timer Channel Mapping */\n" \
-                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITDacLineMapp_as[{ENUM_FMKCPU_IT_DAC_ROOT}_NB] = " \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineDacMapp_as[{ENUM_FMKCPU_IT_DAC_ROOT}_NB] = " \
                             + "{\n"
 
         for idx, timer_cfg in enumerate(timer_cfg_a[1:]):
@@ -233,36 +233,36 @@ class FMKCPU_CodeGen():
                         const_mapp_gp_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
                                         + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
                                         + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}" \
-                                            + "}," + f"// {ENUM_FMKCPU_IT_GP_ROOT}_{idx_tim_pg}{channel}\n"
+                                            + "}," + f"    // {ENUM_FMKCPU_IT_GP_ROOT}_{idx_tim_pg}{channel}\n"
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_GP_ROOT}_{idx_tim_pg}{channel}"
                     # update idx   
                     idx_tim_pg +=1
                     
                 case 'DAC':
-                    suffix_dac_tim.extend(f"{i}" for i in range(1, (timer_cfg[1] +1)))
+                    suffix_dac_tim.extend(f"{int(idx_dac_tim + i)}" for i in range(0, (timer_cfg[1])))
                     description_dac_tim.extend(f"Dac Purpose Timer, Reference to Timer {idx_timer} Channel {channel}" for channel in range(1, (timer_cfg[1] +1)))
 
                     for channel in range(1, (timer_cfg[1] +1)):
                         const_mapp_dac_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
                                             + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
                                             + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}" \
-                                            + "}," + f"// {ENUM_FMKCPU_IT_DAC_ROOT}_{idx_dac_tim}\n"
+                                            + "}," + f"    // {ENUM_FMKCPU_IT_DAC_ROOT}_{idx_dac_tim}\n"
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_DAC_ROOT}_{idx_dac_tim}"
-                    idx_dac_tim +=1
+                    idx_dac_tim = idx_dac_tim + timer_cfg[1]
 
                 case 'EVENT':
-                    suffix_evnt_tim.extend(f"{i}" for i in range(1, (timer_cfg[1] +1)))
+                    suffix_evnt_tim.extend(f"{int(idx_tim_evnt + i)}" for i in range(0, (timer_cfg[1])))
                     description_evnt_tim.extend(f"Event Purpose Timer, Reference to Timer {idx_timer} Channel {channel}" for channel in range(1, (timer_cfg[1] +1)))
                     for channel in range(1, (timer_cfg[1] +1)):
                         const_mapp_evnt_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
                                             + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
                                             + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}"\
-                                            + "}," + f"// {ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}\n"
+                                            + "}," + f"    // {ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}\n"
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}"
-                    idx_tim_evnt +=1
+                    idx_tim_evnt = idx_tim_evnt + timer_cfg[1]
             
 
         var_tim_max_chnl += "    };\n\n"

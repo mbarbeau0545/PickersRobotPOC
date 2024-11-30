@@ -31,8 +31,8 @@
     /* Internal Sensors manage by the cpu */
     typedef enum
     {
-        FMKCDA_ADC_INTERN_TS = 0x0,                 /**< Refernce to TS_CAL1 */
-        FMKCDA_ADC_INTERN_TS,                       /**< Refernce to TS_CAL2 */
+        FMKCDA_ADC_INTERN_TS_CAL1 = 0x0,            /**< Refernce to TS_CAL1 */
+        FMKCDA_ADC_INTERN_TS_CAL2,                  /**< Refernce to TS_CAL2 */
     
         FMKCDA_ADC_INTERN_NB,
     } t_eFMKCDA_AdcInternSns;

@@ -52,34 +52,34 @@
     /* Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse */
     typedef enum
     {
-        FMKCPU_INTERRUPT_LINE_IO_01 = 0x0,                 /**< General Purpose Timer, Reference to Timer 1 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_02,                       /**< General Purpose Timer, Reference to Timer 1 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_03,                       /**< General Purpose Timer, Reference to Timer 1 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_04,                       /**< General Purpose Timer, Reference to Timer 1 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_11,                       /**< General Purpose Timer, Reference to Timer 2 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_12,                       /**< General Purpose Timer, Reference to Timer 2 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_13,                       /**< General Purpose Timer, Reference to Timer 2 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_14,                       /**< General Purpose Timer, Reference to Timer 2 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_21,                       /**< General Purpose Timer, Reference to Timer 3 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_22,                       /**< General Purpose Timer, Reference to Timer 3 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_23,                       /**< General Purpose Timer, Reference to Timer 3 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_24,                       /**< General Purpose Timer, Reference to Timer 3 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_31,                       /**< General Purpose Timer, Reference to Timer 4 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_32,                       /**< General Purpose Timer, Reference to Timer 4 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_33,                       /**< General Purpose Timer, Reference to Timer 4 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_34,                       /**< General Purpose Timer, Reference to Timer 4 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_41,                       /**< General Purpose Timer, Reference to Timer 5 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_42,                       /**< General Purpose Timer, Reference to Timer 5 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_43,                       /**< General Purpose Timer, Reference to Timer 5 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_44,                       /**< General Purpose Timer, Reference to Timer 5 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_51,                       /**< General Purpose Timer, Reference to Timer 8 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_52,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_53,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_54,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_61,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 20 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_11 = 0x0,                 /**< General Purpose Timer, Reference to Timer 1 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_12,                       /**< General Purpose Timer, Reference to Timer 1 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_13,                       /**< General Purpose Timer, Reference to Timer 1 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_14,                       /**< General Purpose Timer, Reference to Timer 1 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_21,                       /**< General Purpose Timer, Reference to Timer 2 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_22,                       /**< General Purpose Timer, Reference to Timer 2 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_23,                       /**< General Purpose Timer, Reference to Timer 2 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_24,                       /**< General Purpose Timer, Reference to Timer 2 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_31,                       /**< General Purpose Timer, Reference to Timer 3 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_32,                       /**< General Purpose Timer, Reference to Timer 3 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_33,                       /**< General Purpose Timer, Reference to Timer 3 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_34,                       /**< General Purpose Timer, Reference to Timer 3 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_41,                       /**< General Purpose Timer, Reference to Timer 4 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_42,                       /**< General Purpose Timer, Reference to Timer 4 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_43,                       /**< General Purpose Timer, Reference to Timer 4 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_44,                       /**< General Purpose Timer, Reference to Timer 4 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_51,                       /**< General Purpose Timer, Reference to Timer 5 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_52,                       /**< General Purpose Timer, Reference to Timer 5 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_53,                       /**< General Purpose Timer, Reference to Timer 5 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_54,                       /**< General Purpose Timer, Reference to Timer 5 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_61,                       /**< General Purpose Timer, Reference to Timer 8 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_71,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_72,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_73,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_74,                       /**< General Purpose Timer, Reference to Timer 20 Channel 4 */
     
         FMKCPU_INTERRUPT_LINE_IO_NB,
     } t_eFMKCPU_InterruptLineIO;
@@ -89,8 +89,8 @@
     {
         FMKCPU_INTERRUPT_LINE_EVNT_1 = 0x0,                  /**< Event Purpose Timer, Reference to Timer 15 Channel 1 */
         FMKCPU_INTERRUPT_LINE_EVNT_2,                        /**< Event Purpose Timer, Reference to Timer 15 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_EVNT_1,                        /**< Event Purpose Timer, Reference to Timer 16 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_EVNT_1,                        /**< Event Purpose Timer, Reference to Timer 17 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_EVNT_3,                        /**< Event Purpose Timer, Reference to Timer 16 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_EVNT_4,                        /**< Event Purpose Timer, Reference to Timer 17 Channel 1 */
     
         FMKCPU_INTERRUPT_LINE_EVNT_NB,
     } t_eFMKCPU_InterruptLineEvnt;
@@ -99,7 +99,7 @@
     typedef enum
     {
         FMKCPU_INTERRUPT_LINE_DAC_1 = 0x0,                  /**< Dac Purpose Timer, Reference to Timer 6 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_DAC_1,                        /**< Dac Purpose Timer, Reference to Timer 7 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_DAC_2,                        /**< Dac Purpose Timer, Reference to Timer 7 Channel 1 */
     
         FMKCPU_INTERRUPT_LINE_DAC_NB,
     } t_eFMKCPU_InterruptLineDAC;
@@ -107,63 +107,63 @@
     /* Enum for rcc clock state reference */
     typedef enum
     {
-        FMKCPU_RCC_CLK_DMA1 = 0x0,               /**< None */
-        FMKCPU_RCC_CLK_DMA2,                     /**< None */
-        FMKCPU_RCC_CLK_DMAMUX1,                  /**< None */
-        FMKCPU_RCC_CLK_CORDIC,                   /**< None */
-        FMKCPU_RCC_CLK_FMAC,                     /**< None */
-        FMKCPU_RCC_CLK_FLASH,                    /**< None */
-        FMKCPU_RCC_CLK_CRC,                      /**< None */
-        FMKCPU_RCC_CLK_GPIOG,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOF,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOE,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOD,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOC,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOB,                    /**< None */
-        FMKCPU_RCC_CLK_GPIOA,                    /**< None */
-        FMKCPU_RCC_CLK_ADC12,                    /**< None */
-        FMKCPU_RCC_CLK_ADC345,                   /**< None */
-        FMKCPU_RCC_CLK_DAC1,                     /**< None */
-        FMKCPU_RCC_CLK_DAC2,                     /**< None */
-        FMKCPU_RCC_CLK_DAC3,                     /**< None */
-        FMKCPU_RCC_CLK_DAC4,                     /**< None */
-        FMKCPU_RCC_CLK_RNG,                      /**< None */
-        FMKCPU_RCC_CLK_FMC,                      /**< None */
-        FMKCPU_RCC_CLK_QSPI,                     /**< None */
-        FMKCPU_RCC_CLK_TIM2,                     /**< None */
-        FMKCPU_RCC_CLK_TIM3,                     /**< None */
-        FMKCPU_RCC_CLK_TIM4,                     /**< None */
-        FMKCPU_RCC_CLK_TIM5,                     /**< None */
-        FMKCPU_RCC_CLK_TIM6,                     /**< None */
-        FMKCPU_RCC_CLK_TIM7,                     /**< None */
-        FMKCPU_RCC_CLK_CRS,                      /**< None */
-        FMKCPU_RCC_CLK_RTCAPB,                   /**< None */
-        FMKCPU_RCC_CLK_WWDG,                     /**< None */
-        FMKCPU_RCC_CLK_SPI2,                     /**< None */
-        FMKCPU_RCC_CLK_SPI3,                     /**< None */
-        FMKCPU_RCC_CLK_USART2,                   /**< None */
-        FMKCPU_RCC_CLK_USART3,                   /**< None */
-        FMKCPU_RCC_CLK_USART4,                   /**< None */
-        FMKCPU_RCC_CLK_USART5,                   /**< None */
-        FMKCPU_RCC_CLK_I2C2,                     /**< None */
-        FMKCPU_RCC_CLK_USB,                      /**< None */
-        FMKCPU_RCC_CLK_FDCAN,                    /**< None */
-        FMKCPU_RCC_CLK_PWR,                      /**< None */
-        FMKCPU_RCC_CLK_I2C3,                     /**< None */
-        FMKCPU_RCC_CLK_LPTIM1,                   /**< None */
-        FMKCPU_RCC_CLK_UCPD1,                    /**< None */
-        FMKCPU_RCC_CLK_SYSCFG,                   /**< None */
-        FMKCPU_RCC_CLK_TIM1,                     /**< None */
-        FMKCPU_RCC_CLK_SPI1,                     /**< None */
-        FMKCPU_RCC_CLK_TIM8,                     /**< x */
-        FMKCPU_RCC_CLK_USART1,                   /**< x */
-        FMKCPU_RCC_CLK_SPI4,                     /**< x */
-        FMKCPU_RCC_CLK_TIM15,                    /**< None */
-        FMKCPU_RCC_CLK_TIM16,                    /**< None */
-        FMKCPU_RCC_CLK_TIM17,                    /**< None */
-        FMKCPU_RCC_CLK_TIM20,                    /**< None */
-        FMKCPU_RCC_CLK_SAI1,                     /**< None */
-        FMKCPU_RCC_CLK_HRTIM1,                   /**< None */
+        FMKCPU_RCC_CLK_DMA1 = 0x0,               /**< Reference to RCC Clock DMA1 */
+        FMKCPU_RCC_CLK_DMA2,                     /**< Reference to RCC Clock DMA2 */
+        FMKCPU_RCC_CLK_DMAMUX1,                  /**< Reference to RCC Clock DMAMUX1 */
+        FMKCPU_RCC_CLK_CORDIC,                   /**< Reference to RCC Clock CORDIC */
+        FMKCPU_RCC_CLK_FMAC,                     /**< Reference to RCC Clock FMAC */
+        FMKCPU_RCC_CLK_FLASH,                    /**< Reference to RCC Clock FLASH */
+        FMKCPU_RCC_CLK_CRC,                      /**< Reference to RCC Clock CRC */
+        FMKCPU_RCC_CLK_GPIOG,                    /**< Reference to RCC Clock GPIOG */
+        FMKCPU_RCC_CLK_GPIOF,                    /**< Reference to RCC Clock GPIOF */
+        FMKCPU_RCC_CLK_GPIOE,                    /**< Reference to RCC Clock GPIOE */
+        FMKCPU_RCC_CLK_GPIOD,                    /**< Reference to RCC Clock GPIOD */
+        FMKCPU_RCC_CLK_GPIOC,                    /**< Reference to RCC Clock GPIOC */
+        FMKCPU_RCC_CLK_GPIOB,                    /**< Reference to RCC Clock GPIOB */
+        FMKCPU_RCC_CLK_GPIOA,                    /**< Reference to RCC Clock GPIOA */
+        FMKCPU_RCC_CLK_ADC12,                    /**< Reference to RCC Clock ADC12 */
+        FMKCPU_RCC_CLK_ADC345,                   /**< Reference to RCC Clock ADC345 */
+        FMKCPU_RCC_CLK_DAC1,                     /**< Reference to RCC Clock DAC1 */
+        FMKCPU_RCC_CLK_DAC2,                     /**< Reference to RCC Clock DAC2 */
+        FMKCPU_RCC_CLK_DAC3,                     /**< Reference to RCC Clock DAC3 */
+        FMKCPU_RCC_CLK_DAC4,                     /**< Reference to RCC Clock DAC4 */
+        FMKCPU_RCC_CLK_RNG,                      /**< Reference to RCC Clock RNG */
+        FMKCPU_RCC_CLK_FMC,                      /**< Reference to RCC Clock FMC */
+        FMKCPU_RCC_CLK_QSPI,                     /**< Reference to RCC Clock QSPI */
+        FMKCPU_RCC_CLK_TIM2,                     /**< Reference to RCC Clock TIM2 */
+        FMKCPU_RCC_CLK_TIM3,                     /**< Reference to RCC Clock TIM3 */
+        FMKCPU_RCC_CLK_TIM4,                     /**< Reference to RCC Clock TIM4 */
+        FMKCPU_RCC_CLK_TIM5,                     /**< Reference to RCC Clock TIM5 */
+        FMKCPU_RCC_CLK_TIM6,                     /**< Reference to RCC Clock TIM6 */
+        FMKCPU_RCC_CLK_TIM7,                     /**< Reference to RCC Clock TIM7 */
+        FMKCPU_RCC_CLK_CRS,                      /**< Reference to RCC Clock CRS */
+        FMKCPU_RCC_CLK_RTCAPB,                   /**< Reference to RCC Clock RTCAPB */
+        FMKCPU_RCC_CLK_WWDG,                     /**< Reference to RCC Clock WWDG */
+        FMKCPU_RCC_CLK_SPI2,                     /**< Reference to RCC Clock SPI2 */
+        FMKCPU_RCC_CLK_SPI3,                     /**< Reference to RCC Clock SPI3 */
+        FMKCPU_RCC_CLK_USART2,                   /**< Reference to RCC Clock USART2 */
+        FMKCPU_RCC_CLK_USART3,                   /**< Reference to RCC Clock USART3 */
+        FMKCPU_RCC_CLK_UART4,                    /**< Reference to RCC Clock UART4 */
+        FMKCPU_RCC_CLK_UART5,                    /**< Reference to RCC Clock UART5 */
+        FMKCPU_RCC_CLK_I2C2,                     /**< Reference to RCC Clock I2C2 */
+        FMKCPU_RCC_CLK_USB,                      /**< Reference to RCC Clock USB */
+        FMKCPU_RCC_CLK_FDCAN,                    /**< Reference to RCC Clock FDCAN */
+        FMKCPU_RCC_CLK_PWR,                      /**< Reference to RCC Clock PWR */
+        FMKCPU_RCC_CLK_I2C3,                     /**< Reference to RCC Clock I2C3 */
+        FMKCPU_RCC_CLK_LPTIM1,                   /**< Reference to RCC Clock LPTIM1 */
+        FMKCPU_RCC_CLK_UCPD1,                    /**< Reference to RCC Clock UCPD1 */
+        FMKCPU_RCC_CLK_SYSCFG,                   /**< Reference to RCC Clock SYSCFG */
+        FMKCPU_RCC_CLK_TIM1,                     /**< Reference to RCC Clock TIM1 */
+        FMKCPU_RCC_CLK_SPI1,                     /**< Reference to RCC Clock SPI1 */
+        FMKCPU_RCC_CLK_TIM8,                     /**< Reference to RCC Clock TIM8 */
+        FMKCPU_RCC_CLK_USART1,                   /**< Reference to RCC Clock USART1 */
+        FMKCPU_RCC_CLK_SPI4,                     /**< Reference to RCC Clock SPI4 */
+        FMKCPU_RCC_CLK_TIM15,                    /**< Reference to RCC Clock TIM15 */
+        FMKCPU_RCC_CLK_TIM16,                    /**< Reference to RCC Clock TIM16 */
+        FMKCPU_RCC_CLK_TIM17,                    /**< Reference to RCC Clock TIM17 */
+        FMKCPU_RCC_CLK_TIM20,                    /**< Reference to RCC Clock TIM20 */
+        FMKCPU_RCC_CLK_SAI1,                     /**< Reference to RCC Clock SAI1 */
+        FMKCPU_RCC_CLK_HRTIM1,                   /**< Reference to RCC Clock HRTIM1 */
     
         FMKCPU_RCC_CLK_NB,
     } t_eFMKCPU_ClockPort;
@@ -287,6 +287,7 @@
         FMKCPU_HWTIM_CFG_OP,                /**< Timer configuration in One Pulse mode */
         FMKCPU_HWTIM_CFG_EVNT,              /**< Timer configuration in Event mode */
         FMKCPU_HWTIM_CFG_ECDR,              /**< Timer configuration in encoder mode */
+        FMKCPU_HWTIM_CFG_DAC,               /**< Timer configuration in Dac mode */
 
         FMKCPU_HWTIM_CFG_NB,                /**< Number of timer configuration mode*/
     } t_eFMKCPU_HwTimerCfg;

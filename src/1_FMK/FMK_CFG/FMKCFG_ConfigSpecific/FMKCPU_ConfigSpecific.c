@@ -124,10 +124,10 @@ void FMKCPU_Enable_SPI3_Clock(void) {__HAL_RCC_SPI3_CLK_ENABLE();}
 void FMKCPU_Enable_USART2_Clock(void) {__HAL_RCC_USART2_CLK_ENABLE();}
 /**< Function to enable USART3 rcc clock*/
 void FMKCPU_Enable_USART3_Clock(void) {__HAL_RCC_USART3_CLK_ENABLE();}
-/**< Function to enable USART4 rcc clock*/
-void FMKCPU_Enable_USART4_Clock(void) {__HAL_RCC_USART4_CLK_ENABLE();}
-/**< Function to enable USART5 rcc clock*/
-void FMKCPU_Enable_USART5_Clock(void) {__HAL_RCC_USART5_CLK_ENABLE();}
+/**< Function to enable UART4 rcc clock*/
+void FMKCPU_Enable_UART4_Clock(void) {__HAL_RCC_UART4_CLK_ENABLE();}
+/**< Function to enable UART5 rcc clock*/
+void FMKCPU_Enable_UART5_Clock(void) {__HAL_RCC_UART5_CLK_ENABLE();}
 /**< Function to enable I2C2 rcc clock*/
 void FMKCPU_Enable_I2C2_Clock(void) {__HAL_RCC_I2C2_CLK_ENABLE();}
 /**< Function to enable USB rcc clock*/
@@ -241,10 +241,10 @@ void FMKCPU_Disable_SPI3_Clock(void) {__HAL_RCC_SPI3_CLK_DISABLE();}
 void FMKCPU_Disable_USART2_Clock(void) {__HAL_RCC_USART2_CLK_DISABLE();}
 /**< Function to disable USART3 rcc clock*/
 void FMKCPU_Disable_USART3_Clock(void) {__HAL_RCC_USART3_CLK_DISABLE();}
-/**< Function to disable USART4 rcc clock*/
-void FMKCPU_Disable_USART4_Clock(void) {__HAL_RCC_USART4_CLK_DISABLE();}
-/**< Function to disable USART5 rcc clock*/
-void FMKCPU_Disable_USART5_Clock(void) {__HAL_RCC_USART5_CLK_DISABLE();}
+/**< Function to disable UART4 rcc clock*/
+void FMKCPU_Disable_UART4_Clock(void) {__HAL_RCC_UART4_CLK_DISABLE();}
+/**< Function to disable UART5 rcc clock*/
+void FMKCPU_Disable_UART5_Clock(void) {__HAL_RCC_UART5_CLK_DISABLE();}
 /**< Function to disable I2C2 rcc clock*/
 void FMKCPU_Disable_I2C2_Clock(void) {__HAL_RCC_I2C2_CLK_DISABLE();}
 /**< Function to disable USB rcc clock*/

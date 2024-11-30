@@ -2,7 +2,7 @@ var _f_m_k___c_p_u_8h =
 [
     [ "FMKCPU_PWM_MAX_DUTY_CYLCE", "_f_m_k___c_p_u_8h.html#a4eaa3857563082c95669b448e992b30d", null ],
     [ "FMKCPU_PWM_MIN_DUTY_CYLCE", "_f_m_k___c_p_u_8h.html#acfcd811c14e061a352a5bc2d91b542d7", null ],
-    [ "t_cbFMKCPU_InterruptChnl", "_f_m_k___c_p_u_8h.html#a4a94c8c75b1bbb845f0033cddfa017d4", null ],
+    [ "t_cbFMKCPU_InterruptLine", "_f_m_k___c_p_u_8h.html#a4a94c8c75b1bbb845f0033cddfa017d4", null ],
     [ "t_eFMKCPU_ChnlErrorState", "_f_m_k___c_p_u_8h.html#adc3eac9262e855d24c96004c38649595", [
       [ "FMKCPU_ERRSTATE_OK", "_f_m_k___c_p_u_8h.html#adc3eac9262e855d24c96004c38649595a28baa8ec404c8260ac7337d99ecf4691", null ],
       [ "FMKCPU_ERRSTATE_INVALID_CHANNEL", "_f_m_k___c_p_u_8h.html#adc3eac9262e855d24c96004c38649595a8a8effc04fddaa5bd3319b688dc53374", null ],

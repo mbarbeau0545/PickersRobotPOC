@@ -17,7 +17,7 @@ var searchData=
   ['t_5fcbfmkcpu_5fclockdisable_14',['t_cbFMKCPU_ClockDisable',['../_f_m_k_c_p_u___config_private_8h.html#aeb47039550c481dbbb750a62653c301d',1,'FMKCPU_ConfigPrivate.h']]],
   ['t_5fcbfmkcpu_5fclockenable_15',['t_cbFMKCPU_ClockEnable',['../_f_m_k_c_p_u___config_private_8h.html#afadb3c3aafe65bd144e119c3a0607e88',1,'FMKCPU_ConfigPrivate.h']]],
   ['t_5fcbfmkcpu_5fgettimerstate_16',['t_cbFMKCPU_GetTimerState',['../_f_m_k_c_p_u___config_private_8h.html#a86fd3f8a2dc5e6346ee05fd89bda9b72',1,'FMKCPU_ConfigPrivate.h']]],
-  ['t_5fcbfmkcpu_5finterruptchnl_17',['t_cbFMKCPU_InterruptChnl',['../_f_m_k___c_p_u_8h.html#a4a94c8c75b1bbb845f0033cddfa017d4',1,'FMK_CPU.h']]],
+  ['t_5fcbfmkcpu_5finterruptchnl_17',['t_cbFMKCPU_InterruptLine',['../_f_m_k___c_p_u_8h.html#a4a94c8c75b1bbb845f0033cddfa017d4',1,'FMK_CPU.h']]],
   ['t_5fcbfmkcpu_5ftimerdeinitfunc_18',['t_cbFMKCPU_TimerDeInitFunc',['../_f_m_k_c_p_u___config_private_8h.html#ab1ec88e256cdbfde73981eb9fff84970',1,'FMKCPU_ConfigPrivate.h']]],
   ['t_5fcbfmkcpu_5ftimerinitfunc_19',['t_cbFMKCPU_TimerInitFunc',['../_f_m_k_c_p_u___config_private_8h.html#a8e22f949df7628d2119ff423d836119a',1,'FMKCPU_ConfigPrivate.h']]],
   ['t_5fcbfmkcpu_5ftimstartfuncmodeinterrupt_20',['t_cbFMKCPU_TimStartFuncModeInterrupt',['../_f_m_k_c_p_u___config_private_8h.html#a4deabb4b4a2e696c407607d8a5154dfc',1,'FMKCPU_ConfigPrivate.h']]],

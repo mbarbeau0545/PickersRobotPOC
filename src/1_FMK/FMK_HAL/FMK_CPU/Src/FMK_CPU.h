@@ -111,6 +111,14 @@
         FMKCPU_ERRSTATE_UNKNOWN         = 0x80U,     /**< unknown error detected */
 
     } t_eFMKCPU_ChnlErrorState;
+
+    /**< typedef for Centralize Certain Function */
+    typedef union
+    {
+        t_eFMKCPU_InterruptLineIO ITLine_IO_e;
+        t_eFMKCPU_InterruptLineEvnt ITLine_Evnt_e;
+        t_eFMKCPU_InterruptLineDAC ITLine_Dac_e;
+    } t_uFMKCPU_InterruptLine;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -121,7 +129,7 @@
     *	 
     *
     */
-   typedef t_eReturnCode (t_cbFMKCPU_InterruptChnl)(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_InterruptChnl f_channel_e);
+   typedef t_eReturnCode (t_cbFMKCPU_InterruptLine)(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -348,7 +356,7 @@
     */
     t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
+                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
     /**
     *
     *	@brief    Configure a timer channel on event configuration.\n
@@ -371,7 +379,7 @@
     */
     t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
                                          t_uint32 f_periodms_u32,
-                                         t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
+                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
     /**
     *
     *	@brief      Add a callback function to a timer channel.\n
@@ -389,7 +397,7 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
     t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
-                                             t_cbFMKCPU_InterruptChnl *f_ITChannel_cb);
+                                             t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
     /**
     *
     *	@brief      Set a InterruptLine  state ON/OFF.\n
