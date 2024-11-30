@@ -62,6 +62,8 @@ class FMKIO_CodeGen():
         InFreq_astr = cls.code_gen.get_array_from_excel("FMKIO_InputFreq")
         OutPWM_astr = cls.code_gen.get_array_from_excel("FMKIO_OutputPwm")
         OutDig_astr = cls.code_gen.get_array_from_excel("FMKIO_OutputDig")
+
+        Descitpion_pwm_freq = ['GPIO_name','Pin_name','alternate function', 'Interrupt Line' ]
         enum_gpio = ""
         enum_pin = ""
         enum_InDig = ""
@@ -195,7 +197,8 @@ class FMKIO_CodeGen():
                     + "    const t_sFMKIO_BspTimerSigCfg c_InFreqSigBspMap_as[FMKIO_INPUT_SIGFREQ_NB] = {\n"
         # make description 
         var_InFreq += "        //" 
-        for elem_desc in InFreq_astr[0]:
+        
+        for elem_desc in Descitpion_pwm_freq:
             var_InFreq += f"{elem_desc}" + " " * (SPACE_VARIABLE - len(elem_desc))
         var_InFreq += "\n"
 
@@ -209,6 +212,8 @@ class FMKIO_CodeGen():
 
             stm_tim_chnl.append(str(pin_freq_cfg[3]+pin_freq_cfg[4]))
             stm_pin.append(str(pin_freq_cfg[5]))
+            # get IT Line                                     FMKCPU_TIMER_X                                         FMKCPU_CHANNEL_X
+            itline = FMKCPU_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKCPU_TIMER_ROOT}_{pin_freq_cfg[3][6:]}', f'{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_freq_cfg[4][8:]}')
             var_InFreq += "        {" + "{" \
                     + f"{ENUM_GPIO_PORT_ROOT}_{pin_freq_cfg[0][5:]}," \
                     + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{pin_freq_cfg[0][5:]}")) \
@@ -216,9 +221,7 @@ class FMKIO_CodeGen():
                     + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PIN_ROOT}_{pin_freq_cfg[1][4:]}")) \
                     + f"{pin_freq_cfg[2]}," \
                     + " " * (SPACE_VARIABLE - len(f"{pin_freq_cfg[2]}")) \
-                    + f"{ENUM_FMKCPU_TIMER_ROOT}_{pin_freq_cfg[3][6:]}," \
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{pin_freq_cfg[3][6:]},")) \
-                    + f"{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_freq_cfg[4][8:]}" \
+                    + str(itline) \
                     + "}," +  " " * (5 - len(f"{pin_freq_cfg[4][8:]}")) \
                     + f"// {ENUM_INSIGFREQ_ROOT}_{idx + 1},\n" 
         var_InFreq += "    };\n\n" 
@@ -255,7 +258,7 @@ class FMKIO_CodeGen():
                     + "    const t_sFMKIO_BspTimerSigCfg c_OutPwmSigBspMap_as[FMKIO_OUTPUT_SIGPWM_NB] = {\n"
         # make description 
         var_OutPWM += "        //" 
-        for elem_desc in OutPWM_astr[0]:
+        for elem_desc in Descitpion_pwm_freq:
             var_OutPWM += f"{elem_desc}" + " " * (SPACE_VARIABLE - len(elem_desc))
         var_OutPWM += "\n"
 
@@ -266,6 +269,7 @@ class FMKIO_CodeGen():
             if str(pin_pwm_cfg[3]+pin_pwm_cfg[4]) in stm_tim_chnl:
                 raise TimerCfg_alreadyUsed(f" the timer {pin_pwm_cfg[3]} and his channel {pin_pwm_cfg[4]} has already been configured")
 
+            itline = FMKCPU_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKCPU_TIMER_ROOT}_{pin_pwm_cfg[3][6:]}', f'{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_pwm_cfg[4][8:]}')
             stm_tim_chnl.append(str(pin_pwm_cfg[3]+pin_pwm_cfg[4]))
             stm_pin.append(str(pin_pwm_cfg[5]))
             var_OutPWM += "        {" + "{" \
@@ -275,9 +279,7 @@ class FMKIO_CodeGen():
                     + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PIN_ROOT}_{pin_pwm_cfg[1][4:]}")) \
                     + f"{pin_pwm_cfg[2]}," \
                     + " " * (SPACE_VARIABLE - len(f"{pin_pwm_cfg[2]}")) \
-                    + f"{ENUM_FMKCPU_TIMER_ROOT}_{pin_pwm_cfg[3][6:]}," \
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{pin_pwm_cfg[3][6:]},")) \
-                    + f"{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_pwm_cfg[4][8:]}" \
+                    + str(itline) \
                     + "}," +  " " * (5 - len(f"{pin_pwm_cfg[4][8:]}")) \
                     + f"// {ENUM_OUTSIGPWM_ROOT}_{idx + 1},\n"
         var_OutPWM += "    };\n\n" 

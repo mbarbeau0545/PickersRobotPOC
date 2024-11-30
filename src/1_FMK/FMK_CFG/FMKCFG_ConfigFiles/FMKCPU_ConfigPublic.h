@@ -39,36 +39,70 @@
     // ********************************************************************
     
     //-----------------------------ENUM TYPES-----------------------------//
-    /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Number of timer enable in smt32xxx board */
-    typedef enum
+    /**< Interrupt Line Type */
+    typedef enum 
     {
-        FMKCPU_TIMER_1 = 0x0,                  /**< Reference for HAL timer_1, this timer has 4 channel(s) */
-        FMKCPU_TIMER_2,                        /**< Reference for HAL timer_2, this timer has 4 channel(s) */
-        FMKCPU_TIMER_3,                        /**< Reference for HAL timer_3, this timer has 4 channel(s) */
-        FMKCPU_TIMER_4,                        /**< Reference for HAL timer_4, this timer has 4 channel(s) */
-        FMKCPU_TIMER_5,                        /**< Reference for HAL timer_5, this timer has 4 channel(s) */
-        FMKCPU_TIMER_6,                        /**< Reference for HAL timer_6, this timer has 1 channel(s) */
-        FMKCPU_TIMER_7,                        /**< Reference for HAL timer_7, this timer has 1 channel(s) */
-        FMKCPU_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 4 channel(s) */
-        FMKCPU_TIMER_15,                       /**< Reference for HAL timer_15, this timer has 2 channel(s) */
-        FMKCPU_TIMER_16,                       /**< Reference for HAL timer_16, this timer has 1 channel(s) */
-        FMKCPU_TIMER_17,                       /**< Reference for HAL timer_17, this timer has 1 channel(s) */
-        FMKCPU_TIMER_20,                       /**< Reference for HAL timer_20, this timer has 4 channel(s) */
-    
-        FMKCPU_TIMER_NB,
-    } t_eFMKCPU_Timer;
+        FMKCPU_INTERRUPT_LINE_TYPE_IO = 0x00,       /**< Timer/Channel use for PWM, IC, OC, OP Purpose */
+        FMKCPU_INTERRUPT_LINE_TYPE_EVNT,            /**< Timer/Channel use for Event purpose */
+        FMKCPU_INTERRUPT_LINE_TYPE_DAC,             /**< Timmer/Channel use for DAC purpose */
 
-    /* Number max of channel enable by timer */
+        FMKCPU_INTERRUPT_LINE_TYPE_NB,
+    } t_eFMKCPU_InterruptLineType;
+    /* CAUTION : Automatic generated code section for Enum: Start */
+    /* Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse */
     typedef enum
     {
-        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */
-        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 1 */
-        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 2 */
-        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_01 = 0x0,                 /**< General Purpose Timer, Reference to Timer 1 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_02,                       /**< General Purpose Timer, Reference to Timer 1 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_03,                       /**< General Purpose Timer, Reference to Timer 1 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_04,                       /**< General Purpose Timer, Reference to Timer 1 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_11,                       /**< General Purpose Timer, Reference to Timer 2 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_12,                       /**< General Purpose Timer, Reference to Timer 2 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_13,                       /**< General Purpose Timer, Reference to Timer 2 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_14,                       /**< General Purpose Timer, Reference to Timer 2 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_21,                       /**< General Purpose Timer, Reference to Timer 3 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_22,                       /**< General Purpose Timer, Reference to Timer 3 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_23,                       /**< General Purpose Timer, Reference to Timer 3 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_24,                       /**< General Purpose Timer, Reference to Timer 3 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_31,                       /**< General Purpose Timer, Reference to Timer 4 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_32,                       /**< General Purpose Timer, Reference to Timer 4 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_33,                       /**< General Purpose Timer, Reference to Timer 4 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_34,                       /**< General Purpose Timer, Reference to Timer 4 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_41,                       /**< General Purpose Timer, Reference to Timer 5 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_42,                       /**< General Purpose Timer, Reference to Timer 5 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_43,                       /**< General Purpose Timer, Reference to Timer 5 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_44,                       /**< General Purpose Timer, Reference to Timer 5 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_51,                       /**< General Purpose Timer, Reference to Timer 8 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_52,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_53,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_54,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_61,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */
+        FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 20 Channel 4 */
     
-        FMKCPU_CHANNEL_NB,
-    } t_eFMKCPU_InterruptChnl;
+        FMKCPU_INTERRUPT_LINE_IO_NB,
+    } t_eFMKCPU_InterruptLineIO;
+
+    /* Number of Event Purpose Interrupt Line */
+    typedef enum
+    {
+        FMKCPU_INTERRUPT_LINE_EVNT_1 = 0x0,                  /**< Event Purpose Timer, Reference to Timer 15 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_EVNT_2,                        /**< Event Purpose Timer, Reference to Timer 15 Channel 2 */
+        FMKCPU_INTERRUPT_LINE_EVNT_1,                        /**< Event Purpose Timer, Reference to Timer 16 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_EVNT_1,                        /**< Event Purpose Timer, Reference to Timer 17 Channel 1 */
+    
+        FMKCPU_INTERRUPT_LINE_EVNT_NB,
+    } t_eFMKCPU_InterruptLineEvnt;
+
+    /* Number of DAC Purpose Interrupt Line */
+    typedef enum
+    {
+        FMKCPU_INTERRUPT_LINE_DAC_1 = 0x0,                  /**< Dac Purpose Timer, Reference to Timer 6 Channel 1 */
+        FMKCPU_INTERRUPT_LINE_DAC_1,                        /**< Dac Purpose Timer, Reference to Timer 7 Channel 1 */
+    
+        FMKCPU_INTERRUPT_LINE_DAC_NB,
+    } t_eFMKCPU_InterruptLineDAC;
 
     /* Enum for rcc clock state reference */
     typedef enum

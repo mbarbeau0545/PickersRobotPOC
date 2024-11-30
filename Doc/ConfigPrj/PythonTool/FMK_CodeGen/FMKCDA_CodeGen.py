@@ -95,7 +95,7 @@ class FMKCDA_CodeGen():
             enum_internal_other.append(adc_intern[0][:idx_enum])
         enum_other_calib = cls.code_gen.make_enum_from_variable(ENUM_ADC_INTERN_SENSOR, enum_internal_other,
                                                                 "t_eFMKCDA_AdcInternSns", 0, "Internal Sensors manage by the cpu",
-                                                                 [f"Refernce to {str(adc_intern[0])}" for adc_intern in calib_astr] )
+                                                                 [f"Refernce to {str(calib_astr[0])}" for calib_astr in calib_astr] )
 
         #----------------------------------------------------------------
         #-----------------------------make adc channel enum--------------

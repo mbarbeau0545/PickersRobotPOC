@@ -30,7 +30,7 @@
     /* Enum for Sensors list */
     typedef enum
     {
-        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Tempï¿½rature local de l'air */
+        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Température local de l'air */
     
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
@@ -45,20 +45,19 @@
     /* Enum for sensor conversion list */
     typedef enum
     {
-        APPSNS_MEASTYPE_RAW = 0x0,                /**< Raw Value */
-        APPSNS_MEASTYPE_PRESSURE,                 /**< Sensor value converted to pressure */
-        APPSNS_MEASTYPE_TEMPERATURE,              /**< Sensor value converted to temperature */
-        APPSNS_MEASTYPE_SPEED,                    /**< Sensor value converted to speed */
-        APPSNS_MEASTYPE_ANGLE,                    /**< Sensor value converted to angle  */
-        APPSNS_MEASTYPE_DISTANCE,                 /**< Sensor value converted to distance */
-        APPSNS_MEASTYPE_FORCE,                    /**< Sensor value converted to force (N) */
-        APPSNS_MEASTYPE_FLOW,                     /**< Sensor value converted to flow */
-        APPSNS_MEASTYPE_ANGULAR_SPD,              /**< Sensors value converted to angular speed */
+        APPSNS_MEASTYPE_RAW = 0x0,                /**< Raw value is not changed */
+        APPSNS_MEASTYPE_PRESSURE,                 /**< Sensor value converted to angle in radians */
+        APPSNS_MEASTYPE_TEMPERATURE,              /**< Sensor value converted to angle in degrees */
+        APPSNS_MEASTYPE_SPEED,                    /**< Sensor value converted to distance in meters */
+        APPSNS_MEASTYPE_ANGLE,                    /**< Sensor value converted to distance in millimeters */
+        APPSNS_MEASTYPE_DISTANCE,                 /**< Sensor value converted to temperature in Celsius */
+        APPSNS_MEASTYPE_FORCE,                    /**< Sensor value converted to temperature in Fahrenheit */
+        APPSNS_MEASTYPE_FLOW,                     /**< Sensor value converted to pressure in pascals */
+        APPSNS_MEASTYPE_ANGULAR_SPD,              /**< Sensor value converted to pressure in bars */
     
         APPSNS_MEASTYPE_NB,
     } t_eAPPSNS_SnsMeasType;
-/* Enum for sensor conversion list */
-    
+
     /* CAUTION : Automatic generated code section for Enum: End */
 	
     //-----------------------------ENUM TYPES-----------------------------//

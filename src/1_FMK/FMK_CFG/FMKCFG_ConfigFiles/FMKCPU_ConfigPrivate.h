@@ -51,6 +51,35 @@
     // *                      Types
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
+    /* Number of timer enable in smt32xxx board */
+    typedef enum
+    {
+        FMKCPU_TIMER_1 = 0x0,                  /**< Reference for HAL timer_1, this timer has 4 channel(s) */
+        FMKCPU_TIMER_2,                        /**< Reference for HAL timer_2, this timer has 4 channel(s) */
+        FMKCPU_TIMER_3,                        /**< Reference for HAL timer_3, this timer has 4 channel(s) */
+        FMKCPU_TIMER_4,                        /**< Reference for HAL timer_4, this timer has 4 channel(s) */
+        FMKCPU_TIMER_5,                        /**< Reference for HAL timer_5, this timer has 4 channel(s) */
+        FMKCPU_TIMER_6,                        /**< Reference for HAL timer_6, this timer has 1 channel(s) */
+        FMKCPU_TIMER_7,                        /**< Reference for HAL timer_7, this timer has 1 channel(s) */
+        FMKCPU_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 4 channel(s) */
+        FMKCPU_TIMER_15,                       /**< Reference for HAL timer_15, this timer has 2 channel(s) */
+        FMKCPU_TIMER_16,                       /**< Reference for HAL timer_16, this timer has 1 channel(s) */
+        FMKCPU_TIMER_17,                       /**< Reference for HAL timer_17, this timer has 1 channel(s) */
+        FMKCPU_TIMER_20,                       /**< Reference for HAL timer_20, this timer has 4 channel(s) */
+    
+        FMKCPU_TIMER_NB,
+    } t_eFMKCPU_Timer;
+
+    /* Number max of channel enable by timer */
+    typedef enum
+    {
+        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */
+        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 1 */
+        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 2 */
+        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 3 */
+    
+        FMKCPU_CHANNEL_NB,
+    } t_eFMKCPU_InterruptChnl;
 
     /* CAUTION : Automatic generated code section for Enum: End */
 
@@ -215,6 +244,52 @@
     // *                      Variables
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Variable: Start */
+    /**< General Purpose Timer Channel Mapping */
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITGpLineMapp_as[FMKCPU_INTERRUPT_LINE_IO_NB] = {
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_01
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_02
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_03
+        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_04
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_11
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_12
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_13
+        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_14
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_21
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_22
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_23
+        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_24
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_31
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_32
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_33
+        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_34
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_41
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_42
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_43
+        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_44
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_51
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_52
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_53
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_54
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_IO_61
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_IO_62
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_3},// FMKCPU_INTERRUPT_LINE_IO_63
+        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_4},// FMKCPU_INTERRUPT_LINE_IO_64
+    };
+
+    /**< Event Purpose Timer Channel Mapping */
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITEvntLineMapp_as[FMKCPU_INTERRUPT_LINE_EVNT_NB] = {
+        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_0
+        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_2},// FMKCPU_INTERRUPT_LINE_EVNT_0
+        {FMKCPU_TIMER_16,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_1
+        {FMKCPU_TIMER_17,                       FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_EVNT_2
+    };
+
+    /**< Dac Purpose Timer Channel Mapping */
+    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITDacLineMapp_as[FMKCPU_INTERRUPT_LINE_DAC_NB] = {
+        {FMKCPU_TIMER_6,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_DAC_0
+        {FMKCPU_TIMER_7,                        FMKCPU_CHANNEL_1},// FMKCPU_INTERRUPT_LINE_DAC_1
+    };
+
     /**< Set the NVIC Priority for all NVIC_IRqn Priority */
     const t_eFMKCPU_NVICPriority c_FMKCPU_IRQNPriority_ae[FMKCPU_NVIC_NB] = {
       //Colonne1                      Colonne2                      

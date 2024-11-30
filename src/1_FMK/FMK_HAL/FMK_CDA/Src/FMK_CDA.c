@@ -85,31 +85,31 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
     {
         // ADC_1
         .BspInit_s.Instance = ADC1,
-        .c_clock_e = FMKCPU_RCC_CLK_ADC12,
-        .c_IRQNType_e = FMKCPU_NVIC_ADC1_2_IRQN,
-    },
+        .c_clock_e = FMKCPU_RCC_CLK_ADC1,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC1_IRQN,
+    }
     {
         // ADC_2
         .BspInit_s.Instance = ADC2,
-        .c_clock_e = FMKCPU_RCC_CLK_ADC12,
-        .c_IRQNType_e = FMKCPU_NVIC_ADC1_2_IRQN,
-    },
+        .c_clock_e = FMKCPU_RCC_CLK_ADC2,
+        .c_IRQNType_e = FMKCPU_NVIC_ADC2_IRQN,
+    }
     {
         // ADC_3
         .BspInit_s.Instance = ADC3,
-        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC3,
         .c_IRQNType_e = FMKCPU_NVIC_ADC3_IRQN,
-    },
+    }
     {
         // ADC_4
         .BspInit_s.Instance = ADC4,
-        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC4,
         .c_IRQNType_e = FMKCPU_NVIC_ADC4_IRQN,
-    },
+    }
     {
         // ADC_5
         .BspInit_s.Instance = ADC5,
-        .c_clock_e = FMKCPU_RCC_CLK_ADC345,
+        .c_clock_e = FMKCPU_RCC_CLK_ADC5,
         .c_IRQNType_e = FMKCPU_NVIC_ADC5_IRQN,
     }
 };

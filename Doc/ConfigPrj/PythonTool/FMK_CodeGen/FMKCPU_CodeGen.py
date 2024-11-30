@@ -75,6 +75,7 @@ class FMKCPU_CodeGen():
                 - switch case IRQN to bsp IRQN          x
                 - hardware IRQNHandler for timer        
         """
+    itline_timchnl_mapping:Dict[str, List[str]] = {}
     code_gen = LCFE()
     stm_tim_chnl = []
     #-------------------------
@@ -91,7 +92,9 @@ class FMKCPU_CodeGen():
         rcclock_cfg_a = cls.code_gen.get_array_from_excel("GI_RCC_CLOCK")
         evnt_cfg_a    = cls.code_gen.get_array_from_excel("FMKCPU_EvntTimer")
         cpu_cfg       = cls.code_gen.get_array_from_excel("CPU_Config")[1][0]
+
         print(cpu_cfg)
+        
         enum_channel = ""
         enum_timer = ""
         enum_rcc = ""
@@ -105,6 +108,12 @@ class FMKCPU_CodeGen():
         rcc_ena_decl = ""
         rcc_dis_decl  = ""
         var_timinfo = ""
+        const_mapp_evnt_tim = ""
+        const_mapp_gp_tim = ""
+        const_mapp_dac_tim = ""
+        enum_it_lines_gp = ""
+        enum_it_lines_dac = ""
+        enum_it_lines_evnt = ""
         func_imple = ""
         def_tim_max_chnl = ""
         var_tim_max_chnl = ""
@@ -163,10 +172,30 @@ class FMKCPU_CodeGen():
         #----------------------------------------------------------------
         #-----------------------------make timer enum--------------------
         #-----------------------------------------------------------------
+        suffix_dac_tim = []
+        suffix_evnt_tim = []
+        idx_tim_pg = 0
+        idx_tim_evnt = 0
+        idx_dac_tim = 0
+        description_pg_tim   = []
+        description_dac_tim  = []
+        description_evnt_tim = []
+        suffix_pg_tim = []
         var_timinfo += "/**< timer information variable */\n" \
                     + "t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {\n"
         var_tim_max_chnl += "    /**< timer max channel variable */\n" \
                             + "    const t_uint8 c_FMKCPU_TimMaxChnl_ua8[FMKCPU_TIMER_NB] = {\n"
+        
+        const_mapp_gp_tim += "    /**< General Purpose Timer Channel Mapping */\n" \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITGpLineMapp_as[{ENUM_FMKCPU_IT_GP_ROOT}_NB] = " \
+                            + "{\n"
+        const_mapp_evnt_tim += "    /**< Event Purpose Timer Channel Mapping */\n" \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITEvntLineMapp_as[{ENUM_FMKCPU_IT_EVNT_ROOT}_NB] = " \
+                            + "{\n"
+        const_mapp_dac_tim += "    /**< Dac Purpose Timer Channel Mapping */\n" \
+                            + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITDacLineMapp_as[{ENUM_FMKCPU_IT_DAC_ROOT}_NB] = " \
+                            + "{\n"
+
         for idx, timer_cfg in enumerate(timer_cfg_a[1:]):
             idx_timer = str(timer_cfg[0][6:])
             timer_number_a.append(idx_timer)
@@ -177,24 +206,82 @@ class FMKCPU_CodeGen():
                         + f"        // Timer_{idx_timer}\n" \
                         + f"        .BspTimer_ps.Instance = TIM{idx_timer},\n" \
                         + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
-                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_TIM{idx_timer}_" \
-                        +  (f"IRQN,\n" if idx_timer != "1" else f"BRK_UP_TRG_COM_IRQN,\n")  \
-                        + "    },\n"
+                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(timer_cfg[2]).upper()}" \
+                        + "},\n"
+            
             # make defines timer channel
             def_tim_max_chnl += f"    #define FMKCPU_MAX_CHNL_TIMER_{idx_timer} ((t_uint8){timer_cfg[1]})\n"
+
             # make varialble max timer channel 
             var_tim_max_chnl += f"        (t_uint8)FMKCPU_MAX_CHNL_TIMER_{idx_timer}," \
                                 + " " * (SPACE_VARIABLE - len(f"FMKCPU_MAX_CHNL_TIMER_{idx_timer},")) \
-                                + f"// {ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}\n"      
+                                + f"// {ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}\n"  
+                
             # Make hardware IRQ handler function impleementation  
             func_imple += f"void TIM{idx_timer}_IRQHandler(void)" \
                         + "{return HAL_TIM_IRQHandler(&g_TimerInfo_as" \
                         + f"[{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}].BspTimer_ps);" \
                         + "}\n"
+            # make timer public enum 
+            match  timer_cfg[3]:
+                case 'PWM/IC/OC/OP':
+                    
+                    suffix_pg_tim.extend([f"{idx_tim_pg}{i}" for i in range(1, (timer_cfg[1] +1))])
+                    description_pg_tim.extend(f"General Purpose Timer, Reference to Timer {idx_timer} Channel {channel}" for channel in range(1, (timer_cfg[1] +1)))
+                    
+                    for channel in range(1, (timer_cfg[1] +1)):
+                        const_mapp_gp_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
+                                        + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
+                                        + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}" \
+                                            + "}," + f"// {ENUM_FMKCPU_IT_GP_ROOT}_{idx_tim_pg}{channel}\n"
+                        # for fmkio
+                        cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_GP_ROOT}_{idx_tim_pg}{channel}"
+                    # update idx   
+                    idx_tim_pg +=1
+                    
+                case 'DAC':
+                    suffix_dac_tim.extend(f"{i}" for i in range(1, (timer_cfg[1] +1)))
+                    description_dac_tim.extend(f"Dac Purpose Timer, Reference to Timer {idx_timer} Channel {channel}" for channel in range(1, (timer_cfg[1] +1)))
+
+                    for channel in range(1, (timer_cfg[1] +1)):
+                        const_mapp_dac_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
+                                            + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
+                                            + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}" \
+                                            + "}," + f"// {ENUM_FMKCPU_IT_DAC_ROOT}_{idx_dac_tim}\n"
+                        # for fmkio
+                        cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_DAC_ROOT}_{idx_dac_tim}"
+                    idx_dac_tim +=1
+
+                case 'EVENT':
+                    suffix_evnt_tim.extend(f"{i}" for i in range(1, (timer_cfg[1] +1)))
+                    description_evnt_tim.extend(f"Event Purpose Timer, Reference to Timer {idx_timer} Channel {channel}" for channel in range(1, (timer_cfg[1] +1)))
+                    for channel in range(1, (timer_cfg[1] +1)):
+                        const_mapp_evnt_tim += "        {" + f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer},"  \
+                                            + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}")) \
+                                            + f"        {ENUM_FMKCPU_CHANNEL_ROOT}_{channel}"\
+                                            + "}," + f"// {ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}\n"
+                        # for fmkio
+                        cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}"
+                    idx_tim_evnt +=1
+            
 
         var_tim_max_chnl += "    };\n\n"
         var_timinfo += "};\n\n"
+        const_mapp_gp_tim += "    };\n\n"
+        const_mapp_evnt_tim += "    };\n\n"
+        const_mapp_dac_tim += "    };\n\n"
 
+        enum_it_lines_gp = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_IT_GP_ROOT, suffix_pg_tim,
+                                                                't_eFMKCPU_InterruptLineIO', 0, "Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse",
+                                                                description_pg_tim)
+        
+        enum_it_lines_evnt = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_IT_EVNT_ROOT, suffix_evnt_tim,
+                                                                't_eFMKCPU_InterruptLineEvnt', 0, "Number of Event Purpose Interrupt Line",
+                                                                description_evnt_tim)
+        
+        enum_it_lines_dac = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_IT_DAC_ROOT, suffix_dac_tim,
+                                                                't_eFMKCPU_InterruptLineDAC', 0, "Number of DAC Purpose Interrupt Line",
+                                                                description_dac_tim)
 
         enum_timer = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_TIMER_ROOT, timer_number_a,
                                                            "t_eFMKCPU_Timer", 0, "Number of timer enable in smt32xxx board",
@@ -255,42 +342,79 @@ class FMKCPU_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKCPU module---------------
         #-----------------------------------------------------------
-        # For FMKCPU_Config Public
+        #---------------------For FMKCPU_Config Public---------------------#
         print("\t- For configPublic file")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE,TARGET_T_ENUM_END_LINE)
+
         print("\t\t- enum for NVIC available in this stm")
         cls.code_gen._write_into_file(enum_nvic, FMKCPU_CONFIGPUBLIC)
+
         print("\t\t- enum for RCC clock available in this stm")
         cls.code_gen._write_into_file(enum_rcc, FMKCPU_CONFIGPUBLIC)
-        print("\t\t- enum for timer channel")
-        cls.code_gen._write_into_file(enum_channel, FMKCPU_CONFIGPUBLIC)
-        print("\t\t- enum for timer")
-        cls.code_gen._write_into_file(enum_timer, FMKCPU_CONFIGPUBLIC)
+
+        print('\t\t- enum for dac purpose timer')
+        cls.code_gen._write_into_file(enum_it_lines_dac, FMKCPU_CONFIGPUBLIC)
+
+        print('\t\t- enum for event purpose timer')
+        cls.code_gen._write_into_file(enum_it_lines_evnt, FMKCPU_CONFIGPUBLIC)
+
+        print('\t\t- enum for general purpose timer')
+        cls.code_gen._write_into_file(enum_it_lines_gp, FMKCPU_CONFIGPUBLIC)
+
+        
+
         print("\t\t include for cpu")
         cls.code_gen.change_target_balise(TARGET_CPU_CFG_START,TARGET_CPU_CFG_END)
+
+
         cls.code_gen._write_into_file(include_cpu,FMKCPU_CONFIGPUBLIC)
         print("\t- For configPrivate file")
-        # For FMKCPU_Config Private
+        #---------------------For FMKCPU_Config Private---------------------#
+        cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE,TARGET_T_ENUM_END_LINE)
+
+        print("\t\t- enum for timer channel")
+        cls.code_gen._write_into_file(enum_channel, FMKCPU_CONFIGPRIVATE)
+
+        print("\t\t- enum for timer")
+        cls.code_gen._write_into_file(enum_timer, FMKCPU_CONFIGPRIVATE)
+
         cls.code_gen.change_target_balise(TARGET_TIMER_CHNLNB_START, TARGET_TIMER_CHNLNB_END)
         print("\t\t- Define for max channel per timer")
         cls.code_gen._write_into_file(def_tim_max_chnl, FMKCPU_CONFIGPRIVATE)
+
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE, TARGET_T_VARIABLE_END_LINE)
+
         print("\t\t- Variable for max channel per timer")
         cls.code_gen._write_into_file(var_tim_max_chnl, FMKCPU_CONFIGPRIVATE)
+
         print("\t\t- Variable for clock state functions")
         cls.code_gen._write_into_file(var_clk_state, FMKCPU_CONFIGPRIVATE)
+
         print("\t\t- Configuration for nvic priority")
         cls.code_gen._write_into_file(var_nvic_prio, FMKCPU_CONFIGPRIVATE)
+
+        print("DAC Purpose Timer_Channel Mapping")
+        cls.code_gen._write_into_file(const_mapp_dac_tim, FMKCPU_CONFIGPRIVATE)
+
+        print("Event Purpose Timer_Channel Mapping")
+        cls.code_gen._write_into_file(const_mapp_evnt_tim, FMKCPU_CONFIGPRIVATE)
+
+        print("General Purpose Timer_Channel Mapping")
+        cls.code_gen._write_into_file(const_mapp_gp_tim, FMKCPU_CONFIGPRIVATE)
+
+        
         cls.code_gen.change_target_balise(TARGET_c_clock_eNABLE_IMPL_START, TARGET_c_clock_eNABLE_IMPL_END)
+        #---------------------For FMKCPU_Config Spec---------------------#
         print("\t\t- Function for enable/disable RCC clock")
         cls.code_gen._write_into_file(rcc_ena_imple, FMKCPU_CONFIGSPECIFIC_C)
+
         cls.code_gen.change_target_balise(TARGET_CLOCK_DISABLE_IMPL_START, TARGET_CLOCK_DISABLE_IMPL_END)
         cls.code_gen._write_into_file(rcc_dis_imple, FMKCPU_CONFIGSPECIFIC_C)
         cls.code_gen.change_target_balise(TARGET_c_clock_eNABLE_DECL_START, TARGET_c_clock_eNABLE_DECL_END)
         cls.code_gen._write_into_file(rcc_ena_decl, FMKCPU_CONFIGSPECIFIC_H)
         cls.code_gen.change_target_balise(TARGET_CLOCK_DISABLE_DECL_START, TARGET_CLOCK_DISABLE_DECL_END)
         cls.code_gen._write_into_file(rcc_dis_decl, FMKCPU_CONFIGSPECIFIC_H)
-        # for FMKCPU.c
+        #---------------------For FMKCPU.c---------------------#
         print("\t- For FMKCPU.c file")
         cls.code_gen.change_target_balise(TARGET_TIMER_INFO_START, TARGET_TIMER_INFO_END)
         print("\t\t- variable for timer information")
@@ -305,11 +429,25 @@ class FMKCPU_CodeGen():
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     #-------------------------
-    # code_generation
+    # get_tim_chnl_used
     #-------------------------
     @classmethod
     def get_tim_chnl_used(cls)->List:
         return cls.stm_tim_chnl
+    
+    #-------------------------
+    # get_tim_chnl_used
+    #-------------------------
+    @classmethod
+    def get_itline_from_timcnl(cls, enum_timer:str, enum_channel:str)->str:
+        timer_chnl = enum_timer + enum_channel
+
+        try: 
+            retval_itline = cls.itline_timchnl_mapping[timer_chnl]
+        except(KeyError):
+            raise KeyError(f'Cannot found Interrupt line for {enum_timer} and {enum_channel}')
+        
+        return retval_itline
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

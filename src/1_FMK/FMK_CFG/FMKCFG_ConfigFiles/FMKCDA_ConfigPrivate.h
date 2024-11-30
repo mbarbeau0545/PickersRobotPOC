@@ -79,10 +79,6 @@
     /**<     Variable for voltage ref calibration value */
     const volatile t_uint16* c_FmkCda_VrefCalibAddress_pas16[FMKCDA_ADC_NB] = {
         (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
     };
 
     /**< Variable for Hardware configuration adc and channel for Voltage Reference for each adc */
