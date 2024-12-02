@@ -568,9 +568,9 @@ t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e,
  * FMKIO_Set_OutPwmSigCfg
  *********************************/
 t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
-                                          t_eFMKIO_PullMode        f_pull_e,
-                                          t_uint32                 f_frequency_u32,
-                                          t_cbFMKIO_SigErrorMngmt *f_sigErr_cb)
+                                     t_eFMKIO_PullMode        f_pull_e,
+                                     t_uint32                 f_frequency_u32,
+                                     t_cbFMKIO_SigErrorMngmt *f_sigErr_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_GpioPort gpioPort_e = FMKIO_GPIO_PORT_NB;

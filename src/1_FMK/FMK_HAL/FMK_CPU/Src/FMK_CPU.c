@@ -505,17 +505,21 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-#ifdef FMKCPU_STM32_ECU_FAMILY_G
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+
+
+/*#ifdef FMKCPU_STM32_ECU_FAMILY_G
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;  // 16 MHz
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-    RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-    RCC_OscInitStruct.PLL.PLLN = 8;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;            // use divider and stuff 
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;    // use HSI as PLL source clock
+    RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;             // Divided the HSI clock sources
+    RCC_OscInitStruct.PLL.PLLN = 8;                         // Multiplied the HSI clock sources
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;             // Divided the HSI clock sources -> that gives us PPLP clock source    
+    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;             // Divided the HSI clock sources -> that gives us PPLQ clock source    
+    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;             // Divided the HSI clock sources -> that gives us PPLCLK (SYSCLK) clock sources
+
+    bspRet_e = HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 #elif defined FMKCPU_STM32_ECU_FAMILY_F
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -524,13 +528,29 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
 #else 
     #error("Unknwon Stm32 Family")
 #endif
+
+
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                                     |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;*/
+
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+
     
-    bspRet_e = HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
+    
 
     if(bspRet_e == HAL_OK)
     bspRet_e = HAL_RCC_OscConfig(&RCC_OscInitStruct);
@@ -727,14 +747,7 @@ t_eReturnCode FMKCPU_ResetWwdg(void)
  *********************************/
 t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint32 f_pwmFreq_u32)
 {
-    /********************************
-     *   Some useful information for PWM generation
-     *   1 - ARR = Period in Init =  (((freq_timer)/ (freq_pwm * (PSC+1))) -1)
-     *   For a dutycyle E [0 - 1000]
-     *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> (DutyCyle/ 1000) * (ARR +1)
-     ********************************/
     t_eReturnCode Ret_e = RC_OK;
-    HAL_StatusTypeDef BspRet_e = HAL_OK;
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
     
@@ -758,7 +771,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine
 t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint16 f_dutyCycle_u16)
 /********************************
  *   Some useful information for PWM generation
- *   1 - ARR = Period in Init = (((freq_timer)/ (freq_pwm * (PSC+1))) -1)
+ *   1 - ARR = Period in Init = (((freq_timer)/ (freq_pwm * (PSC+1))) - 1)
  *   For a dutycyle E [0 - 1000]
  *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> CCR = (DutyCyle/ 1000) * (ARR +1)
  ********************************/
@@ -904,7 +917,6 @@ t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_
                                          t_cbFMKCPU_InterruptLine f_ITChannel_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
-    HAL_StatusTypeDef BspRet_e = HAL_OK;
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
@@ -1250,6 +1262,12 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                                 t_eFMKCPU_InterruptChnl f_channel_e, 
                                                 t_uint32 f_pwmFreq_u32)
 {
+    /********************************
+     *   Some useful information for PWM generation
+     *   1 - ARR = Period in Init =  (((freq_timer)/ (freq_pwm * (PSC+1))) -1)
+     *   For a dutycyle E [0 - 1000]
+     *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> (DutyCyle/ 1000) * (ARR +1)
+     ********************************/
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef BspRet_e = HAL_OK;
     HAL_TIM_ChannelStateTypeDef bspChannelState_e = HAL_TIM_CHANNEL_STATE_BUSY;
@@ -1470,6 +1488,8 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
             Ret_e = RC_ERROR_WRONG_RESULT;
         }
     }
+
+    return Ret_e;
 }
 
 /*********************************
@@ -1782,7 +1802,7 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
     t_eFMKCPU_Timer Calltimer_e = FMKCPU_TIMER_NB;
     HAL_TIM_ActiveChannel BspITChnl_e = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
     t_eFMKCPU_InterruptChnl ITChnl_e = FMKCPU_CHANNEL_NB;
-    t_sFMKCPU_BspTimerCfg * ITLineCfg_ps;
+    const t_sFMKCPU_BspTimerCfg * c_ITLineCfg_ps;
     t_eFMKCPU_InterruptLineType ITType_e;
     t_uint8 maxITLine_u8;
     t_uint8 LLI_u8 = 0;
@@ -1835,17 +1855,17 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
             case FMKCPU_HWTIM_CFG_OC:
             case FMKCPU_HWTIM_CFG_OP:
             case FMKCPU_HWTIM_CFG_ECDR:
-                ITLineCfg_ps = &c_FmkCpu_ITLineIOMapp_as;
+                c_ITLineCfg_ps = (t_sFMKCPU_BspTimerCfg *)&c_FmkCpu_ITLineIOMapp_as;
                 ITType_e = FMKCPU_INTERRUPT_LINE_TYPE_IO;
                 maxITLine_u8 = FMKCPU_INTERRUPT_LINE_IO_NB;
                 break;
             case FMKCPU_HWTIM_CFG_EVNT:
-                ITLineCfg_ps = &c_FmkCpu_ITLineEvntMapp_as;
+                c_ITLineCfg_ps = (t_sFMKCPU_BspTimerCfg *)&c_FmkCpu_ITLineEvntMapp_as;
                 ITType_e = FMKCPU_INTERRUPT_LINE_TYPE_EVNT;
                 maxITLine_u8 = FMKCPU_INTERRUPT_LINE_EVNT_NB;
                 break;
             case FMKCPU_HWTIM_CFG_DAC:
-                ITLineCfg_ps = &c_FmkCpu_ITLineDacMapp_as;
+                c_ITLineCfg_ps = (t_sFMKCPU_BspTimerCfg *)&c_FmkCpu_ITLineDacMapp_as;
                 ITType_e = FMKCPU_INTERRUPT_LINE_TYPE_DAC;
                 maxITLine_u8 = FMKCPU_INTERRUPT_LINE_DAC_NB;
                 break;
@@ -1858,8 +1878,8 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
             //------------Find Interrupt Line------------//
             for (LLI_u8 = (t_uint8)0 ; LLI_u8 < maxITLine_u8 ; LLI_u8++)
             {
-                if((ITLineCfg_ps[LLI_u8].timer_e == Calltimer_e)
-                && (ITLineCfg_ps[LLI_u8].channel_e == ITChnl_e))
+                if((c_ITLineCfg_ps[LLI_u8].timer_e == Calltimer_e)
+                && (c_ITLineCfg_ps[LLI_u8].channel_e == ITChnl_e))
                 {
                     break;
                 }

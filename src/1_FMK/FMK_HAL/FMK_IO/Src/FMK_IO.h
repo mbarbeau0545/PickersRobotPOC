@@ -277,7 +277,7 @@
     *               call FMKCPU to configure a timer in order to convert generate
     *               the pwm period and dutycycle.\n
     *               IMPORTANT NOTE -> For SMT32, each signal has a timer and a channel
-    *               based on confifguration. A timer has multiple channel that shared the frequency
+    *               based on hardware confifguration. A timer has multiple channel that shared the frequency
     *               f_frequency_u32, once the timer set with this frequency the other signal (channel) 
     *               will have the same frequency.\n If the frequency is changed, it will be changed for every signal.\n
     *
@@ -285,8 +285,6 @@
     *	@param[in]      f_signal_e             : the input analog signal, a value from @ref t_eFMKIO_OutPwmSig
     *	@param[in]      f_pull_e               : the input pull mode, value from @ref t_eFMKIO_PullMode
     *	@param[in]      f_frequency_u32        : the PWM frequency 
-    *	@param[in]      f_dutyCycle_u16        : the dutycyle, value between 0 (0%) - 1000 (100%)
-    *	@param[in]      f_puf_startNow_bll_e   : wether or not the pulse generation should start immediately
     *	@param[in]      f_sigErr_cb             : callbback function that will be called if an error occured, NULL_FONCTION if not used
     *	 
     *   @retval RC_OK                             @ref RC_OK

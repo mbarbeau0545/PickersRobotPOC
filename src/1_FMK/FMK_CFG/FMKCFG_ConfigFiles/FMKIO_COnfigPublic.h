@@ -127,8 +127,8 @@
     /* List of output digital pin available on this board */
     typedef enum
     {
-        FMKIO_OUTPUT_SIGDIG_1 = 0x0,                  /**< PB12 */
-        FMKIO_OUTPUT_SIGDIG_2,                        /**< PB13 */
+        FMKIO_OUTPUT_SIGDIG_1 = 0x0,                  /**< PC7 */
+        FMKIO_OUTPUT_SIGDIG_2,                        /**< PC6 */
         FMKIO_OUTPUT_SIGDIG_3,                        /**< PC4 */
         FMKIO_OUTPUT_SIGDIG_4,                        /**< PC5 */
         FMKIO_OUTPUT_SIGDIG_5,                        /**< PC13 */
@@ -143,8 +143,8 @@
     /* List of output PWM pin available on this board */
     typedef enum
     {
-        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< PE8 */
-        FMKIO_OUTPUT_SIGPWM_2,                        /**< PE9 */
+        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< PC7 */
+        FMKIO_OUTPUT_SIGPWM_2,                        /**< PC6 */
         FMKIO_OUTPUT_SIGPWM_3,                        /**< PF12 */
         FMKIO_OUTPUT_SIGPWM_4,                        /**< PF13 */
         FMKIO_OUTPUT_SIGPWM_5,                        /**< PF14 */

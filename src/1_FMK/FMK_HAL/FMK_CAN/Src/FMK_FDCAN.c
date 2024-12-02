@@ -591,8 +591,6 @@ static t_eReturnCode s_FMKFDCAN_GetClockKernelDivider(t_eFMKFDCAN_ClockKernelDiv
 t_eReturnCode FMKFDCAN_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-   
-    HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxBspCallback_u8;
     t_uint8 idxNode_u8 = (t_uint8)0;
     t_uint8 LLI_u8 = (t_uint8)0;
@@ -1057,7 +1055,7 @@ static t_eReturnCode s_FMKFDCAN_MspInit(void)
 static t_eReturnCode s_FMKFDCAN_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    HAL_StatusTypeDef bspRet_e;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxNode_u8;
     //----------Activate Notification that are always ON----------//
     for(idxNode_u8 = (t_uint8)0; idxNode_u8 < FMKFDCAN_NODE_NB ; idxNode_u8++)
