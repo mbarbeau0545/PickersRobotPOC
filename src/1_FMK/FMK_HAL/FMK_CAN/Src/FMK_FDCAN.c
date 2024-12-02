@@ -20,7 +20,7 @@
 #include "./FMK_FDCAN.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPrivate.h"
-
+#include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 
 #include "Library/Queue/Src/LIBQueue.h"
 #include "Library/SafeMem/SafeMem.h"
@@ -983,7 +983,7 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
         if(Ret_e == RC_OK)
         {
         //----------Configure Pin Init----------//
-            Ret_e = s_FMKFDCAN_MspInit();
+            Ret_e = FMKIO_Set_ComCanCfg((t_eFMKIO_ComSigCan)f_Node_e);
         }
         if(Ret_e == RC_OK)
         ///----------Copy Bsp Init from Config/----------//
@@ -1025,30 +1025,6 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     return Ret_e;
 }
 
-/***********************
-* s_FMKFDCAN_MspInit
-************************/
-static t_eReturnCode s_FMKFDCAN_MspInit(void)
-{
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    
-    /* Enable the peripheral clock */
-    __HAL_RCC_FDCAN_CLK_ENABLE();
-
-    /* Enable GPIO clocks */
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    /* Configure FDCAN TX (PA12) and RX (PA11) pins */
-    GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF9_FDCAN1;  // Alternate Function for FDCAN1
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    return RC_OK;
-    
-}
 /*********************************
 * s_FMKFDCAN_PreOperational
 *********************************/

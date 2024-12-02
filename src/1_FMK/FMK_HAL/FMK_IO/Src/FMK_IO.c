@@ -424,8 +424,8 @@ t_eReturnCode FMKIO_Set_InAnaSigCfg(t_eFMKIO_InAnaSig f_signal_e,
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Set_BspSigCfg(c_InAnaSigBspMap_as[f_signal_e].BasicCfg.HwGpio_e,
-                                      c_InAnaSigBspMap_as[f_signal_e].BasicCfg.HwPin_e,
+        Ret_e = s_FMKIO_Set_BspSigCfg(c_InAnaSigBspMap_as[f_signal_e].BasicCfg_s.HwGpio_e,
+                                      c_InAnaSigBspMap_as[f_signal_e].BasicCfg_s.HwPin_e,
                                       (t_uint32)FMKIO_BSP_MODE_ANALOG,
                                       f_pull_e,
                                       FMKIO_SPD_MODE_LOW, // irrevelent for a input sig dig
@@ -470,8 +470,8 @@ t_eReturnCode FMKIO_Set_InFreqSigCfg(t_eFMKIO_InFreqSig f_signal_e,
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Set_BspSigCfg(c_InFreqSigBspMap_as[f_signal_e].BasicCfg.HwGpio_e,
-                                      c_InFreqSigBspMap_as[f_signal_e].BasicCfg.HwPin_e,
+        Ret_e = s_FMKIO_Set_BspSigCfg(c_InFreqSigBspMap_as[f_signal_e].BasicCfg_s.HwGpio_e,
+                                      c_InFreqSigBspMap_as[f_signal_e].BasicCfg_s.HwPin_e,
                                       (t_uint32)GPIO_MODE_AF_PP,
                                       FMKIO_PULL_MODE_DISABLE,
                                       FMKIO_SPD_MODE_HIGH, 
@@ -537,12 +537,12 @@ t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e,
     }
     if (Ret_e == RC_OK)
     {
-        gpioPort_e = c_InEvntSigBspMap_as[f_signal_e].BasicCfg.HwGpio_e;
+        gpioPort_e = c_InEvntSigBspMap_as[f_signal_e].BasicCfg_s.HwGpio_e;
         Ret_e = s_FMKIO_Get_BspTriggerMode(f_trigger_e, &bspTrigger_u32);
         if (Ret_e == RC_OK)
         {
             Ret_e = s_FMKIO_Set_BspSigCfg(gpioPort_e,
-                                          c_InEvntSigBspMap_as[f_signal_e].BasicCfg.HwPin_e,
+                                          c_InEvntSigBspMap_as[f_signal_e].BasicCfg_s.HwPin_e,
                                           (t_uint32)bspTrigger_u32,
                                           FMKIO_PULL_MODE_DISABLE,
                                           FMKIO_SPD_MODE_LOW, // irrevelent for a input sig dig
@@ -591,9 +591,9 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
         
         if (Ret_e == RC_OK)
         {
-            gpioPort_e = c_OutPwmSigBspMap_as[f_signal_e].BasicCfg.HwGpio_e;
+            gpioPort_e = c_OutPwmSigBspMap_as[f_signal_e].BasicCfg_s.HwGpio_e;
             Ret_e = s_FMKIO_Set_BspSigCfg(gpioPort_e,
-                                      c_OutPwmSigBspMap_as[f_signal_e].BasicCfg.HwPin_e,
+                                      c_OutPwmSigBspMap_as[f_signal_e].BasicCfg_s.HwPin_e,
                                       (t_uint32)GPIO_MODE_AF_PP,
                                       f_pull_e,
                                       FMKIO_SPD_MODE_LOW, // irrevelent for a input sig dig
@@ -645,6 +645,44 @@ t_eReturnCode FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e,
     return Ret_e;
 }
 
+/*********************************
+ * FMKIO_Set_ComCanCfg
+ *********************************/
+t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_sFMKIO_CanSigCfg *bspSigCanCfg_ps;
+
+    if(f_SigCan_e > FMKIO_COM_SIGNAL_CAN_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        //---------------Set Tx Configuration---------------//
+        bspSigCanCfg_ps = (t_sFMKIO_CanSigCfg *)&c_FmkIo_CanSigCfg_as[f_SigCan_e];
+
+        Ret_e = s_FMKIO_Set_BspSigCfg(bspSigCanCfg_ps->TxPin_s.HwGpio_e,
+                                      bspSigCanCfg_ps->TxPin_s.HwPin_e,
+                                      GPIO_MODE_AF_PP,
+                                      FMKIO_PULL_MODE_DISABLE,
+                                      FMKIO_SPD_MODE_HIGH,
+                                      bspSigCanCfg_ps->BspAlternateFunc_u8);
+
+        if(Ret_e == RC_OK)
+        {
+            //---------------Set Rx Configuration---------------//
+            Ret_e = s_FMKIO_Set_BspSigCfg(bspSigCanCfg_ps->RxPin_s.HwGpio_e,
+                                      bspSigCanCfg_ps->RxPin_s.HwPin_e,
+                                      GPIO_MODE_AF_PP,
+                                      FMKIO_PULL_MODE_DISABLE,
+                                      FMKIO_SPD_MODE_HIGH,
+                                      bspSigCanCfg_ps->BspAlternateFunc_u8);
+        }
+    }
+
+    return Ret_e;
+}
 /*********************************
  * FMKIO_Set_OutDigSigValue
  *********************************/
@@ -1041,7 +1079,7 @@ static t_eReturnCode s_FMKIO_PerformDiagnostic(void)
             }
         }
     } 
-    // perform diag for Analog signal configuration 
+    //------perform diag for Analog signal configuration ------//
     for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < FMKIO_INPUT_SIGANA_NB) ; LLI_u8++)
     {
         if(g_InAnaSigInfo_as[LLI_u8].IsSigConfigured_b == (t_bool)True)
@@ -1411,7 +1449,7 @@ static void s_FMKIO_BspRqst_InterruptMngmt(void)
 
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKIO_INPUT_SIGEVNT_NB ; LLI_u8++)
     {
-        pin_e = c_InEvntSigBspMap_as[LLI_u8].BasicCfg.HwPin_e;
+        pin_e = c_InEvntSigBspMap_as[LLI_u8].BasicCfg_s.HwPin_e;
 
         if(g_InEvntSigInfo_as[LLI_u8].IsSigConfigured_b == (t_bool)True)
         {

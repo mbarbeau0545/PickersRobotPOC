@@ -236,7 +236,6 @@ typedef struct
     *               If the Hardware TxFiFo is full and cannot accept this TxItem, the software will
     *               put the TxItem into software Buffer and try later on ONLY IF DLC (data_len) IS <= 8.\n
     *
-    *
     *	@param[in] f_NodeStatus_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
     *	@param[in] f_TxItemCfg_s  : Structure for TxItem @ref t_sFMKFDCAN_TxItemCfg
     *	 

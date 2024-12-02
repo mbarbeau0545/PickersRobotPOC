@@ -499,7 +499,7 @@ void FMKCPU_Get_Tick(t_uint32 * f_tickms_pu32)
 /*********************************
  * FMKCPU_Set_SysClockCfg
  *********************************/
-t_eReturnCode FMKCPU_Set_SysClockCfg(void)
+t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCPU_ClkCoreCfg f_)
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
@@ -507,11 +507,11 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
 
-/*#ifdef FMKCPU_STM32_ECU_FAMILY_G
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;  // 16 MHz
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;            // use divider and stuff 
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;            // use divider and stuff
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;    // use HSI as PLL source clock
     RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;             // Divided the HSI clock sources
     RCC_OscInitStruct.PLL.PLLN = 8;                         // Multiplied the HSI clock sources
@@ -532,31 +532,15 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
 
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                                     |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;*/
-
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-
-    
-    
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; // 64Mhz
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
 
     if(bspRet_e == HAL_OK)
     bspRet_e = HAL_RCC_OscConfig(&RCC_OscInitStruct);
     if(bspRet_e == HAL_OK)
     {
-        bspRet_e = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0);
+        bspRet_e = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
     }
     if(bspRet_e != HAL_OK)
     {

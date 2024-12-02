@@ -1,0 +1,24 @@
+Le but de cette librairie est de gérer l'accès (écriture/lecture) d'une variable 
+
+Exemple : si une instance écrit toutes les 50 ms dans un espace donné, disons un tableau de 10 élément qui forme une phrase,
+si je commence à lire les 10 élements et que lorsque je suis au ème l'instance (avec une interruption) réecrit d'autre data donc une autre phrase 
+et que je termine de lire le tableau, ma phrase n'a plus aucun sens.
+
+Il faudrait une fonction Ecriture, Une fonction lecture, Une fonction Init 
+Dans l'Init :
+    - Je renseigne la taille de ma structure, je renseigne si je veux utiliser une Sauvegarde de ma structure (au cas où
+        quelqu'un écrit dans la variable au même moment, la librairie me donnera le backup varaible)
+Dans la fonction read 
+    - Je regarde si quelqu'un est en train d'écrire, 
+    - si non, je set le flag read et je copie la structure dans le conteneur que me donne l'utilisateur
+    - si oui, je regarde si l'utilisateur a utiliser la backup variable 
+        - si oui, je lui donne la backup variable
+        - si non, je renvoi un message de warning
+    - j'enlève le flag read
+
+Dans la fonction write 
+    - je regarde si quelqu'un est en train de lire
+    - si oui, je mets le contenu dans le backup data si l'utilisateur l'a set 
+    - si non je set le flag écriture a true
+    - je copie la varaible 
+    - je reset le flag lecture.

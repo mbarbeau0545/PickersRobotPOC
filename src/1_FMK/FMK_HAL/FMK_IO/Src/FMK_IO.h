@@ -317,6 +317,18 @@
                                           t_eFMKIO_SpdMode   f_spd_e);
     /**
     *
+    *	@brief      Set Signals configuration for CAN.\n
+    *
+    *
+    *	@param[in]      f_SigCan_e     : which CAN configuration will be made, enum from @ref t_eFMKIO_ComSigCan
+    *	 
+    * @retval RC_OK                             @ref RC_OK
+    * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *
+    */
+    t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e);
+    /**
+    *
     *	@brief      Update the digital output value.\n
     *	@note       Once the configuration is done, this function update the state of 
     *               the digital cycle with f_value_e.\n
@@ -449,6 +461,7 @@
     *
     */
     t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    
     #ifdef FMKCPU_STM32_ECU_FAMILY_F
     /**
     *	@brief       @brief This function handles EXTI line 0 to 1 interrupts.\n

@@ -73,17 +73,15 @@
     /* /List of input digital pin available on this board */
     typedef enum
     {
-        FMKIO_INPUT_SIGDIG_1 = 0x0,                  /**< PA12 */
-        FMKIO_INPUT_SIGDIG_2,                        /**< PA11 */
-        FMKIO_INPUT_SIGDIG_3,                        /**< PA14 */
-        FMKIO_INPUT_SIGDIG_4,                        /**< PA15 */
-        FMKIO_INPUT_SIGDIG_5,                        /**< PB0 */
-        FMKIO_INPUT_SIGDIG_6,                        /**< PB1 */
-        FMKIO_INPUT_SIGDIG_7,                        /**< PB2 */
-        FMKIO_INPUT_SIGDIG_8,                        /**< PB3 */
-        FMKIO_INPUT_SIGDIG_9,                        /**< PB4 */
-        FMKIO_INPUT_SIGDIG_10,                       /**< PB5 */
-        FMKIO_INPUT_SIGDIG_11,                       /**< PB11 */
+        FMKIO_INPUT_SIGDIG_1 = 0x0,                  /**< Reference to PA14 */
+        FMKIO_INPUT_SIGDIG_2,                        /**< Reference to PA15 */
+        FMKIO_INPUT_SIGDIG_3,                        /**< Reference to PB15 */
+        FMKIO_INPUT_SIGDIG_4,                        /**< Reference to PB14 */
+        FMKIO_INPUT_SIGDIG_5,                        /**< Reference to PB2 */
+        FMKIO_INPUT_SIGDIG_6,                        /**< Reference to PB3 */
+        FMKIO_INPUT_SIGDIG_7,                        /**< Reference to PB4 */
+        FMKIO_INPUT_SIGDIG_8,                        /**< Reference to PB5 */
+        FMKIO_INPUT_SIGDIG_9,                        /**< Reference to PB11 */
     
         FMKIO_INPUT_SIGDIG_NB,
     } t_eFMKIO_InDigSig;
@@ -91,16 +89,16 @@
     /* List of input Analog pin available on this board */
     typedef enum
     {
-        FMKIO_INPUT_SIGANA_1 = 0x0,                  /**< PC0 */
-        FMKIO_INPUT_SIGANA_2,                        /**< PC1 */
-        FMKIO_INPUT_SIGANA_3,                        /**< PC2 */
-        FMKIO_INPUT_SIGANA_4,                        /**< PC3 */
-        FMKIO_INPUT_SIGANA_5,                        /**< PA6 */
-        FMKIO_INPUT_SIGANA_6,                        /**< PA7 */
-        FMKIO_INPUT_SIGANA_7,                        /**< PB8 */
-        FMKIO_INPUT_SIGANA_8,                        /**< PB9 */
-        FMKIO_INPUT_SIGANA_9,                        /**< PA2 */
-        FMKIO_INPUT_SIGANA_10,                       /**< PA3 */
+        FMKIO_INPUT_SIGANA_1 = 0x0,                  /**< Reference to PC0 */
+        FMKIO_INPUT_SIGANA_2,                        /**< Reference to PC1 */
+        FMKIO_INPUT_SIGANA_3,                        /**< Reference to PC2 */
+        FMKIO_INPUT_SIGANA_4,                        /**< Reference to PC3 */
+        FMKIO_INPUT_SIGANA_5,                        /**< Reference to PA6 */
+        FMKIO_INPUT_SIGANA_6,                        /**< Reference to PA7 */
+        FMKIO_INPUT_SIGANA_7,                        /**< Reference to PB0 */
+        FMKIO_INPUT_SIGANA_8,                        /**< Reference to PB1 */
+        FMKIO_INPUT_SIGANA_9,                        /**< Reference to PA2 */
+        FMKIO_INPUT_SIGANA_10,                       /**< Reference to PA3 */
     
         FMKIO_INPUT_SIGANA_NB,
     } t_eFMKIO_InAnaSig;
@@ -108,9 +106,9 @@
     /* List of input frequency pin available on this board */
     typedef enum
     {
-        FMKIO_INPUT_SIGFREQ_1 = 0x0,                  /**< PE2 */
-        FMKIO_INPUT_SIGFREQ_2,                        /**< PE3 */
-        FMKIO_INPUT_SIGFREQ_3,                        /**< PE4 */
+        FMKIO_INPUT_SIGFREQ_1 = 0x0,                  /**< Reference to PE2 */
+        FMKIO_INPUT_SIGFREQ_2,                        /**< Reference to PE3 */
+        FMKIO_INPUT_SIGFREQ_3,                        /**< Reference to PE4 */
     
         FMKIO_INPUT_SIGFREQ_NB,
     } t_eFMKIO_InFreqSig;
@@ -118,8 +116,8 @@
     /* List of input event pin available on this board */
     typedef enum
     {
-        FMKIO_INPUT_SIGEVNT_1 = 0x0,                  /**< PB10 */
-        FMKIO_INPUT_SIGEVNT_2,                        /**< PA4 */
+        FMKIO_INPUT_SIGEVNT_1 = 0x0,                  /**< Reference to PB10 */
+        FMKIO_INPUT_SIGEVNT_2,                        /**< Reference to PA4 */
     
         FMKIO_INPUT_SIGEVNT_NB,
     } t_eFMKIO_InEvntSig;
@@ -127,15 +125,15 @@
     /* List of output digital pin available on this board */
     typedef enum
     {
-        FMKIO_OUTPUT_SIGDIG_1 = 0x0,                  /**< PC7 */
-        FMKIO_OUTPUT_SIGDIG_2,                        /**< PC6 */
-        FMKIO_OUTPUT_SIGDIG_3,                        /**< PC4 */
-        FMKIO_OUTPUT_SIGDIG_4,                        /**< PC5 */
-        FMKIO_OUTPUT_SIGDIG_5,                        /**< PC13 */
-        FMKIO_OUTPUT_SIGDIG_6,                        /**< PF4 */
-        FMKIO_OUTPUT_SIGDIG_7,                        /**< PD13 */
-        FMKIO_OUTPUT_SIGDIG_8,                        /**< PD9 */
-        FMKIO_OUTPUT_SIGDIG_9,                        /**< PD10 */
+        FMKIO_OUTPUT_SIGDIG_1 = 0x0,                  /**< Reference to PB12 */
+        FMKIO_OUTPUT_SIGDIG_2,                        /**< Reference to PB13 */
+        FMKIO_OUTPUT_SIGDIG_3,                        /**< Reference to PC4 */
+        FMKIO_OUTPUT_SIGDIG_4,                        /**< Reference to PC5 */
+        FMKIO_OUTPUT_SIGDIG_5,                        /**< Reference to PC13 */
+        FMKIO_OUTPUT_SIGDIG_6,                        /**< Reference to PF4 */
+        FMKIO_OUTPUT_SIGDIG_7,                        /**< Reference to PD13 */
+        FMKIO_OUTPUT_SIGDIG_8,                        /**< Reference to PD9 */
+        FMKIO_OUTPUT_SIGDIG_9,                        /**< Reference to PD10 */
     
         FMKIO_OUTPUT_SIGDIG_NB,
     } t_eFMKIO_OutDigSig;
@@ -143,21 +141,29 @@
     /* List of output PWM pin available on this board */
     typedef enum
     {
-        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< PC7 */
-        FMKIO_OUTPUT_SIGPWM_2,                        /**< PC6 */
-        FMKIO_OUTPUT_SIGPWM_3,                        /**< PF12 */
-        FMKIO_OUTPUT_SIGPWM_4,                        /**< PF13 */
-        FMKIO_OUTPUT_SIGPWM_5,                        /**< PF14 */
-        FMKIO_OUTPUT_SIGPWM_6,                        /**< PF15 */
-        FMKIO_OUTPUT_SIGPWM_7,                        /**< PF6 */
-        FMKIO_OUTPUT_SIGPWM_8,                        /**< PF7 */
+        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< Reference to PC7 */
+        FMKIO_OUTPUT_SIGPWM_2,                        /**< Reference to PC6 */
+        FMKIO_OUTPUT_SIGPWM_3,                        /**< Reference to PF12 */
+        FMKIO_OUTPUT_SIGPWM_4,                        /**< Reference to PF13 */
+        FMKIO_OUTPUT_SIGPWM_5,                        /**< Reference to PF14 */
+        FMKIO_OUTPUT_SIGPWM_6,                        /**< Reference to PF15 */
+        FMKIO_OUTPUT_SIGPWM_7,                        /**< Reference to PF6 */
+        FMKIO_OUTPUT_SIGPWM_8,                        /**< Reference to PF7 */
     
         FMKIO_OUTPUT_SIGPWM_NB,
     } t_eFMKIO_OutPwmSig;
 
-    /* CAUTION : Automatic generated code section for Enum: End */
+    /* List of signals used for CAN communication */
+    typedef enum
+    {
+        FMKIO_COM_SIGNAL_CAN_1 = 0x0,                  /**< Rx -> PA11, Tx -> PA12, Reference to CAN 0 */
+        FMKIO_COM_SIGNAL_CAN_2,                        /**< Rx -> PG14, Tx -> PG15, Reference to CAN 1 */
+        FMKIO_COM_SIGNAL_CAN_3,                        /**< Rx -> PG13, Tx -> PG12, Reference to CAN 2 */
     
-    // Flag automatic generate code
+        FMKIO_COM_SIGNAL_CAN_NB,
+    } t_eFMKIO_ComSigCan;
+
+    /* CAUTION : Automatic generated code section for Enum: End */
     /**< List of alternate function*/
     typedef enum
     {
