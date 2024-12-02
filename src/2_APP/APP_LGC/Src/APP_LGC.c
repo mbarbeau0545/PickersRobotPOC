@@ -157,7 +157,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 
     Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_2, 
                                     FMKIO_PULL_MODE_DISABLE,
-                                    3,
+                                    10,
                                     NULL_FONCTION);
     
    

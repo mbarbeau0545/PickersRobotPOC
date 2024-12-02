@@ -156,8 +156,8 @@
     /**< Variable for bsp_Gpio_Pin PWM output signal mapping */
     const t_sFMKIO_BspTimerSigCfg c_OutPwmSigBspMap_as[FMKIO_OUTPUT_SIGPWM_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_7},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_32},    // FMKIO_OUTPUT_SIGPWM_1,
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_8},              GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_12},    // FMKIO_OUTPUT_SIGPWM_2,
+        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_7},              GPIO_AF2_TIM3,                  FMKCPU_INTERRUPT_LINE_IO_32},    // FMKIO_OUTPUT_SIGPWM_1,
+        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_6},              GPIO_AF2_TIM3,                  FMKCPU_INTERRUPT_LINE_IO_31},    // FMKIO_OUTPUT_SIGPWM_2,
         {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_12},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_71},    // FMKIO_OUTPUT_SIGPWM_3,
         {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_13},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_72},    // FMKIO_OUTPUT_SIGPWM_4,
         {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_14},             GPIO_AF0_MCO,                  FMKCPU_INTERRUPT_LINE_IO_73},    // FMKIO_OUTPUT_SIGPWM_5,

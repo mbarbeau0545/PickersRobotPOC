@@ -38,7 +38,7 @@
     #define FMKCPU_MAX_CHNL_TIMER_17 ((t_uint8)1)
     #define FMKCPU_MAX_CHNL_TIMER_20 ((t_uint8)4)
     /* CAUTION : Automatic generated code section for Timer channels number: End */
-    #define FMKCPU_TIMER_CLOCK_OSC_MHZ   ((t_uint8)8)        /**<  Frequency of the timer are 8 MHz */
+    #define FMKCPU_TIMER_CLOCK_OSC_MHZ   ((t_uint8)16)        /**<  Frequency of the timer are 8 MHz */
     #define FMKCPU_TIMER_PWM_PSC         ((t_uint8)50)       /**<  for every PWM the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_PSC          ((t_uint8)0)        /**<  for every InputCOmpare the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_ARR          ((t_uint16)0xFFFF)       /**<  for every InputCOmpare the Prescaler is a constant */
