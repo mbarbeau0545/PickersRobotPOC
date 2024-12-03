@@ -86,7 +86,7 @@ void APPSYS_Init(void)
         Ret_e = FMKCPU_Set_HardwareInit();
         if(Ret_e == RC_OK)
         {
-            Ret_e = FMKCPU_Set_SysClockCfg(FMKCPU_CLKCORE_CFG_142MHZ, FMKCPU_CLKCORE_CFG_64MHZ);
+            Ret_e = FMKCPU_Set_SysClockCfg();
         }
         if(Ret_e == RC_OK)
         {

@@ -111,6 +111,7 @@ class FMKCPU_CodeGen():
         const_mapp_evnt_tim = ""
         const_mapp_gp_tim = ""
         const_mapp_dac_tim = ""
+        const_tim_clk_src = ""
         enum_it_lines_gp = ""
         enum_it_lines_dac = ""
         enum_it_lines_evnt = ""
@@ -195,6 +196,9 @@ class FMKCPU_CodeGen():
         const_mapp_dac_tim += "    /**< Dac Purpose Timer Channel Mapping */\n" \
                             + f"    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineDacMapp_as[{ENUM_FMKCPU_IT_DAC_ROOT}_NB] = " \
                             + "{\n"
+        
+        const_tim_clk_src += '    /**< Timer/Oscillator source constant */\n' \
+                        +   f"    const t_eFMKCPU_SysClkOsc c_FmkCpu_TimClkSrc_ae[FMKCPU_TIMER_NB] =" + '{\n'
 
         for idx, timer_cfg in enumerate(timer_cfg_a[1:]):
             idx_timer = str(timer_cfg[0][6:])
@@ -222,6 +226,10 @@ class FMKCPU_CodeGen():
                         + "{return HAL_TIM_IRQHandler(&g_TimerInfo_as" \
                         + f"[{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}].BspTimer_ps);" \
                         + "}\n"
+            # make const var for tim clock source 
+            const_tim_clk_src += f'        {ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]},' \
+                            + " " * (SPACE_VARIABLE - len(f"{ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]}")) \
+                            + f' // {ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}\n'
             # make timer public enum 
             match  timer_cfg[3]:
                 case 'PWM/IC/OC/OP':
@@ -264,7 +272,7 @@ class FMKCPU_CodeGen():
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}{ENUM_FMKCPU_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKCPU_IT_EVNT_ROOT}_{idx_tim_evnt}"
                     idx_tim_evnt = idx_tim_evnt + timer_cfg[1]
             
-
+        const_tim_clk_src += '    };\n\n'
         var_tim_max_chnl += "    };\n\n"
         var_timinfo += "};\n\n"
         const_mapp_gp_tim += "    };\n\n"
@@ -383,6 +391,9 @@ class FMKCPU_CodeGen():
         cls.code_gen._write_into_file(def_tim_max_chnl, FMKCPU_CONFIGPRIVATE)
 
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE, TARGET_T_VARIABLE_END_LINE)
+
+        print('\t\t- Variable for timer clock source')
+        cls.code_gen._write_into_file(const_tim_clk_src, FMKCPU_CONFIGPRIVATE)
 
         print("\t\t- Variable for max channel per timer")
         cls.code_gen._write_into_file(var_tim_max_chnl, FMKCPU_CONFIGPRIVATE)

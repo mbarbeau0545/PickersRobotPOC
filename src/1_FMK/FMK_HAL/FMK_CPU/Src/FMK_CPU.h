@@ -112,22 +112,6 @@
 
     } t_eFMKCPU_ChnlErrorState;
 
-    /**< Enum for Clock Core System Frequency */
-    typedef enum 
-    {
-        FMKCPU_CLKCORE_CFG_8MHZ = 0x00,     /**< System Clock Core Configuration to 8 Mhz */
-        FMKCPU_CLKCORE_CFG_16MHZ,           /**< System Clock Core Configuration to 16 Mhz */
-        FMKCPU_CLKCORE_CFG_24MHZ,           /**< System Clock Core Configuration to 24 Mhz */
-        FMKCPU_CLKCORE_CFG_32MHZ,           /**< System Clock Core Configuration to 32 Mhz */
-        FMKCPU_CLKCORE_CFG_48MHZ,           /**< System Clock Core Configuration to 48 Mhz */
-        FMKCPU_CLKCORE_CFG_64MHZ,           /**< System Clock Core Configuration to 64 Mhz */
-        FMKCPU_CLKCORE_CFG_96MHZ,           /**< System Clock Core Configuration to 96 Mhz */
-        FMKCPU_CLKCORE_CFG_120MHZ,          /**< System Clock Core Configuration to 120 Mhz */
-        FMKCPU_CLKCORE_CFG_142MHZ,          /**< System Clock Core Configuration to 142 Mhz */
-        FMKCPU_CLKCORE_CFG_170MHZ,          /**< System Clock Core Configuration to 170 Mhz */
-
-    } t_eFMKCPU_ClkCoreCfg;
-
     /**< union for Centralize Certain Function */
     typedef union
     {
@@ -212,7 +196,16 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCPU_ClkCoreCfg f_);
+    t_eReturnCode FMKCPU_Set_SysClockCfg(void);
+    /**
+    *
+    *	@brief      Get the Frequency in MHz from configuration of System Oscillator values.\n
+    *
+    *
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
+    */
+    t_eReturnCode FMKCPU_Get_ClockFreqOscillator(t_eFMKCPU_SysClkOsc f_SysClkOsc_e, t_uint8 * f_value_pu8);
     /**
     *
     *	@brief      Set a Delay.\n

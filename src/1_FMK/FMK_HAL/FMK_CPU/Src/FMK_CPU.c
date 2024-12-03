@@ -14,6 +14,8 @@
 #include "./FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKCPU_ConfigPrivate.h"
 #include "Constant.h"
+
+#include "Library/SafeMem/SafeMem.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -69,6 +71,16 @@ typedef struct
 static t_eCyclicFuncState g_state_e = STATE_CYCLIC_WAITING;
 
 WWDG_HandleTypeDef g_wwdgInfos_s = {0};
+
+t_uint8 g_SysOscValues_ua8[FMKCPU_SYS_CLOCK_NB] = {
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+    (t_uint8)0,
+};
 /* CAUTION : Automatic generated code section for Timer Configuration: Start */
 /**< timer information variable */
 t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
@@ -499,7 +511,7 @@ void FMKCPU_Get_Tick(t_uint32 * f_tickms_pu32)
 /*********************************
  * FMKCPU_Set_SysClockCfg
  *********************************/
-t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCPU_ClkCoreCfg f_)
+t_eReturnCode FMKCPU_Set_SysClockCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
@@ -508,16 +520,16 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCP
 
 
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;  // 16 MHz
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;                      // 16 MHz
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;            // use divider and stuff
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;    // use HSI as PLL source clock
-    RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;             // Divided the HSI clock sources
-    RCC_OscInitStruct.PLL.PLLN = 8;                         // Multiplied the HSI clock sources
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;             // Divided the HSI clock sources -> that gives us PPLP clock source    
-    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;             // Divided the HSI clock sources -> that gives us PPLQ clock source    
-    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;             // Divided the HSI clock sources -> that gives us PPLCLK (SYSCLK) clock sources
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                                    // use divider and stuff
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;                            // use HSI as PLL source clock
+    RCC_OscInitStruct.PLL.PLLM = c_FmkCpu_SysOscCfg_s.PLLM_Divider_u32;             // Divided the HSI clock sources
+    RCC_OscInitStruct.PLL.PLLN = c_FmkCpu_SysOscCfg_s.PPLN_Multplier_u32;           // Multiplied the HSI clock sources
+    RCC_OscInitStruct.PLL.PLLP = c_FmkCpu_SysOscCfg_s.PLLP_Divider_u32;             // Divided the HSI clock sources -> that gives us PPLP clock source    
+    RCC_OscInitStruct.PLL.PLLQ = c_FmkCpu_SysOscCfg_s.PPLQ_Divider_u32;             // Divided the HSI clock sources -> that gives us PPLQ clock source    
+    RCC_OscInitStruct.PLL.PLLR = c_FmkCpu_SysOscCfg_s.PLLR_Divider_u32;             // Divided the HSI clock sources -> that gives us PPLCLK (SYSCLK) clock sources
 
     bspRet_e = HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 #elif defined FMKCPU_STM32_ECU_FAMILY_F
@@ -530,11 +542,12 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCP
 #endif
 
 
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                                    |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; // 64Mhz
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
+    RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                                         |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK; 
+    RCC_ClkInitStruct.AHBCLKDivider  = c_FmkCpu_SysOscCfg_s.AHB_Divider;
+    RCC_ClkInitStruct.APB1CLKDivider = c_FmkCpu_SysOscCfg_s.APB2_Divider_u32;
+    RCC_ClkInitStruct.APB2CLKDivider = c_FmkCpu_SysOscCfg_s.APB2_Divider_u32;
 
     if(bspRet_e == HAL_OK)
     bspRet_e = HAL_RCC_OscConfig(&RCC_OscInitStruct);
@@ -547,6 +560,30 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_ClkCoreCfg f_SysClock_e, t_eFMKCP
         g_state_e = STATE_CYCLIC_ERROR;
         Ret_e = RC_ERROR_WRONG_RESULT;
     }
+    else 
+    {
+        Ret_e = SafeMem_memcpy(&g_SysOscValues_ua8, &c_FmkCpu_SysOscValue_ua8, (t_uint16)(sizeof(t_uint8) * FMKCPU_SYS_CLOCK_NB));
+    }
+    return Ret_e;
+}
+
+t_eReturnCode FMKCPU_Get_ClockFreqOscillator(t_eFMKCPU_SysClkOsc f_SysClkOsc_e, t_uint8 * f_value_pu8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_SysClkOsc_e > FMKCPU_SYS_CLOCK_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(f_value_pu8 == (t_uint8 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        *f_value_pu8 = (t_uint8)g_SysOscValues_ua8[f_SysClkOsc_e];
+    }
+
     return Ret_e;
 }
 
@@ -1259,11 +1296,12 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
     TIM_OC_InitTypeDef BspOcInit_s;
     t_uint32 bspChannel_u32 = 0;
     t_uint32 bspPeriod_u32;
-
+    t_uint8 timerOscFreq_u8 = g_SysOscValues_ua8[c_FmkCpu_TimClkSrc_ae[f_timer_e]];
+    
     //----------Check if timer is not configured yet------------------//
     if ((g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False))
     {
-        bspPeriod_u32 = (t_uint32)(((FMKCPU_TIMER_CLOCK_OSC_MHZ * CST_MHZ_TO_HZ) /
+        bspPeriod_u32 = (t_uint32)(((timerOscFreq_u8 * CST_MHZ_TO_HZ) /
                                             (f_pwmFreq_u32 * (FMKCPU_TIMER_PWM_PSC + 1))) - (t_uint32)1);
         //----------Set PWM Timer configuration for all channels------------------//
         Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
@@ -1431,6 +1469,7 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPeriod_u32 = 0; 
     t_uint32 prescaler_u32 = 0;
+    t_uint8 timerOscFreq_u8 = g_SysOscValues_ua8[c_FmkCpu_TimClkSrc_ae[f_timer_e]];
 
     //-------------See if timer has already been configured-------------//
     if(g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)True)
@@ -1449,7 +1488,7 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
             prescaler_u32 = FMKCPU_TIMER_EVNT_PSC_LOW;
         }
         //-------------Calculate the timer Period-------------//
-        bspPeriod_u32 = (t_uint32)((t_float32)((t_float32)(FMKCPU_HSI_CLOCK_OSC_MHZ * CST_MHZ_TO_HZ) * (t_float32)(f_periodms_u32 / 1000)) / 
+        bspPeriod_u32 = (t_uint32)((t_float32)((t_float32)(timerOscFreq_u8 * CST_MHZ_TO_HZ) * (t_float32)(f_periodms_u32 / 1000)) / 
                                                 (t_float32)((prescaler_u32 + 1)));
 
         //-------------Call Init Function-------------//

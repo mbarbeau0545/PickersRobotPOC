@@ -171,7 +171,7 @@
         {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_7},              GPIO_AF6_TIM5,                 FMKCPU_INTERRUPT_LINE_IO_52},    // FMKIO_OUTPUT_SIGPWM_8,
     };
 
-    const t_sFMKIO_CanSigCfg c_FmkIo_CanSigCfg_as[FMKIO_COM_SIGNAL_CAN_NB] = {
+    const t_sFMKIO_CanSigCfg c_FmkIo_CanSigCfg_as[FMKIO_COM_SIGNAL_CAN_NB] ={
         // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function
         {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_11},             {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_12},             GPIO_AF9_FDCAN1}, // FMKIO_COM_SIGNAL_CAN_1
         {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_14},             {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_15},             GPIO_AF9_FDCAN1}, // FMKIO_COM_SIGNAL_CAN_2

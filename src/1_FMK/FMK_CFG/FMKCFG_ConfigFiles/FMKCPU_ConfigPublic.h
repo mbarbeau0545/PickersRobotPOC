@@ -28,15 +28,11 @@
     // *                      Defines
     // ********************************************************************
     // flag automatic generate code
-    #define FMKCPU_STM32_ECU_FAMILY_G
-
+    #define FMKCPU_STM32_ECU_FAMILY_G ((t_uint8)1)
+    //#define FMKCPU_STM32_ECU_FAMILY_F ((t_uint8)0)
+    
     #define FMKCPU_WWDG_RESET_CFG  FMKCPU_WWDG_RESET_100MS /**< default watchdogs configuration */
-#ifdef FMKCPU_STM32_ECU_FAMILY_G
-    #define FMKCPU_HSI_CLOCK_OSC_MHZ ((t_uint8)16)
-#elif defined  FMKCPU_STM32_ECU_FAMILY_F
-    #define FMKCPU_PLLQ_CLOCK_OSC_MHZ    ((t_uint8)64)       /**< LLP oscillator equals to 64 MHz */
-    #define FMKCPU_HSI_CLOCK_OSC_MHZ     ((t_uint8)8)        /**<  HSI oscillatator equals to 8 MHz */
-#endif
+
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -305,6 +301,20 @@
         FMKCPU_NVIC_PRIORITY_NB             /**< Number of reference to bsp priority */
     } t_eFMKCPU_NVICPriority;
 
+    /**< Enum for System Oscillator Clock */
+    typedef enum 
+    {
+        FMKCPU_SYS_CLOCK_HSI = 0x00,
+        FMKCPU_SYS_CLOCK_CORE,
+        FMKCPU_SYS_CLOCK_HCLK,
+        FMKCPU_SYS_CLOCK_APB1,
+        FMKCPU_SYS_CLOCK_APB2,
+        FMKCPU_SYS_CLOCK_PLLQ,
+        FMKCPU_SYS_CLOCK_PLLP,
+
+        FMKCPU_SYS_CLOCK_NB,
+    } t_eFMKCPU_SysClkOsc;
+    
     /**< Enum for watchdog timer list */
     typedef enum
     {
@@ -316,7 +326,6 @@
         FMKCPU_WWDG_RESET_NB,           /**< Number of watchdogs reset parameter  */
     } t_eFMKCPu_WwdgResetPeriod;
     //-----------------------------TYPEDEF TYPES---------------------------//
-    
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
