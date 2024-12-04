@@ -210,7 +210,7 @@ class FMKCPU_CodeGen():
                         + f"        // Timer_{idx_timer}\n" \
                         + f"        .BspTimer_ps.Instance = TIM{idx_timer},\n" \
                         + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
-                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(timer_cfg[2]).upper()}" \
+                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(timer_cfg[2]).upper()}\n" \
                         + "},\n"
             
             # make defines timer channel

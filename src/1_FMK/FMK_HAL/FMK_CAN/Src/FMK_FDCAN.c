@@ -689,7 +689,7 @@ t_eReturnCode FMKFDCAN_Init(void)
         }
         if(Ret_e == RC_OK)
         {
-            //-----------------Init driver if it used ----------------//
+            //-----------------Init driver if Node is used ----------------//
             if(c_FmkCan_IsNodeActive[idxNode_u8] == (t_bool)True)
             {
                 idxBspNodeCfg_u8 = c_FmkCan_NodeCfg_ae[idxNode_u8];
@@ -965,7 +965,8 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
         .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
-        .FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1,
+        //---According to datasheet, it's PLLQ, which is currently set to 120Mhz---//
+        .FdcanClockSelection  = RCC_FDCANCLKSOURCE_PLL,
     };
 
     if(f_Node_e > FMKFDCAN_NODE_NB)
@@ -980,36 +981,38 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
         }
+        //----------Configure Pin Init----------//
         if(Ret_e == RC_OK)
         {
-        //----------Configure Pin Init----------//
             Ret_e = FMKIO_Set_ComCanCfg((t_eFMKIO_ComSigCan)f_Node_e);
         }
-        if(Ret_e == RC_OK)
-        ///----------Copy Bsp Init from Config/----------//
-        Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
+        //----------Copy Bsp Init from Config/----------//
         if(Ret_e == RC_OK)
         {
-            //----------Set hardware clock RCC----------//
+            Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
+        }
+        //----------Set hardware clock RCC----------//
+        if(Ret_e == RC_OK)
+        {
             Ret_e = FMKCPU_Set_HwClock(g_NodeInfo_as[f_Node_e].c_Clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         }
+        //----------set enable the Interruption----------//
         if(Ret_e == RC_OK)
         {
-            //----------set enable the Interruption----------//
             Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine1_e, FMKCPU_NVIC_OPE_ENABLE);
             if(Ret_e == RC_OK)
             {
                 Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine2_e, FMKCPU_NVIC_OPE_ENABLE);
             }
         }
+        //----------Call Bsp Init for FDCAN----------//
         if(Ret_e == RC_OK)
         {
-            //----------Call Bsp Init for FDCAN----------//
             bspRet_e = HAL_FDCAN_Init(&g_NodeInfo_as[f_Node_e].bspNode_s);
         }
+        //----------Set Hardware FIFO mode for FDCAN----------//
         if(bspRet_e == HAL_OK)
         {
-            //----------Set Hardware FIFO mode for FDCAN----------//
             Ret_e = s_FMKFDCAN_SetHwFifoOpeMode(f_Node_e, f_NodeCfg_s.FifoMode_e);
         }
     }
@@ -1423,7 +1426,7 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
             //-------------------Init for nominal baudrate-------------------//
             /* Information 
             *   Here in c_FmkCan_BspBaudrateCfg_as, the configuration has been made 
-            *   for Max Clock (64Mhz), if user wants to divided this clock, in order to 
+            *   for Clock Cfg (120Mhz), if user wants to divided this clock, in order to 
             *   obtain the right baudrate, we have to multiply the the value of the enum.\n
             *   In consequence no matter the clock divider value, the baudrate will always be 
             *   good 
@@ -1587,10 +1590,12 @@ static void s_FMKFDCAN_BspErrorEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                     break;
                 case HAL_FDCAN_ERROR_LOG_OVERFLOW:
                 case HAL_FDCAN_ERROR_RAM_ACCESS:
-                case HAL_FDCAN_ERROR_RAM_WDG:
                 case HAL_FDCAN_ERROR_PENDING:
                 case HAL_FDCAN_ERROR_RESERVED_AREA:
-                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_RAM;
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_MEM;
+                    break;
+                case HAL_FDCAN_ERROR_RAM_WDG:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_WDG;
                     break;
                 default:
                     Ret_e = RC_OK;
@@ -1648,7 +1653,6 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg *f_TxItemCfg
             f_bspTxItem_ps->MessageMarker       = (t_uint32)0;
             f_bspTxItem_ps->ErrorStateIndicator = (t_uint32)0;
         }
-        
     }
 
     return Ret_e;

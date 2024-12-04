@@ -513,7 +513,7 @@ static t_eReturnCode s_FMKCDA_Operational(void)
         &&( (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_OK)
         || (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_PRESENTS)))
         {
-            Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
+            //Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
             if(Ret_e == RC_OK) 
             {
                 g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = True;

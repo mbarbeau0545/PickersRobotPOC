@@ -63,7 +63,8 @@ typedef enum
     FMKFDCAN_NODE_STATE_ERR_FIFO       = 0x02,     /**< Node is queuing messages. */
     FMKFDCAN_NODE_STATE_ERR_TIMEOUT    = 0x04,     /**< Timeout occured  on the Node */
     FMKFDCAN_NODE_STATE_ERR_PROTOCOL   = 0x08,     /**< Protocol error detected in the node. */
-    FMKFDCAN_NODE_STATE_ERR_RAM        = 0x10,     /**< Protocol error detected in the node. */
+    FMKFDCAN_NODE_STATE_ERR_MEM        = 0x10,     /**< Memory error detected in the node. */
+    FMKFDCAN_NODE_STATE_ERR_WDG        = 0x20,     /**<  WhatchDog error detected*/
 
     FMKFDCAN_NODE_STATE_NB                         /**< Total number of node statuses. */
 } t_eFMKFDCAN_NodeStatus;

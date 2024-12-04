@@ -35,9 +35,9 @@
     typedef enum
     {
         APPSYS_MODULE_FMK_CPU = 0,
-        APPSYS_MODULE_FMK_CAN,
-        APPSYS_MODULE_FMK_CDA,
         APPSYS_MODULE_FMK_IO,
+        APPSYS_MODULE_FMK_CDA,
+        APPSYS_MODULE_FMK_CAN,
 
         APPSYS_MODULE_APP_SNS,
         APPSYS_MODULE_APP_ACT,

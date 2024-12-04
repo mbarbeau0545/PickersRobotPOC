@@ -38,7 +38,7 @@
     #define FMKCPU_MAX_CHNL_TIMER_17 ((t_uint8)1)
     #define FMKCPU_MAX_CHNL_TIMER_20 ((t_uint8)4)
     /* CAUTION : Automatic generated code section for Timer channels number: End */
-    #define FMKCPU_TIMER_PWM_PSC         ((t_uint8)100)       /**<  for every PWM the Prescaler is a constant */
+    #define FMKCPU_TIMER_PWM_PSC         ((t_uint8)50)       /**<  for every PWM the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_PSC          ((t_uint8)20)        /**<  for every InputCOmpare the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_ARR          ((t_uint16)0xFFFF)       /**<  for every InputCOmpare the Prescaler is a constant */
 
@@ -268,7 +268,7 @@
     // PLLP     -> 40  MHz
     const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_s = {
     // PLLM_Divider_u32         PPLN_Multplier_u32          PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
-        RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV4,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV2,          RCC_HCLK_DIV2
+        RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2
     };
 
     const t_uint8 c_FmkCpu_SysOscValue_ua8[FMKCPU_SYS_CLOCK_NB] = 
@@ -276,9 +276,9 @@
         (t_uint8)16,     // FMKCPU_SYS_CLOCK_HSI
         (t_uint8)120,    // FMKCPU_SYS_CLOCK_CORE
         (t_uint8)120,    // FMKCPU_SYS_CLOCK_HCLK
-        (t_uint8)60,    // FMKCPU_SYS_CLOCK_APB1
+        (t_uint8)30,     // FMKCPU_SYS_CLOCK_APB1
         (t_uint8)60,     // FMKCPU_SYS_CLOCK_APB2
-        (t_uint8)60,     // FMKCPU_SYS_CLOCK_PLLQ
+        (t_uint8)120,    // FMKCPU_SYS_CLOCK_PLLQ
         (t_uint8)40,     // FMKCPU_SYS_CLOCK_PLLP
     };
 #elif defined FMKCPU_STM32_ECU_FAMILY_F

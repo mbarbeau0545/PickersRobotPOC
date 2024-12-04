@@ -386,6 +386,23 @@ static t_eReturnCode s_FMKCPU_Get_TimChnlFromITLine(t_eFMKCPU_InterruptLineType 
                                                     t_uFMKCPU_InterruptLine     f_ITLine_u,    
                                                     t_eFMKCPU_Timer             *f_timer_pe,
                                                     t_eFMKCPU_InterruptChnl     *f_channel_pe);
+
+/**
+ *
+ *	@brief      Get the Bsp Freqency of the bus that provide frequency to timer
+ *  @note       According to datasheet, if the APB1 or APB2 clock is divided by 2 or more,
+ *              Frequency for PWM are mutlplied by two
+ *
+ *	@param[in]  f_timer_e                : pointor enum value for containing timer, value from @ref t_eFMKCPU_Timer
+ *	@param[in]  f_bspBusFreq_pu8         : Storage for freqency timer in Mhz.\n
+ *
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
+ *
+ */
+static t_eReturnCode s_FMKCPU_Get_BspTimerFreq(t_eFMKCPU_Timer f_timer_e, t_uint8 *f_bspBusFreqMhz_pu8);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -398,7 +415,7 @@ t_eReturnCode FMKCPU_Init(void)
         g_TimerInfo_as[timIndex_u8].IsNVICTimerEnable_b = (t_bool)False;
         g_TimerInfo_as[timIndex_u8].IsTimerConfigured_b = (t_bool)False;
         g_TimerInfo_as[timIndex_u8].IsTimerRunning_b    = (t_bool)False;
-        g_TimerInfo_as[timIndex_u8].HwCfg_e = FMKCPU_HWTIM_CFG_EVNT;
+        g_TimerInfo_as[timIndex_u8].HwCfg_e = FMKCPU_HWTIM_CFG_NB;
         for (chnlIndex_u8 = (t_uint8)0 ; chnlIndex_u8 < (t_eFMKCPU_InterruptChnl)FMKCPU_CHANNEL_NB ; chnlIndex_u8++)
         {
             g_TimerInfo_as[timIndex_u8].Channel_as[chnlIndex_u8].chnl_cb = NULL_FONCTION;
@@ -515,8 +532,10 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef  bspRet_e = HAL_OK;
+    
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    t_uint32 bspSysClkFreq_u32;
 
 
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
@@ -546,7 +565,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
                                          |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK; 
     RCC_ClkInitStruct.AHBCLKDivider  = c_FmkCpu_SysOscCfg_s.AHB_Divider;
-    RCC_ClkInitStruct.APB1CLKDivider = c_FmkCpu_SysOscCfg_s.APB2_Divider_u32;
+    RCC_ClkInitStruct.APB1CLKDivider = c_FmkCpu_SysOscCfg_s.APB1_Divider_u32;
     RCC_ClkInitStruct.APB2CLKDivider = c_FmkCpu_SysOscCfg_s.APB2_Divider_u32;
 
     if(bspRet_e == HAL_OK)
@@ -563,6 +582,14 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
     else 
     {
         Ret_e = SafeMem_memcpy(&g_SysOscValues_ua8, &c_FmkCpu_SysOscValue_ua8, (t_uint16)(sizeof(t_uint8) * FMKCPU_SYS_CLOCK_NB));
+        if(Ret_e == RC_OK)
+        {
+            bspSysClkFreq_u32 = HAL_RCC_GetSysClockFreq();
+            if(bspSysClkFreq_u32 != (t_uint32)g_SysOscValues_ua8[FMKCPU_SYS_CLOCK_CORE] * CST_MHZ_TO_HZ)
+            {
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+        }
     }
     return Ret_e;
 }
@@ -1296,29 +1323,34 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
     TIM_OC_InitTypeDef BspOcInit_s;
     t_uint32 bspChannel_u32 = 0;
     t_uint32 bspPeriod_u32;
-    t_uint8 timerOscFreq_u8 = g_SysOscValues_ua8[c_FmkCpu_TimClkSrc_ae[f_timer_e]];
+    t_uint8 timerOscFreq_u8;
     
     //----------Check if timer is not configured yet------------------//
     if ((g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False))
     {
-        bspPeriod_u32 = (t_uint32)(((timerOscFreq_u8 * CST_MHZ_TO_HZ) /
-                                            (f_pwmFreq_u32 * (FMKCPU_TIMER_PWM_PSC + 1))) - (t_uint32)1);
-        //----------Set PWM Timer configuration for all channels------------------//
-        Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
-                                                    FMKCPU_HWTIM_CFG_PWM,
-                                                    (t_uint32)FMKCPU_TIMER_PWM_PSC,
-                                                    (t_uint32)bspPeriod_u32,
-                                                    (t_uint32)TIM_COUNTERMODE_UP,
-                                                    (t_uint32)TIM_CLOCKDIVISION_DIV1,
-                                                    (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE); // Irreveleent in PWM                           
-        masterCfg_s.MasterOutputTrigger = TIM_TRGO_RESET;
-        masterCfg_s.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-        BspRet_e = HAL_TIMEx_MasterConfigSynchronization(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
-                                                            &masterCfg_s);
-        if(BspRet_e != HAL_OK)
+        //----------Check the timer frequency ------------------//
+        Ret_e = s_FMKCPU_Get_BspTimerFreq(f_timer_e, &timerOscFreq_u8);
+        if(Ret_e == RC_OK)
         {
-            g_TimerInfo_as[f_timer_e].IsTimerConfigured_b = (t_bool)False;
-            Ret_e = RC_ERROR_WRONG_RESULT;
+            bspPeriod_u32 = (t_uint32)(((timerOscFreq_u8 * CST_MHZ_TO_HZ) /
+                                                (f_pwmFreq_u32 * (FMKCPU_TIMER_PWM_PSC + 1))) - (t_uint32)1);
+            //----------Set PWM Timer configuration for all channels------------------//
+            Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
+                                                        FMKCPU_HWTIM_CFG_PWM,
+                                                        (t_uint32)FMKCPU_TIMER_PWM_PSC,
+                                                        (t_uint32)bspPeriod_u32,
+                                                        (t_uint32)TIM_COUNTERMODE_UP,
+                                                        (t_uint32)TIM_CLOCKDIVISION_DIV1,
+                                                        (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE); // Irreveleent in PWM                           
+            masterCfg_s.MasterOutputTrigger = TIM_TRGO_RESET;
+            masterCfg_s.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+            BspRet_e = HAL_TIMEx_MasterConfigSynchronization(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                                                &masterCfg_s);
+            if(BspRet_e != HAL_OK)
+            {
+                g_TimerInfo_as[f_timer_e].IsTimerConfigured_b = (t_bool)False;
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
         }
     }
     //-------this timer has already been configured and cannot be used for another Type of Configuration------//
@@ -1917,6 +1949,58 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
     return;
 }
 
+static t_eReturnCode s_FMKCPU_Get_BspTimerFreq(t_eFMKCPU_Timer f_Timer_e, t_uint8 * f_bspBusFreqMhz_pu8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_eFMKCPU_SysClkOsc timerOsc_e;
+
+    if(f_Timer_e > FMKCPU_TIMER_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(f_bspBusFreqMhz_pu8 == (t_uint8 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        //-------Get Timer Bus Supplier--------------//
+        timerOsc_e = c_FmkCpu_TimClkSrc_ae[f_Timer_e];
+        switch (timerOsc_e)
+        {
+            case FMKCPU_SYS_CLOCK_APB1:
+            {
+                *f_bspBusFreqMhz_pu8 = (t_uint8)g_SysOscValues_ua8[FMKCPU_SYS_CLOCK_APB1];
+                //-------According to datasheet --------------//
+                if(c_FmkCpu_SysOscCfg_s.APB1_Divider_u32 > RCC_HCLK_DIV1)
+                {
+                    *f_bspBusFreqMhz_pu8 = (t_uint8)((t_uint8)2 * (*f_bspBusFreqMhz_pu8 ));
+                }
+                break;
+            }
+            case FMKCPU_SYS_CLOCK_APB2:
+            {
+                *f_bspBusFreqMhz_pu8 = (t_uint8)g_SysOscValues_ua8[FMKCPU_SYS_CLOCK_APB2];
+                //-------According to datasheet --------------//
+                if(c_FmkCpu_SysOscCfg_s.APB1_Divider_u32 > RCC_HCLK_DIV1)
+                {
+                    *f_bspBusFreqMhz_pu8 = (t_uint8)((t_uint8)2 * (*f_bspBusFreqMhz_pu8));
+                }
+                break;
+            }
+            case FMKCPU_SYS_CLOCK_HSI:
+            case FMKCPU_SYS_CLOCK_CORE:
+            case FMKCPU_SYS_CLOCK_HCLK:
+            case FMKCPU_SYS_CLOCK_PLLQ:
+            case FMKCPU_SYS_CLOCK_PLLP:
+            default:
+                Ret_e = RC_ERROR_NOT_ALLOWED;
+            break;
+        }
+    }
+
+    return Ret_e;
+}
 /*********************************
  * s_FMKCPU_Get_BspTimer
  *********************************/

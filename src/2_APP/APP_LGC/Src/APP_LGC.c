@@ -172,7 +172,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
     t_uint32 syclock = HAL_RCC_GetSysClockFreq();
     if (syclock > 0)
     {
-        FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, 750);
+        FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, 500);
         FMKCPU_Set_Delay(1000);
     }
     

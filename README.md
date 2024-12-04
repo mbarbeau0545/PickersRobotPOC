@@ -41,6 +41,8 @@ For the doxygen documentation search the file "index.html"
 - Faire l'intégration MatLab du projet
 - Faire un module USART
 - Mettre à jour la documentation 
+    - Mettre à jour la documentaiton drawio
+    - Créer un script python qui fait une documentation générale du Projet avec toutes les API par Modules ?
 - Dans le module FDCAN
     - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size.
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
