@@ -48,5 +48,5 @@ For the doxygen documentation search the file "index.html"
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
 Dans la Cfg FMKCPU
-    - revoir la configuration des prescaler,
+    - revoir la configuration des horloges et des prescalers de chaque module 
         la rendre  automatique en fonction des valeurs des fréquences de SYS_CLOCK

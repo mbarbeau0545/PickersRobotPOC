@@ -205,7 +205,9 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Get_ClockFreqOscillator(t_eFMKCPU_SysClkOsc f_SysClkOsc_e, t_uint8 * f_value_pu8);
+    t_eReturnCode FMKCPU_Get_PeripheryPrescaler(t_eFMKCPU_ClockPeriphExtType  f_SysClkType_e, 
+                                            t_uint8 idxRccPeriphExt_u8,
+                                            t_uint8 * bspPrescaler_pu32);
     /**
     *
     *	@brief      Set a Delay.\n

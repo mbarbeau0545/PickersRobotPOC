@@ -221,20 +221,7 @@ static t_eReturnCode s_FMKFDCAN_Operational(void);
 *
 */
 static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
-/**
- *	@brief
- *	@note   
- *
- *	@param[in]  f_Node_e     : The Node where the RxMsg is Pending -> enum value from @ref t_eFMKFDCAN_NodeList
- *	@param[in]  f_NodeCfg_s  : software init structure @ref t_sFMKFDCAN_DrvNodeCfg
- *	 
- *  @retval RC_OK                             @ref RC_OK
- *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
- *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
- *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
- *
- */
-static t_eReturnCode s_FMKFDCAN_MspInit(void);
+
 /**
  *	@brief      Set the initiation of the Node.\n
  *	@note       We extract from software confgiuration the bsp configuration
@@ -725,6 +712,7 @@ t_eReturnCode FMKFDCAN_Cyclic(void)
             {
                 g_Modulestate_e = STATE_CYCLIC_WAITING;
             }
+            break;
         }
         case STATE_CYCLIC_WAITING:
         {

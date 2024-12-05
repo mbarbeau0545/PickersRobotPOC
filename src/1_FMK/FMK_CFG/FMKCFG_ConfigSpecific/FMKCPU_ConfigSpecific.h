@@ -283,6 +283,30 @@
     void FMKCPU_Disable_HRTIM1_Clock(void);
     /* CAUTION : Automatic generated code section for Disable Clk Declaration: End */
 
+    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: Start */
+    //Function to Get the Prescaler of Adc Configuration from Adc frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForAdc(t_uint8 idxAdcRccClock_u8, t_uint32 * bspAdcPrescaler_pu32);
+    //Function to Get the Prescaler of Rng Configuration from Rng frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForRng(t_uint8 idxRngRccClock_u8, t_uint32 * bspRngPrescaler_pu32);
+    //Function to Get the Prescaler of Tim Configuration from Tim frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForTim(t_uint8 idxTimRccClock_u8, t_uint32 * bspTimPrescaler_pu32);
+    //Function to Get the Prescaler of Usart Configuration from Usart frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForUsart(t_uint8 idxUsartRccClock_u8, t_uint32 * bspUsartPrescaler_pu32);
+    //Function to Get the Prescaler of Uart Configuration from Uart frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForUart(t_uint8 idxUartRccClock_u8, t_uint32 * bspUartPrescaler_pu32);
+    //Function to Get the Prescaler of I2c Configuration from I2c frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForI2c(t_uint8 idxI2cRccClock_u8, t_uint32 * bspI2cPrescaler_pu32);
+    //Function to Get the Prescaler of Usb Configuration from Usb frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForUsb(t_uint8 idxUsbRccClock_u8, t_uint32 * bspUsbPrescaler_pu32);
+    //Function to Get the Prescaler of Fdcan Configuration from Fdcan frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForFdcan(t_uint8 idxFdcanRccClock_u8, t_uint32 * bspFdcanPrescaler_pu32);
+    //Function to Get the Prescaler of Lptim Configuration from Lptim frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForLptim(t_uint8 idxLptimRccClock_u8, t_uint32 * bspLptimPrescaler_pu32);
+    //Function to Get the Prescaler of Sai1 Configuration from Sai1 frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForSai1(t_uint8 idxSai1RccClock_u8, t_uint32 * bspSai1Prescaler_pu32);
+    //Function to Get the Prescaler of Hrtim Configuration from Hrtim frequency constraint and the Bus used
+    t_eReturnCode FMKCPU_GetPrescalerForHrtim(t_uint8 idxHrtimRccClock_u8, t_uint32 * bspHrtimPrescaler_pu32);
+    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: End */
 /**< This function has been made to filled in c_FMKCPU_BspTimFunc_apf */
 HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
 HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);

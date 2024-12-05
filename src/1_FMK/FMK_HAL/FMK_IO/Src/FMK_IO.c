@@ -1021,7 +1021,7 @@ static t_eReturnCode s_FMKIO_Operational(void)
         s_SavedTime_u32 = currentTime_u32;
         Ret_e = s_FMKIO_PerformDiagnostic();
     }
-        // else do other thing(or nothing for now)
+    // else do other thing(or nothing for now)
     return Ret_e;
 }
 

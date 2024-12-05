@@ -88,62 +88,74 @@ t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
         // Timer_1
         .BspTimer_ps.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
+},
     {
         // Timer_2
         .BspTimer_ps.Instance = TIM2,
         .c_clock_e = FMKCPU_RCC_CLK_TIM2,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM2_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM2_IRQN
+},
     {
         // Timer_3
         .BspTimer_ps.Instance = TIM3,
         .c_clock_e = FMKCPU_RCC_CLK_TIM3,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM3_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM3_IRQN
+},
     {
         // Timer_4
         .BspTimer_ps.Instance = TIM4,
         .c_clock_e = FMKCPU_RCC_CLK_TIM4,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM4_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM4_IRQN
+},
     {
         // Timer_5
         .BspTimer_ps.Instance = TIM5,
         .c_clock_e = FMKCPU_RCC_CLK_TIM5,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN
+},
     {
         // Timer_6
         .BspTimer_ps.Instance = TIM6,
         .c_clock_e = FMKCPU_RCC_CLK_TIM6,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM6_DAC_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM6_DAC_IRQN
+},
     {
         // Timer_7
         .BspTimer_ps.Instance = TIM7,
         .c_clock_e = FMKCPU_RCC_CLK_TIM7,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM7_DAC_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM7_DAC_IRQN
+},
     {
         // Timer_8
         .BspTimer_ps.Instance = TIM8,
         .c_clock_e = FMKCPU_RCC_CLK_TIM8,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN
+},
     {
         // Timer_15
         .BspTimer_ps.Instance = TIM15,
         .c_clock_e = FMKCPU_RCC_CLK_TIM15,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN
+},
     {
         // Timer_16
         .BspTimer_ps.Instance = TIM16,
         .c_clock_e = FMKCPU_RCC_CLK_TIM16,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
+},
     {
         // Timer_17
         .BspTimer_ps.Instance = TIM17,
         .c_clock_e = FMKCPU_RCC_CLK_TIM17,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_TRG_COM_TIM17_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_TRG_COM_TIM17_IRQN
+},
     {
         // Timer_20
         .BspTimer_ps.Instance = TIM20,
         .c_clock_e = FMKCPU_RCC_CLK_TIM20,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN},
+        .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN
+},
 };
 
 /* CAUTION : Automatic generated code section for Timer Configuration: End */
@@ -594,21 +606,64 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(void)
     return Ret_e;
 }
 
-t_eReturnCode FMKCPU_Get_ClockFreqOscillator(t_eFMKCPU_SysClkOsc f_SysClkOsc_e, t_uint8 * f_value_pu8)
+t_eReturnCode FMKCPU_Get_PeripheryPrescaler(t_eFMKCPU_ClockPeriphExtType  f_SysClkType_e, 
+                                            t_uint8 idxRccPeriphExt_u8,
+                                            t_uint8 * bspPrescaler_pu32)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_SysClkOsc_e > FMKCPU_SYS_CLOCK_NB)
+    if(f_SysClkType_e > FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(f_value_pu8 == (t_uint8 *)NULL)
+    if(bspPrescaler_pu32 == (t_uint8 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_value_pu8 = (t_uint8)g_SysOscValues_ua8[f_SysClkOsc_e];
+        switch(f_SysClkType_e)
+        {
+            /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: Start */
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC:
+                Ret_e = FMKCPU_GetPrescalerForAdc((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG:
+                Ret_e = FMKCPU_GetPrescalerForRng((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM:
+                Ret_e = FMKCPU_GetPrescalerForTim((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART:
+                Ret_e = FMKCPU_GetPrescalerForUsart((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART:
+                Ret_e = FMKCPU_GetPrescalerForUart((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C:
+                Ret_e = FMKCPU_GetPrescalerForI2c((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB:
+                Ret_e = FMKCPU_GetPrescalerForUsb((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN:
+                Ret_e = FMKCPU_GetPrescalerForFdcan((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM:
+                Ret_e = FMKCPU_GetPrescalerForLptim((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1:
+                Ret_e = FMKCPU_GetPrescalerForSai1((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM:
+                Ret_e = FMKCPU_GetPrescalerForHrtim((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);
+                break;
+            /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: End */
+            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB:
+            default:
+                Ret_e = RC_ERROR_NOT_SUPPORTED;
+        }
+        
     }
 
     return Ret_e;

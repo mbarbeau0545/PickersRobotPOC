@@ -275,6 +275,44 @@
         FMKCPU_NVIC_NB,
     } t_eFMKCPU_IRQNType;
 
+    /* Enum for System Oscillator Clock */
+    typedef enum
+    {
+        FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to Hardware Bus HSE */
+        FMKCPU_SYS_CLOCK_HSI,                      /**< Reference to Hardware Bus HSI */
+        FMKCPU_SYS_CLOCK_SYSTEM,                   /**< Reference to Hardware Bus SYSTEM */
+        FMKCPU_SYS_CLOCK_HCLK1,                    /**< Reference to Hardware Bus HCLK1 */
+        FMKCPU_SYS_CLOCK_AHB1,                     /**< Reference to Hardware Bus AHB1 */
+        FMKCPU_SYS_CLOCK_AHB2,                     /**< Reference to Hardware Bus AHB2 */
+        FMKCPU_SYS_CLOCK_APB1,                     /**< Reference to Hardware Bus APB1 */
+        FMKCPU_SYS_CLOCK_APB2,                     /**< Reference to Hardware Bus APB2 */
+        FMKCPU_SYS_CLOCK_PLLQ,                     /**< Reference to Hardware Bus PLLQ */
+        FMKCPU_SYS_CLOCK_PLLP,                     /**< Reference to Hardware Bus PLLP */
+    
+        FMKCPU_SYS_CLOCK_NB,
+    } t_eFMKCPU_SysClkOsc;
+
+    /* Enum for Independent Clock Domain */
+    typedef enum
+    {
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC = 0x0,                /**< Reference to Independant Clock Domain ADC */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C,                      /**< Reference to Independant Clock Domain I2C */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2S,                      /**< Reference to Independant Clock Domain I2S */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM,                    /**< Reference to Independant Clock Domain LPTIM */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM,                      /**< Reference to Independant Clock Domain TIM */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPUART,                   /**< Reference to Independant Clock Domain LPUART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_QUADSPI,                  /**< Reference to Independant Clock Domain QUADSPI */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG,                      /**< Reference to Independant Clock Domain RNG */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB,                      /**< Reference to Independant Clock Domain USB */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1,                     /**< Reference to Independant Clock Domain SAI1 */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN,                    /**< Reference to Independant Clock Domain FDCAN */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART,                     /**< Reference to Independant Clock Domain UART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART,                    /**< Reference to Independant Clock Domain USART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM,                    /**< Reference to Independant Clock Domain HRTIM */
+    
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB,
+    } t_eFMKCPU_ClockPeriphExtType;
+
     /* CAUTION : Automatic generated code section for Enum: End */
   
     /**< typedef enum for channel mode */
