@@ -176,10 +176,10 @@ class FMKCPU_CodeGen():
                     if str(rcc_ref).upper() not in rcc_prsc_done:
                         rcc_ref_capitalize = str(rcc_ref).capitalize()
                         switch_rcc_prsc += f'            case {ENUM_FMKCPU_CLOCK_PERIPH_TYPE}_{str(rcc_ref).upper()}:\n' \
-                                        + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}((t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);\n' \
+                                        + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(&g_SysClockValue_ua8, (t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);\n' \
                                         +  '                break;\n'
                         osc_prsc_decl += f"    //Function to Get the Prescaler of {rcc_ref_capitalize} Configuration from {rcc_ref_capitalize} frequency constraint and the Bus used\n" \
-                                    +  f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_uint8 idx{rcc_ref_capitalize}RccClock_u8, t_uint32 * bsp{rcc_ref_capitalize}Prescaler_pu32);\n'
+                                    +  f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_uint8 * f_SysClockValue_pua8, t_uint8 f_idx{rcc_ref_capitalize}RccClock_u8, t_uint32 * f_bsp{rcc_ref_capitalize}Prescaler_pu32);\n'
                         
                         rcc_prsc_done.append(str(rcc_ref).upper())
                     

@@ -268,7 +268,7 @@
     // PLLP     -> 40  MHz
     const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_s = {
     // PLLM_Divider_u32         PPLN_Multplier_u32          PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
-        RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2
+        RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2 // 120 MHz
     };
 
     const t_uint8 c_FmkCpu_SysOscValue_ua8[FMKCPU_SYS_CLOCK_NB] = 
