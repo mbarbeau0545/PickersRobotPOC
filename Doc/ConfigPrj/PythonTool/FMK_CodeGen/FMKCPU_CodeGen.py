@@ -44,7 +44,7 @@ TARGET_PERIP_PRESCALER_END = '            /* CAUTION : Automatic generated code 
 TARGET_FUNC_PERIPH_PRESC_START = '    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: Start */\n'
 TARGET_FUNC_PERIPH_PRESC_END   = '    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: End */\n'
 
-PERIPH_CLOCK_NEED_PRESCALER = ['ADC', 'I2C', 'I2S', 'LPTIM', 'TIM', 'LPUART', 'QUADSPI', 'RNG', 'USB', 'SAI1', 'FDCAN', 'UART', 'USART', 'HRTIM']
+PERIPH_CLOCK_NEED_PRESCALER = ['ADC', 'I2C', 'I2S', 'LPTIM', 'TIM', 'LPUART', 'QUADSPI', 'RNG', 'USB', 'SAI1', 'FDCAN', 'CAN', 'UART', 'USART', 'HRTIM']
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #

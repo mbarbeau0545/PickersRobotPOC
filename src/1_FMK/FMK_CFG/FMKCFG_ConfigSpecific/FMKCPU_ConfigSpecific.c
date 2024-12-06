@@ -305,22 +305,22 @@ t_eReturnCode FMKCPU_GetPrescalerForAdc(t_uint8 * f_SysClockValue_pua8, t_uint8 
     }
     if(Ret_e == RC_OK)
     {
-        // find where come from the Adc Periph Clock
+        //---------find where come from the Adc Periph Clock-----------//
         SysclkOsc_e = c_FmkCpu_RccClockOscSrc_ae[f_idxAdcRccClock_u8];
-        // get the value on MHz of this value 
+        //---------get the value on MHz of this value-----------//
         clkOscvalue_u8 = c_FmkCpu_SysOscValue_ua8[SysclkOsc_e];
-        // An Adc Run between 40 to 60 MHz
+        //---------An Adc Run between 40 to 60 MHz-----------//
         if (clkOscvalue_u8 < 60)
         {
-            *f_bspAdcPrescaler_pu32 = (t_uint8)1
+            *f_bspAdcPrescaler_pu32 = (t_uint8)ADC_CLOCK_ASYNC_DIV1;
         }
         else if((t_uint8)60>clkOscvalue_u8 > (t_uint8)120)
         {
-            *f_bspAdcPrescaler_pu32 = (t_uint32)2 ;
+            *f_bspAdcPrescaler_pu32 = (t_uint32)ADC_CLOCK_ASYNC_DIV2 ;
         }
         else if(clkOscvalue_u8 > (t_uint8)120)
         {
-            *f_bspAdcPrescaler_pu32 = (t_uint8)3;
+            *f_bspAdcPrescaler_pu32 = (t_uint8)ADC_CLOCK_ASYNC_DIV4;
         }
         else 
         {
