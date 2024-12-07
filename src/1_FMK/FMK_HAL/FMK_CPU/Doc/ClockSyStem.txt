@@ -7,7 +7,7 @@ Le but est à partir de la configuration des hologes du bus l'argument des fonct
 
 Pour un exemple d'implémentation regarder la fonction FMKCPU_GetPrescalerForAdc, 
 Pour un exemple d'implémentation des valeurs des Clock Systems voir FMKCPU_ConfigPrivate
-    regarder c_FmkCpu_SysOscValue_ua8, c'est la variable qui sera transmis en tant que pointeur dans l'argument f_SysClockValue_pua8
+    regarder c_FmkCpu_CoreClkValue_ua8, c'est la variable qui sera transmis en tant que pointeur dans l'argument f_SysClockValue_pua8
     donc pour y faire référence (regarder l'implémentation de FMKCPU_GetPrescalerForAdc)
     Il faut l'utiliser comme un tableau où l'index est un enum de t_eFMKCPU_SysClkOsc 
 

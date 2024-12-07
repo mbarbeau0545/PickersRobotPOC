@@ -18,7 +18,6 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    #include "./FMKCPU_ConfigPublic.h"
     #include "../FMKCFG_ConfigSpecific/FMKCPU_ConfigSpecific.h"
     #include "TypeCommon.h"
     // ********************************************************************
@@ -38,6 +37,8 @@
     #define FMKCPU_MAX_CHNL_TIMER_17 ((t_uint8)1)
     #define FMKCPU_MAX_CHNL_TIMER_20 ((t_uint8)4)
     /* CAUTION : Automatic generated code section for Timer channels number: End */
+
+
     #define FMKCPU_TIMER_PWM_PSC         ((t_uint8)50)       /**<  for every PWM the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_PSC          ((t_uint8)20)        /**<  for every InputCOmpare the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_ARR          ((t_uint16)0xFFFF)       /**<  for every InputCOmpare the Prescaler is a constant */
@@ -266,26 +267,38 @@
     // APB2     -> 60  MHz
     // PLLQ     -> 60  MHz
     // PLLP     -> 40  MHz
-    const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_s = {
-    // PLLM_Divider_u32         PPLN_Multplier_u32          PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
-        RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2 // 120 MHz
+    const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_as[FMKCPU_CORE_CLOCK_SPEED_NB] = {
+    //   PLLM_Divider_u32         PPLN_Multplier_u32         PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, // FMKCPU_CORE_CLOCK_SPEED_8MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_16MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_32MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_40MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_48MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_64MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_132MHZ
+        {RCC_PLLM_DIV2,         (t_uint32)30,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV4,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_160MHZ
     };
 
-    const t_uint8 c_FmkCpu_SysOscValue_ua8[FMKCPU_SYS_CLOCK_NB] = 
-    {
-        (t_uint8)16,     // FMKCPU_SYS_CLOCK_HSI
-        (t_uint8)120,    // FMKCPU_SYS_CLOCK_CORE
-        (t_uint8)120,    // FMKCPU_SYS_CLOCK_HCLK
-        (t_uint8)30,     // FMKCPU_SYS_CLOCK_APB1
-        (t_uint8)60,     // FMKCPU_SYS_CLOCK_APB2
-        (t_uint8)120,    // FMKCPU_SYS_CLOCK_PLLQ
-        (t_uint8)40,     // FMKCPU_SYS_CLOCK_PLLP
+    const t_uint8 c_FmkCpu_CoreClkValue_ua8[FMKCPU_CORE_CLOCK_SPEED_NB][FMKCPU_SYS_CLOCK_NB] = 
+    {//               HSE                           HSI                             SYSTEM                           HCLK1                         AHB1                          AHB2                          APB1                          APB2                          PLLQ                          PLLP 
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_8MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_16MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_32MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_40MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_48MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_64MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_132MHZ
+        {FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,   FMKCPU_CORE_CLOCK_SPEED_8MHZ,    FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ, FMKCPU_CORE_CLOCK_SPEED_8MHZ,},  //  FMKCPU_CORE_CLOCK_SPEED_160MHZ
     };
 #elif defined FMKCPU_STM32_ECU_FAMILY_F
     const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_s = {
     // PLLM_Divider_u32         PPLN_Multplier_u32          PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
     };
-    const t_uint8 c_FmkCpu_SysOscValue_ua8[FMKCPU_SYS_CLOCK_NB] = 
+    const t_uint8 c_FmkCpu_CoreClkValue_ua8[FMKCPU_SYS_CLOCK_NB] = 
     {
         (t_uint8)0,     // FMKCPU_SYS_CLOCK_HSI
         (t_uint8)0,    // FMKCPU_SYS_CLOCK_CORE
@@ -296,6 +309,39 @@
         (t_uint8)0,     // FMKCPU_SYS_CLOCK_PLLP
     };
 #endif
+
+    const t_uint32 c_FmkCpu_ClkSpeedFreqValueMhz_ua8[FMKCPU_CORE_CLOCK_SPEED_NB] = {
+        (t_uint32)(8  ),//  FMKCPU_CORE_CLOCK_SPEED_8MHZ
+        (t_uint32)(16 ),//  FMKCPU_CORE_CLOCK_SPEED_16MHZ
+        (t_uint32)(32 ),//  FMKCPU_CORE_CLOCK_SPEED_32MHZ
+        (t_uint32)(40 ),//  FMKCPU_CORE_CLOCK_SPEED_40MHZ
+        (t_uint32)(48 ),//  FMKCPU_CORE_CLOCK_SPEED_48MHZ
+        (t_uint32)(64 ),//  FMKCPU_CORE_CLOCK_SPEED_64MHZ
+        (t_uint32)(80 ),//  FMKCPU_CORE_CLOCK_SPEED_80MHZ
+        (t_uint32)(96 ),//  FMKCPU_CORE_CLOCK_SPEED_96MHZ
+        (t_uint32)(132),//  FMKCPU_CORE_CLOCK_SPEED_132MHZ
+        (t_uint32)(160),//  FMKCPU_CORE_CLOCK_SPEED_160MHZ
+    };
+
+    /**< Referencing all HAL_TIM function*/
+    const t_sFMKCPU_TimChannelFunc c_FMKCPU_BspTimFunc_apf[FMKCPU_HWTIM_CFG_NB] = 
+    {//    Get Timer State                 Init Timer                       DeInitTimer                   StartPolling Func                StopPolling Funnc            Start Interrupt Func             Stop Interrupt Func
+        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT},         // FMKCPU_CHANNEL_CFG_PWM 
+        {HAL_TIM_IC_GetState,              HAL_TIM_IC_Init,                 HAL_TIM_IC_DeInit,            HAL_TIM_IC_Start,                HAL_TIM_IC_Stop,              HAL_TIM_IC_Start_IT,            HAL_TIM_IC_Stop_IT},          // FMKCPU_CHANNEL_CFG_IC
+        {HAL_TIM_OC_GetState,              HAL_TIM_OC_Init,                 HAL_TIM_OC_DeInit,            HAL_TIM_OC_Start,                HAL_TIM_OC_Stop,              HAL_TIM_OC_Start_IT,            HAL_TIM_OC_Stop_IT},          // FMKCPU_CHANNEL_CFG_OC
+        {HAL_TIM_OnePulse_GetState,        NULL_FONCTION,                   HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT},    // FMKCPU_CHANNEL_CFG_OP
+        {HAL_TIM_Base_GetState,            HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT}, // FMKCPU_CHANNEL_CFG_EVNT
+        {HAL_TIM_Encoder_GetState,         NULL_FONCTION,                   HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT},     // FMKCPU_CHANNEL_CFG_ECDR
+    };
+
+    /**< Hardware configuration watchdog Period Timer */
+    const t_sFMKCPU_BspWwdgCfg c_FMKCPU_WwdgPeriodcfg_ua16[FMKCPU_WWDG_RESET_NB] = {
+        // prescaler value         reload value
+        {WWDG_PRESCALER_1,          98}, // FMKCPU_WWDG_RESET_50MS
+        {WWDG_PRESCALER_2,          98}, // FMKCPU_WWDG_RESET_100MS
+        {WWDG_PRESCALER_4,          98}, // FMKCPU_WWDG_RESET_200MS
+        {WWDG_PRESCALER_8,          122},// FMKCPU_WWDG_RESET_500MS
+    };
 
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< General Purpose Timer Channel Mapping */
@@ -605,26 +651,6 @@
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */
-
-    /**< Referencing all HAL_TIM function*/
-    const t_sFMKCPU_TimChannelFunc c_FMKCPU_BspTimFunc_apf[FMKCPU_HWTIM_CFG_NB] = 
-    {//    Get Timer State                 Init Timer                       DeInitTimer                   StartPolling Func                StopPolling Funnc            Start Interrupt Func             Stop Interrupt Func
-        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT},         // FMKCPU_CHANNEL_CFG_PWM 
-        {HAL_TIM_IC_GetState,              HAL_TIM_IC_Init,                 HAL_TIM_IC_DeInit,            HAL_TIM_IC_Start,                HAL_TIM_IC_Stop,              HAL_TIM_IC_Start_IT,            HAL_TIM_IC_Stop_IT},          // FMKCPU_CHANNEL_CFG_IC
-        {HAL_TIM_OC_GetState,              HAL_TIM_OC_Init,                 HAL_TIM_OC_DeInit,            HAL_TIM_OC_Start,                HAL_TIM_OC_Stop,              HAL_TIM_OC_Start_IT,            HAL_TIM_OC_Stop_IT},          // FMKCPU_CHANNEL_CFG_OC
-        {HAL_TIM_OnePulse_GetState,        NULL_FONCTION,                   HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT},    // FMKCPU_CHANNEL_CFG_OP
-        {HAL_TIM_Base_GetState,            HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT}, // FMKCPU_CHANNEL_CFG_EVNT
-        {HAL_TIM_Encoder_GetState,         NULL_FONCTION,                   HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT},     // FMKCPU_CHANNEL_CFG_ECDR
-    };
-
-    /**< Hardware configuration watchdog Period Timer */
-    const t_sFMKCPU_BspWwdgCfg c_FMKCPU_WwdgPeriodcfg_ua16[FMKCPU_WWDG_RESET_NB] = {
-        // prescaler value         reload value
-        {WWDG_PRESCALER_1,          98}, // FMKCPU_WWDG_RESET_50MS
-        {WWDG_PRESCALER_2,          98}, // FMKCPU_WWDG_RESET_100MS
-        {WWDG_PRESCALER_4,          98}, // FMKCPU_WWDG_RESET_200MS
-        {WWDG_PRESCALER_8,          122},// FMKCPU_WWDG_RESET_500MS
-    };
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

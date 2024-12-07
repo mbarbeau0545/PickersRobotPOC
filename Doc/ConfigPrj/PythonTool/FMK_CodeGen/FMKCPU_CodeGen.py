@@ -175,11 +175,17 @@ class FMKCPU_CodeGen():
                 if str(rcc_ref).upper() in str(rcc_cfg[0]).upper():
                     if str(rcc_ref).upper() not in rcc_prsc_done:
                         rcc_ref_capitalize = str(rcc_ref).capitalize()
-                        switch_rcc_prsc += f'            case {ENUM_FMKCPU_CLOCK_PERIPH_TYPE}_{str(rcc_ref).upper()}:\n' \
-                                        + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(&g_SysClockValue_ua8, (t_uint8)idxRccPeriphExt_u8, &bspPrescaler_pu32);\n' \
-                                        +  '                break;\n'
                         osc_prsc_decl += f"    //Function to Get the Prescaler of {rcc_ref_capitalize} Configuration from {rcc_ref_capitalize} frequency constraint and the Bus used\n" \
-                                    +  f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_uint8 * f_SysClockValue_pua8, t_uint8 f_idx{rcc_ref_capitalize}RccClock_u8, t_uint32 * f_bsp{rcc_ref_capitalize}Prescaler_pu32);\n'
+                                     + f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_eFMKCPU_SysClkOsc f_{rcc_ref_capitalize}OscSrc_e,\n' \
+                                     + f'                                            t_uint8 f_{rcc_ref_capitalize}OscValue_u8,\n' \
+                                     + f'                                            t_uint8 f_idx{rcc_ref_capitalize}RccClock_u8,\n' \
+                                     + f'                                            t_uint32 * f_bsp{rcc_ref_capitalize}Prescaler_pu32);\n\n'
+                        switch_rcc_prsc += f'            case {ENUM_FMKCPU_CLOCK_PERIPH_TYPE}_{str(rcc_ref).upper()}:\n' \
+                                        + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(OscPeriphSrc_e,\n' \
+                                        +  '                                                 OscSrcValue_u8,\n' \
+                                        +  '                                                (t_uint8)f_idxRccPeriphExt_u8\n,' \
+                                        + f'                                                f_bspPrescaler_pu32);\n' \
+                                        +  '                break;\n'
                         
                         rcc_prsc_done.append(str(rcc_ref).upper())
                     
@@ -402,10 +408,6 @@ class FMKCPU_CodeGen():
         print("\t- For configPublic file")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE,TARGET_T_ENUM_END_LINE)
 
-        print('\t\t enum for oscillator management')
-        cls.code_gen._write_into_file(enum_clokc_periph_ext, FMKCPU_CONFIGPUBLIC)
-        cls.code_gen._write_into_file(enum_osc_freq, FMKCPU_CONFIGPUBLIC)
-
         print("\t\t- enum for NVIC available in this stm")
         cls.code_gen._write_into_file(enum_nvic, FMKCPU_CONFIGPUBLIC)
 
@@ -421,7 +423,9 @@ class FMKCPU_CodeGen():
         print('\t\t- enum for general purpose timer')
         cls.code_gen._write_into_file(enum_it_lines_gp, FMKCPU_CONFIGPUBLIC)
 
-        
+        print('\t\t enum for oscillator management')
+        cls.code_gen._write_into_file(enum_clokc_periph_ext, FMKCPU_CONFIGPUBLIC)
+        cls.code_gen._write_into_file(enum_osc_freq, FMKCPU_CONFIGPUBLIC)
 
         print("\t\t include for cpu")
         cls.code_gen.change_target_balise(TARGET_CPU_CFG_START,TARGET_CPU_CFG_END)

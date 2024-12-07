@@ -78,34 +78,35 @@ static t_eReturnCode s_APPSYS_Set_ModulesCyclic();
 void APPSYS_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool s_IsSysCfgDone_b = False;
+    static t_bool s_IsModInitDone_b = False;
     t_uint8 modIndex_u8 = 0;
-    // set sys confgiguration 
-    if( s_IsSysCfgDone_b == (t_bool)False)
-    {
-        Ret_e = FMKCPU_Set_HardwareInit();
-        if(Ret_e == RC_OK)
-        {
-            Ret_e = FMKCPU_Set_SysClockCfg();
-        }
-        if(Ret_e == RC_OK)
-        {
-            //Ret_e = FMKCPU_Set_WwdgCfg((t_eFMKCPu_WwdgResetPeriod)FMKCPU_WWDG_RESET_CFG);
-        }
-        if(Ret_e == RC_OK)
-        {
-            s_IsSysCfgDone_b = (t_bool)True;
-        }
-    }
-    if(Ret_e == RC_OK)
+    // set sys confgiguration
+    if( s_IsModInitDone_b == (t_bool)False)
     {
         for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 < APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
             Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].Init_pcb();
         }
+        if(Ret_e == RC_OK)
+        {
+            s_IsModInitDone_b = (t_bool)True;
+        }
     }
-    else
+    if(Ret_e == RC_OK)
     {
+        Ret_e = FMKCPU_Set_HardwareInit();
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = FMKCPU_Set_SysClockCfg(APPSYS_SYSTEM_CORE_SPEED);
+        }
+        if(Ret_e == RC_OK)
+        {
+            //Ret_e = FMKCPU_Set_WwdgCfg((t_eFMKCPu_WwdgResetPeriod)FMKCPU_WWDG_RESET_CFG);
+        }
+        
+    }
+    if(Ret_e != RC_OK)
+    {    
         g_AppSysModuleState_e = STATE_CYCLIC_ERROR;
     }
     return;

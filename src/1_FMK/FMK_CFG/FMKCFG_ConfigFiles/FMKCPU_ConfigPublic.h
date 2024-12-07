@@ -24,6 +24,7 @@
     /* CAUTION : Automatic generated code section for CPU Configuration: End */
     // flag automatic generate code
     #include "TypeCommon.h"
+    #include "Constant.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -36,7 +37,58 @@
     // ********************************************************************
     // *                      Types
     // ********************************************************************
+    /**< Clock Core System Frequency Speed */
+    typedef enum
+    {
+        FMKCPU_CORE_CLOCK_SPEED_8MHZ = 0x0U,    /**< Core CLock Speed Run at 8Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_16MHZ,          /**< Core CLock Speed Run at 16Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_32MHZ,          /**< Core CLock Speed Run at 32Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_40MHZ,          /**< Core CLock Speed Run at 40Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_48MHZ,          /**< Core CLock Speed Run at 48Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_64MHZ,          /**< Core CLock Speed Run at 64Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_80MHZ,          /**< Core CLock Speed Run at 80Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_96MHZ,          /**< Core CLock Speed Run at 96Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_132MHZ,         /**< Core CLock Speed Run at 132Mhz */
+        FMKCPU_CORE_CLOCK_SPEED_160MHZ,         /**< Core CLock Speed Run at 160Mhz */
+
+        FMKCPU_CORE_CLOCK_SPEED_NB,             /**< Core CLock Speed Run Number */
+        FMKCPU_CORE_CLOCK_SPEED_UNKNOWN,             /**< Core CLock Speed Run Number */
+    } t_eFMKCPU_CoreClockSpeed;
+    /**< typedef enum for channel mode */
+    typedef enum 
+    {
+        FMKCPU_HWTIM_CFG_PWM = 0x0U,        /**< Timer configuration in PWM mode */
+        FMKCPU_HWTIM_CFG_IC,                /**< Timer configuration in Input Capture mode */
+        FMKCPU_HWTIM_CFG_OC,                /**< Timer configuration in Ouput Compare mode */
+        FMKCPU_HWTIM_CFG_OP,                /**< Timer configuration in One Pulse mode */
+        FMKCPU_HWTIM_CFG_EVNT,              /**< Timer configuration in Event mode */
+        FMKCPU_HWTIM_CFG_ECDR,              /**< Timer configuration in encoder mode */
+        FMKCPU_HWTIM_CFG_DAC,               /**< Timer configuration in Dac mode */
+
+        FMKCPU_HWTIM_CFG_NB,                /**< Number of timer configuration mode*/
+    } t_eFMKCPU_HwTimerCfg;
+
+    /**< Enum for NVIC priority */
+    typedef enum 
+    {
+        FMKCPU_NVIC_PRIORITY_LOW = 0x0U,    /**< Reference to bsp priority low value */
+        FMKCPU_NVIC_PRIORITY_MEDIUM,        /**< Reference to bsp priority medium value */
+        FMKCPU_NVIC_PRIORITY_HIGH,          /**< Reference to bsp priority high value */
+
+        FMKCPU_NVIC_PRIORITY_NB             /**< Number of reference to bsp priority */
+    } t_eFMKCPU_NVICPriority;
+
     
+    /**< Enum for watchdog timer list */
+    typedef enum
+    {
+        FMKCPU_WWDG_RESET_50MS = 0,     /**< Watchdogs reset parameter is 50 ms */
+        FMKCPU_WWDG_RESET_100MS,        /**< Watchdogs reset parameter is 100 ms */
+        FMKCPU_WWDG_RESET_200MS,        /**< Watchdogs reset parameter is 200 ms */
+        FMKCPU_WWDG_RESET_500MS,        /**< Watchdogs reset parameter is 500 ms */
+
+        FMKCPU_WWDG_RESET_NB,           /**< Number of watchdogs reset parameter  */
+    } t_eFMKCPu_WwdgResetPeriod;
     //-----------------------------ENUM TYPES-----------------------------//
     /**< Interrupt Line Type */
     typedef enum 
@@ -48,6 +100,45 @@
         FMKCPU_INTERRUPT_LINE_TYPE_NB,
     } t_eFMKCPU_InterruptLineType;
     /* CAUTION : Automatic generated code section for Enum: Start */
+    /* Enum for System Oscillator Clock */
+    typedef enum
+    {
+        FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to Hardware Bus HSE */
+        FMKCPU_SYS_CLOCK_HSI,                      /**< Reference to Hardware Bus HSI */
+        FMKCPU_SYS_CLOCK_SYSTEM,                   /**< Reference to Hardware Bus SYSTEM */
+        FMKCPU_SYS_CLOCK_HCLK1,                    /**< Reference to Hardware Bus HCLK1 */
+        FMKCPU_SYS_CLOCK_AHB1,                     /**< Reference to Hardware Bus AHB1 */
+        FMKCPU_SYS_CLOCK_AHB2,                     /**< Reference to Hardware Bus AHB2 */
+        FMKCPU_SYS_CLOCK_APB1,                     /**< Reference to Hardware Bus APB1 */
+        FMKCPU_SYS_CLOCK_APB2,                     /**< Reference to Hardware Bus APB2 */
+        FMKCPU_SYS_CLOCK_PLLQ,                     /**< Reference to Hardware Bus PLLQ */
+        FMKCPU_SYS_CLOCK_PLLP,                     /**< Reference to Hardware Bus PLLP */
+    
+        FMKCPU_SYS_CLOCK_NB,
+    } t_eFMKCPU_SysClkOsc;
+
+    /* Enum for Independent Clock Domain */
+    typedef enum
+    {
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC = 0x0,                /**< Reference to Independant Clock Domain ADC */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C,                      /**< Reference to Independant Clock Domain I2C */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2S,                      /**< Reference to Independant Clock Domain I2S */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM,                    /**< Reference to Independant Clock Domain LPTIM */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM,                      /**< Reference to Independant Clock Domain TIM */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPUART,                   /**< Reference to Independant Clock Domain LPUART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_QUADSPI,                  /**< Reference to Independant Clock Domain QUADSPI */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG,                      /**< Reference to Independant Clock Domain RNG */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB,                      /**< Reference to Independant Clock Domain USB */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1,                     /**< Reference to Independant Clock Domain SAI1 */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN,                    /**< Reference to Independant Clock Domain FDCAN */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_CAN,                      /**< Reference to Independant Clock Domain CAN */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART,                     /**< Reference to Independant Clock Domain UART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART,                    /**< Reference to Independant Clock Domain USART */
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM,                    /**< Reference to Independant Clock Domain HRTIM */
+    
+        FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB,
+    } t_eFMKCPU_ClockPeriphExtType;
+
     /* Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse */
     typedef enum
     {
@@ -275,94 +366,9 @@
         FMKCPU_NVIC_NB,
     } t_eFMKCPU_IRQNType;
 
-    /* Enum for System Oscillator Clock */
-    typedef enum
-    {
-        FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to Hardware Bus HSE */
-        FMKCPU_SYS_CLOCK_HSI,                      /**< Reference to Hardware Bus HSI */
-        FMKCPU_SYS_CLOCK_SYSTEM,                   /**< Reference to Hardware Bus SYSTEM */
-        FMKCPU_SYS_CLOCK_HCLK1,                    /**< Reference to Hardware Bus HCLK1 */
-        FMKCPU_SYS_CLOCK_AHB1,                     /**< Reference to Hardware Bus AHB1 */
-        FMKCPU_SYS_CLOCK_AHB2,                     /**< Reference to Hardware Bus AHB2 */
-        FMKCPU_SYS_CLOCK_APB1,                     /**< Reference to Hardware Bus APB1 */
-        FMKCPU_SYS_CLOCK_APB2,                     /**< Reference to Hardware Bus APB2 */
-        FMKCPU_SYS_CLOCK_PLLQ,                     /**< Reference to Hardware Bus PLLQ */
-        FMKCPU_SYS_CLOCK_PLLP,                     /**< Reference to Hardware Bus PLLP */
-    
-        FMKCPU_SYS_CLOCK_NB,
-    } t_eFMKCPU_SysClkOsc;
-
-    /* Enum for Independent Clock Domain */
-    typedef enum
-    {
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC = 0x0,                /**< Reference to Independant Clock Domain ADC */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C,                      /**< Reference to Independant Clock Domain I2C */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2S,                      /**< Reference to Independant Clock Domain I2S */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM,                    /**< Reference to Independant Clock Domain LPTIM */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM,                      /**< Reference to Independant Clock Domain TIM */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPUART,                   /**< Reference to Independant Clock Domain LPUART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_QUADSPI,                  /**< Reference to Independant Clock Domain QUADSPI */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG,                      /**< Reference to Independant Clock Domain RNG */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB,                      /**< Reference to Independant Clock Domain USB */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1,                     /**< Reference to Independant Clock Domain SAI1 */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN,                    /**< Reference to Independant Clock Domain FDCAN */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART,                     /**< Reference to Independant Clock Domain UART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART,                    /**< Reference to Independant Clock Domain USART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM,                    /**< Reference to Independant Clock Domain HRTIM */
-    
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB,
-    } t_eFMKCPU_ClockPeriphExtType;
-
     /* CAUTION : Automatic generated code section for Enum: End */
   
-    /**< typedef enum for channel mode */
-    typedef enum 
-    {
-        FMKCPU_HWTIM_CFG_PWM = 0x0U,        /**< Timer configuration in PWM mode */
-        FMKCPU_HWTIM_CFG_IC,                /**< Timer configuration in Input Capture mode */
-        FMKCPU_HWTIM_CFG_OC,                /**< Timer configuration in Ouput Compare mode */
-        FMKCPU_HWTIM_CFG_OP,                /**< Timer configuration in One Pulse mode */
-        FMKCPU_HWTIM_CFG_EVNT,              /**< Timer configuration in Event mode */
-        FMKCPU_HWTIM_CFG_ECDR,              /**< Timer configuration in encoder mode */
-        FMKCPU_HWTIM_CFG_DAC,               /**< Timer configuration in Dac mode */
-
-        FMKCPU_HWTIM_CFG_NB,                /**< Number of timer configuration mode*/
-    } t_eFMKCPU_HwTimerCfg;
-
-    /**< Enum for NVIC priority */
-    typedef enum 
-    {
-        FMKCPU_NVIC_PRIORITY_LOW = 0x0U,    /**< Reference to bsp priority low value */
-        FMKCPU_NVIC_PRIORITY_MEDIUM,        /**< Reference to bsp priority medium value */
-        FMKCPU_NVIC_PRIORITY_HIGH,          /**< Reference to bsp priority high value */
-
-        FMKCPU_NVIC_PRIORITY_NB             /**< Number of reference to bsp priority */
-    } t_eFMKCPU_NVICPriority;
-
-    /**< Enum for System Oscillator Clock */
-    typedef enum 
-    {
-        FMKCPU_SYS_CLOCK_HSI = 0x00,
-        FMKCPU_SYS_CLOCK_CORE,
-        FMKCPU_SYS_CLOCK_HCLK,
-        FMKCPU_SYS_CLOCK_APB1,
-        FMKCPU_SYS_CLOCK_APB2,
-        FMKCPU_SYS_CLOCK_PLLQ,
-        FMKCPU_SYS_CLOCK_PLLP,
-
-        FMKCPU_SYS_CLOCK_NB,
-    } t_eFMKCPU_SysClkOsc;
     
-    /**< Enum for watchdog timer list */
-    typedef enum
-    {
-        FMKCPU_WWDG_RESET_50MS = 0,     /**< Watchdogs reset parameter is 50 ms */
-        FMKCPU_WWDG_RESET_100MS,        /**< Watchdogs reset parameter is 100 ms */
-        FMKCPU_WWDG_RESET_200MS,        /**< Watchdogs reset parameter is 200 ms */
-        FMKCPU_WWDG_RESET_500MS,        /**< Watchdogs reset parameter is 500 ms */
-
-        FMKCPU_WWDG_RESET_NB,           /**< Number of watchdogs reset parameter  */
-    } t_eFMKCPu_WwdgResetPeriod;
     //-----------------------------TYPEDEF TYPES---------------------------//
     // ********************************************************************
     // *                      Prototypes
@@ -371,8 +377,6 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
-    
-
 
     //********************************************************************************
     //                      Public functions - Prototyupes
