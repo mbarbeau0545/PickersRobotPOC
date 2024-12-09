@@ -284,16 +284,24 @@ void FMKCPU_Disable_SAI1_Clock(void) {__HAL_RCC_SAI1_CLK_DISABLE();}
 void FMKCPU_Disable_HRTIM1_Clock(void) {__HAL_RCC_HRTIM1_CLK_DISABLE();}
 /* CAUTION : Automatic generated code section for Disable Clk Implementation: End */
 
+/**< This function has been made to filled in c_FMKCPU_bspTimFunc_apf */
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start(htim);}
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop(htim);}
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start_IT(htim);}
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_IT(htim);}
+
 
 //Function to Get the Prescaler of Adc Configuration from Adc frequency constraint and the Bus used
 t_eReturnCode FMKCPU_GetPrescalerForAdc(t_eFMKCPU_SysClkOsc f_AdcOscSrc_e,
-                                            t_uint8 f_AdcOscValue_u8,
+                                            t_eFMKCPU_CoreClockSpeed * f_SysClockValues_pae,
                                             t_uint8 f_idxAdcRccClock_u8,
                                             t_uint32 * f_bspAdcPrescaler_pu32)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_eFMKCPU_CoreClockSpeed OscAdcSrcValue_e;
 
-    if(f_bspAdcPrescaler_pu32 == (t_uint32 *)NULL)
+    if((f_bspAdcPrescaler_pu32 == (t_uint32 *)NULL)
+    || (f_SysClockValues_pae == (t_eFMKCPU_CoreClockSpeed *)NULL))
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -304,23 +312,25 @@ t_eReturnCode FMKCPU_GetPrescalerForAdc(t_eFMKCPU_SysClkOsc f_AdcOscSrc_e,
     }
     if(Ret_e == RC_OK)
     {
-        if (f_AdcOscValue_u8 < 60)
+        OscAdcSrcValue_e = f_SysClockValues_pae[f_AdcOscSrc_e];
+
+        if (OscAdcSrcValue_e < FMKCPU_CORE_CLOCK_SPEED_64MHZ)
         {
             *f_bspAdcPrescaler_pu32 = (t_uint8)ADC_CLOCK_ASYNC_DIV1;
         }
-        else if((f_AdcOscValue_u8 > (t_uint8)60)  
-           && (f_AdcOscValue_u8 < (t_uint8)120))
+        else if((OscAdcSrcValue_e >= (t_uint8)FMKCPU_CORE_CLOCK_SPEED_64MHZ)  
+           && (OscAdcSrcValue_e < (t_uint8)FMKCPU_CORE_CLOCK_SPEED_132MHZ))
         {
             *f_bspAdcPrescaler_pu32 = (t_uint32)ADC_CLOCK_ASYNC_DIV2 ;
         }
-        else if(f_AdcOscValue_u8 > (t_uint8)120)
+        else if(OscAdcSrcValue_e >= (t_uint8)FMKCPU_CORE_CLOCK_SPEED_132MHZ)
         {
             *f_bspAdcPrescaler_pu32 = (t_uint8)ADC_CLOCK_ASYNC_DIV4;
         }
         else 
         {
-            // etc
-
+            *f_bspAdcPrescaler_pu32 = (t_uint32)0;
+            Ret_e = RC_WARNING_NO_OPERATION;
         }
     }
     return Ret_e;
@@ -332,16 +342,34 @@ t_eReturnCode FMKCPU_GetPrescalerForRng(t_eFMKCPU_SysClkOsc f_RngOscSrc_e,
                                         t_uint32 * f_bspRngPrescaler_pu32)
 {
     t_eReturnCode Ret_e = RC_OK;
-
+    
     return Ret_e;  
 }
 //Function to Get the Prescaler of Tim Configuration from Tim frequency constraint and the Bus used
 t_eReturnCode FMKCPU_GetPrescalerForTim(t_eFMKCPU_SysClkOsc f_TimOscSrc_e,
-                                        t_uint8 f_TimOscValue_u8,
-                                        t_uint8 f_idxTimRccClock_u8,
-                                        t_uint32 * f_bspTimPrescaler_pu32)
+                                            t_eFMKCPU_CoreClockSpeed * f_SysClockValues_pae,
+                                            t_uint8 f_idxTimRccClock_u8,
+                                            t_uint32 * f_bspTimPrescaler_pu32)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_eFMKCPU_CoreClockSpeed OscTimSrcValue_e;
+
+    if((f_bspTimPrescaler_pu32 == (t_uint32 *)NULL)
+    || (f_SysClockValues_pae == (t_eFMKCPU_CoreClockSpeed *)NULL))
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if((f_idxTimRccClock_u8 > FMKCPU_RCC_CLK_NB)
+    || (f_TimOscSrc_e > FMKCPU_SYS_CLOCK_NB))
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        // Timer depend on APB1 or APB2, if these clock were divided per 2 or more,
+        // Hardware mutliply by 2 the core freqency of the timer
+        // In other word
+    }
 
     return Ret_e;  
 }
@@ -435,11 +463,6 @@ t_eReturnCode FMKCPU_GetPrescalerForHrtim(t_eFMKCPU_SysClkOsc f_HrtimOscSrc_e,
 
     return Ret_e;   
 }
-/**< This function has been made to filled in c_FMKCPU_bspTimFunc_apf */
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start_IT(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_IT(htim);}
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************

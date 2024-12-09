@@ -15,3 +15,6 @@ Concernant la valeur de retour 'f_bspAdcPrescaler_pu32', c'est souvent un define
 ADC c'est des trucs du genre ADC_CLOCK_ASYNC_DIV1 ou ADC_CLOCK_SYNC_DIV1 suivant l'horloge
 Pour FDCAN c'est FDCAN_CLOCK_DIV1 etc etc
 Contacte-me avec ta beuteu pour plus d'information 
+
+---------Determination des fréquences d'horloges à partir du SysClk----------------
+AHB1 = SYSCLK / 

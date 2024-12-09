@@ -638,73 +638,73 @@ t_eReturnCode FMKCPU_Get_PeripheryPrescaler(t_eFMKCPU_ClockPeriphExtType  f_SysC
             /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: Start */
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC:
                 Ret_e = FMKCPU_GetPrescalerForAdc(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG:
                 Ret_e = FMKCPU_GetPrescalerForRng(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM:
                 Ret_e = FMKCPU_GetPrescalerForTim(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART:
                 Ret_e = FMKCPU_GetPrescalerForUsart(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART:
                 Ret_e = FMKCPU_GetPrescalerForUart(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C:
                 Ret_e = FMKCPU_GetPrescalerForI2c(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB:
                 Ret_e = FMKCPU_GetPrescalerForUsb(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN:
                 Ret_e = FMKCPU_GetPrescalerForFdcan(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_CAN:
                 Ret_e = FMKCPU_GetPrescalerForCan(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM:
                 Ret_e = FMKCPU_GetPrescalerForLptim(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1:
                 Ret_e = FMKCPU_GetPrescalerForSai1(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
             case FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM:
                 Ret_e = FMKCPU_GetPrescalerForHrtim(OscPeriphSrc_e,
-                                                 OscSrcValue_u8,
+                                                 &g_SysClockValue_ae,
                                                 (t_uint8)f_idxRccPeriphExt_u8
 ,                                                f_bspPrescaler_pu32);
                 break;
