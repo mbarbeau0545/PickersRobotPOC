@@ -1,20 +1,3 @@
-Il faut implémenter les fonctions dans le fichier situé à src\1_FMK\FMK_CFG\FMKCFG_ConfigSpecific\FMKCPU_ConfigSpecific.c
-vers la ligne 300. 
-
-Le but est à partir de la configuration des hologes du bus l'argument des fonctions 'f_SysClockValue_pua8' et en fonction du registre donné 
-'f_idxAdcRccClock_u8 (par exemple)', donné la valeur du prescaler pour que la fréquence de clock pour le registre soit la plus adapté 
-    (prescaler utilisé dans la structure d'init)
-
-Pour un exemple d'implémentation regarder la fonction FMKCPU_GetPrescalerForAdc, 
-Pour un exemple d'implémentation des valeurs des Clock Systems voir FMKCPU_ConfigPrivate
-    regarder c_FmkCpu_CoreClkValue_ua8, c'est la variable qui sera transmis en tant que pointeur dans l'argument f_SysClockValue_pua8
-    donc pour y faire référence (regarder l'implémentation de FMKCPU_GetPrescalerForAdc)
-    Il faut l'utiliser comme un tableau où l'index est un enum de t_eFMKCPU_SysClkOsc 
-
-Concernant la valeur de retour 'f_bspAdcPrescaler_pu32', c'est souvent un define propre à chaque libraire par exemple pour
-ADC c'est des trucs du genre ADC_CLOCK_ASYNC_DIV1 ou ADC_CLOCK_SYNC_DIV1 suivant l'horloge
-Pour FDCAN c'est FDCAN_CLOCK_DIV1 etc etc
-Contacte-me avec ta beuteu pour plus d'information 
-
----------Determination des fréquences d'horloges à partir du SysClk----------------
-AHB1 = SYSCLK / 
+POur le prescaler de l'init chacun gère sa merde, FMKCPU fourni deux API
+une pour connaître les valeurs de fréquence des horloges et une autre pour savoir 
+quel est la source de l'horloge d'un périphérique.

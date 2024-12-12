@@ -32,6 +32,11 @@
     #define FMKCPU_STM32_ECU_FAMILY_G ((t_uint8)1)
     //#define FMKCPU_STM32_ECU_FAMILY_F ((t_uint8)0)
     
+    #define FMKCPU_FREQ_COMPUTE_DELTA_ACCEPTANCE ((t_float32)0.5)
+    #define FMKCPU_ARR_LOW_LIMIT_16BIT  ((t_uint32)0xC350)     // 50000
+    #define FMKCPU_ARR_HIGH_LIMIT_16BIT ((t_uint32)0xFFFE)     // 65534
+    #define FMKCPU_ARR_LOW_LIMIT_32BIT  ((t_uint32)0xB2D05E00) // 3_000_000_000
+    #define FMKCPU_ARR_HIGH_LIMIT_32BIT ((t_uint32)0xFFFFFFFE) // 4_294_967_295
     #define FMKCPU_WWDG_RESET_CFG  FMKCPU_WWDG_RESET_100MS /**< default watchdogs configuration */
 
     // ********************************************************************
@@ -55,22 +60,6 @@
         FMKCPU_CORE_CLOCK_SPEED_UNKNOWN,             /**< Core CLock Speed Run Number */
     } t_eFMKCPU_CoreClockSpeed;
 
-    /* Enum for System Oscillator Clock */
-    typedef enum
-    {
-        FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to High Speed Extertal clock */
-        FMKCPU_SYS_CLOCK_HSI,                      /**< Reference to High Speed Internal clock */
-        FMKCPU_SYS_CLOCK_SYSTEM,                   /**< Reference to Hardware Bus SYSTEM */
-        FMKCPU_SYS_CLOCK_HCLK1,                    /**< Reference to Hardware Bus HCLK1 */
-        FMKCPU_SYS_CLOCK_AHB1,                     /**< Reference to Advanced High Performance Bus 1 */
-        FMKCPU_SYS_CLOCK_AHB2,                     /**< Reference to Advanced High Performance Bus 2 */
-        FMKCPU_SYS_CLOCK_APB1,                     /**< Reference to Advanced Peripheral Bus 1 */
-        FMKCPU_SYS_CLOCK_APB2,                     /**< Reference to Advanced Peripheral Bus 2 */
-        FMKCPU_SYS_CLOCK_PLLQ,                     /**< Reference to Hardware Bus PLLQ */
-        FMKCPU_SYS_CLOCK_PLLP,                     /**< Reference to Hardware Bus PLLP */
-    
-        FMKCPU_SYS_CLOCK_NB,
-    } t_eFMKCPU_SysClkOsc;
     /**< typedef enum for channel mode */
     typedef enum 
     {
@@ -117,6 +106,22 @@
         FMKCPU_INTERRUPT_LINE_TYPE_NB,
     } t_eFMKCPU_InterruptLineType;
     /* CAUTION : Automatic generated code section for Enum: Start */
+    /* Enum for System Oscillator Clock */
+    typedef enum
+    {
+        FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to Hardware Bus HSE */
+        FMKCPU_SYS_CLOCK_HSI,                      /**< Reference to Hardware Bus HSI */
+        FMKCPU_SYS_CLOCK_SYSTEM,                   /**< Reference to Hardware Bus SYSTEM */
+        FMKCPU_SYS_CLOCK_HCLK1,                    /**< Reference to Hardware Bus HCLK1 */
+        FMKCPU_SYS_CLOCK_AHB1,                     /**< Reference to Hardware Bus AHB1 */
+        FMKCPU_SYS_CLOCK_AHB2,                     /**< Reference to Hardware Bus AHB2 */
+        FMKCPU_SYS_CLOCK_APB1,                     /**< Reference to Hardware Bus APB1 */
+        FMKCPU_SYS_CLOCK_APB2,                     /**< Reference to Hardware Bus APB2 */
+        FMKCPU_SYS_CLOCK_PLLQ,                     /**< Reference to Hardware Bus PLLQ */
+        FMKCPU_SYS_CLOCK_PLLP,                     /**< Reference to Hardware Bus PLLP */
+    
+        FMKCPU_SYS_CLOCK_NB,
+    } t_eFMKCPU_SysClkOsc;
 
     /* Enum for Independent Clock Domain */
     typedef enum

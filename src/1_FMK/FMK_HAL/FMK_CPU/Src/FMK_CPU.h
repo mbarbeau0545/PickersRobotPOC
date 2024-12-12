@@ -199,23 +199,6 @@
     t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e);
     /**
     *
-    *	@brief      Get the prescaler to applied in Initialization of a perihperal as ADC,FDCAN,TIM etc.\n
-    *   @note       This function allow user to get the best prescaler for the initialisation of a peripheral,
-    *               depending on the value of frequency of the different oscillator bus and system core.\n
-    *
-    *	@param[in]  f_SysClkType_e     : Peripheral Extern Clock Type, @ref t_eFMKCPU_ClockPeriphExtType
-    *	@param[in]  idxRccPeriphExt_u8 : Index from t_eFMKCPU_IRQNType, @ref t_eFMKCPU_IRQNType
-    *	@param[in]  bspPrescaler_pu32  : pointor to contain the prescaler to appiled for peripheral initialization 
-    *
-    *   @retval RC_OK                             @ref RC_OK
-    *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
-    */
-    t_eReturnCode FMKCPU_Get_PeripheryPrescaler(t_eFMKCPU_ClockPeriphExtType  f_SysClkType_e, 
-                                            t_uint8 idxRccPeriphExt_u8,
-                                            t_uint32 * bspPrescaler_pu32);
-
-    /**
-    *
     *	@brief      Set a Delay.\n
     *
     *	@param[in]  f_delayms_u32 : period delay in millisecond.\n

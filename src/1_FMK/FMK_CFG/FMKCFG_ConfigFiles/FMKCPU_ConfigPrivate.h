@@ -39,7 +39,6 @@
     /* CAUTION : Automatic generated code section for Timer channels number: End */
 
 
-    #define FMKCPU_TIMER_PWM_PSC         ((t_uint8)50)       /**<  for every PWM the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_PSC          ((t_uint8)20)        /**<  for every InputCOmpare the Prescaler is a constant */
     #define FMKCPU_TIMER_IC_ARR          ((t_uint16)0xFFFF)       /**<  for every InputCOmpare the Prescaler is a constant */
 
@@ -87,8 +86,8 @@
     /* CAUTION : Automatic generated code section for Enum: End */
 
     /**
-     *
-     *	@brief      HAL enable clock Function abstraction
+    *
+    *	@brief      HAL enable clock Function abstraction
     *	@note       This function repertory in stm32f00xx_hal_tim,
     *               is used in blocking mode 
     *
@@ -101,8 +100,8 @@
     */
     typedef void (t_cbFMKCPU_ClockEnable)(void);
     /**
-     *
-     *	@brief      HAL Disable clock Function abstraction
+    *
+    *	@brief      HAL Disable clock Function abstraction
     *	@note       This function repertory in stm32f00xx_hal_tim,
     *               is used in blocking mode 
     *
@@ -113,6 +112,29 @@
     *
     *
     */
+   /**
+    *
+    *	@brief    Get the Prescaler and ARR value For Timer Configured in PWM.\n
+    *
+    *	@param[in]  f_idxTimRccClock_u8     : enum value for Idx Rcc Clock Timer, value from @ref t_eFMKCPU_ClockPort
+    *	@param[in]  f_timOscSrc_e           : enum value to know which bsp clock support the frequence based to the timer
+    *	@param[in]  f_SysClockValues_ua8    : pointor to all sys clock value of the system
+    *	@param[in]  f_RqstTimerFreq_u32     : the timer frequency requested
+    *	@param[in]  f_RqstTimerFreq_u32     : Container for ARR register value 
+    *	@param[in]  f_RqstTimerFreq_u32     : Container for Prescaler Value
+    *	@param[in]  f_ITChannel_cb         : call back function to call
+    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
+    */
+    typedef t_eReturnCode (t_cbFMKCPU_GetTimerInfoInit)(t_uint8  f_idxTimRccClock_u8,
+                                                        t_eFMKCPU_SysClkOsc f_timOscSrc_e,
+                                                        t_uint8  * f_SysClockValues_ua8,
+                                                        t_float32   f_RqstTimerFreq_f32,
+                                                        t_uint32 * f_bspTimARR_pu32,
+                                                        t_uint32 * f_bspTimPrescaler_pu32);
     typedef void (t_cbFMKCPU_ClockDisable)(void);
     /**
     *
@@ -275,8 +297,8 @@
         {RCC_PLLM_DIV4,         (t_uint32)60,                RCC_PLLR_DIV6,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, //  FMKCPU_CORE_CLOCK_SPEED_40MHZ
         {RCC_PLLM_DIV4,         (t_uint32)72,                RCC_PLLR_DIV6,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, //  FMKCPU_CORE_CLOCK_SPEED_48MHZ
         {RCC_PLLM_DIV4,         (t_uint32)64,                RCC_PLLR_DIV4,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, //  FMKCPU_CORE_CLOCK_SPEED_64MHZ
-        {RCC_PLLM_DIV3,         (t_uint32)60,                RCC_PLLR_DIV4,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV8,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
-        {RCC_PLLM_DIV3,         (t_uint32)24,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV4,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
+        {RCC_PLLM_DIV3,         (t_uint32)60,                RCC_PLLR_DIV4,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV8,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV2,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
+        {RCC_PLLM_DIV3,         (t_uint32)24,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV4,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV2,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
         {RCC_PLLM_DIV1,         (t_uint32)16,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV6,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV2,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_132MHZ
         {RCC_PLLM_DIV1,         (t_uint32)20,                RCC_PLLR_DIV2,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV8,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV2,          RCC_HCLK_DIV2}, //  FMKCPU_CORE_CLOCK_SPEED_160MHZ
     };
@@ -289,10 +311,10 @@
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)40,                   (t_uint8)40,                    (t_uint8)40,                 (t_uint8)40,                 (t_uint8)40,                    (t_uint8)40,                  (t_uint8)120,                 (t_uint8)40},  //  FMKCPU_CORE_CLOCK_SPEED_40MHZ
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)48,                   (t_uint8)48,                    (t_uint8)48,                 (t_uint8)48,                 (t_uint8)48,                    (t_uint8)48,                  (t_uint8)144,                 (t_uint8)48},  //  FMKCPU_CORE_CLOCK_SPEED_48MHZ
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)64,                   (t_uint8)64,                    (t_uint8)64,                 (t_uint8)64,                 (t_uint8)64,                    (t_uint8)64,                  (t_uint8)128,                 (t_uint8)42},  //  FMKCPU_CORE_CLOCK_SPEED_64MHZ
-        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)80,                   (t_uint8)80,                    (t_uint8)80,                 (t_uint8)80,                 (t_uint8)80,                    (t_uint8)80,                  (t_uint8)160,                 (t_uint8)40},  //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
-        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)96,                   (t_uint8)96,                    (t_uint8)96,                 (t_uint8)96,                 (t_uint8)96,                    (t_uint8)96,                  (t_uint8)96,                  (t_uint8)48},  //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
-        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)128,                  (t_uint8)128,                   (t_uint8)128,                (t_uint8)128,                (t_uint8)128,                   (t_uint8)128,                 (t_uint8)128,                 (t_uint8)42},  //  FMKCPU_CORE_CLOCK_SPEED_132MHZ
-        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)160,                  (t_uint8)160,                   (t_uint8)160,                (t_uint8)160,                (t_uint8)160,                   (t_uint8)160,                 (t_uint8)160,                 (t_uint8)40},  //  FMKCPU_CORE_CLOCK_SPEED_160MHZ
+        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)80,                   (t_uint8)80,                    (t_uint8)80,                 (t_uint8)80,                 (t_uint8)40,                    (t_uint8)40,                  (t_uint8)160,                 (t_uint8)40},  //  FMKCPU_CORE_CLOCK_SPEED_80MHZ
+        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)96,                   (t_uint8)96,                    (t_uint8)96,                 (t_uint8)96,                 (t_uint8)48,                    (t_uint8)48,                  (t_uint8)96,                  (t_uint8)48},  //  FMKCPU_CORE_CLOCK_SPEED_96MHZ
+        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)128,                  (t_uint8)128,                   (t_uint8)128,                (t_uint8)128,                (t_uint8)64,                    (t_uint8)64,                  (t_uint8)128,                 (t_uint8)42},  //  FMKCPU_CORE_CLOCK_SPEED_132MHZ
+        {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)160,                  (t_uint8)160,                   (t_uint8)160,                (t_uint8)160,                (t_uint8)80,                    (t_uint8)80,                  (t_uint8)160,                 (t_uint8)40},  //  FMKCPU_CORE_CLOCK_SPEED_160MHZ
     };
 #elif defined FMKCPU_STM32_ECU_FAMILY_F
     const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_s = {
@@ -332,6 +354,18 @@
         {HAL_TIM_OnePulse_GetState,        NULL_FONCTION,                   HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT},    // FMKCPU_CHANNEL_CFG_OP
         {HAL_TIM_Base_GetState,            HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT}, // FMKCPU_CHANNEL_CFG_EVNT
         {HAL_TIM_Encoder_GetState,         NULL_FONCTION,                   HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT},     // FMKCPU_CHANNEL_CFG_ECDR
+        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT},         // FMKCPU_CHANNEL_CFG_DAC 
+    };
+
+    /**< Function to dynamically set the the best init value for Timer */
+    const t_cbFMKCPU_GetTimerInfoInit * c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_NB] = {
+        FMKCPU_GetPwmTimerInitParam,// FMKCPU_CHANNEL_CFG_PWM
+        FMKCPU_GetICTimerInitParam,// FMKCPU_CHANNEL_CFG_IC
+        FMKCPU_GetOCTimerInitParam,// FMKCPU_CHANNEL_CFG_OC
+        FMKCPU_GetOPTimerInitParam,// FMKCPU_CHANNEL_CFG_OP
+        FMKCPU_GetEvntTimerInitParam,// FMKCPU_CHANNEL_CFG_EVNT
+        FMKCPU_GetECDRTimerInitParam,// FMKCPU_CHANNEL_CFG_ECDR
+        FMKCPU_GetDacTimerInitParam,// FMKCPU_CHANNEL_CFG_DAC
     };
 
     /**< Hardware configuration watchdog Period Timer */

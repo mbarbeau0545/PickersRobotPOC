@@ -72,7 +72,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_WAITING;
 
 WWDG_HandleTypeDef g_wwdgInfos_s = {0};
 
-t_eFMKCPU_CoreClockSpeed g_SysClockValue_ae[FMKCPU_SYS_CLOCK_NB];
+t_uint8 g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_NB];
 /* CAUTION : Automatic generated code section for Timer Configuration: Start */
 /**< timer information variable */
 t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
@@ -81,73 +81,73 @@ t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
         .BspTimer_ps.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
-},
+    },
     {
         // Timer_2
         .BspTimer_ps.Instance = TIM2,
         .c_clock_e = FMKCPU_RCC_CLK_TIM2,
         .c_IRQNType_e = FMKCPU_NVIC_TIM2_IRQN
-},
+    },
     {
         // Timer_3
         .BspTimer_ps.Instance = TIM3,
         .c_clock_e = FMKCPU_RCC_CLK_TIM3,
         .c_IRQNType_e = FMKCPU_NVIC_TIM3_IRQN
-},
+    },
     {
         // Timer_4
         .BspTimer_ps.Instance = TIM4,
         .c_clock_e = FMKCPU_RCC_CLK_TIM4,
         .c_IRQNType_e = FMKCPU_NVIC_TIM4_IRQN
-},
+    },
     {
         // Timer_5
         .BspTimer_ps.Instance = TIM5,
         .c_clock_e = FMKCPU_RCC_CLK_TIM5,
         .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN
-},
+    },
     {
         // Timer_6
         .BspTimer_ps.Instance = TIM6,
         .c_clock_e = FMKCPU_RCC_CLK_TIM6,
         .c_IRQNType_e = FMKCPU_NVIC_TIM6_DAC_IRQN
-},
+    },
     {
         // Timer_7
         .BspTimer_ps.Instance = TIM7,
         .c_clock_e = FMKCPU_RCC_CLK_TIM7,
         .c_IRQNType_e = FMKCPU_NVIC_TIM7_DAC_IRQN
-},
+    },
     {
         // Timer_8
         .BspTimer_ps.Instance = TIM8,
         .c_clock_e = FMKCPU_RCC_CLK_TIM8,
         .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN
-},
+    },
     {
         // Timer_15
         .BspTimer_ps.Instance = TIM15,
         .c_clock_e = FMKCPU_RCC_CLK_TIM15,
         .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN
-},
+    },
     {
         // Timer_16
         .BspTimer_ps.Instance = TIM16,
         .c_clock_e = FMKCPU_RCC_CLK_TIM16,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
-},
+    },
     {
         // Timer_17
         .BspTimer_ps.Instance = TIM17,
         .c_clock_e = FMKCPU_RCC_CLK_TIM17,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_TRG_COM_TIM17_IRQN
-},
+    },
     {
         // Timer_20
         .BspTimer_ps.Instance = TIM20,
         .c_clock_e = FMKCPU_RCC_CLK_TIM20,
         .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN
-},
+    },
 };
 
 /* CAUTION : Automatic generated code section for Timer Configuration: End */
@@ -418,7 +418,7 @@ t_eReturnCode FMKCPU_Init(void)
     }
     for (ClockIndex_u8 = (t_uint8)0 ; ClockIndex_u8 < FMKCPU_SYS_CLOCK_NB ; ClockIndex_u8++)
     {
-        g_SysClockValue_ae[ClockIndex_u8] = FMKCPU_CORE_CLOCK_SPEED_UNKNOWN;
+        g_SysClockValue_ua8[ClockIndex_u8] = (t_uint8)0;
     }
     return RC_OK;
 }
@@ -590,7 +590,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
         }
         else 
         {
-            Ret_e = SafeMem_memcpy(&g_SysClockValue_ae, &c_FmkCpu_CoreClkValue_ua8[f_SystemCoreFreq_e], (t_uint16)(sizeof(t_uint8) * FMKCPU_SYS_CLOCK_NB));
+            Ret_e = SafeMem_memcpy(&g_SysClockValue_ua8, &c_FmkCpu_CoreClkValue_ua8[f_SystemCoreFreq_e], (t_uint16)(sizeof(t_uint8) * FMKCPU_SYS_CLOCK_NB));
             if(Ret_e == RC_OK)
             {
                 //------Get the system core frequency set by the bsp------//
@@ -605,117 +605,6 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
             }
         }
     }
-    return Ret_e;
-}
-
-/*********************************
- * FMKCPU_Get_PeripheryPrescaler
- *********************************/
-t_eReturnCode FMKCPU_Get_PeripheryPrescaler(t_eFMKCPU_ClockPeriphExtType  f_SysClkType_e, 
-                                            t_uint8 f_idxRccPeriphExt_u8,
-                                            t_uint32 * f_bspPrescaler_pu32)
-{
-    t_eReturnCode Ret_e = RC_OK;
-    t_uint8 OscSrcValue_u8;
-    t_eFMKCPU_SysClkOsc OscPeriphSrc_e;
-
-    if(f_SysClkType_e > FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(f_bspPrescaler_pu32 == (t_uint32 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if(Ret_e == RC_OK)
-    {
-        //---------Get Oscillator Source Enum---------//
-        OscPeriphSrc_e = c_FmkCpu_RccClockOscSrc_ae[f_idxRccPeriphExt_u8];
-        //---------Get Oscillator Source Value---------//
-        OscSrcValue_u8 = c_FmkCpu_ClkSpeedFreqValueMhz_ua8[g_SysClockValue_ae[OscPeriphSrc_e]];
-        switch(f_SysClkType_e)
-        {
-            /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: Start */
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC:
-                Ret_e = FMKCPU_GetPrescalerForAdc(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG:
-                Ret_e = FMKCPU_GetPrescalerForRng(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM:
-                Ret_e = FMKCPU_GetPrescalerForTim(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART:
-                Ret_e = FMKCPU_GetPrescalerForUsart(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART:
-                Ret_e = FMKCPU_GetPrescalerForUart(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C:
-                Ret_e = FMKCPU_GetPrescalerForI2c(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB:
-                Ret_e = FMKCPU_GetPrescalerForUsb(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN:
-                Ret_e = FMKCPU_GetPrescalerForFdcan(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_CAN:
-                Ret_e = FMKCPU_GetPrescalerForCan(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM:
-                Ret_e = FMKCPU_GetPrescalerForLptim(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1:
-                Ret_e = FMKCPU_GetPrescalerForSai1(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM:
-                Ret_e = FMKCPU_GetPrescalerForHrtim(OscPeriphSrc_e,
-                                                 &g_SysClockValue_ae,
-                                                (t_uint8)f_idxRccPeriphExt_u8
-,                                                f_bspPrescaler_pu32);
-                break;
-            /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: End */
-            case FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB:
-            default:
-                Ret_e = RC_ERROR_NOT_SUPPORTED;
-        }
-        
-    }
-
     return Ret_e;
 }
 
@@ -1429,26 +1318,24 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
     t_uint32 bspChannel_u32 = 0;
     t_uint32 bspPeriod_u32;
     t_uint32 bspPrescaler_u32;
-    t_uint8 timerOscFreqMhz_u8;
     t_eFMKCPU_SysClkOsc OscTimerSrc_e;
 
     //----------Check if timer is not configured yet------------------//
     if ((g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False))
     {
-        //----------Get the prescalerr for the timer ------------------//
-        Ret_e = FMKCPU_Get_PeripheryPrescaler(FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM, 
-                                            g_TimerInfo_as[f_timer_e].c_clock_e,
-                                            &bspPrescaler_u32);
+        //----------Get tyhe oscilattor source for the timer ------------------//
+        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+
+        //----------Get the prescaler/ ARR for the timer ------------------//
+        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_PWM](g_TimerInfo_as[f_timer_e].c_clock_e,
+                                                                 OscTimerSrc_e,
+                                                                 g_SysClockValue_ua8,
+                                                                 (t_float32)f_pwmFreq_u32,
+                                                                 &bspPeriod_u32,
+                                                                 &bspPrescaler_u32);
+        
         if(Ret_e == RC_OK)
         {
-            //-------------Calculate the Timer Source Frequency-------------//
-            //                      Rcc Clock Src
-            OscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
-            //                          Value u8 from enum          Enum Frequency speed for the oscillator Source
-            timerOscFreqMhz_u8 = c_FmkCpu_ClkSpeedFreqValueMhz_ua8[ g_SysClockValue_ae[OscTimerSrc_e] ];
-            //-------------Calculate  Period-------------//
-            bspPeriod_u32 = (t_uint32)(((timerOscFreqMhz_u8 * CST_MHZ_TO_HZ) /
-                                                (f_pwmFreq_u32 * (bspPrescaler_u32))) - (t_uint32)1);
             //----------Set PWM Timer configuration for all channels------------------//
             Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
                                                         FMKCPU_HWTIM_CFG_PWM,
@@ -1534,28 +1421,34 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
     TIM_IC_InitTypeDef BspICInit_s;
     t_uint32 bspChannel_u32 = 0;
     t_uint32 bspMeasPolarity_u32 = 0;
-    t_uint32 bspICPrescaler_u32 = 0;
+    t_uint32 bspPeriod_u32;
+    t_uint32 bspPrescaler_u32;
+    t_eFMKCPU_SysClkOsc OscTimerSrc_e;
 
     
     //----------Check if timer is not configured yet------------------//
-    if ((g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False) && (Ret_e == RC_OK))
+    if (g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False)
     {
-        //----------Get Init prescaler------------------//
-        Ret_e = FMKCPU_Get_PeripheryPrescaler(FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM, 
-                                            g_TimerInfo_as[f_timer_e].c_clock_e,
-                                            &bspICPrescaler_u32);
+       //----------Get tyhe oscilattor source for the timer ------------------//
+        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+
+        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_EVNT](g_TimerInfo_as[f_timer_e].c_clock_e,
+                                                                 OscTimerSrc_e,
+                                                                 g_SysClockValue_ua8,
+                                                                 (t_float32)0x3E8,
+                                                                 &bspPeriod_u32,
+                                                                 &bspPrescaler_u32);
         if(Ret_e == RC_OK)
         {
-            //----------Set PWM Input Compare configuration for all channels------------------//
+            //----------Set Input Compare configuration for all channels------------------//
             Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
-                                        FMKCPU_HWTIM_CFG_IC,
-                                        (t_uint32)bspICPrescaler_u32,
-                                        (t_uint32)FMKCPU_TIMER_IC_ARR,
-                                        (t_uint32)TIM_COUNTERMODE_UP,
-                                        (t_uint32)TIM_CLOCKDIVISION_DIV1,
-                                        (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE);
+                                            FMKCPU_HWTIM_CFG_IC,
+                                            (t_uint32)bspPrescaler_u32,
+                                            (t_uint32)bspPeriod_u32,
+                                            (t_uint32)TIM_COUNTERMODE_UP,
+                                            (t_uint32)TIM_CLOCKDIVISION_DIV1,
+                                            (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE);       
         }
-                
     }
     //-------this timer has already been configured and cannot be used for another Type of Configuration------//
     if (g_TimerInfo_as[f_timer_e].HwCfg_e != FMKCPU_HWTIM_CFG_IC)
@@ -1624,10 +1517,10 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPeriod_u32 = 0; 
-    t_uint32 prescaler_u32 = 0;
+    t_uint32 bspPrescaler_u32 = 0;
     t_uint8 timerOscFreqMhz_u8 = 0;
     t_eFMKCPU_SysClkOsc OscTimerSrc_e;
-
+    t_float32 freqEvnt_f32 = 0.0f;
     //-------------See if timer has already been configured-------------//
     if(g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)True)
     {
@@ -1635,29 +1528,23 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
     }
     if(Ret_e == RC_OK)
     {
-        //------------- Choose the Prescaler the more adapted to Period requested-------------//
-        if(f_periodms_u32 < FMKCPU_TIMER_EVNT_MAX_LOW_PERIOD_MS)
-        {
-            prescaler_u32 = FMKCPU_TIMER_EVNT_PSC_HIGH; 
-        }
-        else 
-        {
-            prescaler_u32 = FMKCPU_TIMER_EVNT_PSC_LOW;
-        }
-        //-------------Calculate the Timer Source Frequency-------------//
-        //                      Rcc Clock Src
-        OscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
-        //                          Value u8 from enum          Enum Frequency speed for the oscillator Source
-        timerOscFreqMhz_u8 = c_FmkCpu_ClkSpeedFreqValueMhz_ua8[ g_SysClockValue_ae[OscTimerSrc_e] ];
-        //-------------Calculate the timer Period-------------//
-        bspPeriod_u32 = (t_uint32)((t_float32)((t_float32)(timerOscFreqMhz_u8 * CST_MHZ_TO_HZ) * (t_float32)(f_periodms_u32 / 1000)) / 
-                                                (t_float32)((prescaler_u32 + 1)));
+       //----------Get tyhe oscilattor source for the timer ------------------//
+        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+
+        //----------Get the prescaler/ ARR for the timer ------------------//
+        freqEvnt_f32 = (t_float32)(((t_float32)1.0f)/(f_periodms_u32/ (t_float32)CST_MSEC_TO_SEC));
+        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_EVNT](g_TimerInfo_as[f_timer_e].c_clock_e,
+                                                                 OscTimerSrc_e,
+                                                                 g_SysClockValue_ua8,
+                                                                 (t_float32)freqEvnt_f32,
+                                                                 &bspPeriod_u32,
+                                                                 &bspPrescaler_u32);
 
         //-------------Call Init Function-------------//
         Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
                                             FMKCPU_HWTIM_CFG_EVNT,
-                                            (t_uint32)(prescaler_u32 - (t_uint32)1),
-                                            (t_uint32)(bspPeriod_u32 - (t_uint32)1),
+                                            (t_uint32)(bspPrescaler_u32),
+                                            (t_uint32)(bspPeriod_u32),
                                             (t_uint32)TIM_COUNTERMODE_UP,
                                             (t_uint32)TIM_CLOCKDIVISION_DIV1,
                                             (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE);
@@ -1668,169 +1555,15 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
             g_TimerInfo_as[f_timer_e].Channel_as[chnl_e].chnl_cb = f_ITChannel_cb;
             g_TimerInfo_as[f_timer_e].Channel_as[chnl_e].RunMode_e = FMKCPU_CNHL_RUNMODE_INTERRUPT;
         }
-        else 
+        else
         {
-            Ret_e = RC_ERROR_WRONG_RESULT;
+            g_TimerInfo_as[f_timer_e].Channel_as[f_channel_e].ErrState_e |= FMKCPU_ERRSTATE_INIT_FAILED;   
         }
     }
 
     return Ret_e;
 }
 
-/*********************************
- * s_FMKCPU_Get_BspChannel
- *********************************/
-static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if (f_bspChnl_pu32 == (t_uint32 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if (f_channel_e > FMKCPU_CHANNEL_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if (Ret_e == RC_OK)
-    {
-        switch (f_channel_e)
-        {
-        case FMKCPU_CHANNEL_1:
-            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_1;
-            break;
-        case FMKCPU_CHANNEL_2:
-            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_2;
-            break;
-        case FMKCPU_CHANNEL_3:
-            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_3;
-            break;
-        case FMKCPU_CHANNEL_4:
-            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_4;
-            break;
-        case FMKCPU_CHANNEL_NB:
-        default:
-            Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
-            break;
-        }
-    }
-    return Ret_e;
-}
-
-/*********************************
- * s_FMKCPU_Get_BspTimer
- *********************************/
-static t_eReturnCode s_FMKCPU_Get_BspICTrigger(t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e, t_uint32 *f_bspMeasTrigger_u32)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if (f_bspMeasTrigger_u32 == (t_uint32 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if (Ret_e == RC_OK)
-    {
-        switch (f_MeasTrigger_e)
-        {
-        case FMKCPU_CHNL_MEAS_FALLING_EDGE:
-            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_FALLING;
-            break;
-        case FMKCPU_CHNL_MEAS_RISING_EDGE:
-            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_RISING;
-            break;
-        case FMKCPU_CHNL_MEAS_BOTH_EDGE:
-            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_BOTHEDGE;
-            break;
-        case FMKCPU_CHNL_MEAS_NB:
-        default:
-            Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
-            break;
-        }
-    }
-    return Ret_e;
-}
-
-
-/*********************************
- * s_FMKCPU_Get_BspNVICPriority
- *********************************/
-static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *f_BspNVICPriority_pu32)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if (f_BspNVICPriority_pu32 == (t_uint32 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if (f_priority_e > FMKCPU_NVIC_PRIORITY_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if (Ret_e == RC_OK)
-    {
-        switch (f_priority_e)
-        {
-            case FMKCPU_NVIC_PRIORITY_LOW:
-                *f_BspNVICPriority_pu32 = 6;
-                break;
-            case FMKCPU_NVIC_PRIORITY_MEDIUM:
-                *f_BspNVICPriority_pu32 = 3;
-                break;
-            case FMKCPU_NVIC_PRIORITY_HIGH:
-                *f_BspNVICPriority_pu32 = 0;
-                break;
-
-            case FMKCPU_NVIC_PRIORITY_NB:
-            default:
-                Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
-                break;
-        }
-    }
-    return Ret_e;
-}
-
-/*********************************
- * s_FMKCPU_Get_TimChnlFromITLine
- *********************************/
-static t_eReturnCode s_FMKCPU_Get_TimChnlFromITLine(t_eFMKCPU_InterruptLineType f_ITLineType_e,
-                                                    t_uFMKCPU_InterruptLine     f_ITLine_u,    
-                                                    t_eFMKCPU_Timer             *f_timer_pe,
-                                                    t_eFMKCPU_InterruptChnl     *f_channel_pe)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    switch(f_ITLineType_e)
-    {
-        case FMKCPU_INTERRUPT_LINE_TYPE_IO:
-        {
-            *f_timer_pe = c_FmkCpu_ITLineIOMapp_as[(t_eFMKCPU_InterruptLineIO)f_ITLine_u.ITLine_IO_e].timer_e;
-            *f_channel_pe = c_FmkCpu_ITLineIOMapp_as[(t_eFMKCPU_InterruptLineIO)f_ITLine_u.ITLine_IO_e].channel_e;
-            break;
-        }
-        case FMKCPU_INTERRUPT_LINE_TYPE_EVNT:
-        {
-            *f_timer_pe = c_FmkCpu_ITLineEvntMapp_as[(t_eFMKCPU_InterruptLineEvnt)f_ITLine_u.ITLine_Evnt_e].timer_e;
-            *f_channel_pe = c_FmkCpu_ITLineEvntMapp_as[(t_eFMKCPU_InterruptLineEvnt)f_ITLine_u.ITLine_Evnt_e].channel_e;
-            break;
-        }
-        case FMKCPU_INTERRUPT_LINE_TYPE_DAC:
-        {
-            *f_timer_pe = c_FmkCpu_ITLineDacMapp_as[(t_eFMKCPU_InterruptLineDAC)f_ITLine_u.ITLine_Dac_e].timer_e;
-            *f_channel_pe = c_FmkCpu_ITLineDacMapp_as[(t_eFMKCPU_InterruptLineDAC)f_ITLine_u.ITLine_Dac_e].channel_e;
-            break;
-        }
-        case FMKCPU_INTERRUPT_LINE_TYPE_NB:
-        default:
-            Ret_e = RC_ERROR_NOT_SUPPORTED;
-            break;
-    }
-    
-    return Ret_e;
-}
 /*********************************
  * s_FMKCPU_Set_HwChannelState
  *********************************/
@@ -2077,6 +1810,161 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
         }
     }
     return;
+}
+
+/*********************************
+ * s_FMKCPU_Get_BspChannel
+ *********************************/
+static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e, t_uint32 *f_bspChnl_pu32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if (f_bspChnl_pu32 == (t_uint32 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if (f_channel_e > FMKCPU_CHANNEL_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if (Ret_e == RC_OK)
+    {
+        switch (f_channel_e)
+        {
+        case FMKCPU_CHANNEL_1:
+            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_1;
+            break;
+        case FMKCPU_CHANNEL_2:
+            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_2;
+            break;
+        case FMKCPU_CHANNEL_3:
+            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_3;
+            break;
+        case FMKCPU_CHANNEL_4:
+            *f_bspChnl_pu32 = (t_uint32)TIM_CHANNEL_4;
+            break;
+        case FMKCPU_CHANNEL_NB:
+        default:
+            Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
+            break;
+        }
+    }
+    return Ret_e;
+}
+
+/*********************************
+ * s_FMKCPU_Get_BspTimer
+ *********************************/
+static t_eReturnCode s_FMKCPU_Get_BspICTrigger(t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e, t_uint32 *f_bspMeasTrigger_u32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if (f_bspMeasTrigger_u32 == (t_uint32 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if (Ret_e == RC_OK)
+    {
+        switch (f_MeasTrigger_e)
+        {
+        case FMKCPU_CHNL_MEAS_FALLING_EDGE:
+            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_FALLING;
+            break;
+        case FMKCPU_CHNL_MEAS_RISING_EDGE:
+            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_RISING;
+            break;
+        case FMKCPU_CHNL_MEAS_BOTH_EDGE:
+            *f_bspMeasTrigger_u32 = (t_uint32)TIM_ICPOLARITY_BOTHEDGE;
+            break;
+        case FMKCPU_CHNL_MEAS_NB:
+        default:
+            Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
+            break;
+        }
+    }
+    return Ret_e;
+}
+
+
+/*********************************
+ * s_FMKCPU_Get_BspNVICPriority
+ *********************************/
+static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *f_BspNVICPriority_pu32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if (f_BspNVICPriority_pu32 == (t_uint32 *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if (f_priority_e > FMKCPU_NVIC_PRIORITY_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if (Ret_e == RC_OK)
+    {
+        switch (f_priority_e)
+        {
+            case FMKCPU_NVIC_PRIORITY_LOW:
+                *f_BspNVICPriority_pu32 = 6;
+                break;
+            case FMKCPU_NVIC_PRIORITY_MEDIUM:
+                *f_BspNVICPriority_pu32 = 3;
+                break;
+            case FMKCPU_NVIC_PRIORITY_HIGH:
+                *f_BspNVICPriority_pu32 = 0;
+                break;
+
+            case FMKCPU_NVIC_PRIORITY_NB:
+            default:
+                Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
+                break;
+        }
+    }
+    return Ret_e;
+}
+
+/*********************************
+ * s_FMKCPU_Get_TimChnlFromITLine
+ *********************************/
+static t_eReturnCode s_FMKCPU_Get_TimChnlFromITLine(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                                    t_uFMKCPU_InterruptLine     f_ITLine_u,    
+                                                    t_eFMKCPU_Timer             *f_timer_pe,
+                                                    t_eFMKCPU_InterruptChnl     *f_channel_pe)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    switch(f_ITLineType_e)
+    {
+        case FMKCPU_INTERRUPT_LINE_TYPE_IO:
+        {
+            *f_timer_pe = c_FmkCpu_ITLineIOMapp_as[(t_eFMKCPU_InterruptLineIO)f_ITLine_u.ITLine_IO_e].timer_e;
+            *f_channel_pe = c_FmkCpu_ITLineIOMapp_as[(t_eFMKCPU_InterruptLineIO)f_ITLine_u.ITLine_IO_e].channel_e;
+            break;
+        }
+        case FMKCPU_INTERRUPT_LINE_TYPE_EVNT:
+        {
+            *f_timer_pe = c_FmkCpu_ITLineEvntMapp_as[(t_eFMKCPU_InterruptLineEvnt)f_ITLine_u.ITLine_Evnt_e].timer_e;
+            *f_channel_pe = c_FmkCpu_ITLineEvntMapp_as[(t_eFMKCPU_InterruptLineEvnt)f_ITLine_u.ITLine_Evnt_e].channel_e;
+            break;
+        }
+        case FMKCPU_INTERRUPT_LINE_TYPE_DAC:
+        {
+            *f_timer_pe = c_FmkCpu_ITLineDacMapp_as[(t_eFMKCPU_InterruptLineDAC)f_ITLine_u.ITLine_Dac_e].timer_e;
+            *f_channel_pe = c_FmkCpu_ITLineDacMapp_as[(t_eFMKCPU_InterruptLineDAC)f_ITLine_u.ITLine_Dac_e].channel_e;
+            break;
+        }
+        case FMKCPU_INTERRUPT_LINE_TYPE_NB:
+        default:
+            Ret_e = RC_ERROR_NOT_SUPPORTED;
+            break;
+    }
+    
+    return Ret_e;
 }
 
 /*********************************

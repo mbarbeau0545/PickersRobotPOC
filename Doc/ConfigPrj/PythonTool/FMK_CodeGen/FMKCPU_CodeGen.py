@@ -137,7 +137,7 @@ class FMKCPU_CodeGen():
         #-----------------------------make cpu include-------------------
         #----------------------------------------------------------------
         # only takes tha family for include function
-        cpu_function = f'    #include "{str(cpu_cfg)[:7]}xx_hal.h"\n'
+        cpu_function =   f'    #include "{str(cpu_cfg)[:7]}xx_hal.h"\n'
         include_cpu_hw = f'    #include "{cpu_cfg}.h"\n'
         include_cpu = cpu_function + include_cpu_hw
         #----------------------------------------------------------------
@@ -177,13 +177,15 @@ class FMKCPU_CodeGen():
                         rcc_ref_capitalize = str(rcc_ref).capitalize()
                         osc_prsc_decl += f"    //Function to Get the Prescaler of {rcc_ref_capitalize} Configuration from {rcc_ref_capitalize} frequency constraint and the Bus used\n" \
                                      + f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_eFMKCPU_SysClkOsc f_{rcc_ref_capitalize}OscSrc_e,\n' \
-                                     + f'                                            t_eFMKCPU_CoreClockSpeed * f_SysClockValues_pae,\n' \
+                                     + f'                                            t_uint8 * f_SysClockValues_ua8,\n' \
                                      + f'                                            t_uint8 f_idx{rcc_ref_capitalize}RccClock_u8,\n' \
+                                     + f'                                            t_uint32 f_InfoPeriph_u32,\n' \
                                      + f'                                            t_uint32 * f_bsp{rcc_ref_capitalize}Prescaler_pu32);\n\n'
                         switch_rcc_prsc += f'            case {ENUM_FMKCPU_CLOCK_PERIPH_TYPE}_{str(rcc_ref).upper()}:\n' \
                                         + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(OscPeriphSrc_e,\n' \
-                                        +  '                                                 &g_SysClockValue_ae,\n' \
+                                        +  '                                                 g_SysClockValue_ua8,\n' \
                                         +  '                                                (t_uint8)f_idxRccPeriphExt_u8\n,' \
+                                        +  '                                                (t_uint32)f_InfoPeriph_u32\n,' \
                                         + f'                                                f_bspPrescaler_pu32);\n' \
                                         +  '                break;\n'
                         
@@ -265,7 +267,7 @@ class FMKCPU_CodeGen():
                         + f"        .BspTimer_ps.Instance = TIM{idx_timer},\n" \
                         + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
                         + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(timer_cfg[2]).upper()}\n" \
-                        + "},\n"
+                        + "    },\n"
             
             # make defines timer channel
             def_tim_max_chnl += f"    #define FMKCPU_MAX_CHNL_TIMER_{idx_timer} ((t_uint8){timer_cfg[1]})\n"
@@ -487,8 +489,8 @@ class FMKCPU_CodeGen():
         cls.code_gen._write_into_file(rcc_dis_decl, FMKCPU_CONFIGSPECIFIC_H)
 
         print('\t\t- Function for Prescaler Peripherique External Clock')
-        cls.code_gen.change_target_balise(TARGET_FUNC_PERIPH_PRESC_START, TARGET_FUNC_PERIPH_PRESC_END)
-        cls.code_gen._write_into_file(osc_prsc_decl, FMKCPU_CONFIGSPECIFIC_H)
+        #cls.code_gen.change_target_balise(TARGET_FUNC_PERIPH_PRESC_START, TARGET_FUNC_PERIPH_PRESC_END)
+        #cls.code_gen._write_into_file(osc_prsc_decl, FMKCPU_CONFIGSPECIFIC_H)
         #---------------------For FMKCPU.c---------------------#
         print("\t- For FMKCPU.c file")
         cls.code_gen.change_target_balise(TARGET_TIMER_INFO_START, TARGET_TIMER_INFO_END)
