@@ -65,7 +65,7 @@
     #define FMKFDCAN_MAX_ITEM_ON_QUEUE_PER_IT ((t_uint8)5)
 
     /**
-     * @brief Buffer size in bytes for FDCAN (64 bytes).
+     * @brief Buffer size in bytes for a Data Frame FDCAN (64 bytes).
      */
     #define FMKFDCAN_64_BYTES ((t_uint8)64)
 

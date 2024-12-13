@@ -1062,16 +1062,16 @@ static t_eReturnCode s_FMKFDCAN_PreOperational(void)
             }
             if(Ret_e == RC_OK)
             {
-                //---------- Update Flag----------//
-                g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
-            }
-            if(Ret_e == RC_OK)
-            {
                 bspRet_e = HAL_FDCAN_Start(&g_NodeInfo_as[idxNode_u8].bspNode_s);
             }
             if(bspRet_e != HAL_OK)
             {
                 Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+            if(Ret_e == RC_OK)
+            {
+                //---------- Update Flag----------//
+                g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
             }
         }
     }
@@ -1429,6 +1429,8 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
             */
             nominalPrescaler_u32 = (t_uint32)(c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].prescaler_u16 *
                                         f_NodeCfg_s.clockDivider_e);
+
+            //-------------------copy information -------------------//            
             f_bspInit_ps->Init.NominalPrescaler = nominalPrescaler_u32;
             f_bspInit_ps->Init.NominalSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].syncSeg_u8;
             f_bspInit_ps->Init.NominalTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg1_u8;

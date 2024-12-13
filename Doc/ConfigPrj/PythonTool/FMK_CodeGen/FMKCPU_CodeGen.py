@@ -452,8 +452,8 @@ class FMKCPU_CodeGen():
 
         print('\t\t- varriable for oscillator management')
         cls.code_gen._write_into_file(const_osc_rcc_src, FMKCPU_CONFIGPRIVATE)
-        print('\t\t- Variable for timer clock source')
-        cls.code_gen._write_into_file(const_tim_clk_src, FMKCPU_CONFIGPRIVATE)
+        #print('\t\t- Variable for timer clock source')
+        #cls.code_gen._write_into_file(const_tim_clk_src, FMKCPU_CONFIGPRIVATE)
 
         print("\t\t- Variable for max channel per timer")
         cls.code_gen._write_into_file(var_tim_max_chnl, FMKCPU_CONFIGPRIVATE)

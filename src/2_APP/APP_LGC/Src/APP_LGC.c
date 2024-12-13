@@ -156,7 +156,10 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
     t_eReturnCode Ret_e = RC_OK;
 
     
-    
+    Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_2, 
+                                    FMKIO_PULL_MODE_DISABLE,
+                                    200,
+                                    NULL_FONCTION);
    
     return Ret_e;
 }
@@ -166,6 +169,14 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
  *********************************/
 static t_eReturnCode s_APPLGC_Operational(void)
 {
+    t_uint32 syclock = HAL_RCC_GetSysClockFreq();
+    // Expected 128 -> Sysclokc
+    // Expcted 160 for timer 
+    if (syclock > 0)
+    {
+        FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, 250);
+        FMKCPU_Set_Delay(1000);
+    }
     
     return RC_OK;
 }

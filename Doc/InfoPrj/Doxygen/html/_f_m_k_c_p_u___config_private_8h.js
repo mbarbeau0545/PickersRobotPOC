@@ -26,7 +26,7 @@ var _f_m_k_c_p_u___config_private_8h =
     [ "t_cbFMKCPU_TimStartFuncModePolling", "_f_m_k_c_p_u___config_private_8h.html#a861fe4a2c19075c4843893f148a3b76b", null ],
     [ "t_cbFMKCPU_TimStopFuncModeInterrupt", "_f_m_k_c_p_u___config_private_8h.html#aace484dfb912d75f65243747c7ad701e", null ],
     [ "t_cbFMKCPU_TimStopFuncModePolling", "_f_m_k_c_p_u___config_private_8h.html#a92212c7a37f14d2700c7ce2d2f8f430e", null ],
-    [ "c_FMKCPU_BspTimFunc_apf", "_f_m_k_c_p_u___config_private_8h.html#a3aa77a2c8612b5296a19740fe80256c8", null ],
+    [ "c_FMKCPU_TimerFunc_apf", "_f_m_k_c_p_u___config_private_8h.html#a3aa77a2c8612b5296a19740fe80256c8", null ],
     [ "c_FMKCPU_ClkFunctions_apcb", "_f_m_k_c_p_u___config_private_8h.html#aeee60afe74541be26c5a19cec575f03f", null ],
     [ "c_FMKCPU_EvntTimerCfg_as", "_f_m_k_c_p_u___config_private_8h.html#a306a37e409d033a6facde59372f32716", null ],
     [ "c_FMKCPU_IRQNPriority_ae", "_f_m_k_c_p_u___config_private_8h.html#ac09dc67fed4ddad079efbc4cce4d9332", null ],

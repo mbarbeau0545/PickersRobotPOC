@@ -8,7 +8,7 @@ var searchData=
   ['c_5fappsys_5fmodulefunc_5fapf_5',['c_AppSys_ModuleFunc_apf',['../_a_p_p_s_y_s___config_private_8h.html#a62abb39dafd96e62536c5bf36e4454c9',1,'APPSYS_ConfigPrivate.h']]],
   ['c_5fbsppinmapping_5fua32_6',['c_BspPinMapping_ua32',['../_f_m_k_i_o___config_private_8h.html#ad7a1aefc83b28ffe555b99dc190ea15b',1,'FMKIO_ConfigPrivate.h']]],
   ['c_5ffmkcda_5fadcmaxchnl_5fua8_7',['c_FmkCda_AdcMaxChnl_ua8',['../_f_m_k_c_d_a___config_private_8h.html#a6b132742a44271d37d3ad4f322beaca1',1,'FMKCDA_ConfigPrivate.h']]],
-  ['c_5ffmkcpu_5fbsptimfunc_5fapf_8',['c_FMKCPU_BspTimFunc_apf',['../_f_m_k_c_p_u___config_private_8h.html#a3aa77a2c8612b5296a19740fe80256c8',1,'FMKCPU_ConfigPrivate.h']]],
+  ['c_5ffmkcpu_5fbsptimfunc_5fapf_8',['c_FMKCPU_TimerFunc_apf',['../_f_m_k_c_p_u___config_private_8h.html#a3aa77a2c8612b5296a19740fe80256c8',1,'FMKCPU_ConfigPrivate.h']]],
   ['c_5ffmkcpu_5fclkfunctions_5fapcb_9',['c_FMKCPU_ClkFunctions_apcb',['../_f_m_k_c_p_u___config_private_8h.html#aeee60afe74541be26c5a19cec575f03f',1,'FMKCPU_ConfigPrivate.h']]],
   ['c_5ffmkcpu_5fevnttimercfg_5fas_10',['c_FMKCPU_EvntTimerCfg_as',['../_f_m_k_c_p_u___config_private_8h.html#a306a37e409d033a6facde59372f32716',1,'FMKCPU_ConfigPrivate.h']]],
   ['c_5ffmkcpu_5firqnpriority_5fae_11',['c_FMKCPU_IRQNPriority_ae',['../_f_m_k_c_p_u___config_private_8h.html#ac09dc67fed4ddad079efbc4cce4d9332',1,'FMKCPU_ConfigPrivate.h']]],

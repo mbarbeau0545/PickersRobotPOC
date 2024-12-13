@@ -66,7 +66,7 @@
     t_eReturnCode FMKCPU_GetPwmTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                                 t_eFMKCPU_SysClkOsc f_timOscSrc_e,
                                                 t_uint8 * f_SysClockValues_ua8,
-                                                t_uint32 f_PwmFreq_u32,
+                                                t_float32 f_PwmFreq_f32,
                                                 t_uint32 * f_bspTimARR_pu32,
                                                 t_uint32 * f_bspTimPrescaler_pu32);
     /**
@@ -162,7 +162,7 @@
     t_eReturnCode FMKCPU_GetECDRTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                                 t_eFMKCPU_SysClkOsc f_timOscSrc_e,
                                                 t_uint8 * f_SysClockValues_ua8,
-                                                t_uint32 f_EcdrFreq_u32,
+                                                t_float32 f_EcdrFreq_f32,
                                                 t_uint32 * f_bspARR_pu32,
                                                 t_uint32 * f_bspTimPrescaler_pu32);
     /**
@@ -181,7 +181,7 @@
     t_eReturnCode FMKCPU_GetDacTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                                 t_eFMKCPU_SysClkOsc f_timOscSrc_e,
                                                 t_uint8 * f_SysClockValues_ua8,
-                                                t_uint32 f_DacFreq_u32,
+                                                t_float32 f_DacFreq_f32,
                                                 t_uint32 * f_bspARR_pu32,
                                                 t_uint32 * f_bspTimPrescaler_pu32);
 
@@ -419,7 +419,7 @@
     void FMKCPU_Disable_HRTIM1_Clock(void);
     /* CAUTION : Automatic generated code section for Disable Clk Declaration: End */
 
-/**< This function has been made to filled in c_FMKCPU_BspTimFunc_apf */
+/**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
 HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
 HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
 HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);

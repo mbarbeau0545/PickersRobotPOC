@@ -32,6 +32,8 @@
     #define FMKCPU_STM32_ECU_FAMILY_G ((t_uint8)1)
     //#define FMKCPU_STM32_ECU_FAMILY_F ((t_uint8)0)
     
+    #define FMKCPU_TIMER_PWM_ARR_TARGET_16_BIT   ((t_uint32)0xF80C) // 63500
+    #define FMKCPU_TIMER_PWM_ARR_TARGET_32_BIT   ((t_uint32)(CST_MAX_UINT_32BIT - (t_uint32)1)) 
     #define FMKCPU_FREQ_COMPUTE_DELTA_ACCEPTANCE ((t_float32)0.5)
     #define FMKCPU_ARR_LOW_LIMIT_16BIT  ((t_uint32)0xC350)     // 50000
     #define FMKCPU_ARR_HIGH_LIMIT_16BIT ((t_uint32)0xFFFE)     // 65534

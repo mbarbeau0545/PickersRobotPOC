@@ -596,7 +596,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
                 //------Get the system core frequency set by the bsp------//
                 bspSysClkFreqHz_u32 = HAL_RCC_GetSysClockFreq();
                 //------Get the system core frequency wanted by user------//
-                SysClkFreqHz_u32 = (t_uint32)c_FmkCpu_ClkSpeedFreqValueMhz_ua8[f_SystemCoreFreq_e];
+                SysClkFreqHz_u32 = (t_uint32)g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_SYSTEM];
                 //------Compare both value------//
                 if(bspSysClkFreqHz_u32 != (t_uint32)(SysClkFreqHz_u32 * CST_MHZ_TO_HZ))
                 {
@@ -841,7 +841,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
         if (g_TimerInfo_as[timer_e].IsTimerConfigured_b == (t_bool)False 
         || g_TimerInfo_as[timer_e].Channel_as[chnl_e].IsChnlConfigure_b == (t_bool)False)
         {
-            Ret_e = RC_ERROR_ALREADY_CONFIGURED;
+            Ret_e = RC_ERROR_MISSING_CONFIG;
         }
         if(g_TimerInfo_as[timer_e].Channel_as[chnl_e].ErrState_e != FMKCPU_ERRSTATE_OK)
         {
@@ -1241,14 +1241,13 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
         //-----------diag for timer currently working/ Running-----------//
         if(timerInfo_ps->IsTimerRunning_b == (t_bool)True)
         {
-            bspTimerState_e = c_FMKCPU_BspTimFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_cb(
+            bspTimerState_e = c_FMKCPU_TimerFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_cb(
                                         &timerInfo_ps->BspTimer_ps);
 
             if((bspTimerState_e & HAL_TIM_STATE_BUSY) != HAL_TIM_STATE_BUSY) // busy means ok for stm32
             {
                 //----------- associate bsp err with channel FMKCPU err-----------//
-                if((bspTimerState_e & HAL_TIM_STATE_RESET) == HAL_TIM_STATE_RESET
-                || (bspTimerState_e & HAL_TIM_STATE_READY) == HAL_TIM_STATE_READY)
+                if((bspTimerState_e & HAL_TIM_STATE_RESET) == HAL_TIM_STATE_RESET)
                 {
                     channelErr_e |= FMKCPU_ERRSTATE_NOT_CONFIGURED;
                 }
@@ -1324,15 +1323,16 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
     if ((g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False))
     {
         //----------Get tyhe oscilattor source for the timer ------------------//
-        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+        OscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
 
         //----------Get the prescaler/ ARR for the timer ------------------//
-        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_PWM](g_TimerInfo_as[f_timer_e].c_clock_e,
-                                                                 OscTimerSrc_e,
-                                                                 g_SysClockValue_ua8,
-                                                                 (t_float32)f_pwmFreq_u32,
-                                                                 &bspPeriod_u32,
-                                                                 &bspPrescaler_u32);
+        Ret_e = c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_PWM].
+                    GetTimerInfoInit_pcb(g_TimerInfo_as[f_timer_e].c_clock_e,
+                                         OscTimerSrc_e,
+                                         g_SysClockValue_ua8,
+                                         (t_float32)f_pwmFreq_u32,
+                                         &bspPeriod_u32,
+                                         &bspPrescaler_u32);
         
         if(Ret_e == RC_OK)
         {
@@ -1376,10 +1376,15 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
             bspChannelState_e = HAL_TIM_GetChannelState(&g_TimerInfo_as[f_timer_e].BspTimer_ps, bspChannel_u32);
             if(bspChannelState_e == HAL_TIM_CHANNEL_STATE_READY)
             {
-                BspOcInit_s.OCMode = (t_uint32)TIM_OCMODE_PWM1; 
-                BspOcInit_s.Pulse = (t_uint32)0;   // set init DutyCycle to 0
-                BspOcInit_s.OCNPolarity = (t_uint32)TIM_OCPOLARITY_HIGH;
-                BspOcInit_s.OCFastMode = (t_uint32)TIM_OCFAST_DISABLE;
+                BspOcInit_s.OCMode = TIM_OCMODE_PWM1;       // Mode PWM1
+            BspOcInit_s.Pulse = 0;                     // Initial Duty Cycle à 0%
+            BspOcInit_s.OCFastMode = TIM_OCFAST_DISABLE;    // Mode rapide désactivé
+            BspOcInit_s.OCPolarity = TIM_OCPOLARITY_HIGH;  // Polarité normale (actif haut)
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
+            BspOcInit_s.OCNPolarity = TIM_OCNPOLARITY_HIGH; // Non utilisé si pas de signal complémentaire
+            BspOcInit_s.OCIdleState = TIM_OCIDLESTATE_RESET; // État au repos à 0
+            BspOcInit_s.OCNIdleState = TIM_OCNIDLESTATE_RESET; // Non utilisé si pas de signal complémentaire
+#endif
                 BspRet_e = HAL_TIM_PWM_ConfigChannel(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
                                                         &BspOcInit_s,
                                                         (uint32_t)bspChannel_u32);  
@@ -1430,14 +1435,15 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
     if (g_TimerInfo_as[f_timer_e].IsTimerConfigured_b == (t_bool)False)
     {
        //----------Get tyhe oscilattor source for the timer ------------------//
-        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+        OscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
 
-        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_EVNT](g_TimerInfo_as[f_timer_e].c_clock_e,
-                                                                 OscTimerSrc_e,
-                                                                 g_SysClockValue_ua8,
-                                                                 (t_float32)0x3E8,
-                                                                 &bspPeriod_u32,
-                                                                 &bspPrescaler_u32);
+        Ret_e = c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_IC].
+                    GetTimerInfoInit_pcb(g_TimerInfo_as[f_timer_e].c_clock_e,
+                                         OscTimerSrc_e,
+                                         g_SysClockValue_ua8,
+                                         (t_float32)0x3E8, // Random number, to changed
+                                         &bspPeriod_u32,
+                                         &bspPrescaler_u32);
         if(Ret_e == RC_OK)
         {
             //----------Set Input Compare configuration for all channels------------------//
@@ -1518,7 +1524,6 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPeriod_u32 = 0; 
     t_uint32 bspPrescaler_u32 = 0;
-    t_uint8 timerOscFreqMhz_u8 = 0;
     t_eFMKCPU_SysClkOsc OscTimerSrc_e;
     t_float32 freqEvnt_f32 = 0.0f;
     //-------------See if timer has already been configured-------------//
@@ -1529,16 +1534,17 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
     if(Ret_e == RC_OK)
     {
        //----------Get tyhe oscilattor source for the timer ------------------//
-        OscTimerSrc_e = c_FmkCpu_TimClkSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
+        OscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[g_TimerInfo_as[f_timer_e].c_clock_e];
 
         //----------Get the prescaler/ ARR for the timer ------------------//
         freqEvnt_f32 = (t_float32)(((t_float32)1.0f)/(f_periodms_u32/ (t_float32)CST_MSEC_TO_SEC));
-        Ret_e = c_FMKCPU_GetTimInfoInit_apf[FMKCPU_HWTIM_CFG_EVNT](g_TimerInfo_as[f_timer_e].c_clock_e,
-                                                                 OscTimerSrc_e,
-                                                                 g_SysClockValue_ua8,
-                                                                 (t_float32)freqEvnt_f32,
-                                                                 &bspPeriod_u32,
-                                                                 &bspPrescaler_u32);
+        Ret_e = c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_EVNT].
+                    GetTimerInfoInit_pcb(g_TimerInfo_as[f_timer_e].c_clock_e,
+                                         OscTimerSrc_e,
+                                         g_SysClockValue_ua8,
+                                         (t_float32)freqEvnt_f32,
+                                         &bspPeriod_u32,
+                                         &bspPrescaler_u32);
 
         //-------------Call Init Function-------------//
         Ret_e = s_FMKCPU_Set_BspTimerInit(&g_TimerInfo_as[f_timer_e],
@@ -1557,7 +1563,7 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_timer_e,
         }
         else
         {
-            g_TimerInfo_as[f_timer_e].Channel_as[f_channel_e].ErrState_e |= FMKCPU_ERRSTATE_INIT_FAILED;   
+            g_TimerInfo_as[f_timer_e].Channel_as[chnl_e].ErrState_e |= FMKCPU_ERRSTATE_INIT_FAILED;   
         }
     }
 
@@ -1601,11 +1607,11 @@ static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                         switch (channel_ps->RunMode_e)
                         {
                         case FMKCPU_CNHL_RUNMODE_POLLING:
-                            bspRet_e = c_FMKCPU_BspTimFunc_apf[timer_ps->HwCfg_e].StartFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                            bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].StartFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
                                                                                                             (t_uint32)bspChannel_u32);
                             break;
                         case FMKCPU_CNHL_RUNMODE_INTERRUPT:
-                            bspRet_e = c_FMKCPU_BspTimFunc_apf[timer_ps->HwCfg_e].StartFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                            bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].StartFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
                                                                                                                 (t_uint32)bspChannel_u32);
                             break;
                         case FMKCPU_CNHL_RUNMODE_NB:
@@ -1629,11 +1635,11 @@ static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                         switch (channel_ps->RunMode_e)
                         {
                             case FMKCPU_CNHL_RUNMODE_POLLING:
-                                bspRet_e = c_FMKCPU_BspTimFunc_apf[timer_ps->HwCfg_e].StopFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].StopFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
                                                                                                             (t_uint32)bspChannel_u32);
                                 break;
                             case FMKCPU_CNHL_RUNMODE_INTERRUPT:
-                                bspRet_e = c_FMKCPU_BspTimFunc_apf[timer_ps->HwCfg_e].StopFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].StopFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
                                                                                                                     (t_uint32)bspChannel_u32);
                                 break;
                             case FMKCPU_CNHL_RUNMODE_NB:
@@ -1696,7 +1702,7 @@ static t_eReturnCode s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
         f_timer_ps->BspTimer_ps.Init.ClockDivision = f_clockDivision_u32;
         f_timer_ps->BspTimer_ps.Init.AutoReloadPreload = f_autoRePreload_u32;
 
-        bspRet_e = c_FMKCPU_BspTimFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->BspTimer_ps);
+        bspRet_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->BspTimer_ps);
         if(bspRet_e != HAL_OK)
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
