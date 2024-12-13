@@ -365,7 +365,8 @@
     *             Once the timer configure is done, update the channel state using function 
     *             "FMKCPU_Set_InterruptLineState" and every f_periodms_u32 callback function is called.\n
     *             IMPORTANT, In hardware this is the Timer which manage the interruption with ARR register,
-    *             which meansn, it is best that the timer is a basic timer with one channnels
+    *             which means, it is best that the timer is a basic timer with only one channel, 'cause the others will
+    *             be unused.\n
     *
     *	@param[in]  f_EvntITLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineEvnt
     *	@param[in]  f_periodms_u32            : period before calling function, in millisecond

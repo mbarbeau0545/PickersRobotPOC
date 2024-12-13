@@ -502,9 +502,6 @@ class FMKCPU_CodeGen():
         cls.code_gen.change_target_balise(TARGET_TIMER_X_IRQH_START, TARGET_TIMER_X_IRQH_END)
         cls.code_gen._write_into_file(func_imple, FMKCPU)
 
-        print('\t\t- Switch case for Periph clock Configuration')
-        cls.code_gen.change_target_balise(TARGET_PERIP_PRESCALER_START, TARGET_PERIP_PRESCALER_END)
-        cls.code_gen._write_into_file(switch_rcc_prsc, FMKCPU)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FmkCpu Module>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")

@@ -55,6 +55,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 //********************************************************************************
 static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_PreOperational(void);
+static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 
 //****************************************************************************
 //                      Public functions - Implementation
@@ -154,12 +155,22 @@ t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-
-    
+    static t_bool isLineActive = False;
     Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_2, 
                                     FMKIO_PULL_MODE_DISABLE,
                                     200,
                                     NULL_FONCTION);
+    if(Ret_e == RC_OK)
+    {
+
+        Ret_e = FMKCP_Set_EvntTimerCfg(FMKCPU_INTERRUPT_LINE_EVNT_1, 500, s_APPLGC_Callback);
+    }
+    if(isLineActive == False)
+    {
+        Ret_e = FMKCPU_Set_InterruptLineState(FMKCPU_INTERRUPT_LINE_TYPE_EVNT, 
+                                                (t_uFMKCPU_InterruptLine){.ITLine_Evnt_e = FMKCPU_INTERRUPT_LINE_EVNT_1}, 
+                                                FMKCPU_CHNLST_ACTIVATED);
+    }
    
     return Ret_e;
 }
@@ -169,16 +180,29 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
  *********************************/
 static t_eReturnCode s_APPLGC_Operational(void)
 {
-    t_uint32 syclock = HAL_RCC_GetSysClockFreq();
-    // Expected 128 -> Sysclokc
-    // Expcted 160 for timer 
-    if (syclock > 0)
-    {
-        FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, 250);
-        FMKCPU_Set_Delay(1000);
-    }
+    
     
     return RC_OK;
+}
+
+/*********************************
+ * s_APPLGC_Operational
+ *********************************/
+static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    static t_uint16 dutycycle = 0;
+    dutycycle += 200;
+    UNUSED(f_InterruptType_e);
+    UNUSED(f_InterruptLine_u8);
+
+    if(dutycycle >= 1000)
+    {
+        dutycycle = (t_uint16)0;
+    }
+
+    Ret_e = FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, dutycycle);
+    return Ret_e;
 }
 //************************************************************************************
 // End of File
