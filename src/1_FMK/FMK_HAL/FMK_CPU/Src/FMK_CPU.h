@@ -106,7 +106,7 @@
         FMKCPU_ERRSTATE_OVERFLOW        = 0x04U,     /**< overflow capacity */
         FMKCPU_ERRSTATE_UNDERFLOW       = 0x08U,     /**< Under flow capacity */
         FMKCPU_ERRSTATE_NOT_CONFIGURED  = 0x10U,     /**< timer or channel not configured */
-        FMKCPU_ERRSTATE_BUSY            = 0x20U,     /**< channel is busy */
+        FMKCPU_ERRSTATE_OFF_UNEXPECTED  = 0x20U,     /**< channel is busy */
         FMKCPU_ERRSTATE_INIT_FAILED     = 0x04U,     /**< Failed during intitialize of channel */
         FMKCPU_ERRSTATE_UNKNOWN         = 0x80U,     /**< unknown error detected */
 
