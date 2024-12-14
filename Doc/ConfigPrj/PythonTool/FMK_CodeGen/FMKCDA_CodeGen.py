@@ -91,11 +91,11 @@ class FMKCDA_CodeGen():
         #-----------------------------------------------------------------
         enum_internal_other = []
         for adc_intern in calib_astr:
-            idx_enum = str(adc_intern[0]).index("_")
-            enum_internal_other.append(adc_intern[0][:idx_enum])
+            #idx_enum = str(adc_intern[0]).index("_")
+            enum_internal_other.append(adc_intern[0])
         enum_other_calib = cls.code_gen.make_enum_from_variable(ENUM_ADC_INTERN_SENSOR, enum_internal_other,
                                                                 "t_eFMKCDA_AdcInternSns", 0, "Internal Sensors manage by the cpu",
-                                                                 [f"Refernce to {str(adc_intern[0])}" for adc_intern in calib_astr] )
+                                                                 [f"Refernce to {str(calib_astr[0])}" for calib_astr in calib_astr] )
 
         #----------------------------------------------------------------
         #-----------------------------make adc channel enum--------------
@@ -118,9 +118,9 @@ class FMKCDA_CodeGen():
             #make adc info
             var_adc_info += "    {\n" + f"        // ADC_{adc_index}\n" \
                         + f"        .BspInit_s.Instance = ADC{adc_index},\n" \
-                        + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_ADC{adc_index},\n" \
-                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_ADC{adc_index}_IRQN,\n" \
-                        + "    }\n"
+                        + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_{str(adc_info[3]).upper()},\n" \
+                        + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(adc_info[2]).upper()},\n" \
+                        + "    },\n"
             #make rank coutner 
             var_rank_counter += "    (t_uint8)0,\n"
             # make variable adc maxchannel

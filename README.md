@@ -40,4 +40,18 @@ For the doxygen documentation search the file "index.html"
 - Faire un module Supply Voltage Control
 - Faire l'intégration MatLab du projet
 - Faire un module USART
+
 - Mettre à jour la documentation 
+    - Mettre à jour la documentaiton drawio
+    - Créer un script python qui fait une documentation générale du Projet avec toutes les API par Modules ?
+- Dans le module FDCAN
+    - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size.
+    - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
+
+Dans la Cfg FMKCPU
+    - revoir la configuration des horloges et des prescalers de chaque module 
+        la rendre  automatique en fonction des valeurs des fréquences de SYS_CLOCK
+
+Dans FMKCPU, dans les fonctions de ChannelCfg
+    Mettre l'initialisation du timer dans une autre fonction pour réduire la complexité de la fonction 'channelCfg'
+    Appeler cette fonction (qui initialise le timer) dans channelCfg

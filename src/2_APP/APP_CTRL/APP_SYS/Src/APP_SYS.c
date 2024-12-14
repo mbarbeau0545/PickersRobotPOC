@@ -46,8 +46,8 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-t_eCyclicFuncState g_ModuleState_ae[APPSYS_MODULE_NB];
-static t_eCyclicFuncState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
+t_eCyclicModState g_ModuleState_ae[APPSYS_MODULE_NB];
+static t_eCyclicModState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -78,34 +78,35 @@ static t_eReturnCode s_APPSYS_Set_ModulesCyclic();
 void APPSYS_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool s_IsSysCfgDone_b = False;
+    static t_bool s_IsModInitDone_b = False;
     t_uint8 modIndex_u8 = 0;
-    // set sys confgiguration 
-    if( s_IsSysCfgDone_b == (t_bool)False)
-    {
-        Ret_e = FMKCPU_Set_HardwareInit();
-        if(Ret_e == RC_OK)
-        {
-            Ret_e = FMKCPU_Set_SysClockCfg();
-        }
-        if(Ret_e == RC_OK)
-        {
-            //Ret_e = FMKCPU_Set_WwdgCfg((t_eFMKCPu_WwdgResetPeriod)FMKCPU_WWDG_RESET_CFG);
-        }
-        if(Ret_e == RC_OK)
-        {
-            s_IsSysCfgDone_b = (t_bool)True;
-        }
-    }
-    if(Ret_e == RC_OK)
+    // set sys confgiguration
+    if( s_IsModInitDone_b == (t_bool)False)
     {
         for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 < APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
             Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].Init_pcb();
         }
+        if(Ret_e == RC_OK)
+        {
+            s_IsModInitDone_b = (t_bool)True;
+        }
     }
-    else
+    if(Ret_e == RC_OK)
     {
+        Ret_e = FMKCPU_Set_HardwareInit();
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = FMKCPU_Set_SysClockCfg(APPSYS_SYSTEM_CORE_SPEED);
+        }
+        if(Ret_e == RC_OK)
+        {
+            //Ret_e = FMKCPU_Set_WwdgCfg((t_eFMKCPu_WwdgResetPeriod)FMKCPU_WWDG_RESET_CFG);
+        }
+        
+    }
+    if(Ret_e != RC_OK)
+    {    
         g_AppSysModuleState_e = STATE_CYCLIC_ERROR;
     }
     return;
@@ -122,9 +123,9 @@ void APPSYS_Cyclic(void)
         case STATE_CYCLIC_PREOPE:
         {/* In Preope Mode AppSys called every cycle and wait every module are ready for Ope Mode*/
             Ret_e = s_APPSYS_PreOperational();
-            if(Ret_e == RC_OK)
+            if(Ret_e < RC_OK)
             {
-                g_AppSysModuleState_e = STATE_CYCLIC_OPE;
+                g_AppSysModuleState_e = STATE_CYCLIC_ERROR;
             }
             break;
         }
@@ -137,6 +138,7 @@ void APPSYS_Cyclic(void)
         {
             break;
         }
+        case STATE_CYCLIC_CFG:
         case STATE_CYCLIC_WAITING:
         case STATE_CYCLIC_ERROR:
         default:
@@ -196,13 +198,11 @@ static t_eReturnCode s_APPSYS_PreOperational(void)
         {
             if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
             {
-                Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].SetState_pcb(STATE_CYCLIC_OPE);
+                Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].SetState_pcb(STATE_CYCLIC_PREOPE);
             }
         }
-    }
-    else 
-    {
-        Ret_e = RC_WARNING_BUSY;
+        //---------Update Module State------------//
+        g_AppSysModuleState_e = STATE_CYCLIC_OPE;
     }
     return Ret_e;
 }

@@ -20,7 +20,7 @@
 #include "./FMK_FDCAN.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPrivate.h"
-
+#include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 
 #include "Library/Queue/Src/LIBQueue.h"
 #include "Library/SafeMem/SafeMem.h"
@@ -139,7 +139,7 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static t_eCyclicFuncState g_Modulestate_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_FmkCan_ModState_e = STATE_CYCLIC_CFG;
 /* Store information about node*/
 t_sFMKFDCAN_NodeInfo g_NodeInfo_as[FMKFDCAN_NODE_NB] = {
     {
@@ -182,26 +182,17 @@ t_eFMKFDCAN_BspStatusCb g_BspCbMngmt_ae[FMKFDCAN_NODE_NB][FMKFDCAN_BSP_CB_NB];
 //                      Local functions - Prototypes
 //*********************************************************************************
 /**
- *	@brief
- *	@note       Activate Interrupt line 
+ *	@brief      Init the CAN driver used thanks to c_FmkCan_IsNodeActive
  *
- *
- *	@param[in] 
- *	@param[in]
- *	 
- *
+ */
+static t_eReturnCode s_FMKFDCAN_ConfigurationState(void);
+/**
+ *	@brief      Activate Interrupt line 
  *
  */
 static t_eReturnCode s_FMKFDCAN_PreOperational(void);
 /**
- *	@brief
- *	@note       Activate Interrupt line 
- *
- *
- *	@param[in] 
- *	@param[in]
- *	 
- *
+ *	@brief      Perform Cyclic Operation
  *
  */
 static t_eReturnCode s_FMKFDCAN_Operational(void);
@@ -221,20 +212,7 @@ static t_eReturnCode s_FMKFDCAN_Operational(void);
 *
 */
 static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_DrvNodeCfg f_NodeCfg_s);
-/**
- *	@brief
- *	@note   
- *
- *	@param[in]  f_Node_e     : The Node where the RxMsg is Pending -> enum value from @ref t_eFMKFDCAN_NodeList
- *	@param[in]  f_NodeCfg_s  : software init structure @ref t_sFMKFDCAN_DrvNodeCfg
- *	 
- *  @retval RC_OK                             @ref RC_OK
- *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
- *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
- *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
- *
- */
-static t_eReturnCode s_FMKFDCAN_MspInit(void);
+
 /**
  *	@brief      Set the initiation of the Node.\n
  *	@note       We extract from software confgiuration the bsp configuration
@@ -591,12 +569,11 @@ static t_eReturnCode s_FMKFDCAN_GetClockKernelDivider(t_eFMKFDCAN_ClockKernelDiv
 t_eReturnCode FMKFDCAN_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-   
-    HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxBspCallback_u8;
     t_uint8 idxNode_u8 = (t_uint8)0;
     t_uint8 LLI_u8 = (t_uint8)0;
     t_uint8 LLI2_u8 = (t_uint8)0;
+
     t_sLIBQUEUE_QueueCfg TxBufferCfg_s = {
         .bufferSize_u8 = FMKFDCAN_TX_SOFT_BUFF_SIZE,
         .elementSize_u8 = sizeof(t_sFMKFDCAN_TxItemBuffer),
@@ -607,10 +584,6 @@ t_eReturnCode FMKFDCAN_Init(void)
         .elementSize_u8 = sizeof(t_sFMKFDCAN_RxItemBuffer),
         .enableOverwrite_b = False,
     };
-    
-    t_sFMKFDCAN_DrvNodeCfg nodeCfg_s;
-    t_uint8 idxBspNodeCfg_u8;
-
 
     //-----------------For Every Node in FDCAN----------------//
     for (idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
@@ -689,44 +662,37 @@ t_eReturnCode FMKFDCAN_Init(void)
             TxBufferCfg_s.bufferHead_pv = g_TxSoftBuffer_as[idxNode_u8];
             Ret_e = LIBQUEUE_Create(&g_TxSoftQueue_as[idxNode_u8], TxBufferCfg_s);
         }
-        if(Ret_e == RC_OK)
-        {
-            //-----------------Init driver if it used ----------------//
-            if(c_FmkCan_IsNodeActive[idxNode_u8] == (t_bool)True)
-            {
-                idxBspNodeCfg_u8 = c_FmkCan_NodeCfg_ae[idxNode_u8];
-
-                nodeCfg_s.clockDivider_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].clockDivider_e;
-                nodeCfg_s.DataBaudrate_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].DataBaudrate_e;
-                nodeCfg_s.FifoMode_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].FifoMode_e;
-                nodeCfg_s.FrameBaudrate_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].FrameBaudrate_e;
-                nodeCfg_s.ProtocolUse_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].ProtocolUse_e;
-                nodeCfg_s.QueueType_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].QueueType_e;
-
-                Ret_e = s_FMKFDCAN_InitDriver((t_eFMKFDCAN_NodeList)idxNode_u8, nodeCfg_s);
-            }
-        }
     }
     
     return Ret_e;
 }
 
 /***********************
-* s_FMKFDCAN_InitDriver
+* FMKFDCAN_Cyclic
 ************************/
 t_eReturnCode FMKFDCAN_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_Modulestate_e)
+    switch (g_FmkCan_ModState_e)
     {
+        case STATE_CYCLIC_CFG:
+        {
+            Ret_e = s_FMKFDCAN_ConfigurationState();;
+            if(Ret_e == RC_OK)
+            {
+                g_FmkCan_ModState_e = STATE_CYCLIC_WAITING;
+            }
+            break;
+        }
         case STATE_CYCLIC_PREOPE:
         {
             Ret_e = s_FMKFDCAN_PreOperational();
             if(Ret_e  == RC_OK)
             {
-                g_Modulestate_e = STATE_CYCLIC_WAITING;
+                g_FmkCan_ModState_e = STATE_CYCLIC_OPE;
             }
+            break;
         }
         case STATE_CYCLIC_WAITING:
         {
@@ -738,7 +704,7 @@ t_eReturnCode FMKFDCAN_Cyclic(void)
             Ret_e = s_FMKFDCAN_Operational();
             if(Ret_e < RC_OK)
             {
-                g_Modulestate_e = STATE_CYCLIC_ERROR;
+                g_FmkCan_ModState_e = STATE_CYCLIC_ERROR;
             }
             break;
         }
@@ -758,17 +724,17 @@ t_eReturnCode FMKFDCAN_Cyclic(void)
 /*********************************
  * FMKCDA_GetState
  *********************************/
-t_eReturnCode FMKFDCAN_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKFDCAN_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_Modulestate_e;
+        *f_State_pe = g_FmkCan_ModState_e;
     }
 
     return Ret_e;
@@ -777,10 +743,10 @@ t_eReturnCode FMKFDCAN_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKCDA_SetState
  *********************************/
-t_eReturnCode FMKFDCAN_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKFDCAN_SetState(t_eCyclicModState f_State_e)
 {
 
-    g_Modulestate_e = f_State_e;
+    g_FmkCan_ModState_e = f_State_e;
     return RC_OK;
 }
 
@@ -838,7 +804,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_Modulestate_e != STATE_CYCLIC_OPE)
+    if(g_FmkCan_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -912,7 +878,7 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if(g_Modulestate_e != STATE_CYCLIC_OPE)
+    if(g_FmkCan_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -967,7 +933,8 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
         .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
-        .FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1,
+        //---According to datasheet, it's PLLQ, which is currently set to 120Mhz---//
+        .FdcanClockSelection  = RCC_FDCANCLKSOURCE_PLL,
     };
 
     if(f_Node_e > FMKFDCAN_NODE_NB)
@@ -982,36 +949,38 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
         }
-        if(Ret_e == RC_OK)
-        {
         //----------Configure Pin Init----------//
-            Ret_e = s_FMKFDCAN_MspInit();
-        }
-        if(Ret_e == RC_OK)
-        ///----------Copy Bsp Init from Config/----------//
-        Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
         if(Ret_e == RC_OK)
         {
-            //----------Set hardware clock RCC----------//
+            Ret_e = FMKIO_Set_ComCanCfg((t_eFMKIO_ComSigCan)f_Node_e);
+        }
+        //----------Copy Bsp Init from Config/----------//
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = s_FMKFDCAN_SetBspNodeInit(&g_NodeInfo_as[f_Node_e].bspNode_s, f_NodeCfg_s);
+        }
+        //----------Set hardware clock RCC----------//
+        if(Ret_e == RC_OK)
+        {
             Ret_e = FMKCPU_Set_HwClock(g_NodeInfo_as[f_Node_e].c_Clock_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         }
+        //----------set enable the Interruption----------//
         if(Ret_e == RC_OK)
         {
-            //----------set enable the Interruption----------//
             Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine1_e, FMKCPU_NVIC_OPE_ENABLE);
             if(Ret_e == RC_OK)
             {
                 Ret_e = FMKCPU_Set_NVICState(g_NodeInfo_as[f_Node_e].c_IrqnLine2_e, FMKCPU_NVIC_OPE_ENABLE);
             }
         }
+        //----------Call Bsp Init for FDCAN----------//
         if(Ret_e == RC_OK)
         {
-            //----------Call Bsp Init for FDCAN----------//
             bspRet_e = HAL_FDCAN_Init(&g_NodeInfo_as[f_Node_e].bspNode_s);
         }
+        //----------Set Hardware FIFO mode for FDCAN----------//
         if(bspRet_e == HAL_OK)
         {
-            //----------Set Hardware FIFO mode for FDCAN----------//
             Ret_e = s_FMKFDCAN_SetHwFifoOpeMode(f_Node_e, f_NodeCfg_s.FifoMode_e);
         }
     }
@@ -1027,29 +996,36 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     return Ret_e;
 }
 
-/***********************
-* s_FMKFDCAN_MspInit
-************************/
-static t_eReturnCode s_FMKFDCAN_MspInit(void)
+/*********************************
+* s_FMKFDCAN_ConfigurationState
+*********************************/
+static t_eReturnCode s_FMKFDCAN_ConfigurationState(void)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    
-    /* Enable the peripheral clock */
-    __HAL_RCC_FDCAN_CLK_ENABLE();
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxNode_u8 = (t_uint8)0;
+    t_sFMKFDCAN_DrvNodeCfg nodeCfg_s;
+    t_uint8 idxBspNodeCfg_u8;
+    for (idxNode_u8 = (t_uint8)0 ; (idxNode_u8 < FMKFDCAN_NODE_NB) && (Ret_e == RC_OK) ; idxNode_u8++)
+    { 
+        //-----------------Init driver if Node is used ----------------//
+        if(c_FmkCan_IsNodeActive[idxNode_u8] == (t_bool)True)
+        {
+            idxBspNodeCfg_u8 = c_FmkCan_NodeCfg_ae[idxNode_u8];
 
-    /* Enable GPIO clocks */
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+            //-----------------Copy FdCan Configuration ----------------//
+            nodeCfg_s.clockDivider_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].clockDivider_e;
+            nodeCfg_s.DataBaudrate_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].DataBaudrate_e;
+            nodeCfg_s.FifoMode_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].FifoMode_e;
+            nodeCfg_s.FrameBaudrate_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].FrameBaudrate_e;
+            nodeCfg_s.ProtocolUse_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].ProtocolUse_e;
+            nodeCfg_s.QueueType_e = c_FmkCan_BspNodeCfgList_as[idxBspNodeCfg_u8].QueueType_e;
+            
+            //-----------------Call Init Driver Managment----------------//
+            Ret_e = s_FMKFDCAN_InitDriver((t_eFMKFDCAN_NodeList)idxNode_u8, nodeCfg_s);
+        }
+    }
 
-    /* Configure FDCAN TX (PA12) and RX (PA11) pins */
-    GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF9_FDCAN1;  // Alternate Function for FDCAN1
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    return RC_OK;
-    
+    return Ret_e;
 }
 /*********************************
 * s_FMKFDCAN_PreOperational
@@ -1057,7 +1033,7 @@ static t_eReturnCode s_FMKFDCAN_MspInit(void)
 static t_eReturnCode s_FMKFDCAN_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    HAL_StatusTypeDef bspRet_e;
+    HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_uint8 idxNode_u8;
     //----------Activate Notification that are always ON----------//
     for(idxNode_u8 = (t_uint8)0; idxNode_u8 < FMKFDCAN_NODE_NB ; idxNode_u8++)
@@ -1097,16 +1073,16 @@ static t_eReturnCode s_FMKFDCAN_PreOperational(void)
             }
             if(Ret_e == RC_OK)
             {
-                //---------- Update Flag----------//
-                g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
-            }
-            if(Ret_e == RC_OK)
-            {
                 bspRet_e = HAL_FDCAN_Start(&g_NodeInfo_as[idxNode_u8].bspNode_s);
             }
             if(bspRet_e != HAL_OK)
             {
                 Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+            if(Ret_e == RC_OK)
+            {
+                //---------- Update Flag----------//
+                g_NodeInfo_as[idxNode_u8].isNodeActive_b = (t_bool)True;
             }
         }
     }
@@ -1449,7 +1425,7 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
             //-------------------Init for nominal baudrate-------------------//
             /* Information 
             *   Here in c_FmkCan_BspBaudrateCfg_as, the configuration has been made 
-            *   for Max Clock (64Mhz), if user wants to divided this clock, in order to 
+            *   for Clock Cfg (120Mhz), if user wants to divided this clock, in order to 
             *   obtain the right baudrate, we have to multiply the the value of the enum.\n
             *   In consequence no matter the clock divider value, the baudrate will always be 
             *   good 
@@ -1464,6 +1440,8 @@ static t_eReturnCode s_FMKFDCAN_SetBspNodeInit(FDCAN_HandleTypeDef *f_bspInit_ps
             */
             nominalPrescaler_u32 = (t_uint32)(c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].prescaler_u16 *
                                         f_NodeCfg_s.clockDivider_e);
+
+            //-------------------copy information -------------------//            
             f_bspInit_ps->Init.NominalPrescaler = nominalPrescaler_u32;
             f_bspInit_ps->Init.NominalSyncJumpWidth = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].syncSeg_u8;
             f_bspInit_ps->Init.NominalTimeSeg1 = c_FmkCan_BspBaudrateCfg_as[frameBaudrate_e].timeSeg1_u8;
@@ -1613,10 +1591,12 @@ static void s_FMKFDCAN_BspErrorEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                     break;
                 case HAL_FDCAN_ERROR_LOG_OVERFLOW:
                 case HAL_FDCAN_ERROR_RAM_ACCESS:
-                case HAL_FDCAN_ERROR_RAM_WDG:
                 case HAL_FDCAN_ERROR_PENDING:
                 case HAL_FDCAN_ERROR_RESERVED_AREA:
-                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_RAM;
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_MEM;
+                    break;
+                case HAL_FDCAN_ERROR_RAM_WDG:
+                    g_NodeInfo_as[idxNode_u8].nodeHealth_e |= FMKFDCAN_NODE_STATE_ERR_WDG;
                     break;
                 default:
                     Ret_e = RC_OK;
@@ -1674,7 +1654,6 @@ static t_eReturnCode s_FMKFDCAN_CopyBspTxItem(t_sFMKFDCAN_TxItemCfg *f_TxItemCfg
             f_bspTxItem_ps->MessageMarker       = (t_uint32)0;
             f_bspTxItem_ps->ErrorStateIndicator = (t_uint32)0;
         }
-        
     }
 
     return Ret_e;

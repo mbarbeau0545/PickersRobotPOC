@@ -111,7 +111,7 @@ t_sFMKCDA_AdcInfo g_AdcInfo_as[FMKCDA_ADC_NB] = {
         .BspInit_s.Instance = ADC5,
         .c_clock_e = FMKCPU_RCC_CLK_ADC345,
         .c_IRQNType_e = FMKCPU_NVIC_ADC5_IRQN,
-    }
+    },
 };
 
 /**< Rank for each channel add for ADC */
@@ -130,7 +130,7 @@ t_sFMKCDA_AdcCalibInfo g_adcCalibInfo_as[FMKCDA_ADC_NB];
 /**< store the raw value for each channel of each adc converter*/
 t_sFMKCDA_AdcBuffer g_AdcBuffer_as[FMKCDA_ADC_NB];
 
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_FmkCda_ModState_e = STATE_CYCLIC_CFG;
 
 //********************************************************************************
 //                      Local functions - Prototypes
@@ -210,7 +210,7 @@ static t_eReturnCode s_FMKCDA_Operational(void);
  * @retval RC_WARNING_BUSY                     @ref RC_WARNING_BUSY
  *
  */
-static t_eReturnCode s_FMKCDA_PreOperational(void);
+static t_eReturnCode s_FMKCDA_ConfigurationState(void);
 /**
  *
  *	@brief      Perform Diagnostic on adc & dac
@@ -295,19 +295,25 @@ t_eReturnCode FMKCDA_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_FmkCda_ModState_e)
     {
-        case STATE_CYCLIC_PREOPE:
+        case STATE_CYCLIC_CFG:
         {
-            Ret_e = s_FMKCDA_PreOperational();
+            Ret_e = s_FMKCDA_ConfigurationState();
             if(Ret_e  == RC_OK)
             {
-                g_state_e = STATE_CYCLIC_WAITING;
+                g_FmkCda_ModState_e = STATE_CYCLIC_WAITING;
             }
+            break;
         }
         case STATE_CYCLIC_WAITING:
         {
             // nothing to do just wait AppSys Signal
+            break;
+        }
+        case STATE_CYCLIC_PREOPE:
+        {
+            g_FmkCda_ModState_e = STATE_CYCLIC_OPE;
             break;
         }
         case STATE_CYCLIC_OPE:
@@ -315,7 +321,7 @@ t_eReturnCode FMKCDA_Cyclic(void)
             Ret_e = s_FMKCDA_Operational();
             if(Ret_e < RC_OK)
             {
-                g_state_e = STATE_CYCLIC_ERROR;
+                g_FmkCda_ModState_e = STATE_CYCLIC_ERROR;
             }
             break;
         }
@@ -335,17 +341,17 @@ t_eReturnCode FMKCDA_Cyclic(void)
 /*********************************
  * FMKCDA_GetState
  *********************************/
-t_eReturnCode FMKCDA_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKCDA_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_FmkCda_ModState_e;
     }
 
     return Ret_e;
@@ -354,10 +360,10 @@ t_eReturnCode FMKCDA_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKCDA_SetState
  *********************************/
-t_eReturnCode FMKCDA_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKCDA_SetState(t_eCyclicModState f_State_e)
 {
 
-    g_state_e = f_State_e;
+    g_FmkCda_ModState_e = f_State_e;
     return RC_OK;
 }
 
@@ -411,7 +417,7 @@ t_eReturnCode FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcC
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkCda_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_ERROR_WRONG_STATE;
     }
@@ -470,7 +476,7 @@ t_eReturnCode FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState 
 /*********************************
  * s_FMKCDA_Operational
  *********************************/
-static t_eReturnCode s_FMKCDA_PreOperational(void)
+static t_eReturnCode s_FMKCDA_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 AdcIndex_u8 = 0;
@@ -513,7 +519,7 @@ static t_eReturnCode s_FMKCDA_Operational(void)
         &&( (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_OK)
         || (g_AdcInfo_as[adcIndex_u8].Error_e == FMKCDA_ERRSTATE_PRESENTS)))
         {
-            Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
+            //Ret_e = s_FMKCDA_StartAdcConversion((t_eFMKCDA_Adc)adcIndex_u8, g_AdcInfo_as[adcIndex_u8].HwCfg_e);
             if(Ret_e == RC_OK) 
             {
                 g_AdcInfo_as[adcIndex_u8].IsAdcRunning_b = True;

@@ -60,7 +60,7 @@ t_eAPPACT_DriverState g_ActDrvState_ae[APPACT_DRIVER_NB] = {
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_AppAct_ModState_e = STATE_CYCLIC_CFG;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -78,7 +78,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
  *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
 
  */
-static t_eReturnCode s_APPACT_PreOperational(void);
+static t_eReturnCode s_APPACT_ConfigurationState(void);
 /**
 *
 *	@brief  Call driver cyclic function
@@ -103,19 +103,25 @@ t_eReturnCode APPACT_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_AppAct_ModState_e)
     {
-    case STATE_CYCLIC_PREOPE:
+    case STATE_CYCLIC_CFG:
     {
-        Ret_e = s_APPACT_PreOperational();
+        Ret_e = s_APPACT_ConfigurationState();
         if(Ret_e == RC_OK)
         {
-            g_state_e = STATE_CYCLIC_WAITING;
+            g_AppAct_ModState_e = STATE_CYCLIC_WAITING;
         }   
         break;
     }
     case STATE_CYCLIC_WAITING:
     {
+        // nothing to do, just wait all module are Ope
+        break;
+    }
+    case STATE_CYCLIC_PREOPE:
+    {
+        g_AppAct_ModState_e = STATE_CYCLIC_OPE;
         // nothing to do, just wait all module are Ope
         break;
     }
@@ -139,17 +145,17 @@ t_eReturnCode APPACT_Cyclic(void)
 /*********************************
  * APPACT_GetState
  *********************************/
-t_eReturnCode APPACT_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPACT_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_AppAct_ModState_e;
     }
     return Ret_e;
 }
@@ -157,9 +163,9 @@ t_eReturnCode APPACT_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * APPACT_SetState
  *********************************/
-t_eReturnCode APPACT_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPACT_SetState(t_eCyclicModState f_State_e)
 {
-    g_state_e = f_State_e;
+    g_AppAct_ModState_e = f_State_e;
     return RC_OK;
 }
 
@@ -179,7 +185,7 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_AppAct_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_ERROR_MODULE_NOT_INITIALIZED;
     }
@@ -211,7 +217,7 @@ t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_v
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_AppAct_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_ERROR_MODULE_NOT_INITIALIZED;
     }
@@ -268,9 +274,9 @@ t_eReturnCode APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 //                      Local functions - Implementation
 //********************************************************************************
 /*********************************
- * s_APPACT_PreOperational
+ * s_APPACT_ConfigurationState
  *********************************/
-static t_eReturnCode s_APPACT_PreOperational(void)
+static t_eReturnCode s_APPACT_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_LLDRV_u8 = 0;

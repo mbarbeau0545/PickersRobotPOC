@@ -63,7 +63,8 @@ typedef enum
     FMKFDCAN_NODE_STATE_ERR_FIFO       = 0x02,     /**< Node is queuing messages. */
     FMKFDCAN_NODE_STATE_ERR_TIMEOUT    = 0x04,     /**< Timeout occured  on the Node */
     FMKFDCAN_NODE_STATE_ERR_PROTOCOL   = 0x08,     /**< Protocol error detected in the node. */
-    FMKFDCAN_NODE_STATE_ERR_RAM        = 0x10,     /**< Protocol error detected in the node. */
+    FMKFDCAN_NODE_STATE_ERR_MEM        = 0x10,     /**< Memory error detected in the node. */
+    FMKFDCAN_NODE_STATE_ERR_WDG        = 0x20,     /**<  WhatchDog error detected*/
 
     FMKFDCAN_NODE_STATE_NB                         /**< Total number of node statuses. */
 } t_eFMKFDCAN_NodeStatus;
@@ -194,21 +195,21 @@ typedef struct
     *
     *	@brief Function to know the module state.\n 
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKFDCAN_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKFDCAN_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state.\n
     *
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    t_eReturnCode FMKFDCAN_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKFDCAN_SetState(t_eCyclicModState f_State_e);
     /**
     *	@brief      Configure a RxItem to be received.\n
     *	@note       This Function is used for registration to received a message CAN.\n
@@ -235,7 +236,6 @@ typedef struct
     *               f_TxItemCfg_s information.\n
     *               If the Hardware TxFiFo is full and cannot accept this TxItem, the software will
     *               put the TxItem into software Buffer and try later on ONLY IF DLC (data_len) IS <= 8.\n
-    *
     *
     *	@param[in] f_NodeStatus_e : CAN  Node -> enum value from @ref t_eFMKFDCAN_NodeList
     *	@param[in] f_TxItemCfg_s  : Structure for TxItem @ref t_sFMKFDCAN_TxItemCfg

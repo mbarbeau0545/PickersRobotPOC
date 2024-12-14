@@ -59,7 +59,7 @@ t_eAPPSNS_DrvState g_SnsDrvState_ae[APPSNS_DRIVER_NB] = {
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_AppSns_ModState_e = STATE_CYCLIC_CFG;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -75,7 +75,7 @@ static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
 *
 *
 */
-static t_eReturnCode s_APPSNS_PreOperational(void);
+static t_eReturnCode s_AppSns_ConfigurationState(void);
 /**
  *
  *	@brief      Perform preOperationnal action.\n
@@ -255,15 +255,20 @@ t_eReturnCode APPSNS_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_AppSns_ModState_e)
     {
-    case STATE_CYCLIC_PREOPE:
+    case STATE_CYCLIC_CFG:
     {
-        Ret_e = s_APPSNS_PreOperational();
+        Ret_e = s_AppSns_ConfigurationState();
         if(Ret_e == RC_OK)
         {
-            g_state_e = STATE_CYCLIC_WAITING;
+            g_AppSns_ModState_e = STATE_CYCLIC_WAITING;
         }
+        break;
+    }
+    case STATE_CYCLIC_PREOPE:
+    {
+        g_AppSns_ModState_e = STATE_CYCLIC_OPE;
         break;
     }
     case STATE_CYCLIC_WAITING:
@@ -274,6 +279,10 @@ t_eReturnCode APPSNS_Cyclic(void)
     case STATE_CYCLIC_OPE:
     {
         Ret_e = s_APPSNS_Operational();
+        if(Ret_e < RC_OK)
+        {
+            g_AppSns_ModState_e = STATE_CYCLIC_ERROR;
+        }
         break;
     }
     case STATE_CYCLIC_ERROR:
@@ -291,26 +300,26 @@ t_eReturnCode APPSNS_Cyclic(void)
 /*********************************
  * APPSNS_GetState
  *********************************/
-t_eReturnCode APPSNS_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPSNS_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_AppSns_ModState_e;
     }
     return Ret_e;
 }
 /*********************************
  * APPSNS_GetState
  *********************************/
-t_eReturnCode APPSNS_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPSNS_SetState(t_eCyclicModState f_State_e)
 {
-    g_state_e = f_State_e;
+    g_AppSns_ModState_e = f_State_e;
     return RC_OK;
 }
 
@@ -321,7 +330,7 @@ t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_AppSns_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_ERROR_MODULE_NOT_INITIALIZED;
     }
@@ -356,9 +365,9 @@ t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *
 //                      Local functions - Implementation
 //********************************************************************************
 /*********************************
- * s_APPSNS_PreOperational
+ * s_AppSns_ConfigurationState
  *********************************/
-static t_eReturnCode s_APPSNS_PreOperational(void)
+static t_eReturnCode s_AppSns_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_LLDRV_u8 = 0;

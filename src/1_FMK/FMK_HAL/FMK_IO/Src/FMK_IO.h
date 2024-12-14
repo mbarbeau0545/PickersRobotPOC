@@ -167,21 +167,21 @@
     /**
     *
     *	@brief Function to know the module state 
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKIO_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKIO_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state 
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKIO_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKIO_SetState(t_eCyclicModState f_State_e);
     /**
     *
     *	@brief      Set an input in Digital configuration.\n
@@ -252,7 +252,7 @@
     *
     *	@param[in]      f_signal_e          : the input frequency signal, a value from @ref t_eFMKIO_InEvntSig
     *	@param[in]      f_pull_e            : the input pull mode, value from @ref t_eFMKIO_PullMode
-    *	@param[in]      f_debouncDelay_u32  : the input pull mode, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_debouncDelay_u32  : time in which interrupt will be ignore due to indertemine state
     *	@param[in]      f_trigger_e         : time in ms to ignore fluctuation from signal after a interruption happened
     *	@param[in]      f_Evnt_cb           : Function to call when the edge is detected by hardware
     *	@param[in]      f_sigErr_cb         : callbback function that will be called if an error occured, NULL_FONCTION if not used
@@ -277,7 +277,7 @@
     *               call FMKCPU to configure a timer in order to convert generate
     *               the pwm period and dutycycle.\n
     *               IMPORTANT NOTE -> For SMT32, each signal has a timer and a channel
-    *               based on confifguration. A timer has multiple channel that shared the frequency
+    *               based on hardware confifguration. A timer has multiple channel that shared the frequency
     *               f_frequency_u32, once the timer set with this frequency the other signal (channel) 
     *               will have the same frequency.\n If the frequency is changed, it will be changed for every signal.\n
     *
@@ -285,8 +285,6 @@
     *	@param[in]      f_signal_e             : the input analog signal, a value from @ref t_eFMKIO_OutPwmSig
     *	@param[in]      f_pull_e               : the input pull mode, value from @ref t_eFMKIO_PullMode
     *	@param[in]      f_frequency_u32        : the PWM frequency 
-    *	@param[in]      f_dutyCycle_u16        : the dutycyle, value between 0 (0%) - 1000 (100%)
-    *	@param[in]      f_puf_startNow_bll_e   : wether or not the pulse generation should start immediately
     *	@param[in]      f_sigErr_cb             : callbback function that will be called if an error occured, NULL_FONCTION if not used
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -294,7 +292,7 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
+    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig        f_signal_e, 
                                           t_eFMKIO_PullMode        f_pull_e,
                                           t_uint32                 f_frequency_u32,
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
@@ -317,6 +315,18 @@
     t_eReturnCode FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e, 
                                           t_eFMKIO_PullMode  f_pull_e,
                                           t_eFMKIO_SpdMode   f_spd_e);
+    /**
+    *
+    *	@brief      Set Signals configuration for CAN.\n
+    *
+    *
+    *	@param[in]      f_SigCan_e     : which CAN configuration will be made, enum from @ref t_eFMKIO_ComSigCan
+    *	 
+    * @retval RC_OK                             @ref RC_OK
+    * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *
+    */
+    t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e);
     /**
     *
     *	@brief      Update the digital output value.\n
@@ -451,6 +461,7 @@
     *
     */
     t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    
     #ifdef FMKCPU_STM32_ECU_FAMILY_F
     /**
     *	@brief       @brief This function handles EXTI line 0 to 1 interrupts.\n

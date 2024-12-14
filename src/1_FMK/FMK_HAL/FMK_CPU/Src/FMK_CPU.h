@@ -106,11 +106,19 @@
         FMKCPU_ERRSTATE_OVERFLOW        = 0x04U,     /**< overflow capacity */
         FMKCPU_ERRSTATE_UNDERFLOW       = 0x08U,     /**< Under flow capacity */
         FMKCPU_ERRSTATE_NOT_CONFIGURED  = 0x10U,     /**< timer or channel not configured */
-        FMKCPU_ERRSTATE_BUSY            = 0x20U,     /**< channel is busy */
+        FMKCPU_ERRSTATE_OFF_UNEXPECTED  = 0x20U,     /**< channel is busy */
         FMKCPU_ERRSTATE_INIT_FAILED     = 0x04U,     /**< Failed during intitialize of channel */
         FMKCPU_ERRSTATE_UNKNOWN         = 0x80U,     /**< unknown error detected */
 
     } t_eFMKCPU_ChnlErrorState;
+
+    /**< union for Centralize Certain Function */
+    typedef union
+    {
+        t_eFMKCPU_InterruptLineIO ITLine_IO_e;
+        t_eFMKCPU_InterruptLineEvnt ITLine_Evnt_e;
+        t_eFMKCPU_InterruptLineDAC ITLine_Dac_e;
+    } t_uFMKCPU_InterruptLine;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -121,7 +129,7 @@
     *	 
     *
     */
-   typedef t_eReturnCode (t_cbFMKCPU_InterruptChnl)(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_InterruptChnl f_channel_e);
+   typedef t_eReturnCode (t_cbFMKCPU_InterruptLine)(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -163,21 +171,21 @@
     *
     *	@brief Function to know the module state.\n 
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKCPU_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state.\n
     *
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKCPU_SetState(t_eCyclicModState f_State_e);
     /**
     *
     *	@brief      Set the system clock configuration.\n
@@ -188,10 +196,10 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_SysClockCfg(void);
+    t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e);
     /**
     *
-    *	@brief      Set a Delay.\n
+    *	@brief      Set a Delay without bloxking other interruption.\n
     *
     *	@param[in]  f_delayms_u32 : period delay in millisecond.\n
     *
@@ -274,25 +282,23 @@
     t_eReturnCode FMKCPU_ResetWwdg(void);
     /**
     *
-    *	@brief      Configure a timer channel in PWM configuration.\n
+    *	@brief      Configure an tinterrupt line in PWM configuration.\n
     *   @note       First, this configuration set the bsp timer cfg in PWM mode.\n
     *               Once it's done, this function configure the bsp channel in PWM mode too.\n
     *               IMPORTANT, the PWM generation is based on a timer configuration which share
-    *               multiple channels, ina sense that, frequency is shared by all PWM channels.\n
-    *               In result, the modification of the timer configuration reverbate for all channels.\n          
+    *               multiple channels, in a sense that, frequency is shared by all PWM channels.\n
+    *               In result, the modification of the timer configuration reverbate for all channels.\n     
+    *               For Instance, every FMKCPU_INTERRUPT_LINE_IO_0Y, Y belong to [0, Innfini] shared the same timer.\n
     *
-    *	@param[in]  f_timer_e              : enum value for the priority, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
-    *	@param[in]  f_pwmFreq_u32      : the frequency timer.
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  f_pwmFreq_u32          : the frequency timer.
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_Timer f_timer_e,
-                                            t_eFMKCPU_InterruptChnl f_channel_e,
-                                            t_uint32 f_pwmFreq_u32);
+    t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint32 f_pwmFreq_u32);
     /**
     *
     *	@brief    Set the DutyCycle to a timer channel
@@ -301,36 +307,30 @@
     *             this function will enable the channel and set dutycycle give by f_dutyCycle_u16.\n
     *             If the value equals 0 this function will stop the PWM pulse (channel).\n 
     *
-    *	@param[in]  f_timer_e              : enum value for the priority, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
     *	@param[in]  f_dutyCycle_u16        : the dutycyle, value from [0, 1000]
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_ALREADY_CONFIGURED           @ref RC_ERROR_ALREADY_CONFIGURED
+    *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
-                                             t_eFMKCPU_InterruptChnl f_channel_e,
-                                             t_uint16 f_dutyCycle_u16);
+    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint16 f_dutyCycle_u16);
     /**
     *
     *	@brief    Get the DutyCycle from a timer channel
     *   @note     Get the value from CCRx register and convert it in dutycycle
     *
-    *	@param[in]  f_timer_e              : enum value for the priority, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
     *	@param[in]  f_dutyCycle_u16        : the dutycyle, value from [0, 1000]
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_ALREADY_CONFIGURED           @ref RC_ERROR_ALREADY_CONFIGURED
+    *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_Timer f_timer_e, 
-                                             t_eFMKCPU_InterruptChnl f_channel_e,
-                                             t_uint16 *f_dutyCycle_u16);
+    t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint16 *f_dutyCycle_u16);
     /**
     *
     *	@brief    Configure a timer channel in Input Compare configuration.\n
@@ -344,8 +344,7 @@
     *             based on the interrupt mode gives by f_MeasTrigger_e.\n
     *             Finally, if the CPU detect the event, it will call the function f_ITChannel_cb.\n
     *
-    *	@param[in]  f_timer_e              : enum value for the priority, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
     *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
     *	@param[in]  f_ITChannel_cb         : call back function to call
     *
@@ -355,22 +354,21 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
-                                         t_eFMKCPU_InterruptChnl f_channel_e, 
+    t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
+                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
     /**
     *
-    *	@brief    Configure a a timer channel on event configuration.\n
+    *	@brief    Configure a timer channel on event configuration.\n
     *   @note     This function initialize the timer in event configuration if the
     *             timer is not configured yet.\n
     *             Once the timer configure is done, update the channel state using function 
-    *             "FMKCPU_Set_EvntTimerState" and every f_periodms_u32 callback function is called.\n
+    *             "FMKCPU_Set_InterruptLineState" and every f_periodms_u32 callback function is called.\n
     *             IMPORTANT, In hardware this is the Timer which manage the interruption with ARR register,
-    *             In software this is channel structure who manage interruption to make all timer identical 
-    *             in just in variable.\n
+    *             which means, it is best that the timer is a basic timer with only one channel, 'cause the others will
+    *             be unused.\n
     *
-    *	@param[in]  f_evntChannel_e           : enum value for event channel, value from @ref f_timer_e
+    *	@param[in]  f_EvntITLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineEvnt
     *	@param[in]  f_periodms_u32            : period before calling function, in millisecond
     *	@param[in]  f_ITChannel_cb            : callback function to call
     *
@@ -380,9 +378,9 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_Timer f_timer_e,
+    t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
                                          t_uint32 f_periodms_u32,
-                                         t_cbFMKCPU_InterruptChnl f_ITChannel_cb);
+                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
     /**
     *
     *	@brief      Add a callback function to a timer channel.\n
@@ -392,20 +390,18 @@
     *               On OnePulse -> Not implemented
     *           
     *
-    *	@param[in]  f_timer_e              : enum value for the priority, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
-    *	@param[in]  f_pwmFreq_u32      : the frequency timer.
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  f_ITChannel_cb      : the frequency timer.
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_Timer f_timer_e, 
-                                             t_eFMKCPU_InterruptChnl f_channel_e,
-                                             t_cbFMKCPU_InterruptChnl *f_ITChannel_cb);
+    t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+                                             t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
     /**
     *
-    *	@brief      Set a timer-channel state ON/OFF.\n
+    *	@brief      Set a InterruptLine  state ON/OFF.\n
     *   @note       Using HAL_TIM function 
     *           
     *
@@ -417,23 +413,9 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_ChannelState(t_eFMKCPU_Timer f_timer_e, 
-                                           t_eFMKCPU_InterruptChnl f_channel_e,
-                                           t_eFMKCPU_ChnlState f_channelState_e);
-    /**
-    *
-    *	@brief      Set a timer-channel state ON/OFF.\n
-    *   @note       Using HAL_TIM function 
-    *           
-    *
-    *	@param[in]  f_timer_e              : enum value for the timer, value from @ref t_eFMKCPU_Timer
-    *	@param[in]  f_TimState_e       : enum value for the state operation, value from @ref t_eFMKCPU_EvntTimState
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
-    */
-    t_eReturnCode FMKCPU_Set_EventTimerState(t_eFMKCPU_Timer f_timer_e, t_eFMKCPU_EvntTimState f_TimState_e);
+    t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                                t_uFMKCPU_InterruptLine IT_line_u,
+                                                t_eFMKCPU_ChnlState f_channelState_e);
     /**
     *
     *	@brief      Function to get the error code for a timer_channel
@@ -447,9 +429,9 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_Timer f_timer_e,
-                                             t_eFMKCPU_InterruptChnl f_channel_e, 
-                                             t_eFMKCPU_ChnlErrorState *f_chnlErrInfo_pe);
+    t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                                t_uFMKCPU_InterruptLine f_IT_line_u,
+                                                t_eFMKCPU_ChnlErrorState *f_chnlErrInfo_pe);
     /**
     *
     *	@brief      Function to get CCRx register value
@@ -463,9 +445,9 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_Timer f_timer_e, 
-                                        t_eFMKCPU_InterruptChnl f_channel_e,
-                                        t_uint32 * f_CCRxValue_pu32);
+    t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                          t_uFMKCPU_InterruptLine f_IT_line_u,
+                                          t_uint32 * f_CCRxValue_pu32);
     /**
      *  @brief Declaration for hardware IRQnHandler call
      */

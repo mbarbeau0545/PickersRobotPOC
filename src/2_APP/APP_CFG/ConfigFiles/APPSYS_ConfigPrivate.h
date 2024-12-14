@@ -30,6 +30,7 @@
     // *                      Defines
     // ********************************************************************
 
+    #define APPSYS_SYSTEM_CORE_SPEED FMKCPU_CORE_CLOCK_SPEED_128MHZ
     #define APPSYS_ELAPSED_TIME_CYCLIC ((t_uint8)100) /**< Elapsed time (in ms) between cyclic function call*/
     // ********************************************************************
     // *                      Types
@@ -64,21 +65,21 @@
     *
     *	@brief Function to know the module state.\n 
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    typedef t_eReturnCode (t_cbAppSys_GetState)(t_eCyclicFuncState *f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_GetState)(t_eCyclicModState *f_state_pe);
     /**
     *
     *	@brief Function to update the module state.\n
     *
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    typedef t_eReturnCode (t_cbAppSys_SetState)(t_eCyclicFuncState f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_SetState)(t_eCyclicModState f_state_pe);
 
     /* Structure to store Init and Cyclic Func*/
     typedef struct 
@@ -101,9 +102,9 @@
     t_sAppSys_SysFunc c_AppSys_ModuleFunc_apf[APPSYS_MODULE_NB] = {
         // FrameWork module 
         {FMKCPU_Init,    FMKCPU_Cyclic,     FMKCPU_GetState,   FMKCPU_SetState},
-        {FMKFDCAN_Init,  FMKFDCAN_Cyclic,   FMKFDCAN_GetState, FMKFDCAN_SetState},
-        {FMKCDA_Init,    FMKCDA_Cyclic,     FMKCDA_GetState,   FMKCDA_SetState},
         {FMKIO_Init,     FMKIO_Cyclic,      FMKIO_GetState,    FMKIO_SetState},
+        {FMKCDA_Init,    FMKCDA_Cyclic,     FMKCDA_GetState,   FMKCDA_SetState},
+        {FMKFDCAN_Init,  FMKFDCAN_Cyclic,   FMKFDCAN_GetState, FMKFDCAN_SetState},
 
         // Application module
         {APPSNS_Init,    APPSNS_Cyclic,     APPSNS_GetState,   APPSNS_SetState},
