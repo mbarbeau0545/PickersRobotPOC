@@ -10,7 +10,7 @@ var searchData=
   ['t_5feappsns_5fsensorstate_7',['t_eAPPSNS_SensorState',['../_a_p_p_s_n_s___config_public_8h.html#af7afd89244a58f698fc5ac71cbbc897f',1,'APPSNS_ConfigPublic.h']]],
   ['t_5feappsns_5fsnsmeastype_8',['t_eAPPSNS_SnsMeasType',['../_a_p_p_s_n_s___config_public_8h.html#a4b2f12d7e5441f19c5c89bb067f10d68',1,'APPSNS_ConfigPublic.h']]],
   ['t_5feappsys_5fmodulelist_9',['t_eAppSys_ModuleList',['../_a_p_p_s_y_s___config_public_8h.html#a353acbf3f27edaffbc9159dae7987628',1,'APPSYS_ConfigPublic.h']]],
-  ['t_5fecyclicfuncstate_10',['t_eCyclicFuncState',['../_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5',1,'TypeCommon.h']]],
+  ['t_5fecyclicfuncstate_10',['t_eCyclicModState',['../_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5',1,'TypeCommon.h']]],
   ['t_5fefmkcda_5fadc_11',['t_eFMKCDA_Adc',['../_f_m_k_c_d_a___config_public_8h.html#a05ef889bfb1abced1e626d16ac71690a',1,'FMKCDA_ConfigPublic.h']]],
   ['t_5fefmkcda_5fadcchannel_12',['t_eFMKCDA_AdcChannel',['../_f_m_k_c_d_a___config_public_8h.html#a8a7cf2dd524526e08e4b02ba4399ae33',1,'FMKCDA_ConfigPublic.h']]],
   ['t_5fefmkcda_5fchnlerrstate_13',['t_eFMKCDA_ChnlErrState',['../_f_m_k___c_d_a_8h.html#a094a68e7da206f421e2a0a092d7b8193',1,'FMK_CDA.h']]],

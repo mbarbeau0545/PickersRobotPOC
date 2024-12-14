@@ -65,21 +65,21 @@
     *
     *	@brief Function to know the module state.\n 
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    typedef t_eReturnCode (t_cbAppSys_GetState)(t_eCyclicFuncState *f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_GetState)(t_eCyclicModState *f_state_pe);
     /**
     *
     *	@brief Function to update the module state.\n
     *
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    typedef t_eReturnCode (t_cbAppSys_SetState)(t_eCyclicFuncState f_state_pe);
+    typedef t_eReturnCode (t_cbAppSys_SetState)(t_eCyclicModState f_state_pe);
 
     /* Structure to store Init and Cyclic Func*/
     typedef struct 

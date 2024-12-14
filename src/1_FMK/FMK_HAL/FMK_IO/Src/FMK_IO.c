@@ -106,7 +106,7 @@ t_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB] = {
 /* CAUTION : Automatic generated code section for Variable: End */
 
 /**< Module state */
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_WAITING;
+static t_eCyclicModState g_FmkIO_ModState_e = STATE_CYCLIC_CFG;
 t_uint32 g_lastTick_ua32[FMKIO_INPUT_SIGEVNT_NB];
 //********************************************************************************
 //                      Local functions - Prototypes
@@ -316,31 +316,41 @@ t_eReturnCode FMKIO_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_FmkIO_ModState_e)
     {
-    case STATE_CYCLIC_WAITING:
-    {
-        // nothing to do, just wait all module are Ope
-        break;
-    }
-    case STATE_CYCLIC_OPE:
-    {
-        Ret_e = s_FMKIO_Operational();
-        if(Ret_e < RC_OK)
+        case STATE_CYCLIC_CFG:
         {
-            g_state_e = STATE_CYCLIC_ERROR;
+            g_FmkIO_ModState_e = STATE_CYCLIC_WAITING;
+            break;
         }
-        break;
-    }
-    case STATE_CYCLIC_ERROR:
-    {
-        break;
-    }
-    case STATE_CYCLIC_PREOPE:
-    case STATE_CYCLIC_BUSY:
-    default:
-        Ret_e = RC_OK;
-        break;
+        case STATE_CYCLIC_WAITING:
+        {
+            // nothing to do, just wait all module are Ope
+            break;
+        }
+        case STATE_CYCLIC_PREOPE:
+        {
+            g_FmkIO_ModState_e = STATE_CYCLIC_OPE;
+            // nothing to do, just wait all module are Ope
+            break;
+        }
+        case STATE_CYCLIC_OPE:
+        {
+            Ret_e = s_FMKIO_Operational();
+            if(Ret_e < RC_OK)
+            {
+                g_FmkIO_ModState_e = STATE_CYCLIC_ERROR;
+            }
+            break;
+        }
+        case STATE_CYCLIC_ERROR:
+        {
+            break;
+        }
+        case STATE_CYCLIC_BUSY:
+        default:
+            Ret_e = RC_OK;
+            break;
     }
     return Ret_e;
 }
@@ -348,17 +358,17 @@ t_eReturnCode FMKIO_Cyclic(void)
 /*********************************
  * FMKIO_GetState
  *********************************/
-t_eReturnCode FMKIO_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKIO_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_FmkIO_ModState_e;
     }
 
     return Ret_e;
@@ -367,9 +377,9 @@ t_eReturnCode FMKIO_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKIO_SetState
  *********************************/
-t_eReturnCode FMKIO_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKIO_SetState(t_eCyclicModState f_State_e)
 {
-    g_state_e = f_State_e;
+    g_FmkIO_ModState_e = f_State_e;
     return RC_OK;
 }
 /*********************************
@@ -700,7 +710,7 @@ t_eReturnCode FMKIO_Set_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -748,7 +758,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -781,7 +791,7 @@ t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_Dig
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -829,7 +839,7 @@ t_eReturnCode FMKIO_Get_InAnaSigValue(t_eFMKIO_InAnaSig f_signal_e, t_uint16 *f_
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -884,7 +894,7 @@ t_eReturnCode FMKIO_Get_InFreqSigValue(t_eFMKIO_InFreqSig f_signal_e, t_uint32 *
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -943,7 +953,7 @@ t_eReturnCode FMKIO_Get_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 *
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -976,7 +986,7 @@ t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     {
         Ret_e = RC_ERROR_MISSING_CONFIG;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }

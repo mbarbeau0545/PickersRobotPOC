@@ -167,21 +167,21 @@
     /**
     *
     *	@brief Function to know the module state 
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKIO_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKIO_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state 
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKIO_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKIO_SetState(t_eCyclicModState f_State_e);
     /**
     *
     *	@brief      Set an input in Digital configuration.\n

@@ -46,8 +46,8 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-t_eCyclicFuncState g_ModuleState_ae[APPSYS_MODULE_NB];
-static t_eCyclicFuncState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
+t_eCyclicModState g_ModuleState_ae[APPSYS_MODULE_NB];
+static t_eCyclicModState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -123,9 +123,9 @@ void APPSYS_Cyclic(void)
         case STATE_CYCLIC_PREOPE:
         {/* In Preope Mode AppSys called every cycle and wait every module are ready for Ope Mode*/
             Ret_e = s_APPSYS_PreOperational();
-            if(Ret_e == RC_OK)
+            if(Ret_e < RC_OK)
             {
-                g_AppSysModuleState_e = STATE_CYCLIC_OPE;
+                g_AppSysModuleState_e = STATE_CYCLIC_ERROR;
             }
             break;
         }
@@ -138,6 +138,7 @@ void APPSYS_Cyclic(void)
         {
             break;
         }
+        case STATE_CYCLIC_CFG:
         case STATE_CYCLIC_WAITING:
         case STATE_CYCLIC_ERROR:
         default:
@@ -197,13 +198,11 @@ static t_eReturnCode s_APPSYS_PreOperational(void)
         {
             if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
             {
-                Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].SetState_pcb(STATE_CYCLIC_OPE);
+                Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].SetState_pcb(STATE_CYCLIC_PREOPE);
             }
         }
-    }
-    else 
-    {
-        Ret_e = RC_WARNING_BUSY;
+        //---------Update Module State------------//
+        g_AppSysModuleState_e = STATE_CYCLIC_OPE;
     }
     return Ret_e;
 }

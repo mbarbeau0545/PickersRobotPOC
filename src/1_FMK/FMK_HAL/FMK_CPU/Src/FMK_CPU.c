@@ -68,7 +68,7 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_WAITING;
+static t_eCyclicModState g_FmkCpu_ModState_e = STATE_CYCLIC_CFG;
 
 WWDG_HandleTypeDef g_wwdgInfos_s = {0};
 
@@ -429,36 +429,41 @@ t_eReturnCode FMKCPU_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_FmkCpu_ModState_e)
     {
-
-    case STATE_CYCLIC_WAITING:
-    {
-        // nothing to do, just wait all module are Ope
-        break;
-    }
-    case STATE_CYCLIC_OPE:
-    {
-        Ret_e = s_FMKCPU_Operational();
-        if(Ret_e < RC_OK)
+        case STATE_CYCLIC_CFG:
         {
-            g_state_e = STATE_CYCLIC_ERROR;
+            g_FmkCpu_ModState_e = STATE_CYCLIC_WAITING;
+            break;
         }
-        break;
-    }
-    case STATE_CYCLIC_ERROR:
-    {
-        break;
-    }
-    case STATE_CYCLIC_PREOPE:
-    {
-        g_state_e = STATE_CYCLIC_WAITING;
-        break; 
-    }
-    case STATE_CYCLIC_BUSY:
-    default:
-        Ret_e = RC_OK;
-        break;
+        case STATE_CYCLIC_WAITING:
+        {
+            // nothing to do, just wait all module are Ope
+            break;
+        }
+        case STATE_CYCLIC_PREOPE:
+        {
+            g_FmkCpu_ModState_e = STATE_CYCLIC_OPE;
+            break; 
+        }
+        case STATE_CYCLIC_OPE:
+        {
+            Ret_e = s_FMKCPU_Operational();
+            if(Ret_e < RC_OK)
+            {
+                g_FmkCpu_ModState_e = STATE_CYCLIC_ERROR;
+            }
+            break;
+        }
+        case STATE_CYCLIC_ERROR:
+        {
+            break;
+        }
+        
+        case STATE_CYCLIC_BUSY:
+        default:
+            Ret_e = RC_OK;
+            break;
     }
     return Ret_e;
 }
@@ -466,17 +471,17 @@ t_eReturnCode FMKCPU_Cyclic(void)
 /*********************************
  * FMKCPU_GetState
  *********************************/
-t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKCPU_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_FmkCpu_ModState_e;
     }
 
     return Ret_e;
@@ -485,10 +490,10 @@ t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKCPU_SetState
  *********************************/
-t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKCPU_SetState(t_eCyclicModState f_State_e)
 {
 
-    g_state_e = f_State_e;
+    g_FmkCpu_ModState_e = f_State_e;
 
     return RC_OK;
 }
@@ -496,10 +501,52 @@ t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e)
 /*********************************
  * FMKCPU_Set_Delay
  *********************************/
-void FMKCPU_Set_Delay(t_uint32 f_delayms_u32)
+void FMKCPU_Set_Delay(t_uint32 f_delayms_u32) 
 {
-    return HAL_Delay(f_delayms_u32);
+    t_uint32 startTime_u32 = (t_uint32)0;
+    t_uint32 currentTime_u32 = (t_uint32)0;
+    t_uint32 elapsedTime_u32 = (t_uint32)0;
+    t_uint32 timeout_u32 = 1000;  // Timeout de 1000ms (1 seconde), ajustable selon vos besoins
+
+    // Récupérer le tick initial
+    FMKCPU_Get_Tick(&startTime_u32);
+
+    // Si la valeur de startTime est 0, il y a un problème avec l'initialisation du tick
+    if (startTime_u32 == (t_uint32)0)
+    {
+        return;  // Sortir immédiatement si HAL_GetTick() retourne 0
+    }
+
+    while (elapsedTime_u32 < f_delayms_u32)
+    {
+        // Vérifier si on atteint le timeout
+        if (elapsedTime_u32 > timeout_u32)
+        {
+            // Timeout atteint, sortir de la fonction
+            return;
+        }
+
+        // Récupérer le tick actuel
+        FMKCPU_Get_Tick(&currentTime_u32);
+
+        // Calcul de la différence en tenant compte de l'overflow
+        if (currentTime_u32 >= startTime_u32)
+        {
+            elapsedTime_u32 = currentTime_u32 - startTime_u32;
+        }
+        else
+        {
+            // Gestion de l'overflow
+            elapsedTime_u32 = (0xFFFFFFFF - startTime_u32) + currentTime_u32;
+        }
+
+        // Appeler une fonction d'arrière-plan ou mettre en veille pour économiser du CPU
+        __NOP(); // No-operation (placeholder pour ne pas surcharger la CPU)
+    }
+
+    return;
 }
+
 
 /*********************************
  * FMKCPU_Get_Tick
@@ -515,6 +562,10 @@ void FMKCPU_Get_Tick(t_uint32 * f_tickms_pu32)
     if(Ret_e == RC_OK)
     {
         *f_tickms_pu32 = HAL_GetTick();
+    }
+    else 
+    {
+        *f_tickms_pu32 = (t_uint32)0;
     }
     return;
 }
@@ -585,7 +636,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
         }
         if(bspRet_e != HAL_OK)
         {
-            g_state_e = STATE_CYCLIC_ERROR;
+            g_FmkCpu_ModState_e = STATE_CYCLIC_ERROR;
             Ret_e = RC_ERROR_WRONG_RESULT;
         }
         else 
@@ -605,6 +656,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
             }
         }
     }
+
     return Ret_e;
 }
 
@@ -636,7 +688,7 @@ t_eReturnCode FMKCPU_Set_HardwareInit(void)
 
     if(Ret_e != RC_OK)
     {
-        g_state_e = STATE_CYCLIC_ERROR;
+        g_FmkCpu_ModState_e = STATE_CYCLIC_ERROR;
     }
 
     return Ret_e;
@@ -828,7 +880,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkCpu_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -907,7 +959,7 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkCpu_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -1117,7 +1169,7 @@ t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_InterruptLineType f_ITLine
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkCpu_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -1157,7 +1209,7 @@ t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(g_state_e != STATE_CYCLIC_OPE)
+    if(g_FmkCpu_ModState_e != STATE_CYCLIC_OPE)
     {
         Ret_e = RC_WARNING_BUSY;
     }

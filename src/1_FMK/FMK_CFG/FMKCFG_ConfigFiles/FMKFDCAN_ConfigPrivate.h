@@ -136,7 +136,7 @@
     
 
     const t_bool c_FmkCan_IsNodeActive[FMKFDCAN_NODE_NB] = {
-        (t_bool)True,  // FMKFDCAN_NODE_1
+        (t_bool)False,  // FMKFDCAN_NODE_1
         (t_bool)False, // FMKFDCAN_NODE_2
         (t_bool)False, // FMKFDCAN_NODE_3
     };

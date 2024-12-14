@@ -31,7 +31,7 @@ var _type_common_8h =
     [ "t_uint16", "_type_common_8h.html#a2f8b43fd51d852dadf2f4e8fb70b6a50", null ],
     [ "t_uint32", "_type_common_8h.html#a5543ed798da376a99db035f6ae6aaa1f", null ],
     [ "t_uint8", "_type_common_8h.html#a0914b90e8ac459280d7a279030e57bd5", null ],
-    [ "t_eCyclicFuncState", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5", [
+    [ "t_eCyclicModState", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5", [
       [ "STATE_CYCLIC_PREOPE", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5a9eda8a550a6c842af4e2449c222be5c7", null ],
       [ "STATE_CYCLIC_OPE", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5ada22ae869f2719dd22534f0cbded22a2", null ],
       [ "STATE_CYCLIC_BUSY", "_type_common_8h.html#a3880607bf76af2806d46607baf78e6e5a92201e5fc4c4091779af8ca19c5e907f", null ],

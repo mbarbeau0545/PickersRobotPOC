@@ -49,12 +49,13 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
-static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_PreOperational(void);
+static t_eReturnCode s_APPLGC_Operational(void);
+static t_eReturnCode s_APPLGC_ConfigurationState(void);
 static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 
 //****************************************************************************
@@ -78,14 +79,14 @@ t_eReturnCode APPLGC_Cyclic(void)
     t_eReturnCode Ret_e = RC_OK;
     // code to run every x milliseconds, config in APPSYS_ConfigPrivate.h
 
-    switch (g_state_e)
+    switch (g_AppLgc_ModState_e)
     {
-    case STATE_CYCLIC_PREOPE:
+    case STATE_CYCLIC_CFG:
     {
-        Ret_e = s_APPLGC_PreOperational();
+        Ret_e = s_APPLGC_ConfigurationState();
         if(Ret_e == RC_OK)
         {
-            g_state_e = STATE_CYCLIC_WAITING;
+            g_AppLgc_ModState_e = STATE_CYCLIC_WAITING;
         }
         break;
     }
@@ -95,12 +96,20 @@ t_eReturnCode APPLGC_Cyclic(void)
         // nothing to do, just wait all module are Ope
         break;
     }
+    case STATE_CYCLIC_PREOPE:
+    {
+        Ret_e = s_APPLGC_PreOperational();
+        if(Ret_e == RC_OK)
+        {
+            g_AppLgc_ModState_e = STATE_CYCLIC_OPE;
+        }
+    }
     case STATE_CYCLIC_OPE:
     {
         Ret_e = s_APPLGC_Operational();
         if(Ret_e < RC_OK)
         {
-            g_state_e = STATE_CYCLIC_ERROR;
+            g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
         }
         break;
     }
@@ -119,17 +128,17 @@ t_eReturnCode APPLGC_Cyclic(void)
 /*********************************
  * APPLGC_GetState
  *********************************/
-t_eReturnCode APPLGC_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode APPLGC_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_AppLgc_ModState_e;
     }
 
     return Ret_e;
@@ -138,10 +147,10 @@ t_eReturnCode APPLGC_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * APPLGC_SetState
  *********************************/
-t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 {
 
-    g_state_e = f_State_e;
+    g_AppLgc_ModState_e = f_State_e;
 
     return RC_OK;
 }
@@ -150,12 +159,12 @@ t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e)
 //********************************************************************************
 
 /*********************************
- * s_APPLGC_PreOperational
+ * s_APPLGC_ConfigurationState
  *********************************/
-static t_eReturnCode s_APPLGC_PreOperational(void)
+static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool isLineActive = False;
+
     Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_2, 
                                     FMKIO_PULL_MODE_DISABLE,
                                     200,
@@ -165,16 +174,22 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 
         Ret_e = FMKCP_Set_EvntTimerCfg(FMKCPU_INTERRUPT_LINE_EVNT_1, 500, s_APPLGC_Callback);
     }
-    if(isLineActive == False)
-    {
-        Ret_e = FMKCPU_Set_InterruptLineState(FMKCPU_INTERRUPT_LINE_TYPE_EVNT, 
-                                                (t_uFMKCPU_InterruptLine){.ITLine_Evnt_e = FMKCPU_INTERRUPT_LINE_EVNT_1}, 
-                                                FMKCPU_CHNLST_ACTIVATED);
-    }
    
     return Ret_e;
 }
 
+/*********************************
+ * s_APPLGC_ConfigurationState
+ *********************************/
+static t_eReturnCode s_APPLGC_PreOperational(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    Ret_e = FMKCPU_Set_InterruptLineState(FMKCPU_INTERRUPT_LINE_TYPE_EVNT, 
+                                                (t_uFMKCPU_InterruptLine){.ITLine_Evnt_e = FMKCPU_INTERRUPT_LINE_EVNT_1}, 
+                                                FMKCPU_CHNLST_ACTIVATED);
+    return Ret_e;
+}
 /*********************************
  * s_APPLGC_Operational
  *********************************/
@@ -192,7 +207,7 @@ static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptTy
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint16 dutycycle = 0;
-    dutycycle += 200;
+    dutycycle += 50;
     UNUSED(f_InterruptType_e);
     UNUSED(f_InterruptLine_u8);
 
@@ -202,6 +217,7 @@ static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptTy
     }
 
     Ret_e = FMKIO_Set_OutPwmSigValue(FMKIO_OUTPUT_SIGPWM_2, dutycycle);
+    //FMKCPU_Set_Delay(1000);
     return Ret_e;
 }
 //************************************************************************************

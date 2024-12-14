@@ -171,21 +171,21 @@
     *
     *	@brief Function to know the module state.\n 
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKCPU_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode FMKCPU_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief Function to update the module state.\n
     *
-    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicFuncState
+    *	@param[in]  f_State_e : the new value, value from @ref t_eCyclicModState
     *
     *   @retval RC_OK                             @ref RC_OK
     */
-    t_eReturnCode FMKCPU_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode FMKCPU_SetState(t_eCyclicModState f_State_e);
     /**
     *
     *	@brief      Set the system clock configuration.\n
@@ -199,7 +199,7 @@
     t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e);
     /**
     *
-    *	@brief      Set a Delay.\n
+    *	@brief      Set a Delay without bloxking other interruption.\n
     *
     *	@param[in]  f_delayms_u32 : period delay in millisecond.\n
     *

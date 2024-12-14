@@ -87,7 +87,7 @@
     *
     *
     */
-    t_eReturnCode APPLGC_GetState(t_eCyclicFuncState *f_State_pe);
+    t_eReturnCode APPLGC_GetState(t_eCyclicModState *f_State_pe);
     /**
     *
     *	@brief
@@ -100,7 +100,7 @@
     *
     *
     */
-    t_eReturnCode APPLGC_SetState(t_eCyclicFuncState f_State_e);
+    t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e);
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

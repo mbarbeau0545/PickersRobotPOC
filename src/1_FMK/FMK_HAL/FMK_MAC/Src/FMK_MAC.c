@@ -115,7 +115,7 @@ t_sFMKMAC_DmaInfo g_DmaInfo_as[FMKMAC_DMA_CTRL_NB] = {
     }
 };
 
-static t_eCyclicFuncState g_state_e = STATE_CYCLIC_PREOPE;
+static t_eCyclicModState g_FmkMac_ModState_e = STATE_CYCLIC_CFG;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -182,8 +182,14 @@ t_eReturnCode FMKMAC_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    switch (g_state_e)
+    switch (g_FmkMac_ModState_e)
     {
+        case STATE_CYCLIC_CFG:
+    {
+        g_FmkMac_ModState_e = STATE_CYCLIC_WAITING;
+        // nothing to do, just wait all module are Ope
+        break;
+    }
     case STATE_CYCLIC_WAITING:
     {
         // nothing to do, just wait all module are Ope
@@ -191,14 +197,14 @@ t_eReturnCode FMKMAC_Cyclic(void)
     }
     case STATE_CYCLIC_PREOPE:
     {
-        g_state_e = STATE_CYCLIC_WAITING;
+        g_FmkMac_ModState_e = STATE_CYCLIC_OPE;
         break;
     }
     case STATE_CYCLIC_OPE:
     {
         if(Ret_e < RC_OK)
         {
-            g_state_e = STATE_CYCLIC_ERROR;
+            g_FmkMac_ModState_e = STATE_CYCLIC_ERROR;
         }
         break;
     }
@@ -216,17 +222,17 @@ t_eReturnCode FMKMAC_Cyclic(void)
 /*********************************
  * FMKMAC_GetState
  *********************************/
-t_eReturnCode FMKMAC_GetState(t_eCyclicFuncState *f_State_pe)
+t_eReturnCode FMKMAC_GetState(t_eCyclicModState *f_State_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
     
-    if(f_State_pe == (t_eCyclicFuncState *)NULL)
+    if(f_State_pe == (t_eCyclicModState *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        *f_State_pe = g_state_e;
+        *f_State_pe = g_FmkMac_ModState_e;
     }
 
     return Ret_e;
@@ -235,9 +241,9 @@ t_eReturnCode FMKMAC_GetState(t_eCyclicFuncState *f_State_pe)
 /*********************************
  * FMKMAC_SetState
  *********************************/
-t_eReturnCode FMKMAC_SetState(t_eCyclicFuncState f_State_e)
+t_eReturnCode FMKMAC_SetState(t_eCyclicModState f_State_e)
 {
-    g_state_e = f_State_e;
+    g_FmkMac_ModState_e = f_State_e;
     return RC_OK;
 }
 /***********************************
