@@ -82,13 +82,15 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+//--------IO Managment--------//
 t_sFMKIO_InFreqSigInfo     g_InFreqSigInfo_as[FMKIO_INPUT_SIGFREQ_NB];        /**< Signal information for input frequency */
 t_sFMKIO_AnaPwmSigInfo     g_InAnaSigInfo_as[FMKIO_INPUT_SIGANA_NB];          /**< Signal information for input Analog */
 t_sFMKIO_DigSigInfo        g_InDigSigInfo_as[FMKIO_INPUT_SIGDIG_NB];          /**< Signal information for input Digital */
 t_sFMKIO_InEvntSigInfo     g_InEvntSigInfo_as[FMKIO_INPUT_SIGEVNT_NB];        /**< Signal information for input Event */
 t_sFMKIO_AnaPwmSigInfo     g_OutPwmSigInfo_as[FMKIO_OUTPUT_SIGPWM_NB];        /**< Signal information for output PWM */
 t_sFMKIO_DigSigInfo        g_OutDigSigInfo_as[FMKIO_OUTPUT_SIGDIG_NB];        /**< Signal information for output Digital */
-
+//--------Communication Managment--------//
+t_bool g_IsIOComCanConfigured_ab[FMKIO_COM_SIGNAL_CAN_NB];
 t_uint32 g_InFreqLastCapture_ua32[FMKIO_INPUT_SIGFREQ_NB];                      /**< Storage for Last Capture value for freqency pins */
 
 /* CAUTION : Automatic generated code section for Variable: Start */
@@ -262,6 +264,7 @@ t_eReturnCode FMKIO_Init(void)
 {
     t_uint8 LLI_u8;
     
+    //---------Set Frequency Input Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_INPUT_SIGFREQ_NB ; LLI_u8++)
     {
         g_InFreqSigInfo_as[LLI_u8].meas_e = FMKIO_FREQ_MEAS_NB;
@@ -274,18 +277,23 @@ t_eReturnCode FMKIO_Init(void)
 
         g_InFreqLastCapture_ua32[LLI_u8] = (t_uint32)0;
     }
-        
+
+    //---------Set Analogic Input Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_INPUT_SIGANA_NB ; LLI_u8++)
     {
         g_InAnaSigInfo_as[LLI_u8].IsInterruptEnable_b = False;
         g_InAnaSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
         g_InAnaSigInfo_as[LLI_u8].sigError_cb = (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION;
     }
+
+    //---------Set Digital Input Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_INPUT_SIGDIG_NB ; LLI_u8++)
     {
         g_InDigSigInfo_as[LLI_u8].IsInterruptEnable_b = False;
         g_InDigSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
     }
+
+    //---------Set Event Input Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_INPUT_SIGEVNT_NB ; LLI_u8++)
     {
         g_InEvntSigInfo_as[LLI_u8].EvntFunc_cb = (t_cbFMKIO_EventFunc *)NULL_FONCTION;
@@ -295,16 +303,26 @@ t_eReturnCode FMKIO_Init(void)
 
         g_lastTick_ua32[LLI_u8] = (t_uint32)0;
     }
+
+    //---------Set Pwm Output Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_OUTPUT_SIGPWM_NB ; LLI_u8++)
     {
         g_OutPwmSigInfo_as[LLI_u8].IsInterruptEnable_b = False;
         g_OutPwmSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
         g_OutPwmSigInfo_as[LLI_u8].sigError_cb = (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION;
     }
+
+    //---------Set Digital Output Default Value---------//
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_OUTPUT_SIGDIG_NB ; LLI_u8++)
     {
         g_OutDigSigInfo_as[LLI_u8].IsInterruptEnable_b = False;
         g_OutDigSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
+    }
+
+    //---------Set Signal Com CAN Default Value---------//
+    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKIO_COM_SIGNAL_CAN_NB ; LLI_u8++)
+    {
+        g_IsIOComCanConfigured_ab[LLI_u8] = (t_bool)False;
     }
 
     return RC_OK;
@@ -667,6 +685,12 @@ t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
+
+    if(g_IsIOComCanConfigured_ab[f_SigCan_e] == (t_bool)True)
+    {
+        Ret_e = RC_ERROR_ALREADY_CONFIGURED;
+    }
+    
     if(Ret_e == RC_OK)
     {
         //---------------Set Tx Configuration---------------//

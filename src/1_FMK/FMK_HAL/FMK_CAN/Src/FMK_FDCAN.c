@@ -40,7 +40,7 @@
 /**
  * @brief Enumeration for the list of FDCAN BSP callback events.
  */
-typedef enum 
+typedef enum __t_eFMKFDCAN_BspCallbackList
 {
     FMKFDCAN_BSP_TX_CB_EVENT = 0x00,       /**< General Tx callback event. */
     FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,    /**< Tx buffer transmission completed. */
@@ -58,7 +58,7 @@ typedef enum
 /**
  * @brief Bsp Callback Status
  */
-typedef enum 
+typedef enum __t_eFMKFDCAN_BspStatusCb
 {
     FMKFDCAN_CALLBACK_STATUS_ACTIVATE = 0x00,       /**< The Callback needs activated by software */
     FMKFDCAN_CALLBACK_STATUS_DEACTIVATE,            /**< The Callback needs deactivated by software */
@@ -74,7 +74,7 @@ typedef enum
 /**
  * @brief Soft flags structure to manage various FDCAN software flags.
  */
-typedef struct 
+typedef struct __t_sFMKFDCAN_FlagSoft
 {
     t_bool TxQueuePending_b;       /**< Indicates if there are pending frames in the Tx queue. */
     t_bool RxQueuePending_b;       /**< Indicates if there are pending frames in the Rx queue. */
@@ -85,22 +85,22 @@ typedef struct
 /**
  * @brief Node information structure for FDCAN configuration and status.
  */
-typedef struct
+typedef struct __t_sFMKFDCAN_NodeInfo
 {
-    FDCAN_HandleTypeDef bspNode_s;         /**< BSP handle for FDCAN peripheral. */
-    const t_eFMKCPU_ClockPort c_Clock_e;   /**< Clock port associated with the FDCAN node. */
-    const t_eFMKCPU_IRQNType c_IrqnLine1_e;/**< IRQ line 1 associated with the FDCAN peripheral. */
-    const t_eFMKCPU_IRQNType c_IrqnLine2_e;/**< IRQ line 2 associated with the FDCAN peripheral. */
-    t_sFMKFDCAN_FlagSoft Flag_s;           /**< Software flags related to the FDCAN node. */
-    t_bool isNodeConfigured_b;             /**< Indicates if the FDCAN node has been configured. */
-    t_bool isNodeActive_b;                 /**< Indicates if the FDCAN node is active and operational. */
-    t_eFMKFDCAN_NodeStatus nodeHealth_e;    /**< Node status */
+    FDCAN_HandleTypeDef bspNode_s;           /**< BSP handle for FDCAN peripheral. */
+    const t_eFMKCPU_ClockPort c_Clock_e;     /**< Clock port associated with the FDCAN node. */
+    const t_eFMKCPU_IRQNType c_IrqnLine1_e;  /**< IRQ line 1 associated with the FDCAN peripheral. */
+    const t_eFMKCPU_IRQNType c_IrqnLine2_e;  /**< IRQ line 2 associated with the FDCAN peripheral. */
+    t_sFMKFDCAN_FlagSoft Flag_s;             /**< Software flags related to the FDCAN node. */
+    t_bool isNodeConfigured_b;               /**< Indicates if the FDCAN node has been configured. */
+    t_bool isNodeActive_b;                   /**< Indicates if the FDCAN node is active and operational. */
+    t_eFMKFDCAN_NodeStatus nodeHealth_e;      /**< Node status */
 } t_sFMKFDCAN_NodeInfo;
 
 /**
  * @brief Rx item buffer structure for receiving FDCAN frames.
  */
-typedef struct 
+typedef struct __t_sFMKFDCAN_RxItemBuffer
 {
     FDCAN_RxHeaderTypeDef bspRxItem_s; /**< FDCAN BSP Rx header structure for frame details. */
     t_uint8 data_ua8[FMKFDCAN_DLC_8];  /**< Data buffer for the received frame. */
@@ -1201,6 +1201,7 @@ static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                             Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8, 
                                                                     FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
                                                                     FMKFDCAN_CALLBACK_STATUS_DEACTIVATE);
+                                                                    
                             g_NodeInfo_as[idxNode_u8].Flag_s.TxQueuePending_b = (t_bool)False;
                         }
                     }

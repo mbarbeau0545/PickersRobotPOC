@@ -35,11 +35,21 @@ For the doxygen documentation search the file "index.html"
 - Go to the sheet CPU and inform the timer used for event timers whhich means periodic timer
 - Save and Generate code from Doc/ConfigPrj/PythonToolmain.py file.
 
+## bugs
+- Comprendre pourquoi HAL_Delay -> Infinite Loop
+- Comprendre pourquoi FDCAN marche po lo
 ## Left to do
+- Utiliser la LED builtin pour informer le Développer de l'état du µC
+    - LED clignote lentement   -> Phase d'initialisation 
+    - LED clignote rapidement  -> Phase d'initialisation échoué
+    - LED clignote constamment -> L'application est lancé 
+    - LED clignote plus        -> L'application est dans un état d'erreur
+
+- Rendre automatique l'implémentation des TIM_IRQ_Handler et tous enfaite dans chaque fichier
+- Faire un module Serial UART+USART
 - Faire un module Diagnostic Event Management
 - Faire un module Supply Voltage Control
 - Faire l'intégration MatLab du projet
-- Faire un module USART
 
 - Mettre à jour la documentation 
     - Mettre à jour la documentaiton drawio

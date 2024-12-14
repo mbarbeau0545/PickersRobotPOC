@@ -22,10 +22,10 @@
     #include "1_FMK/FMK_HAL/FMK_IO/Src/FMK_IO.h"
     #include "1_FMK/FMK_HAL/FMK_CDA/Src/FMK_CDA.h"
     #include "1_FMK/FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
-    #include "2_APP/APP_CTRL/APP_ACT/Src/APP_ACT.h"
-    #include "2_APP/APP_CTRL/APP_SNS/Src/APP_SNS.h"
     #include "1_FMK/FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
-    #include "2_APP/APP_LGC/Src/APP_LGC.h"
+    #include "3_APP/APP_CTRL/APP_ACT/Src/APP_ACT.h"
+    #include "3_APP/APP_CTRL/APP_SNS/Src/APP_SNS.h"
+    #include "3_APP/APP_LGC/Src/APP_LGC.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
