@@ -1279,7 +1279,7 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
         if(timerInfo_ps->IsTimerRunning_b == (t_bool)True)
         {
             //-----------Timer diagnostic-----------//
-            bspTimerState_e = c_FMKCPU_TimerFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_cb(
+            bspTimerState_e = c_FMKCPU_TimerFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_pcb(
                                     &timerInfo_ps->BspTimer_ps);
 
             if((bspTimerState_e  != HAL_TIM_STATE_BUSY)

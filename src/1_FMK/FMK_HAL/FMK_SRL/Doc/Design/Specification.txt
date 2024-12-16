@@ -1,0 +1,22 @@
+- Dans un premier temps 
+    - Ce module doit être compatible smt32g4/ stm32f4 / stm32f0, en gros tout,
+    - Ce module doit permettre de recevoir/ transmettre 
+    des messages  en UART / USART. 
+    - avec n'importe quels baudrate standard. 
+
+    - Il doit aussi pouvoir gérer nativement les communications type AT
+        L'utilisateur contact une API, lui donne la commande à envoyer
+        et s'attend à recevoir une réponse, 
+        Soit cela se fait Polling ou le retour de la fonction est la réponse sous un timeout
+        Soit cela se fait via une interruption côté module et via un appelle de callback pour l'utilisateur 
+
+    - Il doit aussi pouvoir gérer les communication où ce sont des informations recçu tout les x millisecondes
+        L'utilisateur contact une API et dit je veux recevoir tout les messages qu'importe la taille dès que tu les reçoits
+        Soit en donnant un nombre de bits à recevoir avant qu'on l'appelle avec les données
+        Soit en disant donne moi les données quand tu aura reçu ce trigger '\r\n' par exemple 
+
+- Dans un second temps 
+    - il doit pouvoir gérer les modes un peu complex où j'ai pas tout compris 
+        mais la base doit être déjà envisagé dans la première partie 
+        plus qu'a implémenté 
+        - HalfDuplex/MultiProcess/LIN

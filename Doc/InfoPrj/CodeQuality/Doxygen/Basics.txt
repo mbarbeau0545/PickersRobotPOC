@@ -1,0 +1,174 @@
+ Utiliser des commentaires structurés
+Placez les commentaires directement au-dessus des entités à documenter (fonctions, variables, structures, etc.).
+Adoptez un format homogène, par exemple :
+c
+Copier le code
+/**
+ * @brief  Breve description de la fonction.
+ * @param[in]  param1  Description du premier paramètre.
+ * @param[out] param2  Description du paramètre de sortie.
+ * @return     Description de la valeur de retour.
+ */
+2. Adopter une convention de nommage cohérente
+Assurez-vous que les noms de fichiers, fonctions, et variables soient explicites et auto-descriptifs.
+Évitez les abréviations trop complexes ou ambiguës.
+3. Documenter tout le code pertinent
+Modules/fichiers : Ajoutez une description générale en haut de chaque fichier source avec des balises comme @file, @brief, et @author.
+Fonctions : Documentez chaque fonction, même celles qui semblent triviales.
+Structures et énumérations : Expliquez chaque membre avec des balises @var ou @param.
+Macros et définitions : Indiquez leur but, leurs cas d'utilisation, et leurs limitations éventuelles.
+4. Inclure des exemples d'utilisation
+Ajoutez des balises @code et @endcode pour illustrer comment utiliser une fonction ou un module :
+c
+Copier le code
+/**
+ * @brief  Calcule l'IMC (Indice de Masse Corporelle).
+ * @param[in]  poids_kg  Poids en kilogrammes.
+ * @param[in]  taille_m  Taille en mètres.
+ * @return     IMC en kg/m².
+ * 
+ * @code
+ * float imc = CalculerIMC(70, 1.75);
+ * printf("IMC: %.2f\n", imc);
+ * @endcode
+ */
+5. Utiliser les balises avancées
+1. Définir et organiser des groupes avec @defgroup, @addtogroup, et @ingroup
+Imaginons que vous travaillez sur une bibliothèque de gestion de capteurs. Vous voulez organiser les capteurs en modules pour les types généraux (par exemple, température, pression, lumière).
+
+Dans un fichier source :
+
+c
+Copier le code
+/**
+ * @defgroup Sensors Gestion des capteurs
+ * @brief Ce module contient toutes les fonctions relatives à la gestion des capteurs.
+ * @{
+ */
+
+/**
+ * @defgroup TempSensors Capteurs de température
+ * @ingroup Sensors
+ * @brief Gestion des capteurs de température.
+ * @{
+ */
+
+/**
+ * @brief Initialise le capteur de température.
+ * @param[in] id Identifiant du capteur.
+ * @return `0` si l'initialisation est réussie, une erreur sinon.
+ * @see TempSensor_Read
+ */
+int TempSensor_Init(int id);
+
+/**
+ * @brief Lit la température depuis le capteur.
+ * @param[in] id Identifiant du capteur.
+ * @return Température en degrés Celsius.
+ * @see TempSensor_Init
+ */
+float TempSensor_Read(int id);
+
+/** @} */ // Fin du groupe TempSensors
+
+/**
+ * @defgroup PressureSensors Capteurs de pression
+ * @ingroup Sensors
+ * @brief Gestion des capteurs de pression.
+ * @{
+ */
+
+/**
+ * @brief Initialise le capteur de pression.
+ * @param[in] id Identifiant du capteur.
+ * @return `0` si l'initialisation est réussie, une erreur sinon.
+ */
+int PressureSensor_Init(int id);
+
+/**
+ * @brief Lit la pression depuis le capteur.
+ * @param[in] id Identifiant du capteur.
+ * @return Pression en Pascal.
+ */
+float PressureSensor_Read(int id);
+
+/** @} */ // Fin du groupe PressureSensors
+
+/** @} */ // Fin du groupe Sensors
+2. Utiliser des listes avec @li
+Dans une documentation de fonction, vous pouvez décrire des fonctionnalités ou des étapes sous forme de liste :
+
+c
+Copier le code
+/**
+ * @brief Calcule les statistiques d'une série de mesures.
+ * @param[in] data Tableau contenant les mesures.
+ * @param[in] size Nombre d'éléments dans le tableau.
+ * @return Moyenne des mesures.
+ * 
+ * Les statistiques calculées incluent :
+ * @li Moyenne
+ * @li Médiane
+ * @li Écart-type
+ * 
+ * @note Cette fonction ne gère pas les tableaux de taille 0.
+ */
+float ComputeStatistics(const float* data, size_t size);
+3. Inclure des tables avec Markdown
+Doxygen prend en charge les tables Markdown pour structurer vos données. Par exemple :
+
+c
+Copier le code
+/**
+ * @brief Affiche un tableau des caractéristiques des capteurs.
+ *
+ * | Capteur       | Unité         | Gamme              |
+ * |---------------|---------------|--------------------|
+ * | Température   | °C            | -40 à +125         |
+ * | Pression      | Pascal (Pa)   | 0 à 100 kPa        |
+ * | Lumière       | Lux           | 0 à 100 000        |
+ *
+ * @return `0` si l'affichage est réussi, une erreur sinon.
+ */
+int DisplaySensorCharacteristics(void);
+4. Utiliser des références croisées avec @see et @ref
+Vous pouvez créer des liens entre différentes parties de votre code pour faciliter la navigation :
+
+c
+Copier le code
+/**
+ * @brief Active un capteur donné.
+ * @param[in] id Identifiant du capteur.
+ * @return `0` si l'activation est réussie, une erreur sinon.
+ *
+ * @see TempSensor_Init
+ * @see PressureSensor_Init
+ */
+int Sensor_Enable(int id);
+
+/**
+ * @brief Désactive un capteur donné.
+ * @param[in] id Identifiant du capteur.
+ * @return `0` si la désactivation est réussie, une erreur sinon.
+ * 
+ * @ref Sensor_Enable "Voir Sensor_Enable pour plus de détails."
+ */
+int Sensor_Disable(int id);
+6. Documenter les erreurs et exceptions
+Expliquez les erreurs possibles et les conditions de bord.
+Ajoutez des informations sur les préconditions (@pre) et postconditions (@post).
+c
+Copier le code
+/**
+ * @brief  Divise deux nombres.
+ * @param[in]  a  Dividende.
+ * @param[in]  b  Diviseur (doit être non nul).
+ * @return     Résultat de la division.
+ * @pre        b != 0.
+ */
+7. Automatiser la vérification de la documentation
+Configurez des outils d’intégration continue pour vérifier que tous les éléments de code importants sont documentés.
+Utilisez des options comme WARN_IF_UNDOCUMENTED pour détecter les manques.
+8. Rendre la documentation claire et concise
+Évitez les descriptions trop techniques dans la documentation. Expliquez simplement ce que fait une fonction, pas comment elle le fait (sauf si c'est nécessaire).
+Ajoutez des diagrammes pour visualiser les relations entre les modules ou les structures complexes (par exemple, UML).

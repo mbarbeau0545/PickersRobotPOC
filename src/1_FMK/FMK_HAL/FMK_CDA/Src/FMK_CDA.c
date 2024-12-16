@@ -753,7 +753,9 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         // Gestion du mode DMA
         if (FMKMAC_ADC_DMA_MODE == DMA_CIRCULAR) {
             bspAdcInit_s->DMAContinuousRequests = ENABLE;
-        } else {
+        } 
+        else 
+        {
             bspAdcInit_s->DMAContinuousRequests = DISABLE;
         }
 

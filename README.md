@@ -54,8 +54,12 @@ For the doxygen documentation search the file "index.html"
 - Mettre à jour la documentation 
     - Mettre à jour la documentaiton drawio
     - Créer un script python qui fait une documentation générale du Projet avec toutes les API par Modules ?
+
 - Dans le module FDCAN
-    - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size.
+    - Rendre InitDrv Public, ne pas supposer que tout le monde va l'utiliser 
+    -  Inverser l'ordre de l'init, d'abord set Hw Clock et après Init
+    - Update du flag FlagError Detected et gestion dans la cylic
+    - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size. en gros un pointeur vers une varaible qui est un tableau généré dynamiquemeent par la config EXcel
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
 Dans la Cfg FMKCPU

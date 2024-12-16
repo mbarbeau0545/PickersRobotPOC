@@ -235,7 +235,7 @@
     /**< Structure for repertory all HAL_TIM function */
     typedef struct
     {
-        t_cbFMKCPU_GetTimerState             * GetTimerState_cb;        /**< HAL_TIM function to get the timer state */
+        t_cbFMKCPU_GetTimerState             * GetTimerState_pcb;        /**< HAL_TIM function to get the timer state */
         t_cbFMKCPU_TimerInitFunc             * TimerInit_pcb;           /**< HAL_TIM function to set a timer init */
         t_cbFMKCPU_TimerDeInitFunc           * TimerDeInit_pcb;         /**< HAL_TIM function to set a timer deinit */
         t_cbFMKCPU_TimStartFuncModePolling   * StartFuncPoll_pcb;       /**< HAL_TIM function to start a timer_channel in polling mode */
