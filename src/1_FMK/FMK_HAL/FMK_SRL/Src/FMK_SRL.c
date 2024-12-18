@@ -78,6 +78,17 @@ typedef struct
     t_cbFMKSRL_bspSerialInit   *bspSrlInit;
     t_cbFMKSRL_bspSerialDeInit *bspSrlDeInit;
 } t_sFMKSRl_BspSrlFunc;
+
+typedef struct 
+{
+    t_uint8 * RxBuffer_pu8;
+    t_uint8 * TxBuffer_pu8;
+    t_uint16  RxSizeTaken_u16;
+    t_uint16  TxSizeTaken_u16;
+    t_uint16  RxBufferSize_u16;
+    t_uint16  RxBufferSize_u16;
+    t_eFMKSRL_BufferFlag buffFlag_e;
+}
 // ********************************************************************
 // *                      Prototypes
 // ********************************************************************
