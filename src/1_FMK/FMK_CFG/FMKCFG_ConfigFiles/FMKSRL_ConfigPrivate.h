@@ -25,7 +25,9 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-   
+    #define FMKSRL_TIMEOUT_POLLING ((t_uint32)250)
+
+    #define FMKSRL_MAX_BYTES_TO_SEND ((t_uint16)256)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -76,6 +78,20 @@
                                                     t_uint8 *f_data_pu8, 
                                                     t_uint16 f_dataSize_u16,
                                                     t_uint32 f_timeOut_u32);
+
+    /**
+    *
+    *	@brief      HAL UART.USART function to Receive/ TRansmit in Polling Mode
+    *               is used in blocking mode 
+    *
+    *	@param[in]      bspHandle_pv        : the UART/USART Handle_TypeDef
+    *	@param[out]     f_data_pu8          : the pointer to the data
+    *	@param[out]     f_dataSize_u16      : the data size
+    *	@param[out]     f_timeOut_u32       : tiume out in polling mode
+    *
+    *   @retval HAL_OK                     @ref HAL_OK
+    *   @retval HAL_ERROR                  @ref HAL_ERROR
+    */
 
     /**
     *
@@ -152,9 +168,31 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
-
+    const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
+        {HAL_UART_Receive,      HAL_UART_Receive_IT,        HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {HAL_USART_Receive,     HAL_UART_Receive_IT,        HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
         
-    
+    };
+
+    const t_sFMKSRL_BspRxTxFunc c_FmkSrl_TxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
+        {HAL_UART_Transmit,      HAL_UART_Transmit_IT,        HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {HAL_USART_Transmit,     HAL_UART_Transmit_IT,        HAL_USART_Transmit_DMA},  // FMKSRL_HW_PROTOCOL_USART
+    };
+        
+    const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
+        {HAL_UART_Abort,        HAL_UART_Abort_IT,      HAL_UART_Abort_IT},         // FMKSRL_HW_PROTOCOL_UART    
+        {HAL_USART_Abort,       HAL_USART_Abort_IT,     HAL_USART_Abort_IT},        // FMKSRL_HW_PROTOCOL_USART
+    };
+
+    const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortRxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
+        {HAL_UART_AbortReceive,        HAL_UART_AbortReceive_IT,      HAL_UART_AbortReceive_IT},   // FMKSRL_HW_PROTOCOL_UART    
+        {NULL_FONCTION,                NULL_FONCTION,                 NULL_FONCTION},              // FMKSRL_HW_PROTOCOL_USART
+    };
+
+    const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortTxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
+        {HAL_UART_AbortTransmit,        HAL_UART_AbortTransmit_IT,    HAL_UART_AbortTransmit_IT},  // FMKSRL_HW_PROTOCOL_UART    
+        {NULL_FONCTION,                 NULL_FONCTION,                NULL_FONCTION},              // FMKSRL_HW_PROTOCOL_USART
+    };
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

@@ -21,7 +21,60 @@
     #ifndef NULL
         #define NULL ((void *)0)
     #endif // NULL
-
+    /**
+     * @brief Get a bit from a flag macro
+     */
+    #ifndef GETBIT
+        #define GETBIT(flag, bit) ((flag >> (bit)) & 1)
+    #endif
+    /**
+     * @brief Set a bit in a 16 bit flag
+     */
+    #ifndef SETBIT_16B
+        #define SETBIT_16B(flag, bit) ((flag) |= (t_uint16)1 << (bit))
+    #endif
+    /**
+     * @brief Set a bit in a 32 bit flag
+     */
+    #ifndef SETBIT_32B
+        #define SETBIT_32B(flag, bit) ((flag) |= (t_uint32)1 << (bit))
+    #endif
+    /**
+     * @brief Reset a bit in a 16 bit flag
+     */
+    #ifndef RESETBIT_16B
+        #define RESETBIT_16B(flag, bit) ((flag) &= ~(t_uint16)1 << (bit))
+    #endif
+    /**
+     * @brief Reset a bit in a 32 bit flag
+     */
+    #ifndef RESETBIT_32B
+        #define RESETBIT_32B(flag, bit) ((flag) &= ~(t_uint32)1 << (bit))
+    #endif
+    /**
+     * @brief Bit in a 16 bit flag is set
+     */
+    #ifndef BIT_IS_SET_16B 
+        #define BIT_IS_SET_16B ((t_uint16)1)
+    #endif
+    /**
+     * @brief Bit in a 16 bit flag is reset
+     */
+    #ifndef BIT_IS_RESET_16B 
+        #define BIT_IS_RESET_16B ((t_uint16)0)
+    #endif
+    /**
+     * @brief Bit in a 32 bit flag is set
+     */
+    #ifndef BIT_IS_SET_32B 
+        #define BIT_IS_SET_32B ((t_uint32)1)
+    #endif
+    /**
+     * @brief Bit in a 32 bit flag is reset
+     */
+     #ifndef BIT_IS_RESET_32B 
+        #define BIT_IS_RESET_32B ((t_uint32)0)
+    #endif
     /**
      * @brief Enum for return function
      */

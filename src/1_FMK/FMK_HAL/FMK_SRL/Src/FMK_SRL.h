@@ -188,6 +188,11 @@
     typedef enum 
     {
         FMKSRL_HEALTH_LINE_OK = 0x00,
+        FMKSRL_HEALTH_LINE_TRANSMIT_OVERFLOW,
+        FMKSRL_HEALTH_LINE_RECEIVE_OVERFLOW,
+        FMKSRL_HEALTH_LINE_TRANSMIT_ERR,
+        FMKSRL_HEALTH_LINE_RECEIVE_ERR,
+
     } t_eFMKSRL_HealthLine;
     
 	/* CAUTION : Automatic generated code section for Structure: Start */
@@ -371,7 +376,8 @@
                                     t_eFMKSRL_TxOpeMode f_OpeMode_e,
                                     t_uint8 * _msgData_pu8,
                                     t_uint16 f_dataSize_u16,
-                                    t_uint16 f_InfoMode_u16);
+                                    t_uint16 f_InfoMode_u16,
+                                    t_bool   f_EnableTxCb_b);
 
     /**
     *
@@ -383,8 +389,9 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    t_eReturnCode FMKSRL_Receive(  t_eFMKSRL_SerialLine f_SrlLine_e, 
-                                    t_eFMKSRL_RxOpeMode f_OpeMode_e);
+    t_eReturnCode FMKSRL_ConfigureReception(  t_eFMKSRL_SerialLine f_SrlLine_e, 
+                                              t_eFMKSRL_RxOpeMode f_OpeMode_e,
+                                              t_uint16 f_InfoOpe_u16);
 #endif // FMKSERIAL_INCLUDED           
 //************************************************************************************
 // End of File

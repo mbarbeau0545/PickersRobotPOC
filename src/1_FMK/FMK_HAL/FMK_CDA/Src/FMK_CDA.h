@@ -52,8 +52,8 @@
         FMKCDA_ERRSTATE_ERR_DMA          = 0x04U,            /**< Dma error detetected on channel */
         FMKCDA_ERRSTATE_CB               = 0x08U,            /**< callback error detetected on channel */
         FMKCDA_ERRSTATE_JQOVF            = 0x10U,            /**< to do */
-        FMKCDA_ERRSTATE_PRESENTS         = 0x40U,            /**< Conversio no longer operate when dma mode circular is choosen */
-        FMKCDA_ERRSTATE_UNKNOWN          = 0x20U,            /**< Unknown error detected */
+        FMKCDA_ERRSTATE_PRESENTS         = 0x20U,            /**< Conversio no longer operate when dma mode circular is choosen */
+        FMKCDA_ERRSTATE_UNKNOWN          = 0x40U,            /**< Unknown error detected */
 
     } t_eFMKCDA_ChnlErrState;
     /* CAUTION : Automatic generated code section for Enum: Start */
