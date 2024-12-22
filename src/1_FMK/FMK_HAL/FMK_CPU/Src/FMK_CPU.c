@@ -423,7 +423,7 @@ t_eReturnCode FMKCPU_Init(void)
     return RC_OK;
 }
 /*********************************
- * FMKCPU_Set_Delay
+ * FMKCPU_Cyclic
  *********************************/
 t_eReturnCode FMKCPU_Cyclic(void)
 {
