@@ -187,13 +187,14 @@
 
     typedef enum 
     {
-        FMKSRL_HEALTH_LINE_OK = 0x00,
-        FMKSRL_HEALTH_LINE_TRANSMIT_OVERFLOW,
-        FMKSRL_HEALTH_LINE_RECEIVE_OVERFLOW,
-        FMKSRL_HEALTH_LINE_TRANSMIT_ERR,
-        FMKSRL_HEALTH_LINE_RECEIVE_ERR,
+        FMKSRL_CB_INFO_RECEIVE_ENDING = 0x00,
+        FMKSRL_CB_INFO_RECEIVE_PENDING,
+        FMKSRL_CB_INFO_TRANSMIT_OVERFLOW,
+        FMKSRL_CB_INFO_RECEIVE_OVERFLOW,
+        FMKSRL_CB_INFO_TRANSMIT_ERR,
+        FMKSRL_CB_INFO_RECEIVE_ERR,
 
-    } t_eFMKSRL_HealthLine;
+    } t_eFMKSRL_CallbackInfo;
     
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -269,7 +270,7 @@
     */
     typedef void (t_cbFMKSRL_RcvMsgEvent)(  t_uint8 * f_rxData_pu8, 
                                             t_uint16 f_dataSize_u16, 
-                                            t_eFMKSRL_HealthLine f_healthLine_e);
+                                            t_eFMKSRL_CallbackInfo f_InfoCb_e);
 
     /**
     *
@@ -284,7 +285,7 @@
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
     */
-    typedef void (t_cbFMKSRL_TransmitMsgEvent)(t_bool f_isMsgTransmit_b, t_eFMKSRL_HealthLine f_healthLine_e);
+    typedef void (t_cbFMKSRL_TransmitMsgEvent)(t_bool f_isMsgTransmit_b, t_eFMKSRL_CallbackInfo f_InfoCb_e);
 
     typedef union __t_uSerialCfgSpec
     {

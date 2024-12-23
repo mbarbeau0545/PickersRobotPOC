@@ -22,6 +22,7 @@
     // *                      Includes
     // ********************************************************************
     #include "./FMKSRL_ConfigPublic.h"
+    #include "FMK_CFG/FMKCFG_ConfigSpecific/FMKSRL_ConfigSpecific.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -32,7 +33,7 @@
     // *                      Types
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
-    typedef enum 
+    typedef enum __t_eFMKSRL_BspTransmitOpe
     {
         FMKSRL_BSP_TX_OPE_TRANSMIT = 0x00,
         FMKSRL_BSP_TX_OPE_TRANSMIT_RECEIVE,
@@ -40,15 +41,17 @@
         FMKSRL_BSP_TX_OPE_NB
     } t_eFMKSRL_BspTransmitOpe;
 
-    typedef enum 
+    typedef enum __t_eFMKSRL_BspReceiveOpe
     {
         FMKSRL_BSP_RX_OPE_RECEIVE = 0x00,
         FMKSRL_BSP_RX_OPE_RECEIVE_IDLE,
-
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
+        FMKSRL_BSP_RX_OPE_RECEIVE_TIMEOUT,
+#endif
         FMKSRL_BSP_RX_OPE_NB
     } t_eFMKSRL_BspReceiveOpe;
 
-    typedef enum 
+    typedef enum __t_eFMKSRL_BspAbortOpe
     {
         FMKSRL_OPE_ABORT_RECEPTION = 0x00,
         FMKSRL_OPE_ABORT_TRANSMISSION,
@@ -169,29 +172,28 @@
     // *                      Variables
     // ********************************************************************
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {HAL_UART_Receive,      HAL_UART_Receive_IT,        HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
-        {HAL_USART_Receive,     HAL_UART_Receive_IT,        HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
+        {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,       FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {FMKSRL_HAL_USART_Receive,     FMKSRL_HAL_USART_Receive_IT,        FMKSRL_HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
         
     };
 
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_TxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {HAL_UART_Transmit,      HAL_UART_Transmit_IT,        HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
-        {HAL_USART_Transmit,     HAL_UART_Transmit_IT,        HAL_USART_Transmit_DMA},  // FMKSRL_HW_PROTOCOL_USART
-    };
-        
+        {FMKSRL_HAL_UART_Transmit,      FMKSRL_HAL_UART_Transmit_IT ,       FMKSRL_HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {FMKSRL_HAL_USART_Transmit,     FMKSRL_HAL_USART_Transmit_IT,        FMKSRL_HAL_USART_Transmit_DMA},  // FMKSRL_HW_PROTOCOL_USART
+    };    
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {HAL_UART_Abort,        HAL_UART_Abort_IT,      HAL_UART_Abort_IT},         // FMKSRL_HW_PROTOCOL_UART    
-        {HAL_USART_Abort,       HAL_USART_Abort_IT,     HAL_USART_Abort_IT},        // FMKSRL_HW_PROTOCOL_USART
+        {FMKSRL_HAL_UART_Abort,        FMKSRL_HAL_UART_Abort_IT,      FMKSRL_HAL_UART_Abort_IT},         // FMKSRL_HW_PROTOCOL_UART    
+        {FMKSRL_HAL_USART_Abort,       FMKSRL_HAL_USART_Abort_IT,     FMKSRL_HAL_USART_Abort_IT},        // FMKSRL_HW_PROTOCOL_USART
     };
 
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortRxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {HAL_UART_AbortReceive,        HAL_UART_AbortReceive_IT,      HAL_UART_AbortReceive_IT},   // FMKSRL_HW_PROTOCOL_UART    
-        {NULL_FONCTION,                NULL_FONCTION,                 NULL_FONCTION},              // FMKSRL_HW_PROTOCOL_USART
+        {FMKSRL_HAL_UART_AbortReceive,              FMKSRL_HAL_UART_AbortReceive_IT,         FMKSRL_HAL_UART_AbortReceive_IT},   // FMKSRL_HW_PROTOCOL_UART    
+        {NULL_FONCTION,                             NULL_FONCTION,                           NULL_FONCTION},                     // FMKSRL_HW_PROTOCOL_USART
     };
 
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortTxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {HAL_UART_AbortTransmit,        HAL_UART_AbortTransmit_IT,    HAL_UART_AbortTransmit_IT},  // FMKSRL_HW_PROTOCOL_UART    
-        {NULL_FONCTION,                 NULL_FONCTION,                NULL_FONCTION},              // FMKSRL_HW_PROTOCOL_USART
+        {FMKSRL_HAL_UART_AbortTransmit,             FMKSRL_HAL_UART_AbortTransmit_IT,         FMKSRL_HAL_UART_AbortTransmit_IT},   // FMKSRL_HW_PROTOCOL_UART    
+        {NULL_FONCTION,                             NULL_FONCTION,                            NULL_FONCTION},                      // FMKSRL_HW_PROTOCOL_USART
     };
     //********************************************************************************
     //                      Public functions - Prototyupes
