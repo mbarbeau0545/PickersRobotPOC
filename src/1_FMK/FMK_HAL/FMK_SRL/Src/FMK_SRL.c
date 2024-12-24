@@ -43,7 +43,7 @@ typedef union __t_uFMKSRL_HardwareSerial
 typedef enum __t_eFMKSRL_HealthLine
 {
     FMKSRL_LINE_HEALTH_OK = 0x00U,
-    FMKSRL_LINE_HEALTH_OK,
+    FMKSRL_LINE_HEALTH_ERR,
 } t_eFMKSRL_HealthLine;
 
 typedef enum __t_eFMKSRL_BufferStatus
@@ -69,7 +69,7 @@ typedef enum __t_eFMKSRL_BspCbTxEvnt
 {
     FMKSRL_BSP_TX_CB_HALCPLT = 0x00,
     FMKSRL_BSP_TX_CB_CPLT,
-
+    FMKSRL_BSP_TX_RX_CB_CPLT,
     FMKSRL_BSP_TX_CB_NB
     
 } t_eFMKSRL_BspCbTxEvnt;
@@ -147,13 +147,22 @@ typedef struct __t_sFMKSRL_SerialInfo
 // ********************************************************************
 static t_eCyclicModState g_FmkSrl_ModState_e = STATE_CYCLIC_CFG;
 
-static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB];
-
 static t_uint8 g_MProcessIdUsed[FMKSRL_SERIAL_LINE_NB];
 
 static t_eFMKSRL_RxOpeMode g_SavedUserRxOpeMode_ae[FMKSRL_SERIAL_LINE_NB];
 
-static t_uint8 g_BackUpBuffer[256];
+static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
+    [FMKSRL_SERIAL_LINE_1] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
+        .c_HwType_e = FMKSRL_HW_PROTOCOL_USART,
+        .c_IRQNType_e = FMKCPU_NVIC_USART1_IRQN,
+    },
+    [FMKSRL_SERIAL_LINE_2] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_UART4,
+        .c_HwType_e = FMKSRL_HW_PROTOCOL_UART,
+        .c_IRQNType_e = FMKCPU_NVIC_UART4_IRQN,
+    },
+};
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -297,7 +306,7 @@ static t_eReturnCode s_FMKSRL_SetUsartBspInit(  t_sFMKSRL_SerialInfo     * f_srl
 *   @retval RC_OK                               @ref RC_OK
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
 */
-static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
+static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
                                         t_eFMKSRL_BspCbTxEvnt f_Evnt_e);
 
 /**
@@ -311,7 +320,7 @@ static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
 *   @retval RC_OK                               @ref RC_OK
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
 */
-static void s_FMKSRL_BspRxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
+static void s_FMKSRL_BspRxEventCbMngmt( t_uFMKSRL_HardwareHandle * f_Handle_pu,
                                         t_eFMKSRL_BspCbRxEvnt f_Evnt_e,
                                         t_uint16 f_InfoCb_u16);
 
@@ -443,9 +452,9 @@ static t_eReturnCode s_FMKSRL_CopyData( t_sFMKSRL_BufferInfo * f_RxTxBuffer_ps,
 *   @retval RC_OK                               @ref RC_OK
 * 
 */
-static t_eReturnCode s_FMKSRL_CallUserMngmt(   t_sFMKSRL_SerialInfo * f_srlInfo_ps, 
-                                                    t_uint16   f_InfoCb_u16,
-                                                    t_uint16 * f_nbDataBytes_pu16);
+static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps, 
+                                            t_uint16 f_InfoCb_u16);
+                                                  
 /**
  *	@brief          Get the Bsp baudrate from Software enum.\n
  *
@@ -898,6 +907,21 @@ t_eReturnCode FMKSRL_ConfigureReception(  t_eFMKSRL_SerialLine f_SrlLine_e,
     if(Ret_e == RC_OK)
     {
         srlInfo_ps = (t_sFMKSRL_SerialInfo *)(&g_SerialInfo_as[f_SrlLine_e]);
+
+        //--------- Cyclic Ope Mngmt Has to be Update First ---------//
+        if( (f_OpeMode_e == FMKSRL_OPE_RX_CYCLIC_SIZE)
+        ||  (f_OpeMode_e == FMKSRL_OPE_RX_CYCLIC_IDLE)
+        ||  (f_OpeMode_e == FMKSRL_OPE_RX_CYCLIC_TIMEOUT))
+        {
+            srlInfo_ps->RxInfo_s.RqstCyclic_b = (t_bool)True;
+        }
+        else 
+        {
+            //--------- Update State ---------//
+            srlInfo_ps->RxInfo_s.RqstCyclic_b = (t_bool)False;
+        }
+
+        //--------- Configure Reception Logic ---------//
         switch (f_OpeMode_e)
         {
 
@@ -968,7 +992,6 @@ static t_eReturnCode s_FMKSRL_BspRxOpeMngmt(    t_eFMKSRL_BspReceiveOpe f_RxBspO
                                                 t_uint16 f_InfoMode_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_sFMKSRL_BufferInfo * RxBuffer_ps;
 
     if(f_RxBspOpe >= FMKSRL_BSP_RX_OPE_NB)
     {
@@ -980,7 +1003,6 @@ static t_eReturnCode s_FMKSRL_BspRxOpeMngmt(    t_eFMKSRL_BspReceiveOpe f_RxBspO
     }
     if(Ret_e == RC_OK)
     {   
-        RxBuffer_ps = (t_sFMKSRL_BufferInfo *)(&f_srlInfo_ps->RxInfo_s.Buffer_ps);
         switch (f_RxBspOpe)
         {
             //------ Receive Timeout Management ------//
@@ -1103,7 +1125,7 @@ static t_eReturnCode s_FMKSRL_BspRxOpeTimeOutMngmt( t_sFMKSRL_SerialInfo     * f
     }
     if(Ret_e == RC_OK)
     {
-        #warning('found the right Size to put and if it's the right function to call')
+        #warning('found the right Size to put and if its the right function to call\n')
         Ret_e = s_FMKSRL_BspRxOpeReceiveMngmt(f_srlInfo_ps, 0xFF);
     }
 
@@ -1238,7 +1260,7 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveIdleMngmt(t_sFMKSRL_SerialInfo * f_
                 {
                     f_srlInfo_ps->RxInfo_s.RxUserCb_pcb((t_uint8 *)NULL,
                                                         (t_uint16)0,
-                                                        FMKSRL_HEALTH_LINE_RECEIVE_ERR);
+                                                        FMKSRL_CB_INFO_RECEIVE_ERR);
                 }
                 break;
             }
@@ -1876,6 +1898,10 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                 bspUartInit_ps->StopBits   = bspLineStopbit_u32;
                 bspUartInit_ps->WordLength = bspLineWordLenght_u32;
                 
+                //-------- Set the Instance  --------//
+                srlInfo_ps->bspHandle_u.usartH_s.Instance = 
+                        c_FmkSrl_BspIstcMapp_pas[f_SrlLine_e];
+
                 //-------- Call Uart Bsp Init Managment --------//
                 Ret_e = s_FMKSRL_SetUartBspInit(    f_SrlLine_e, 
                                                     &f_DrvSrlCfg_ps->CfgSpec_u.uartCfg_s,
@@ -2164,17 +2190,15 @@ static t_eReturnCode s_FMKSRL_CopyData( t_sFMKSRL_BufferInfo * f_RxTxBuffer_ps,
 }
 
 /*********************************
- * s_FMKSRL_BspRxEventMngmt
+ * s_FMKSRL_BspRxEventCbMngmt
  *********************************/
-static void s_FMKSRL_BspRxEventMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu, 
-                                      t_eFMKSRL_BspCbRxEvnt f_Evnt_e, 
-                                      t_uint16 f_InfoCb_u16)
+static void s_FMKSRL_BspRxEventCbMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu, 
+                                       t_eFMKSRL_BspCbRxEvnt f_Evnt_e, 
+                                       t_uint16 f_InfoCb_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxSerialLine_u8;
-    t_uint16 dataReceived_u16;
     t_eFMKSRL_SerialLine srlLine_e;
-    t_uint8 * data_pu8;
     t_sFMKSRL_SerialInfo * srlInfo_ps;
     t_sFMKSRL_BufferInfo * RxBuffer_ps;
 
@@ -2197,7 +2221,7 @@ static void s_FMKSRL_BspRxEventMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
         }
         if (idxSerialLine_u8 < FMKSRL_SERIAL_LINE_NB)
         {
-            // Retrieving the relevant serial info
+            //--------- Reach Information for tis Serial Line ---------//
             srlLine_e = (t_eFMKSRL_SerialLine)idxSerialLine_u8;
             srlInfo_ps = &g_SerialInfo_as[srlLine_e];
             RxBuffer_ps = &srlInfo_ps->TxInfo_s.Buffer_ps;
@@ -2205,12 +2229,13 @@ static void s_FMKSRL_BspRxEventMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
             switch (f_Evnt_e)
             {
                 case FMKSRL_BSP_RX_CB_HALCPLT:
-                    // Nothing to do for now
+                    //--------- NOthing to do, Callback Not Use ---------//
                     break;
 
                 case FMKSRL_BSP_RX_CB_CPLT:
                 case FMKSRL_BSP_RX_CB_EVENT:
                 {
+                    //--------- Call User with data ---------//
                     Ret_e = s_FMKSRL_CallUserMngmt( srlInfo_ps, 
                                                     f_InfoCb_u16);
                     break;
@@ -2221,22 +2246,24 @@ static void s_FMKSRL_BspRxEventMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
                     break;
             }
 
-            // Update the buffer's state after the operation
+            
+            //--------- Update Flag After Operation ---------//
             if (srlInfo_ps->TxInfo_s.RqstTxRxOpe_b == true)
             {
                 srlInfo_ps->TxInfo_s.RqstTxRxOpe_b = false;
             }
 
-            // If not HALCPLT, update the buffer indices and status
+            //--------- Update Buffer Status Flag ---------//
             if (f_Evnt_e != FMKSRL_BSP_RX_CB_HALCPLT)
             {
                 SETBIT_16B(RxBuffer_ps->status_e, FMKSRL_BUFFSTATUS_READY);
             }
 
-            // If cyclic operation requested
             if (Ret_e == RC_OK)
             {
-                if (srlInfo_ps->RxInfo_s.RqstCyclic_b == true)
+                //--------- In DMA, Cyclic Ope Perform by Hardware, no need to relaunch cfg ---------//
+                if ( (srlInfo_ps->RxInfo_s.RqstCyclic_b == true)
+                &&   (srlInfo_ps->runMode_e != FMKSRL_LINE_RUNMODE_DMA))
                 {
                     Ret_e = s_FMKSRL_BspRxOpeMngmt(g_SavedUserRxOpeMode_ae[srlLine_e], srlInfo_ps, srlInfo_ps->RxInfo_s.infoMode_u16);
                     if (Ret_e < RC_OK)
@@ -2245,19 +2272,14 @@ static void s_FMKSRL_BspRxEventMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
                         srlInfo_ps->RxInfo_s.RxUserCb_pcb(NULL, 0, srlInfo_ps->Health_e);
                     }
                 }
-                else 
-                {
-                    RESETBIT_16B(RxBuffer_ps->status_e, FMKSRL_BUFFSTATUS_BUSY);
-                    srlInfo_ps->RxInfo_s.RqstCyclic_b = false;
-                }
             }
         }
     }
 }
 /*********************************
- * s_FMKSRL_BspTxEventMngmt
+ * s_FMKSRL_BspTxEventCbMngmt
  *********************************/
-static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
+static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
                                         t_eFMKSRL_BspCbTxEvnt f_Evnt_e)
 {   
     t_eReturnCode Ret_e = RC_OK;
@@ -2317,7 +2339,7 @@ static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
                         &&  (srlInfo_ps->TxInfo_s.NotifyUser_b == (t_bool)True)
                         &&  (srlInfo_ps->TxInfo_s.TxUserCb_pcb != (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION))
                         {
-                            srlInfo_ps->TxInfo_s.TxUserCb_pcb(False, FMKSRL_HEALTH_LINE_TRANSMIT_ERR);
+                            srlInfo_ps->TxInfo_s.TxUserCb_pcb(False, FMKSRL_CB_INFO_TRANSMIT_ERR);
                         }
                     }
                     else 
@@ -2339,7 +2361,7 @@ static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
                             &&  (srlInfo_ps->TxInfo_s.NotifyUser_b == (t_bool)True)
                             &&  (srlInfo_ps->TxInfo_s.TxUserCb_pcb != (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION))
                             {
-                                srlInfo_ps->TxInfo_s.TxUserCb_pcb(False, FMKSRL_HEALTH_LINE_TRANSMIT_ERR);
+                                srlInfo_ps->TxInfo_s.TxUserCb_pcb(False, FMKSRL_CB_INFO_TRANSMIT_ERR);
                             }
                         }
                         else 
@@ -2354,6 +2376,8 @@ static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
                     }
                     break;
                 }
+                #warning ('To Implement TxRx Complete')
+                case FMKSRL_BSP_TX_RX_CB_CPLT:
                 case FMKSRL_BSP_TX_CB_NB:
                 default:
                 {
@@ -2367,10 +2391,10 @@ static void s_FMKSRL_BspTxEventMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu,
 }
 
 /*********************************
- * s_FMKSRL_SetUartAdvanceCfg
+ * s_FMKSRL_CallUserMngmt
  *********************************/
 static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps, 
-                                                  t_uint16 f_InfoCb_u16)
+                                            t_uint16 f_InfoCb_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint16 dataLength_u16 = (t_uint16)0;
@@ -2409,49 +2433,54 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
             }
         }
 
-        // Vérification du mode de réception
+        //--------- Update Data Pending, depending on Run Mode ---------//
         if (f_srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_IT)
         {
-            // Mode interruption : pas de buffer circulaire, lire directement
+            //--------- Interrupt Mode -> No Circular Buffer, just read  ---------//
             RxMngmt_ps->RxUserCb_pcb((t_uint8 *)RxBuffer_ps->bufferAdd_pu8,
                                     dataLength_u16,
                                     f_srlInfo_ps->Health_e);
-            // Mettre à jour l'indice Read à 0 (pas de circulaire en mode interruption)
+
+            //--------- Update Read Idx ---------//
             RxBuffer_ps->readIdx_u16 = 0;
         }
         else if (f_srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
         {
-            // Mode DMA avec buffer circulaire
-            startIdx_u16 = RxBuffer_ps->readIdx_u16;
+            //--------- Dma Mode -> Buffer Circular ---------//
 
-            // Calcul du prochain index de lecture
+            //--------- Get End Index & Start Index ---------//
+            startIdx_u16 = RxBuffer_ps->readIdx_u16;
             endIdx_u16 = (startIdx_u16 + dataLength_u16) % RxBuffer_ps->buffferSize_u16;
 
-            // Si les données sont en train de s'écrire dans deux parties du buffer
-            if (startIdx_u16 < endIdx_u16)
+            //--------- If data are separate between the end and the begninning
+            //          of the buffer call user twice ---------//
+            if (endIdx_u16 < startIdx_u16)
             {
-                // call user twice
+                //--------- First Part Data ---------//
                 RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(&RxBuffer_ps->bufferAdd_pu8[startIdx_u16]),
                                             (t_uint16)(RxBuffer_ps->buffferSize_u16 - startIdx_u16),
                                             FMKSRL_CB_INFO_RECEIVE_PENDING);
 
+                //--------- Second Part Data ---------//
                 RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(RxBuffer_ps->bufferAdd_pu8),
                                             (t_uint16)endIdx_u16,
                                             FMKSRL_CB_INFO_RECEIVE_ENDING);
-                // La deuxième partie commence au début du buffer
-                RxBuffer_ps->readIdx_u16 = endIdx_u16;
             }
             else
             {
-                RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(&RxBuffer_ps->bufferAdd_pu8[startIdx]),
+                //--------- All Data are aline, call User ---------//
+                RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(&RxBuffer_ps->bufferAdd_pu8[startIdx_u16]),
                                             (t_uint16)dataLength_u16,
                                             FMKSRL_CB_INFO_RECEIVE_ENDING);
 
-                // Mise à jour de l'indice de lecture
-                RxBuffer_ps->readIdx_u16 = endIdx_u16;
             }
+
+            //--------- Update End Idx Buffer DMA Mode ---------//
+            RxBuffer_ps->readIdx_u16 = endIdx_u16;
         }
     }
+
+    //--------- Update Bytes Pending ---------//
     RxBuffer_ps->bytesPending_u16 = (t_uint16)0;
 
     return Ret_e;  // Retourner la valeur de retour correcte après les calculs
@@ -3179,6 +3208,103 @@ static t_eReturnCode s_FMKSRL_GetUsartBspClkPhase(t_eFMKSRL_UsartClockPhase f_Cl
 
     return Ret_e;
 }
+//************************************************************************************
+//                                      BSP CALLBACK MAPPING
+//************************************************************************************
+/***************************************
+ * UART IRQN_HANDLER MANAMENT
+ ***************************************/
+//void HAL_UART_IRQHandler(UART_HandleTypeDef *huart) { s_FMKSRL_}
+
+/***************************************
+ * USART IRQN_HANDLER MANAMENT
+ ***************************************/
+/***********************************************************
+ * UART CALLBACK MANAGEMENT
+ **********************************************************/
+// UNUSED void HAL_UART_TxHalfCpltCallback(UART_HandleTypeDef *huart)
+/***************************************
+ * HAL_UART_TxCpltCallback
+ ***************************************/
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) 
+{
+    return s_FMKSRL_BspTxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)huart, 
+                                        FMKSRL_BSP_TX_CB_CPLT); 
+}
+
+/***************************************
+ * HAL_UART_RxHalfCpltCallback
+ ***************************************/
+// UNUSED void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+
+/***************************************
+ * HAL_UART_RxCpltCallback
+ ***************************************/
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    return s_FMKSRL_BspRxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)huart, 
+                                        FMKSRL_BSP_RX_CB_CPLT,
+                                        (t_uint16)0); 
+}
+
+/***************************************
+ * HAL_UARTEx_RxEventCallback
+ ***************************************/
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+    return s_FMKSRL_BspRxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)huart, 
+                                        FMKSRL_BSP_RX_CB_CPLT,
+                                        (t_uint16)Size); 
+}
+
+/***************************************
+ * Error Callback
+ ***************************************/
+// UNUSED for Now void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+// UNUSED for Now void HAL_UART_AbortCpltCallback(UART_HandleTypeDef *huart) 
+// UNUSED for Now void HAL_UART_AbortTransmitCpltCallback(UART_HandleTypeDef *huart) 
+// UNUSED for Now void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart)
+
+/***********************************************************
+ * USART CALLBACK MANAGEMENT
+ **********************************************************/
+/***************************************
+ * HAL_USART_TxHalfCpltCallback
+ ***************************************/
+// UNUSED void HAL_USART_TxHalfCpltCallback(USART_HandleTypeDef *husart)
+
+/***************************************
+ * HAL_USART_TxCpltCallback
+ ***************************************/
+void HAL_USART_TxCpltCallback(USART_HandleTypeDef *husart)
+{
+    return s_FMKSRL_BspTxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)husart, 
+                                        FMKSRL_BSP_TX_CB_CPLT); 
+}
+/***************************************
+ * HAL_USART_RxCpltCallback
+ ***************************************/
+void HAL_USART_RxCpltCallback(USART_HandleTypeDef *husart)
+{
+    return s_FMKSRL_BspRxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)husart, 
+                                        FMKSRL_BSP_RX_CB_CPLT,
+                                        (t_uint16)0); 
+}
+/***************************************
+ * HAL_USART_RxHalfCpltCallback
+ ***************************************/
+// UNUSED void HAL_USART_RxHalfCpltCallback(USART_HandleTypeDef *husart)
+
+/***************************************
+ * HAL_USART_TxRxCpltCallback
+ ***************************************/
+void HAL_USART_TxRxCpltCallback(USART_HandleTypeDef *husart)
+{
+    return s_FMKSRL_BspTxEventCbMngmt(  (t_uFMKSRL_HardwareHandle *)husart, 
+                                        FMKSRL_BSP_TX_RX_CB_CPLT); 
+}
+// void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)
+// void HAL_USART_AbortCpltCallback(USART_HandleTypeDef *husart)
 //************************************************************************************
 // End of File
 //************************************************************************************

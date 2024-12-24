@@ -154,6 +154,7 @@
     } t_eFMKIO_OutPwmSig;
 
     /* List of signals used for CAN communication */
+    // flag automatic generated code
     typedef enum
     {
         FMKIO_COM_SIGNAL_CAN_1 = 0x0,                  /**< Rx -> PA11, Tx -> PA12, Reference to CAN 0 */
@@ -163,6 +164,12 @@
         FMKIO_COM_SIGNAL_CAN_NB,
     } t_eFMKIO_ComSigCan;
 
+    // flag automatic generated code
+    typedef enum 
+    {
+        FMKIO_COM_SIGNAL_SERIAL_1 = 0x00U,
+        FMKIO_COM_SIGNAL_SERIAL_2,
+    } t_eFMKIO_ComSigSerial;
     /* CAUTION : Automatic generated code section for Enum: End */
     /**< List of alternate function*/
     typedef enum

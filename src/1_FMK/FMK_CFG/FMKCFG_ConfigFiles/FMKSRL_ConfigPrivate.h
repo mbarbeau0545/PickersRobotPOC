@@ -171,6 +171,10 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
+    USART_TypeDef * c_FmkSrl_BspIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
+        USART1,
+        UART4
+    };
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,       FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
         {FMKSRL_HAL_USART_Receive,     FMKSRL_HAL_USART_Receive_IT,        FMKSRL_HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
