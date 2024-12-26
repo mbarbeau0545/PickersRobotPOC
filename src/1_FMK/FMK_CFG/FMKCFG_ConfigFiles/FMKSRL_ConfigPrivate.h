@@ -171,8 +171,9 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
+    //flag automatic generated code 
     USART_TypeDef * c_FmkSrl_BspIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
-        USART1,
+        USART2,
         UART4
     };
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {

@@ -45,7 +45,7 @@
     // Flag automatic 
     typedef enum __t_eFMKSRL_SerialLine
     {
-        FMKSRL_SERIAL_LINE_1 = 0x00, /**< Reference to USART 1 */
+        FMKSRL_SERIAL_LINE_1 = 0x00, /**< Reference to USART 2 */
         FMKSRL_SERIAL_LINE_2,        /**< Reference to UART 4 */
 
         FMKSRL_SERIAL_LINE_NB,

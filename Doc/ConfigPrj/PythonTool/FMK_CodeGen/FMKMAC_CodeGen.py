@@ -81,7 +81,7 @@ class FMKMAC_CodeGen():
         enm_channel = cls.code_gen.make_enum_from_variable(ENUM_FMKMAC_DMA_CHANNEL, [idx for idx in range(1, max_channel)],
                                                             't_eFMKMAC_DmaChnl', 0,
                                                             "Enum for number of channel in DMA",
-                                                            [f'Reference to Channel idx' for idx in range(1, max_channel)])
+                                                            [f'Reference to Channel {idx}' for idx in range(1, max_channel)])
         
         enm_dma = cls.code_gen.make_enum_from_variable(ENUM_FMKMAC_DMA_CTRL, [dma_info[0][-1] for dma_info in info_array],
                                                             't_eFMKMAC_DmaController', 0,

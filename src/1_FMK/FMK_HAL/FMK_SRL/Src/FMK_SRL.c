@@ -1902,7 +1902,7 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                                                 f_DrvSrlCfg_ps->hwCfg_s.Stopbit_e,
                                                 &bspLineStopbit_u32);
         }
-        switch (srlInfo_ps->c_HwType_e)
+        switch (f_DrvSrlCfg_ps->hwProtType_e)
         {
             case FMKSRL_HW_PROTOCOL_UART:
             {

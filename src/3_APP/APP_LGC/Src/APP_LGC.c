@@ -21,6 +21,7 @@
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 #include "FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
+#include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -57,7 +58,11 @@ static t_eReturnCode s_APPLGC_PreOperational(void);
 static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_ConfigurationState(void);
 static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
+static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
+                                    t_uint16 f_dataSize_u16, 
+                                    t_eFMKSRL_CallbackInfo f_InfoCb_e);
 
+static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_CallbackInfo f_InfoCb_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -157,7 +162,17 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
+static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
+                                    t_uint16 f_dataSize_u16, 
+                                    t_eFMKSRL_CallbackInfo f_InfoCb_e)
+{
+    return;
+}
 
+static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_CallbackInfo f_InfoCb_e)
+{
+    return;
+}
 /*********************************
  * s_APPLGC_ConfigurationState
  *********************************/
@@ -165,16 +180,27 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_2, 
-                                    FMKIO_PULL_MODE_DISABLE,
-                                    200,
-                                    NULL_FONCTION);
+    t_sFMKSRL_DrvSerialCfg SrlCfg_s;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
+    SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
+
+    SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,
+    SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
+    SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
+    SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
+    SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
+
+    SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
+    SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
+
+    Ret_e = FMKSRL_InitDrv(FMKSRL_SERIAL_LINE_1, SrlCfg_s,
+                            s_APPLGC_RcvSrlEvent,
+                            s_APPLGC_TranmistEvnt);
     if(Ret_e == RC_OK)
     {
-
-        Ret_e = FMKCP_Set_EvntTimerCfg(FMKCPU_INTERRUPT_LINE_EVNT_1, 500, s_APPLGC_Callback);
+        Ret_e = RC_WARNING_BUSY;
     }
-   
+    Ret_e = RC_OK;
     return Ret_e;
 }
 

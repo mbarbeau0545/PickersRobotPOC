@@ -97,8 +97,8 @@
         FMKIO_INPUT_SIGANA_6,                        /**< Reference to PA7 */
         FMKIO_INPUT_SIGANA_7,                        /**< Reference to PB0 */
         FMKIO_INPUT_SIGANA_8,                        /**< Reference to PB1 */
-        FMKIO_INPUT_SIGANA_9,                        /**< Reference to PA2 */
-        FMKIO_INPUT_SIGANA_10,                       /**< Reference to PA3 */
+        FMKIO_INPUT_SIGANA_9,                        /**< Reference to PF2 */
+        FMKIO_INPUT_SIGANA_10,                       /**< Reference to PF3 */
     
         FMKIO_INPUT_SIGANA_NB,
     } t_eFMKIO_InAnaSig;
@@ -162,6 +162,15 @@
     
         FMKIO_COM_SIGNAL_CAN_NB,
     } t_eFMKIO_ComSigCan;
+
+    /* List of signals used for Serial communication */
+    typedef enum
+    {
+        FMKIO_COM_SIGNAL_SERIAL_1 = 0x0,                  /**< Rx -> PA3, Tx -> PA2, Reference to Serial USART2 */
+        FMKIO_COM_SIGNAL_SERIAL_2,                        /**< Rx -> PC11, Tx -> PC10, Reference to Serial UART4 */
+    
+        FMKIO_COM_SIGNAL_SERIAL_NB,
+    } t_eFMKIO_ComSigSerial;
 
     /* CAUTION : Automatic generated code section for Enum: End */
 
