@@ -100,7 +100,7 @@
     *
     *
     */
-    t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, void *f_ModuleHandle_pv);
+    t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqst f_DmaType, void *f_ModuleHandle_pv);
 #endif // FMKMAC_H_INCLUDED           
 //************************************************************************************
 // End of File

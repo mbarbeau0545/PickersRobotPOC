@@ -19,6 +19,8 @@
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 #include "./FMK_SRL.h"
+#include "FMK_HAL/FMK_MAC/Src/FMK_MAC.h"
+
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKSRL_ConfigPrivate.h"
 
 #include "Library/SafeMem/SafeMem.h"
@@ -124,13 +126,14 @@ typedef struct __t_sFMKSRL_SerialInfo
     const t_eFMKCPU_ClockPort           c_clockPort_e;
     const t_eFMKCPU_IRQNType            c_IRQNType_e;
     const t_eFMKSRL_HwProtocolType      c_HwType_e;
+    const t_eFMKMAC_DmaRqst             c_DmaRqstRx;
+    const t_eFMKMAC_DmaRqst             c_DmaRqstTx;
     t_eFMKSRL_HwProtocolType            SoftType_e;
     t_eFMKSRL_LineBaudrate              baudrate_e;
     t_eFMKSRL_LineRunMode               runMode_e;
     t_sFMKSRL_TxMngmt                   TxInfo_s;
     t_sFMKSRL_RxMngmt                   RxInfo_s;
     t_eFMKSRL_HealthLine                Health_e;
-    t_bool                              isLineRunning_b;
     t_bool                              isLineConfigured_b;
 } t_sFMKSRL_SerialInfo;
 /* CAUTION : Automatic generated code section : Start */
@@ -156,11 +159,15 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
         .c_HwType_e = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e = FMKCPU_NVIC_USART1_IRQN,
+        .c_DmaRqstRx = FMKMAC_DMA_RQSTYPE_USART1_RX,
+        .c_DmaRqstTx = FMKMAC_DMA_RQSTYPE_USART1_TX,
     },
     [FMKSRL_SERIAL_LINE_2] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_UART4,
         .c_HwType_e = FMKSRL_HW_PROTOCOL_UART,
         .c_IRQNType_e = FMKCPU_NVIC_UART4_IRQN,
+        .c_DmaRqstRx = FMKMAC_DMA_RQSTYPE_UART4_RX,
+        .c_DmaRqstTx = FMKMAC_DMA_RQSTYPE_UART4_TX,
     },
 };
 //********************************************************************************
@@ -719,16 +726,25 @@ t_eReturnCode FMKSRL_InitDrv(   t_eFMKSRL_SerialLine f_SrlLine_e,
         {
             Ret_e = FMKCPU_Set_HwClock(srlInfo_ps->c_clockPort_e, FMKCPU_CLOCKPORT_OPE_ENABLE);
         }
+
         //------ Set NVIC State ------//
         if(Ret_e == RC_OK)
         {
             Ret_e = FMKCPU_Set_NVICState(srlInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
+
+        //------ Set IO Configuration ------//
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = FMKIO_Set_ComSerialCfg((t_eFMKIO_ComSigSerial)f_SrlLine_e);
+        }
+
         //------ Call Serial Init Management ------//
         if(Ret_e == RC_OK)
         {
             Ret_e = s_FMKSRL_SetBspSerialInit(f_SrlLine_e, &f_SerialCfg_s);
         }
+
         //------ Copy Information ------//
         if(Ret_e == RC_OK)
         {
@@ -1851,6 +1867,7 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
     {
         srlInfo_ps = (t_sFMKSRL_SerialInfo *)(&g_SerialInfo_as[f_SrlLine_e]);
         //--------- Fistly Configure All Common variable to Uart and Usart ---------//
+
         //--------- Get Bsp Line Baudrate ---------//
         Ret_e = s_FMKSRL_GetBspLineBaudrate(f_DrvSrlCfg_ps->hwCfg_s.Baudrate_e, &bspLineBaudrate_u32);
 
@@ -1899,13 +1916,33 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                 bspUartInit_ps->WordLength = bspLineWordLenght_u32;
                 
                 //-------- Set the Instance  --------//
-                srlInfo_ps->bspHandle_u.usartH_s.Instance = 
+                srlInfo_ps->bspHandle_u.uartH_s.Instance = 
                         c_FmkSrl_BspIstcMapp_pas[f_SrlLine_e];
 
+                //------ Set DMA Configuration if needed ------//
+                if(srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
+                {
+                    //------ Rx Line DMA ------//
+                    Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
+
+                    //------ Tx Line DMA ------//
+                    if(Ret_e == RC_OK)
+                    {
+                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
+                                                    (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
+                    }                                                
+
+                }
+
                 //-------- Call Uart Bsp Init Managment --------//
-                Ret_e = s_FMKSRL_SetUartBspInit(    f_SrlLine_e, 
-                                                    &f_DrvSrlCfg_ps->CfgSpec_u.uartCfg_s,
-                                                    &f_DrvSrlCfg_ps->hwCfg_s);
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = s_FMKSRL_SetUartBspInit(    f_SrlLine_e, 
+                                                    (&f_DrvSrlCfg_ps->CfgSpec_u.uartCfg_s),
+                                                    (&f_DrvSrlCfg_ps->hwCfg_s));
+                }
+                
                 break;
             }
 
@@ -1919,10 +1956,35 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                 bspUsartInit_ps->Parity     = bspLineParity_u32;
                 bspUsartInit_ps->StopBits   = bspLineStopbit_u32;
                 bspUsartInit_ps->WordLength = bspLineWordLenght_u32;
+                
+                //-------- Set the Instance  --------//
+                srlInfo_ps->bspHandle_u.usartH_s.Instance = 
+                        c_FmkSrl_BspIstcMapp_pas[f_SrlLine_e];
+
+                //------ Set DMA Configuration if needed ------//
+                if(srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
+                {
+                    //------ Rx Line DMA ------//
+                    Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
+
+                    //------ Tx Line DMA ------//
+                    if(Ret_e == RC_OK)
+                    {
+                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
+                                                    (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
+                    }                                                
+
+                }
+
                 //-------- Call Usart Bsp Init Managment --------//
-                Ret_e = s_FMKSRL_SetUsartBspInit(   srlInfo_ps,
-                                                    &f_DrvSrlCfg_ps->CfgSpec_u.usartCfg_s,
-                                                    &f_DrvSrlCfg_ps->hwCfg_s);
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = s_FMKSRL_SetUsartBspInit(   srlInfo_ps,
+                                                        (&f_DrvSrlCfg_ps->CfgSpec_u.usartCfg_s),
+                                                        (&f_DrvSrlCfg_ps->hwCfg_s));
+                }
+                
                 break;
             }
             case FMKSRL_HW_PROTOCOL_NB:
@@ -1963,18 +2025,19 @@ static t_eReturnCode s_FMKSRL_SetUartBspInit(   t_eFMKSRL_SerialLine      f_SrlL
         srlInfo_ps = (t_sFMKSRL_SerialInfo *)(&g_SerialInfo_as[f_SrlLine_e]);
         bspUartInit_ps = (UART_InitTypeDef *)(&srlInfo_ps->bspHandle_u.uartH_s);
 
-        #ifdef FMKCPU_STM32_ECU_FAMILY_G
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
             
             if(Ret_e == RC_OK)
             {
                 //--------- Get Bsp Hardware Flow Control ---------//
                 Ret_e = s_FMKSRL_GetUartBspHwFlowCtrl( f_UartCfg_ps->hwFlowCtrl_e, &bspLineHwFlowCtrl_u32);
                 bspUartInit_ps->HwFlowCtl  = bspLineHwFlowCtrl_u32;
+
                 //--------- Set Advance Configuration ---------//
                 Ret_e = s_FMKSRL_SetUartAdvanceCfg( &srlInfo_ps->bspHandle_u.uartH_s.AdvancedInit,
                                                 &f_UartCfg_ps->advProtCfg_s);
             }
-        #endif
+#endif
 
         if(Ret_e == RC_OK)
         {
@@ -2310,9 +2373,11 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
         }
         if(idxSerialLine_u8 < FMKSRL_SERIAL_LINE_NB)
         {
+            //--------- Reach Information from the line ---------//
             srlLine_e = (t_eFMKSRL_SerialLine)idxSerialLine_u8;
             srlInfo_ps =  (t_sFMKSRL_SerialInfo *)(&g_SerialInfo_as[srlLine_e]);
             TxBuffer_ps = (t_sFMKSRL_BufferInfo *)(&srlInfo_ps->TxInfo_s.Buffer_ps);
+
             //--------- Manage Logic depending on Whom Make the Interruption ---------//
             switch (f_Evnt_e)
             {
@@ -2478,12 +2543,21 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
             //--------- Update End Idx Buffer DMA Mode ---------//
             RxBuffer_ps->readIdx_u16 = endIdx_u16;
         }
+        else 
+        {
+            Ret_e = RC_WARNING_NO_OPERATION;
+        }
     }
 
     //--------- Update Bytes Pending ---------//
-    RxBuffer_ps->bytesPending_u16 = (t_uint16)0;
+    if(Ret_e == RC_OK)
+    {
+        RxBuffer_ps->bytesPending_u16 = (t_uint16)0;
+    }
+    
+    
 
-    return Ret_e;  // Retourner la valeur de retour correcte après les calculs
+    return Ret_e;
 }
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
 /*********************************
@@ -2556,6 +2630,7 @@ static t_eReturnCode s_FMKSRL_TimeOutMngmt( t_eFMKSRL_TimeoutOpe f_Ope_e,
             default:
             {
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
+                break;
             }
         }
     }

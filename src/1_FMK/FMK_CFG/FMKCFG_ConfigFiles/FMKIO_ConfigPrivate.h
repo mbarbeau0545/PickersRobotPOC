@@ -71,7 +71,7 @@
         t_sFMKIO_BspSigCfg RxPin_s;                /**< GPIO configuration for RxCAN pin*/
         t_sFMKIO_BspSigCfg TxPin_s;                /**< GPIO configuration for TxCAN pin*/
         t_uint8            BspAlternateFunc_u8;    /**< Alterante function/FDCAN relate to the pin */
-    } t_sFMKIO_CanSigCfg;
+    } t_sFMKIO_RxTxComCfg;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************

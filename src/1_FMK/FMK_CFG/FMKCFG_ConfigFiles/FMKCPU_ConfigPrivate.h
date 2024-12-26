@@ -75,14 +75,11 @@
     /* Number max of channel enable by timer */
     typedef enum
     {
-        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 1 */
-        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 2 */
-        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 3 */
-        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 4 */
-#ifdef FMKCPU_STM32_ECU_FAMILY_G
-        FMKCPU_CHANNEL_5,                        /**< Reference to HAL channel 5 */
-        FMKCPU_CHANNEL_6,                        /**< Reference to HAL channel 6 */
-#endif
+        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */
+        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 1 */
+        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 2 */
+        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 3 */
+    
         FMKCPU_CHANNEL_NB,
     } t_eFMKCPU_InterruptChnl;
 

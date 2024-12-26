@@ -44,12 +44,26 @@ typedef enum
     FMKMAC_ERRSTATE_TIMEOUT = 0x100                  /**< Timeout delay (transfer has take too many time)*/
 } t_eFMKMAC_DmaChnlErr;
 
+
+typedef enum 
+{
+    FMKMAC_DMA_TYPE_ADC = 0x00,
+    FMKMAC_DMA_TYPE_UART_RX,
+    FMKMAC_DMA_TYPE_UART_TX,
+    FMKMAC_DMA_TYPE_USART_RX,
+    FMKMAC_DMA_TYPE_USART_TX,
+    FMKMAC_DMA_TYPE_SPI,
+
+    FMKMAC_DMA_TYPE_NB,
+
+} t_eFMKMAC_DmaType;
 /**< Union to centralize Dma Handle TypeDef  */
 typedef union 
 {
     ADC_HandleTypeDef adcHandle_s;
-    USART_HandleTypeDef UsartHandle_s;
-    SPI_HandleTypeDef SpiHandle_s;
+    USART_HandleTypeDef usartHandle_s;
+    UART_HandleTypeDef  uartHanddle_s;
+    SPI_HandleTypeDef spiHandle_s;
 } t_uFMKMAC_DmaHandleType;
 
 /* CAUTION : Automatic generated code section for Structure: Start */
@@ -81,39 +95,107 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+/* CAUTION : Automatic generated code section for Variable: Start */
+/**< Variable to store information about the Dma and the Channel */
 t_sFMKMAC_DmaInfo g_DmaInfo_as[FMKMAC_DMA_CTRL_NB] = {
-    { // DMA1_CONTROLLER
+     {//------- DMA1_CONTROLLER -------//
         .c_clock_e = FMKCPU_RCC_CLK_DMA1,
-        .isConfigured_b = False,
         .channel_as = {
+
+
             [FMKMAC_DMA_CHANNEL_1] = {
-                .bspDma_ps = { .Instance = DMA1_Channel1 },  
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL1_IRQN,
-                .chnlErr_e = FMKMAC_ERRSTATE_OK,
+                .bspDma_ps = {.Instance = DMA1_Channel1},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL1_IRQN,
             },
+
             [FMKMAC_DMA_CHANNEL_2] = {
-                .bspDma_ps = { .Instance = DMA1_Channel2 }, 
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_IRQN,
-                .chnlErr_e = FMKMAC_ERRSTATE_OK,
+                .bspDma_ps = {.Instance = DMA1_Channel2},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL2_IRQN,
             },
+
             [FMKMAC_DMA_CHANNEL_3] = {
-                .bspDma_ps = { .Instance = DMA1_Channel3 }, 
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL3_IRQN,
-                .chnlErr_e = FMKMAC_ERRSTATE_OK,
+                .bspDma_ps = {.Instance = DMA1_Channel3},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL3_IRQN,
             },
+
             [FMKMAC_DMA_CHANNEL_4] = {
-                .bspDma_ps = { .Instance = DMA1_Channel4 },  
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_IRQN,
-                .chnlErr_e = FMKMAC_ERRSTATE_OK,
+                .bspDma_ps = {.Instance = DMA1_Channel4},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_IRQN,
             },
+
             [FMKMAC_DMA_CHANNEL_5] = {
-                .bspDma_ps = { .Instance = DMA1_Channel5 },  
-                .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL4_IRQN,
-                .chnlErr_e = FMKMAC_ERRSTATE_OK,
-            }
+                .bspDma_ps = {.Instance = DMA1_Channel5},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL5_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_6] = {
+                .bspDma_ps = {.Instance = DMA1_Channel6},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL6_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_7] = {
+                .bspDma_ps = {.Instance = DMA1_Channel7},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL7_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_8] = {
+                .bspDma_ps = {.Instance = DMA1_Channel8},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA1_CHANNEL8_IRQN,
+            },
+
         }
-    }
+    },
+     {//------- DMA2_CONTROLLER -------//
+        .c_clock_e = FMKCPU_RCC_CLK_DMA2,
+        .channel_as = {
+
+
+            [FMKMAC_DMA_CHANNEL_1] = {
+                .bspDma_ps = {.Instance = DMA2_Channel1},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL1_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_2] = {
+                .bspDma_ps = {.Instance = DMA2_Channel2},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL2_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_3] = {
+                .bspDma_ps = {.Instance = DMA2_Channel3},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL3_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_4] = {
+                .bspDma_ps = {.Instance = DMA2_Channel4},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL4_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_5] = {
+                .bspDma_ps = {.Instance = DMA2_Channel5},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL5_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_6] = {
+                .bspDma_ps = {.Instance = DMA2_Channel6},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL6_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_7] = {
+                .bspDma_ps = {.Instance = DMA2_Channel7},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL7_IRQN,
+            },
+
+            [FMKMAC_DMA_CHANNEL_8] = {
+                .bspDma_ps = {.Instance = DMA2_Channel8},
+               .c_IRQNType_e = FMKCPU_NVIC_DMA2_CHANNEL8_IRQN,
+            },
+
+        }
+    },
 };
+
+/* CAUTION : Automatic generated code section for Variable: End */
+
 
 static t_eCyclicModState g_FmkMac_ModState_e = STATE_CYCLIC_CFG;
 //********************************************************************************
@@ -132,7 +214,7 @@ static t_eCyclicModState g_FmkMac_ModState_e = STATE_CYCLIC_CFG;
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
+static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
                                                 DMA_HandleTypeDef * f_bspDma_ps,
                                                 t_eFMKMAC_DmaTransferPriority f_dmaPrio_e,
                                                 t_uFMKMAC_DmaHandleType * f_modHandle_pu);
@@ -163,7 +245,22 @@ static t_eReturnCode s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f
 *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
 *
 */
-static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e);
+static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqst f_rqstType_e);
+
+/**
+*
+*	@brief      Function to get the bsp dma priority
+*
+*	@param[in]  f_channel_e              : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+*	@param[in]  f_bspPriority_pu32       : storage for bsp prioirty.\n
+*
+*  @retval RC_OK                             @ref RC_OK
+*  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+*  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+*  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
+*
+*/
+static t_eReturnCode s_FMKMAC_DmaSetInit(t_eFMKMAC_DmaType f_DmaType, DMA_HandleTypeDef * f_bspDma_ps);
 //********************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -249,7 +346,7 @@ t_eReturnCode FMKMAC_SetState(t_eCyclicModState f_State_e)
 /***********************************
  * FMKMAC_RqstDmaInit
  ***********************************/
-t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType, 
+t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqst f_DmaType, 
                                     void *f_ModuleHandle_pv)
 {
     t_eReturnCode Ret_e = RC_OK;
@@ -314,7 +411,7 @@ t_eReturnCode FMKMAC_RqstDmaInit(t_eFMKMAC_DmaRqstType f_DmaType,
 /***********************************
  * s_FMKMAC_RqstInterruptionMngmt
  ***********************************/
-static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
+static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqst f_rqstType_e)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKMAC_DmaChnl chnl_e;
@@ -327,21 +424,25 @@ static void s_FMKMAC_RqstInterruptionMngmt(t_eFMKMAC_DmaRqstType f_rqstType_e)
     }
     if(Ret_e == RC_OK)
     {
+        //------ To increase Speed, chnl and Dma are in Constant ------//
         chnl_e = c_FmkMac_DmaRqstCfg_as[f_rqstType_e].Chnl_e;
         dmaCtrl_e = c_FmkMac_DmaRqstCfg_as[f_rqstType_e].Ctrl_e;
         HAL_DMA_IRQHandler(&g_DmaInfo_as[dmaCtrl_e].channel_as[chnl_e].bspDma_ps);
     }
 }
+
+
 /***********************************
  * s_FMKMAC_SetDmaBspCfg
  ***********************************/
-static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
+static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
                                                 DMA_HandleTypeDef * f_bspDma_ps,
                                                 t_eFMKMAC_DmaTransferPriority f_dmaPrio_e,
                                                 t_uFMKMAC_DmaHandleType * f_modHandle_pu)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPriority_u32 = 0;
+    t_eFMKMAC_DmaType dmaType_e;
 
     if(f_RqstType_e > FMKMAC_DMA_RQSTYPE_NB)
     {
@@ -358,9 +459,92 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
     if(Ret_e == RC_OK)
     {
         f_bspDma_ps->Init.Priority = bspPriority_u32;
+        //------ Link Dma To Dma Handle and Set Specific Info ------//
+        // flag automatic generated code
         switch (f_RqstType_e)
         {
             case FMKMAC_DMA_RQSTYPE_ADC1:
+            {
+                f_bspDma_ps->Init.Request = DMA_REQUEST_ADC1;
+                dmaType_e = FMKMAC_DMA_TYPE_ADC;
+                __HAL_LINKDMA(&f_modHandle_pu->adcHandle_s, DMA_Handle, *f_bspDma_ps);
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_SPI1:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_SPI;
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_SPI2:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_SPI;
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_UART4_RX:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_UART_RX;
+                f_bspDma_ps->Init.Request = DMA_REQUEST_UART4_RX;
+                __HAL_LINKDMA((&f_modHandle_pu->uartHanddle_s), hdmarx, *f_bspDma_ps);
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_UART4_TX:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_UART_TX;
+                f_bspDma_ps->Init.Request = DMA_REQUEST_UART4_TX;
+                __HAL_LINKDMA((&f_modHandle_pu->uartHanddle_s), hdmatx, *f_bspDma_ps);
+            
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_USART1_RX:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_USART_RX;
+                f_bspDma_ps->Init.Request = DMA_REQUEST_USART1_RX;
+                __HAL_LINKDMA((&f_modHandle_pu->usartHandle_s), hdmarx, *f_bspDma_ps);
+            
+                break;
+            }
+            case FMKMAC_DMA_RQSTYPE_USART1_TX:
+            {
+                dmaType_e = FMKMAC_DMA_TYPE_USART_RX;
+                f_bspDma_ps->Init.Request = DMA_REQUEST_USART1_TX;
+                __HAL_LINKDMA((&f_modHandle_pu->usartHandle_s), hdmatx, *f_bspDma_ps);
+                break;
+            }
+            default:
+                Ret_e = RC_ERROR_NOT_SUPPORTED;
+                break;
+        }
+        if(Ret_e == RC_OK)
+        {
+            //------ Set Init Depending On Dma Type ------//
+            Ret_e = s_FMKMAC_DmaSetInit(dmaType_e, f_bspDma_ps);
+        }
+    }
+
+    return Ret_e;
+}
+
+/***********************************
+ * s_FMKMAC_DmaSetInit
+ ***********************************/
+static t_eReturnCode s_FMKMAC_DmaSetInit(t_eFMKMAC_DmaType f_DmaType, DMA_HandleTypeDef * f_bspDma_ps)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_DmaType >= FMKMAC_DMA_TYPE_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(f_bspDma_ps == (DMA_HandleTypeDef *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+
+    if(Ret_e == RC_OK)
+    {
+        switch (f_DmaType)
+        {
+            case FMKMAC_DMA_TYPE_ADC:
             {
                 f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
                 f_bspDma_ps->Init.Mode = FMKMAC_ADC_DMA_MODE;
@@ -368,19 +552,54 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqstType f_RqstType_e,
                 f_bspDma_ps->Init.MemInc = DMA_MINC_ENABLE;
                 f_bspDma_ps->Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
                 f_bspDma_ps->Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-                // Make link between Module Handle and Dma Channel
-                // Lier le handle DMA au handle ADC
-                __HAL_LINKDMA(&f_modHandle_pu->adcHandle_s, DMA_Handle, *f_bspDma_ps);
+            
                 break;
             }
-            case FMKMAC_DMA_RQSTYPE_SPI1:
-            case FMKMAC_DMA_RQSTYPE_SPI2:
-            case FMKMAC_DMA_RQSTYPE_UART1:
+            case FMKMAC_DMA_TYPE_UART_RX:
+            {
+                f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
+                f_bspDma_ps->Init.Mode = FMKMAC_UART_RX_DMA_MODE;
+                f_bspDma_ps->Init.PeriphInc = DMA_PINC_DISABLE;
+                f_bspDma_ps->Init.MemInc = DMA_MINC_ENABLE;
+                f_bspDma_ps->Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+                f_bspDma_ps->Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+                
+                break;
+            }
+            case FMKMAC_DMA_TYPE_UART_TX:
+            {
+                f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
+                f_bspDma_ps->Init.Mode = FMKMAC_UART_RX_DMA_MODE;
+                f_bspDma_ps->Init.PeriphInc = DMA_PINC_DISABLE;
+                f_bspDma_ps->Init.MemInc = DMA_MINC_ENABLE;
+                f_bspDma_ps->Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+                f_bspDma_ps->Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+                break;
+            }
+            case FMKMAC_DMA_TYPE_USART_RX:
+            {
+                Ret_e = RC_ERROR_MISSING_CONFIG;
+                break;
+            }
+            case FMKMAC_DMA_TYPE_USART_TX:
+            {
+                Ret_e = RC_ERROR_MISSING_CONFIG;
+                break;
+            }
+            case FMKMAC_DMA_TYPE_SPI:
+            {
+                Ret_e = RC_ERROR_MISSING_CONFIG;
+                break;
+            }
+            case FMKMAC_DMA_TYPE_NB:
             default:
+            {
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
                 break;
+            }
         }
     }
+
     return Ret_e;
 }
 

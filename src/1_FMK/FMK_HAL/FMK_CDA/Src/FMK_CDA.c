@@ -56,15 +56,16 @@ typedef struct
 /**< Structure for adc information*/
 typedef struct
 {
-    ADC_HandleTypeDef BspInit_s;                            /**< Store the bsp information needed */
-    t_eFMKCDA_HwAdcCfg HwCfg_e;                             /**< Store in which mode the ADC is currently set */
-    t_sFMKCDA_ChnlInfo Channel_as[FMKCDA_ADC_CHANNEL_NB];   /**< Structure channel information for each channel */
-    const t_eFMKCPU_ClockPort c_clock_e;                      /**< constant to store the clock for each ADC */
-    const t_eFMKCPU_IRQNType c_IRQNType_e;                    /**< constant to store the IRQN for each ADC */
-    t_bool IsAdcConfigured_b;                               /**< Flag to know if the ADC is configured */
-    t_bool IsAdcRunning_b;                                  /**< Flag to know if the Adc is running a conversion */
-    t_bool flagErrDetected_b;                               /**< Flag in DMA/Interrupt mode Error Callback has been call */                 
-    t_eFMKCDA_ChnlErrState Error_e;                         /**< Store the adc error status */
+    ADC_HandleTypeDef           BspInit_s;                              /**< Store the bsp information needed */
+    t_eFMKCDA_HwAdcCfg          HwCfg_e;                                /**< Store in which mode the ADC is currently set */
+    t_sFMKCDA_ChnlInfo          Channel_as[FMKCDA_ADC_CHANNEL_NB];      /**< Structure channel information for each channel */
+    const t_eFMKCPU_ClockPort   c_clock_e;                              /**< constant to store the clock for each ADC */
+    const t_eFMKCPU_IRQNType    c_IRQNType_e;                           /**< constant to store the IRQN for each ADC */
+    const t_eFMKMAC_DmaRqst     c_DmaAdc_e;
+    t_bool                      IsAdcConfigured_b;                      /**< Flag to know if the ADC is configured */
+    t_bool                      IsAdcRunning_b;                         /**< Flag to know if the Adc is running a conversion */
+    t_bool                      flagErrDetected_b;                      /**< Flag in DMA/Interrupt mode Error Callback has been call */                 
+    t_eFMKCDA_ChnlErrState      Error_e;                                /**< Store the adc error status */
 } t_sFMKCDA_AdcInfo;
 
 typedef struct
@@ -801,8 +802,8 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         }
         if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config
-            #warning("Only ADC1 managed in DMARequest")
-            Ret_e = FMKMAC_RqstDmaInit(FMKMAC_DMA_RQSTYPE_ADC1, (void *)&g_AdcInfo_as[f_Adc_e].BspInit_s);
+            Ret_e = FMKMAC_RqstDmaInit( g_AdcInfo_as[f_Adc_e].c_DmaAdc_e,
+                                        (void *)(&g_AdcInfo_as[f_Adc_e].BspInit_s));
         }
         if (Ret_e == RC_OK)
         {// Init hardware ADC

@@ -73,6 +73,8 @@ class FMKIO_CodeGen():
         sig_in_evnt = []
         enum_can = ''
         const_can = ''
+        enum_serial = ''
+        const_serial = ''
         enum_gpio = ""
         enum_pin = ""
         enum_InDig = ""

@@ -329,6 +329,18 @@
     t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e);
     /**
     *
+    *	@brief      Set Signals configuration for SERIAL com.\n
+    *
+    *
+    *	@param[in]      f_SigSerial_e     : which Serial configuration will be made, enum from @ref t_eFMKIO_ComSigCan
+    *	 
+    * @retval RC_OK                             @ref RC_OK
+    * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *
+    */
+    t_eReturnCode FMKIO_Set_ComSerialCfg(t_eFMKIO_ComSigSerial f_SigSerial_e);
+    /**
+    *
     *	@brief      Update the digital output value.\n
     *	@note       Once the configuration is done, this function update the state of 
     *               the digital cycle with f_value_e.\n

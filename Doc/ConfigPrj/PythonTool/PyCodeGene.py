@@ -37,7 +37,9 @@ TARGET_T_ENUM_START_LINE = "    /* CAUTION : Automatic generated code section fo
 TARGET_T_ENUM_END_LINE =   "    /* CAUTION : Automatic generated code section for Enum: End */\n"
 
 TARGET_T_VARIABLE_START_LINE = "    /* CAUTION : Automatic generated code section for Variable: Start */\n"
+TARGET_VARIABLE_START_LINE = "/* CAUTION : Automatic generated code section for Variable: Start */\n"
 TARGET_T_VARIABLE_END_LINE   = "    /* CAUTION : Automatic generated code section for Variable: End */\n"
+TARGET_VARIABLE_END_LINE   = "/* CAUTION : Automatic generated code section for Variable: End */\n"
 TARGET_T_STRUCT_START_LINE   = "    /* CAUTION : Automatic generated code section for Structure: Start */\n"
 TARGET_T_STRUCT_END_LINE      ="    /* CAUTION : Automatic generated code section for Structure: End */\n"
 

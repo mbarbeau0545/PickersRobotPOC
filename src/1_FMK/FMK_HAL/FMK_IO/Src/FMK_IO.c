@@ -91,6 +91,8 @@ t_sFMKIO_AnaPwmSigInfo     g_OutPwmSigInfo_as[FMKIO_OUTPUT_SIGPWM_NB];        /*
 t_sFMKIO_DigSigInfo        g_OutDigSigInfo_as[FMKIO_OUTPUT_SIGDIG_NB];        /**< Signal information for output Digital */
 //--------Communication Managment--------//
 t_bool g_IsIOComCanConfigured_ab[FMKIO_COM_SIGNAL_CAN_NB];
+t_bool g_IsIOComSerialConConfigured_ab[FMKIO_COM_SIGNAL_SERIAL_NB];
+
 t_uint32 g_InFreqLastCapture_ua32[FMKIO_INPUT_SIGFREQ_NB];                      /**< Storage for Last Capture value for freqency pins */
 
 /* CAUTION : Automatic generated code section for Variable: Start */
@@ -323,6 +325,12 @@ t_eReturnCode FMKIO_Init(void)
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKIO_COM_SIGNAL_CAN_NB ; LLI_u8++)
     {
         g_IsIOComCanConfigured_ab[LLI_u8] = (t_bool)False;
+    }
+
+    //---------Set Signal Com CAN Default Value---------//
+    for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKIO_COM_SIGNAL_SERIAL_NB ; LLI_u8++)
+    {
+        g_IsIOComSerialConConfigured_ab[LLI_u8] = (t_bool)False;
     }
 
     return RC_OK;
@@ -679,7 +687,7 @@ t_eReturnCode FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e,
 t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_sFMKIO_CanSigCfg *bspSigCanCfg_ps;
+    t_sFMKIO_RxTxComCfg *bspSigCanCfg_ps;
 
     if(f_SigCan_e > FMKIO_COM_SIGNAL_CAN_NB)
     {
@@ -694,7 +702,7 @@ t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
     if(Ret_e == RC_OK)
     {
         //---------------Set Tx Configuration---------------//
-        bspSigCanCfg_ps = (t_sFMKIO_CanSigCfg *)&c_FmkIo_CanSigCfg_as[f_SigCan_e];
+        bspSigCanCfg_ps = (t_sFMKIO_RxTxComCfg *)&c_FmkIo_CanSigCfg_as[f_SigCan_e];
 
         Ret_e = s_FMKIO_Set_BspSigCfg(bspSigCanCfg_ps->TxPin_s.HwGpio_e,
                                       bspSigCanCfg_ps->TxPin_s.HwPin_e,
@@ -712,6 +720,51 @@ t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
                                       FMKIO_PULL_MODE_DISABLE,
                                       FMKIO_SPD_MODE_HIGH,
                                       bspSigCanCfg_ps->BspAlternateFunc_u8);
+        }
+    }
+
+    return Ret_e;
+}
+
+/*********************************
+ * FMKIO_Set_ComCanCfg
+ *********************************/
+t_eReturnCode FMKIO_Set_ComSerialCfg(t_eFMKIO_ComSigSerial f_SigSerial_e)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_sFMKIO_RxTxComCfg *bspSigSerialCfg_ps;
+
+    if(f_SigSerial_e > FMKIO_COM_SIGNAL_SERIAL_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+
+    if( g_IsIOComSerialConConfigured_ab[f_SigSerial_e] == (t_bool)True)
+    {
+        Ret_e = RC_ERROR_ALREADY_CONFIGURED;
+    }
+    
+    if(Ret_e == RC_OK)
+    {
+        //---------------Set Tx Configuration---------------//
+        bspSigSerialCfg_ps = (t_sFMKIO_RxTxComCfg *)&c_FmkIo_SerialSigCfg_as[f_SigSerial_e];
+
+        Ret_e = s_FMKIO_Set_BspSigCfg(bspSigSerialCfg_ps->TxPin_s.HwGpio_e,
+                                      bspSigSerialCfg_ps->TxPin_s.HwPin_e,
+                                      GPIO_MODE_AF_PP,
+                                      FMKIO_PULL_MODE_DISABLE,
+                                      FMKIO_SPD_MODE_LOW,
+                                      bspSigSerialCfg_ps->BspAlternateFunc_u8);
+
+        if(Ret_e == RC_OK)
+        {
+            //---------------Set Rx Configuration---------------//
+            Ret_e = s_FMKIO_Set_BspSigCfg(bspSigSerialCfg_ps->RxPin_s.HwGpio_e,
+                                      bspSigSerialCfg_ps->RxPin_s.HwPin_e,
+                                      GPIO_MODE_AF_PP,
+                                      FMKIO_PULL_MODE_DISABLE,
+                                      FMKIO_SPD_MODE_LOW,
+                                      bspSigSerialCfg_ps->BspAlternateFunc_u8);
         }
     }
 

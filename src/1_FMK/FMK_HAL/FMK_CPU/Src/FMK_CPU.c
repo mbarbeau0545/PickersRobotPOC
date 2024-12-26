@@ -2383,7 +2383,18 @@ static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_
  *
  */
 /* CAUTION : Automatic generated code section for TIMx IRQHandler: Start */
-
+void TIM1_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_1].BspTimer_ps);}
+void TIM2_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_2].BspTimer_ps);}
+void TIM3_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_3].BspTimer_ps);}
+void TIM4_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_4].BspTimer_ps);}
+void TIM5_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_5].BspTimer_ps);}
+void TIM6_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_6].BspTimer_ps);}
+void TIM7_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_7].BspTimer_ps);}
+void TIM8_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_8].BspTimer_ps);}
+void TIM15_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_15].BspTimer_ps);}
+void TIM16_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_16].BspTimer_ps);}
+void TIM17_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_17].BspTimer_ps);}
+void TIM20_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].BspTimer_ps);}
 /* CAUTION : Automatic generated code section for TIMx IRQHandler: End */
 
 void TIM1_CC_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_1].BspTimer_ps);}

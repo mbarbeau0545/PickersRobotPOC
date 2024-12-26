@@ -154,7 +154,6 @@
     } t_eFMKIO_OutPwmSig;
 
     /* List of signals used for CAN communication */
-    // flag automatic generated code
     typedef enum
     {
         FMKIO_COM_SIGNAL_CAN_1 = 0x0,                  /**< Rx -> PA11, Tx -> PA12, Reference to CAN 0 */
@@ -164,58 +163,7 @@
         FMKIO_COM_SIGNAL_CAN_NB,
     } t_eFMKIO_ComSigCan;
 
-    // flag automatic generated code
-    typedef enum 
-    {
-        FMKIO_COM_SIGNAL_SERIAL_1 = 0x00U,
-        FMKIO_COM_SIGNAL_SERIAL_2,
-    } t_eFMKIO_ComSigSerial;
     /* CAUTION : Automatic generated code section for Enum: End */
-    /**< List of alternate function*/
-    typedef enum
-    {
-        FMKIO_AF0_EVENTOUT = 0x0U,  /*!< AF0: EVENTOUT Alternate Function mapping */
-        FMKIO_AF0_MCO,           /*!< AF0: MCO Alternate Function mapping */
-        FMKIO_AF0_SPI1,          /*!< AF0: SPI1 Alternate Function mapping */
-        FMKIO_AF0_SPI2,          /*!< AF0: SPI2 Alternate Function mapping */
-        FMKIO_AF0_TIM15,         /*!< AF0: TIM15 Alternate Function mapping */
-        FMKIO_AF0_TIM17,         /*!< AF0: TIM17 Alternate Function mapping */
-        FMKIO_AF0_SWDIO,         /*!< AF0: SWDIO Alternate Function mapping */
-        FMKIO_AF0_SWCLK,         /*!< AF0: SWCLK Alternate Function mapping */
-        FMKIO_AF0_TIM14,         /*!< AF0: TIM14 Alternate Function mapping */
-        FMKIO_AF0_USART1,        /*!< AF0: USART1 Alternate Function mapping */
-        FMKIO_AF0_IR,            /*!< AF0: IR Alternate Function mapping */
-        FMKIO_AF0_TIM3,          /*!< AF0: TIM3 Alternate Function mapping */
-
-        FMKIO_AF1_TIM3,          /*!< AF1: TIM3 Alternate Function mapping */
-        FMKIO_AF1_TIM15,         /*!< AF1: TIM15 Alternate Function mapping */
-        FMKIO_AF1_USART1,        /*!< AF1: USART1 Alternate Function mapping */
-        FMKIO_AF1_USART2,        /*!< AF1: USART2 Alternate Function mapping */
-        FMKIO_AF1_EVENTOUT,      /*!< AF1: EVENTOUT Alternate Function mapping */
-        FMKIO_AF1_I2C1,          /*!< AF1: I2C1 Alternate Function mapping */
-        FMKIO_AF1_I2C2,          /*!< AF1: I2C2 Alternate Function mapping */
-        FMKIO_AF1_IR,            /*!< AF1: IR Alternate Function mapping */
-
-        FMKIO_AF2_TIM1,          /*!< AF2: TIM1 Alternate Function mapping */
-        FMKIO_AF2_TIM16,         /*!< AF2: TIM16 Alternate Function mapping */
-        FMKIO_AF2_TIM17,         /*!< AF2: TIM17 Alternate Function mapping */
-        FMKIO_AF2_EVENTOUT,      /*!< AF2: EVENTOUT Alternate Function mapping */
-
-        FMKIO_AF3_EVENTOUT,      /*!< AF3: EVENTOUT Alternate Function mapping */
-        FMKIO_AF3_I2C1,          /*!< AF3: I2C1 Alternate Function mapping */
-        FMKIO_AF3_TIM15,         /*!< AF3: TIM15 Alternate Function mapping */
-
-        FMKIO_AF4_TIM14,         /*!< AF4: TIM14 Alternate Function mapping */
-
-        FMKIO_AF5_TIM16,         /*!< AF5: TIM16 Alternate Function mapping */
-        FMKIO_AF5_TIM17,         /*!< AF5: TIM17 Alternate Function mapping */
-
-        FMKIO_AF6_EVENTOUT,      /*!< AF6: EVENTOUT Alternate Function mapping */
-
-        FMKIO_AF_NB              /*!< Total number of alternate functions */
-    } t_eFMKIO_AlternateFunc;
-
-
 
     //-----------------------------TYPEDEF TYPES---------------------------//
     //-----------------------------STRUCT TYPES---------------------------//
