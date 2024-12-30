@@ -184,7 +184,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
 
     t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_POLL;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
     SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
     SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,
@@ -201,7 +201,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
                             s_APPLGC_TranmistEvnt);
     if(Ret_e == RC_OK)
     {
-        Ret_e = RC_WARNING_BUSY;
+        Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_1,
+                                            FMKSRL_OPE_RX_CYCLIC_SIZE,
+                                            (t_uint16)0);
     }
     Ret_e = RC_OK;
     return Ret_e;
@@ -222,7 +224,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    char msgbuffer[20];
+    /*char msgbuffer[20];
     sprintf(msgbuffer, "Hello World\r\n");
 
     Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_1,
@@ -230,7 +232,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
                             (t_uint8 * )msgbuffer,
                             strlen(msgbuffer),
                             (t_uint16)0,
-                            (t_bool)false);
+                            (t_bool)True);*/
     return RC_OK;
 }
 

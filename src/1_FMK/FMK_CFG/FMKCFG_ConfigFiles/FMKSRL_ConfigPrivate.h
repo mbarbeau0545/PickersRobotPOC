@@ -177,13 +177,13 @@
         UART4,
     };
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,       FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,        FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
         {FMKSRL_HAL_USART_Receive,     FMKSRL_HAL_USART_Receive_IT,        FMKSRL_HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
         
     };
 
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_TxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
-        {FMKSRL_HAL_UART_Transmit,      FMKSRL_HAL_UART_Transmit_IT ,       FMKSRL_HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
+        {FMKSRL_HAL_UART_Transmit,      FMKSRL_HAL_UART_Transmit_IT ,        FMKSRL_HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
         {FMKSRL_HAL_USART_Transmit,     FMKSRL_HAL_USART_Transmit_IT,        FMKSRL_HAL_USART_Transmit_DMA},  // FMKSRL_HW_PROTOCOL_USART
     };    
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {

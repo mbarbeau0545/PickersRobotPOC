@@ -97,7 +97,7 @@ typedef struct __t_sFMKSRL_BufferInfo
     t_uint16 bytesSending_u16;
     t_uint16 writeIdx_u16;
     t_uint16 readIdx_u16;
-    t_eFMKSRL_BufferStatus status_e; 
+    t_uint16 status_u16; 
 } t_sFMKSRL_BufferInfo;
 
 typedef struct __t_sFMKSRL_TxMngmt
@@ -656,7 +656,7 @@ t_eReturnCode FMKSRL_Init(void)
         g_SerialInfo_as[idxSrlLine_u8].RxInfo_s.Buffer_s.bytesPending_u16 = (t_uint16)0;
         g_SerialInfo_as[idxSrlLine_u8].RxInfo_s.Buffer_s.readIdx_u16 = (t_uint16)0;
         g_SerialInfo_as[idxSrlLine_u8].RxInfo_s.Buffer_s.writeIdx_u16 = (t_uint16)0;
-        g_SerialInfo_as[idxSrlLine_u8].RxInfo_s.Buffer_s.status_e = FMKSRL_BUFFSTATUS_READY;
+        SETBIT_16B(g_SerialInfo_as[idxSrlLine_u8].RxInfo_s.Buffer_s.status_u16, FMKSRL_BUFFSTATUS_READY);
 
         //------ Transmit Information ------//
         g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.bspTxOpe_e = FMKSRL_BSP_TX_OPE_NB;
@@ -667,7 +667,7 @@ t_eReturnCode FMKSRL_Init(void)
         g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.Buffer_s.bytesPending_u16 = (t_uint16)0;
         g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.Buffer_s.readIdx_u16 = (t_uint16)0;
         g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.Buffer_s.writeIdx_u16 = (t_uint16)0;
-        g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.Buffer_s.status_e = FMKSRL_BUFFSTATUS_READY;
+        SETBIT_16B(g_SerialInfo_as[idxSrlLine_u8].TxInfo_s.Buffer_s.status_u16, FMKSRL_BUFFSTATUS_READY) ;
 
         g_SavedUserRxOpeMode_ae[idxSrlLine_u8] = FMKSRL_OPE_RX_NB;
         g_MProcessIdUsed[idxSrlLine_u8] = (t_uint8)0;
@@ -803,7 +803,8 @@ t_eReturnCode FMKSRL_InitDrv(   t_eFMKSRL_SerialLine f_SrlLine_e,
         }
 
         //------ Set NVIC State ------//
-        if(Ret_e == RC_OK)
+        if( (Ret_e == RC_OK) 
+        &&  (f_SerialCfg_s.runMode_e != FMKSRL_LINE_RUNMODE_POLL))
         {
             Ret_e = FMKCPU_Set_NVICState(srlInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
         }
@@ -1502,7 +1503,7 @@ static t_eReturnCode s_FMKSRL_BspTxOpeTransmitReceiveMngmt(t_sFMKSRL_SerialInfo 
             if(buffSizeLeft_u16 < sizeToTransmit_u16)
             {
                 Ret_e = RC_WARNING_LIMIT_REACHED;
-                SETBIT_16B(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_OVERFLOW);
+                SETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_OVERFLOW);
 
             }
         }
@@ -1594,49 +1595,33 @@ static t_eReturnCode s_FMKSRL_UpdateTxBufferInfo(   t_sFMKSRL_SerialInfo * f_srl
             case FMKSRL_LINE_RUNMODE_DMA:
             case FMKSRL_LINE_RUNMODE_IT:
             {
-                //------ If we about to start a transmission 
-                // or if a msg is on going and had being cut ------//
-                if ( (GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_READY) == BIT_IS_RESET_16B)
-                ||   ( (GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_BUSY) == BIT_IS_SET_16B)
-                &&     (GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_CUT) == BIT_IS_SET_16B)))
+
+                //------ Update Falg Ready ------//
+                if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY) == BIT_IS_SET_16B)
                 {
-                    //------ Update Flag ------//
-                    RESETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_READY);
-                    SETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_BUSY);
-
-                    //------ Manage size to send ------//
-                    if(TxBuffer_s->bytesPending_u16 > (t_uint16)FMKSRL_MAX_BYTES_TO_SEND)
-                    {
-                        //------ Set Flag Msg Cut ------//
-                        SETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_CUT);
-                        *f_dataSizeAdmitted_pu16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
-                        TxBuffer_s->bytesSending_u16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
-                        TxBuffer_s->bytesPending_u16 = (t_uint16)(TxBuffer_s->bytesSending_u16 - 
-                                                                    TxBuffer_s->bytesSending_u16);
-                    }
-                    else 
-                    {
-                        *f_dataSizeAdmitted_pu16 = TxBuffer_s->bytesPending_u16;
-                        TxBuffer_s->bytesSending_u16 = (t_uint16)TxBuffer_s->bytesPending_u16;
-                    }
+                    SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
                 }
-                else // BUSY and MSG_NOT_CUT -> msg is currently transmitted
-                {   
-                    //------ No data are gonna beiing send right now ------//
-                    *f_dataSizeAdmitted_pu16 = (t_uint16)0;
 
-                    //------ If flag MSG_PENDING is not set, Buffer Can accept this message ------//
-                    if(GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_RESET_16B)
+                //------ Manage size to send ------//
+                if(TxBuffer_s->bytesPending_u16 > (t_uint16)FMKSRL_MAX_BYTES_TO_SEND)
+                {
+                    //------ Set Flag Msg Cut ------//
+                    SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_CUT);
+                    *f_dataSizeAdmitted_pu16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
+                    TxBuffer_s->bytesSending_u16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
+                }
+                else 
+                {
+                    //------ Reset Flag Msg Cut or Msg Pending------//
+                    if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_SET_16B)
                     {
-                        SETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_PENDING);
-                        Ret_e = RC_OK;
-                    }
-                    else
-                    {
-                        Ret_e = RC_WARNING_BUSY;
+                        RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING);
                     }
                     
+                    *f_dataSizeAdmitted_pu16 = TxBuffer_s->bytesPending_u16;
+                    TxBuffer_s->bytesSending_u16 = (t_uint16)TxBuffer_s->bytesPending_u16;
                 }
+                
                 break;
 
             }
@@ -1645,11 +1630,10 @@ static t_eReturnCode s_FMKSRL_UpdateTxBufferInfo(   t_sFMKSRL_SerialInfo * f_srl
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
                 break;
         }
-        if(Ret_e == RC_OK && f_srlInfo_ps->runMode_e != FMKSRL_LINE_RUNMODE_POLL)
+        if(Ret_e == RC_OK)
         {
-            TxBuffer_s->writeIdx_u16 = (t_uint16)((TxBuffer_s->writeIdx_u16 
-                                            + (t_uint16)(*f_dataSizeAdmitted_pu16)) % TxBuffer_s->buffferSize_u16);
-            SETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_BUSY);
+            TxBuffer_s->bytesPending_u16 = (t_uint16)(TxBuffer_s->bytesPending_u16 - 
+                                                                TxBuffer_s->bytesSending_u16);
         }
     }
 
@@ -1679,8 +1663,8 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
         RxBuffer_s = (t_sFMKSRL_BufferInfo *)(&f_srlInfo_ps->RxInfo_s.Buffer_s);
 
         //------ If buffer in error/overflow state, don't accept Task ------//
-        if( (GETBIT(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_OVERFLOW) == BIT_IS_SET_16B)
-        ||  (GETBIT(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_ERROR) == BIT_IS_SET_16B))
+        if( (GETBIT(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_OVERFLOW) == BIT_IS_SET_16B)
+        ||  (GETBIT(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_ERROR) == BIT_IS_SET_16B))
         {
             Ret_e = RC_ERROR_BUSY;
         }
@@ -1689,7 +1673,7 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
         else 
         {
             //------ Check Buffer status state ------//
-            if(GETBIT(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_BUSY) == BIT_IS_SET_16B)
+            if(GETBIT(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY) == BIT_IS_SET_16B)
             {
                 //------ Check if TxOpe Mode required RxBuffer ------//
                 if(f_srlInfo_ps->TxInfo_s.RqstTxRxOpe_b == (t_bool)True)
@@ -1728,7 +1712,7 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
             else 
             {
                 //------ Update flag ------//
-                SETBIT_16B(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_BUSY);
+                SETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
                 //------ Reset pending bytes as no data has been accepted yet ------//
                 RxBuffer_s->bytesPending_u16 = (t_uint16)0;
             }
@@ -2432,7 +2416,7 @@ static void s_FMKSRL_BspRxEventCbMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
             //--------- Update Buffer Status Flag ---------//
             if (f_Evnt_e != FMKSRL_BSP_RX_CB_HALCPLT)
             {
-                SETBIT_16B(RxBuffer_s->status_e, FMKSRL_BUFFSTATUS_READY);
+                SETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
             }
 
             if (Ret_e == RC_OK)
@@ -2505,15 +2489,13 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                     TxBuffer_s->readIdx_u16 = (t_uint16)((TxBuffer_s->readIdx_u16 + 
                                                     TxBuffer_s->bytesSending_u16) % TxBuffer_s->buffferSize_u16);
 
-                    //--------- if a msg is cut, send more data from this msg
-                    // if not msg cut but msg is pending, send more data
-                    // if no msg_cut and no msg_pending, reset buffer flag ---------//
-                    if(GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_CUT) == BIT_IS_SET_16B)
+                    //--------- if datas are pending, send more data from the callback ---------//
+                    if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_CUT) == BIT_IS_SET_16B)
                     {
                         Ret_e = s_FMKSRL_BspTxOpeMngmt(srlInfo_ps->TxInfo_s.bspTxOpe_e, srlInfo_ps);
                         
                         //--------- Callback user with error if he wants it ---------//
-                        if(  (Ret_e != RC_OK)
+                        if( (Ret_e != RC_OK)
                         &&  (srlInfo_ps->TxInfo_s.NotifyUser_b == (t_bool)True)
                         &&  (srlInfo_ps->TxInfo_s.TxUserCb_pcb != (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION))
                         {
@@ -2530,7 +2512,7 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                         }
 
                         //--------- See if a msg is pending ---------//
-                        if(GETBIT(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_SET_16B)
+                        if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_SET_16B)
                         {
                            Ret_e = s_FMKSRL_BspTxOpeMngmt(srlInfo_ps->TxInfo_s.bspTxOpe_e, srlInfo_ps);
 
@@ -2545,11 +2527,9 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                         else 
                         {
                             //--------- Update Tx Line Information ---------//
-                            TxBuffer_s->writeIdx_u16     = (t_uint16)0;
-                            TxBuffer_s->readIdx_u16      = (t_uint16)0;
-                            TxBuffer_s->bytesPending_u16 = (t_uint16)0;
                             TxBuffer_s->bytesSending_u16 = (t_uint16)0;
-                            SETBIT_16B(TxBuffer_s->status_e, FMKSRL_BUFFSTATUS_READY);
+                            RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
+                            SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
                         }
                     }
                     break;
@@ -3456,6 +3436,35 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 /***********************************************************
  * USART CALLBACK MANAGEMENT
  **********************************************************/
+// flag automatic genereted code
+void USART2_IRQHandler(void)
+{
+    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].isLineConfigured_b == (t_bool)True)
+    {
+        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
+        {
+            HAL_UART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].bspHandle_u));
+        }
+        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
+        {
+            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].bspHandle_u));
+        }
+    }
+}
+void UART4_IRQHandler(void)
+{
+    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].isLineConfigured_b == (t_bool)True)
+    {
+        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
+        {
+            HAL_UART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].bspHandle_u));
+        }
+        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
+        {
+            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].bspHandle_u));
+        }
+    }
+}
 /***************************************
  * HAL_USART_TxHalfCpltCallback
  ***************************************/
