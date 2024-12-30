@@ -165,10 +165,27 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
-static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
+static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8, 
                                     t_uint16 f_dataSize_u16, 
                                     t_eFMKSRL_CallbackInfo f_InfoCb_e)
 {
+    t_eReturnCode Ret_e = RC_OK;
+    char msgbuffer[20];
+    sprintf(msgbuffer, "Got It\r\n");
+
+
+    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_ENDING)
+    {
+        if(f_rxData_pu8[0] == 'a')
+        {
+            Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_1,
+                                FMKSRL_TX_ONESHOT,
+                                (t_uint8 * )msgbuffer,
+                                strlen(msgbuffer),
+                                (t_uint16)0,
+                                (t_bool)True);
+        }
+    }
     return;
 }
 
@@ -203,7 +220,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     {
         Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_1,
                                             FMKSRL_OPE_RX_CYCLIC_SIZE,
-                                            (t_uint16)0);
+                                            (t_uint16)3);
     }
     Ret_e = RC_OK;
     return Ret_e;
