@@ -220,7 +220,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     {
         Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_1,
                                             FMKSRL_OPE_RX_CYCLIC_SIZE,
-                                            (t_uint16)3);
+                                            (t_uint16)9);
     }
     Ret_e = RC_OK;
     return Ret_e;

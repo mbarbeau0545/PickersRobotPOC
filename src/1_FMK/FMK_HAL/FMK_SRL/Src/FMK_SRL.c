@@ -173,10 +173,10 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
 };
 
 // Flag Automatic Generated Code 
-static t_uint8 g_SrlLine1TxBuffer_ua8[256];
-static t_uint8 g_SrlLine1RxBuffer_ua8[256];
-static t_uint8 g_SrlLine2TxBuffer_ua8[256];
-static t_uint8 g_SrlLine2RxBuffer_ua8[256];
+static t_uint8 g_SrlLine1TxBuffer_ua8[24];
+static t_uint8 g_SrlLine1RxBuffer_ua8[24];
+static t_uint8 g_SrlLine2TxBuffer_ua8[24];
+static t_uint8 g_SrlLine2RxBuffer_ua8[24];
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -676,17 +676,17 @@ t_eReturnCode FMKSRL_Init(void)
     // Flag automatic generated code start
     // Serial Line 1 
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine1RxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
 
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine1TxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
 
     // Serial Line 2
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine2RxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
 
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine2TxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
     
     return RC_OK;
 }
@@ -1646,7 +1646,7 @@ static t_eReturnCode s_FMKSRL_UpdateTxBufferInfo(   t_sFMKSRL_SerialInfo * f_srl
  *********************************/
 static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
                                                  t_uint16  f_rcvDataClaim_u16,
-                                                 t_uint16 *f_WriteIdx_u16,
+                                                 t_uint16 *f_WriteIdx_pu16,
                                                  t_uint16 *f_rcvDataSizeAccept_pu16)
 {
     t_eReturnCode Ret_e = RC_OK;
@@ -1655,7 +1655,8 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
     t_uint16 firstChunk_u16 = (t_uint16)0;
 
     if( (f_srlInfo_ps == (t_sFMKSRL_SerialInfo *)NULL)
-    ||  (f_rcvDataSizeAccept_pu16 == (t_uint16 *)NULL))
+    ||  (f_rcvDataSizeAccept_pu16 == (t_uint16 *)NULL)
+    ||  (f_WriteIdx_pu16 == (t_uint16 *)NULL))
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -1711,43 +1712,53 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
                 RESETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
                 //------ Reset pending bytes as no data has been accepted yet ------//
                 RxBuffer_s->bytesPending_u16 = (t_uint16)0;
-            }
 
-            //------ Size Management ------//
-            if(f_rcvDataClaim_u16 > RxBuffer_s->buffferSize_u16)
-            {
-                Ret_e = RC_WARNING_LIMIT_REACHED;
-                *f_rcvDataSizeAccept_pu16 = (t_uint16)0;
-                *f_WriteIdx_u16 = (t_uint16)0;
-            }
-            else 
-            {
-                *f_rcvDataSizeAccept_pu16 = f_rcvDataClaim_u16;
-                RxBuffer_s->bytesPending_u16 = (t_uint16)(*f_rcvDataSizeAccept_pu16);
-                *f_WriteIdx_u16 = (t_uint16)RxBuffer_s->writeIdx_u16;
-            }
-            if(Ret_e == RC_OK)
-            {
-                //------ Handle Circular Buffer ------//
-                if ((RxBuffer_s->writeIdx_u16 + f_rcvDataClaim_u16) > RxBuffer_s->buffferSize_u16)
+                //------ Size Management ------//
+                if(f_rcvDataClaim_u16 > RxBuffer_s->buffferSize_u16)
                 {
-                    //------ Wrap around if we exceed the buffer size ------//
-                    remainingSpace_u16 = RxBuffer_s->buffferSize_u16 - RxBuffer_s->writeIdx_u16;
-                    firstChunk_u16 = f_rcvDataClaim_u16 - remainingSpace_u16;
-
-                    // Update write index after wrap-around ------//
-                    RxBuffer_s->writeIdx_u16 = firstChunk_u16;
+                    Ret_e = RC_WARNING_LIMIT_REACHED;
+                    *f_rcvDataSizeAccept_pu16 = (t_uint16)0;
+                    *f_WriteIdx_pu16 = (t_uint16)0;
                 }
                 else 
                 {
-                    //------ Normal update of write index ------//
-                    RxBuffer_s->writeIdx_u16 += f_rcvDataClaim_u16;
-                }
+                    //------ Update Info ------//
+                    *f_rcvDataSizeAccept_pu16 = f_rcvDataClaim_u16;
+                    RxBuffer_s->bytesPending_u16 = (t_uint16)(f_rcvDataClaim_u16);
 
-                //------ Check Write Idx Validity ------//
-                if(RxBuffer_s->writeIdx_u16 >= (t_uint16)RxBuffer_s->buffferSize_u16)
-                {
-                    RxBuffer_s->writeIdx_u16 = (t_uint16)0;
+                    //------ Handle Circular Buffer 
+                    //  In IT/POLL Mode We reset Read/Write Idx as no Data are beeing received
+                    //  In DMA CIRCULAR mode Calculate the next write idx ------//
+                    if ((RxBuffer_s->writeIdx_u16 + f_rcvDataClaim_u16) > RxBuffer_s->buffferSize_u16)
+                    {                   
+                        if(f_srlInfo_ps->runMode_e != FMKSRL_LINE_RUNMODE_DMA)
+                        {
+                            *f_WriteIdx_pu16 = (t_uint16)0;
+                            RxBuffer_s->readIdx_u16 = (t_uint16)0;
+                            RxBuffer_s->writeIdx_u16 = (t_uint16)0;
+                        }
+                        else 
+                        {
+                            *f_WriteIdx_pu16 = (t_uint16)RxBuffer_s->writeIdx_u16;
+                            remainingSpace_u16 = RxBuffer_s->buffferSize_u16 - RxBuffer_s->writeIdx_u16;
+                            //------ Wrap around if we exceed the buffer size ------//
+                            firstChunk_u16 = f_rcvDataClaim_u16 - remainingSpace_u16;
+                            // Update write index after wrap-around ------//
+                            RxBuffer_s->writeIdx_u16 = firstChunk_u16;
+                        }
+                    }
+                    else 
+                    {
+                        //------ Normal update of write index ------//
+                        *f_WriteIdx_pu16 = (t_uint16)RxBuffer_s->writeIdx_u16;
+                        RxBuffer_s->writeIdx_u16 += f_rcvDataClaim_u16;
+                    }
+
+                    //------ Check Write Idx Validity ------//
+                    if(RxBuffer_s->writeIdx_u16 >= (t_uint16)RxBuffer_s->buffferSize_u16)
+                    {
+                        RxBuffer_s->writeIdx_u16 = (t_uint16)0;
+                    }
                 }
             }
         }
