@@ -26,7 +26,7 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define FMKSRL_TIMEOUT_POLLING ((t_uint32)250)
+    #define FMKSRL_TIMEOUT_POLLING ((t_uint32)0x0000FFFF)
 
     #define FMKSRL_MAX_BYTES_TO_SEND ((t_uint16)256)
     // ********************************************************************
@@ -172,9 +172,9 @@
     // *                      Variables
     // ********************************************************************
     //flag automatic generated code 
-    USART_TypeDef * c_FmkSrl_BspIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
+    USART_TypeDef * c_FmkSrl_BspInitIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
         USART2,
-        UART4
+        UART4,
     };
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,       FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART

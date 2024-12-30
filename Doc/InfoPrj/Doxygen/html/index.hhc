@@ -175,7 +175,7 @@
       </UL>
     <LI><OBJECT type="text/sitemap"><param name="Name" value="t_sFMKCPU_TimerInfo"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html"><param name="ImageNumber" value="1"></OBJECT>
       <UL>
-      <LI><OBJECT type="text/sitemap"><param name="Name" value="BspTimer_ps"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="bspTimer_s"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="c_clock_e"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a0b125ef9e9d3406a6cdadde1513112fb"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="c_IRQNType_e"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#ae6c72f099bdab6b7ebb465b64683c91d"><param name="ImageNumber" value="11"></OBJECT>
       <LI><OBJECT type="text/sitemap"><param name="Name" value="Channel_as"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#aec054679a0a9852d69514e218659ea88"><param name="ImageNumber" value="11"></OBJECT>
@@ -1942,7 +1942,7 @@
                   </UL>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="t_sFMKCPU_TimerInfo"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html"><param name="ImageNumber" value="1"></OBJECT>
                   <UL>
-                  <LI><OBJECT type="text/sitemap"><param name="Name" value="BspTimer_ps"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="ImageNumber" value="11"></OBJECT>
+                  <LI><OBJECT type="text/sitemap"><param name="Name" value="bspTimer_s"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="ImageNumber" value="11"></OBJECT>
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="c_clock_e"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a0b125ef9e9d3406a6cdadde1513112fb"><param name="ImageNumber" value="11"></OBJECT>
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="c_IRQNType_e"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#ae6c72f099bdab6b7ebb465b64683c91d"><param name="ImageNumber" value="11"></OBJECT>
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="Channel_as"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#aec054679a0a9852d69514e218659ea88"><param name="ImageNumber" value="11"></OBJECT>

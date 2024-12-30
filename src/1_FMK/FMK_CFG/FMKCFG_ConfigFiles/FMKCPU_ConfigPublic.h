@@ -174,6 +174,8 @@
         FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
         FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
         FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_65,                       /**< General Purpose Timer, Reference to Timer 8 Channel 5 */
+        FMKCPU_INTERRUPT_LINE_IO_66,                       /**< General Purpose Timer, Reference to Timer 8 Channel 6 */
         FMKCPU_INTERRUPT_LINE_IO_71,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
         FMKCPU_INTERRUPT_LINE_IO_72,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
         FMKCPU_INTERRUPT_LINE_IO_73,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */

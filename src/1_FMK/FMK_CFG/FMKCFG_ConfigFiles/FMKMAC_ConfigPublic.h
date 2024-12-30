@@ -43,6 +43,8 @@
         FMKMAC_DMA_RQSTYPE_UART4_TX,                 /**< Reference to Bsp Dma Request for UART4_TX */
         FMKMAC_DMA_RQSTYPE_USART1_RX,                /**< Reference to Bsp Dma Request for USART1_RX */
         FMKMAC_DMA_RQSTYPE_USART1_TX,                /**< Reference to Bsp Dma Request for USART1_TX */
+        FMKMAC_DMA_RQSTYPE_USART2_RX,                /**< Reference to Bsp Dma Request for USART2_RX */
+        FMKMAC_DMA_RQSTYPE_USART2_TX,                /**< Reference to Bsp Dma Request for USART2_TX */
     
         FMKMAC_DMA_RQSTYPE_NB,
     } t_eFMKMAC_DmaRqst;
@@ -59,14 +61,14 @@
     /* Enum for number of channel in DMA */
     typedef enum
     {
-        FMKMAC_DMA_CHANNEL_1 = 0x0,                  /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_2,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_3,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_4,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_5,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_6,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_7,                        /**< Reference to Channel idx */
-        FMKMAC_DMA_CHANNEL_8,                        /**< Reference to Channel idx */
+        FMKMAC_DMA_CHANNEL_1 = 0x0,                  /**< Reference to Channel 1 */
+        FMKMAC_DMA_CHANNEL_2,                        /**< Reference to Channel 2 */
+        FMKMAC_DMA_CHANNEL_3,                        /**< Reference to Channel 3 */
+        FMKMAC_DMA_CHANNEL_4,                        /**< Reference to Channel 4 */
+        FMKMAC_DMA_CHANNEL_5,                        /**< Reference to Channel 5 */
+        FMKMAC_DMA_CHANNEL_6,                        /**< Reference to Channel 6 */
+        FMKMAC_DMA_CHANNEL_7,                        /**< Reference to Channel 7 */
+        FMKMAC_DMA_CHANNEL_8,                        /**< Reference to Channel 8 */
     
         FMKMAC_DMA_CHANNEL_NB,
     } t_eFMKMAC_DmaChnl;

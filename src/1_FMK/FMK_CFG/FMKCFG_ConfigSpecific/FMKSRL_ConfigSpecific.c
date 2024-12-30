@@ -142,6 +142,12 @@ HAL_StatusTypeDef FMKSRL_HAL_UART_Abort(void *bspHandle_pv) {
 /*********************************
  * FMKSRL_HAL_USART_Transmit_DMA
  *********************************/
+HAL_StatusTypeDef FMKSRL_HAL_UART_Abort_IT(void *bspHandle_pv) {
+    return HAL_UART_Abort((UART_HandleTypeDef *)bspHandle_pv);
+}
+/*********************************
+ * FMKSRL_HAL_USART_Transmit_DMA
+ *********************************/
 HAL_StatusTypeDef FMKSRL_HAL_USART_Abort(void *bspHandle_pv) {
     return HAL_USART_Abort((USART_HandleTypeDef *)bspHandle_pv);
 }

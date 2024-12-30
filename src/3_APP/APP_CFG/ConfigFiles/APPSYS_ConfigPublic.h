@@ -23,6 +23,9 @@
     // *                      Defines
     // ********************************************************************
 
+    //#define APPSYS_MODULE_FMKCAN_ENABLE
+    #define APPSYS_MODULE_FMKSRL_ENABLE
+    #define APPSYS_MODULE_APPLGC_ENABLE
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -37,7 +40,14 @@
         APPSYS_MODULE_FMK_CPU = 0,
         APPSYS_MODULE_FMK_IO,
         APPSYS_MODULE_FMK_CDA,
+
+#ifdef APPSYS_MODULE_FMKCAN_ENABLE
         APPSYS_MODULE_FMK_CAN,
+#endif // APPSYS_MODULE_FMKCAN_ENABLE
+
+#ifdef APPSYS_MODULE_FMKSRL_ENABLE
+        APPSYS_MODULE_FMK_SERIAL,
+#endif // APPSYS_MODULE_FMKSRL_ENABLE
 
         APPSYS_MODULE_APP_SNS,
         APPSYS_MODULE_APP_ACT,

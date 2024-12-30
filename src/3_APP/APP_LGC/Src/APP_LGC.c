@@ -16,6 +16,8 @@
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
+#include "stdio.h"
+#include "string.h"
 
 #include "./APP_LGC.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
@@ -108,6 +110,7 @@ t_eReturnCode APPLGC_Cyclic(void)
         {
             g_AppLgc_ModState_e = STATE_CYCLIC_OPE;
         }
+        break;
     }
     case STATE_CYCLIC_OPE:
     {
@@ -181,7 +184,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
 
     t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_POLL;
     SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
     SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,
@@ -211,9 +214,6 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKCPU_Set_InterruptLineState(FMKCPU_INTERRUPT_LINE_TYPE_EVNT, 
-                                                (t_uFMKCPU_InterruptLine){.ITLine_Evnt_e = FMKCPU_INTERRUPT_LINE_EVNT_1}, 
-                                                FMKCPU_CHNLST_ACTIVATED);
     return Ret_e;
 }
 /*********************************
@@ -221,8 +221,16 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
  *********************************/
 static t_eReturnCode s_APPLGC_Operational(void)
 {
-    
-    
+    t_eReturnCode Ret_e = RC_OK;
+    char msgbuffer[20];
+    sprintf(msgbuffer, "Hello World\r\n");
+
+    Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_1,
+                            FMKSRL_TX_ONESHOT,
+                            (t_uint8 * )msgbuffer,
+                            strlen(msgbuffer),
+                            (t_uint16)0,
+                            (t_bool)false);
     return RC_OK;
 }
 

@@ -1225,7 +1225,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_s_r_l___serial_info.html#a1adce2e68da7a3866b8c8a59c26f2d1a"><param name="Name" value="bspSrlCfg_e"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_s_rl___bsp_srl_func.html#ad8067be4bf2f1eaefddc70804aa4ac59"><param name="Name" value="bspSrlDeInit"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_s_rl___bsp_srl_func.html#a098be9de9178ff42d8788e64ca2bf447"><param name="Name" value="bspSrlInit"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="Name" value="BspTimer_ps"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="Name" value="bspTimer_s"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_f_d_c_a_n___tx_item_buffer.html#a299a978f9cb9cebd4208e27457c13bb1"><param name="Name" value="bspTxItem_s"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_l_i_b_q_u_e_u_e___queue_cfg.html#a5d949123d295d391ffa13a571029f801"><param name="Name" value="bufferHead_pv"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_l_i_b_q_u_e_u_e___queue_cfg.html#ad8cff6e372149afd4e49c856922efc59"><param name="Name" value="bufferSize_u8"></OBJECT>
@@ -9380,7 +9380,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html"><param name="Name" value="t_sFMKCPU_TimerInfo"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html"><param name="Name" value="t_sFMKCPU_TimerInfo"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="Name" value="BspTimer_ps"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a6ceae01bec6b1f5d372b73fc3ce96d40"><param name="Name" value="bspTimer_s"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html"><param name="Name" value="t_sFMKCPU_TimerInfo"></OBJECT>
   <UL>

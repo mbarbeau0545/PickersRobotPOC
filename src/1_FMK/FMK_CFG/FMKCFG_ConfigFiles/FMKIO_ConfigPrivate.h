@@ -171,16 +171,18 @@
         {{FMKIO_GPIO_PORT_F,             FMKIO_GPIO_PIN_7},              GPIO_AF6_TIM5,                 FMKCPU_INTERRUPT_LINE_IO_52},    // FMKIO_OUTPUT_SIGPWM_8,
     };
 
+    /**< Variable for RxTx Reference for Can Node */
     const t_sFMKIO_RxTxComCfg c_FmkIo_CanSigCfg_as[FMKIO_COM_SIGNAL_CAN_NB] ={
         // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function
         {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_11},             {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_12},             GPIO_AF9_FDCAN1}, // FMKIO_COM_SIGNAL_CAN_1
         {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_14},             {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_15},             GPIO_AF9_FDCAN1}, // FMKIO_COM_SIGNAL_CAN_2
         {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_13},             {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_12},             GPIO_AF9_FDCAN1}, // FMKIO_COM_SIGNAL_CAN_3
     };
+    /**< Variable for RxTx Reference for Serial Line */
     const t_sFMKIO_RxTxComCfg c_FmkIo_SerialSigCfg_as[FMKIO_COM_SIGNAL_SERIAL_NB] ={
         // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function
-        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_3},              {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_2},              GPIO_AF7_USART2}, // FMKIO_COM_SIGNAL_CAN_1
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_11},             {FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_10},             GPIO_AF5_UART4}, // FMKIO_COM_SIGNAL_CAN_2
+        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_3},              {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_2},              GPIO_AF7_USART2}, // FMKIO_COM_SIGNAL_SERIAL_1
+        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_11},             {FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_10},             GPIO_AF5_UART4}, // FMKIO_COM_SIGNAL_SERIAL_2
     };
     /* CAUTION : Automatic generated code section for Variable: End */
 

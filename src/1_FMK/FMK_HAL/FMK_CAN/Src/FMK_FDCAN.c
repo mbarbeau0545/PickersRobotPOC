@@ -16,8 +16,9 @@
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
-
 #include "./FMK_FDCAN.h"
+#ifdef APPSYS_MODULE_FMKCAN_ENABLE
+
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPrivate.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
@@ -25,6 +26,7 @@
 #include "Library/Queue/Src/LIBQueue.h"
 #include "Library/SafeMem/SafeMem.h"
 #include "stm32g4xx_hal.h"
+
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -840,11 +842,11 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
                 }
                 //----------Write Into Software Queue----------//
                 Ret_e = LIBQUEUE_WriteElement(&g_TxSoftQueue_as[f_Node_e], &SoTxitem_s);
-                ///----------update flag Tx Item to send/----------//
+                //----------update flag Tx Item to send/----------//
                 if(Ret_e == RC_OK)
                 {
                     g_NodeInfo_as[f_Node_e].Flag_s.TxQueuePending_b = True;
-                    ///----------Activate Notification /----------//
+                    //----------Activate Notification /----------//
                     Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(f_Node_e, 
                                                             FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
                                                             FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
@@ -868,8 +870,10 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     t_eReturnCode Ret_e = RC_OK;
     //t_uint8 LLI_u8;
     //t_sFMKFDCAN_RxItemBuffer *itemBuff_ps;
-    t_uint8 fifoLevel_u8;
-    t_uint32 FIFO_Id_u32;
+    t_uint8 fifoLevel_u8 = (t_uint8)0;
+    t_uint8 idxData_u8 = (t_uint8)0;
+    t_eFMKFDCAN_DataLength dataLenght_e;
+    t_uint32 FIFO_Id_u32 = (t_uint32)0;
     FDCAN_RxHeaderTypeDef bspRxITem_s;
     t_uint8 data_pu8[8];
     HAL_StatusTypeDef bspRet_e = HAL_OK;
@@ -906,16 +910,43 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
 
             if(bspRet_e == HAL_OK)
             {
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[2];
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[3];
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[4];
-                f_RxItem_ps->CanMsg_s.data_pu8[0] = data_pu8[0];
-                f_RxItem_ps->CanMsg_s.data_pu8[1] = data_pu8[1];
-                f_RxItem_ps->CanMsg_s.Direction_e = 1;
-                f_RxItem_ps->CanMsg_s.Dlc_e = FMKFDCAN_DLC_8;
-                f_RxItem_ps->ItemId_s.Identifier_u32 = bspRxITem_s.Identifier;
-                f_RxItem_ps->ItemId_s.IdType_e = bspRxITem_s.IdType;
+                //---------- Get the number of data ----------//
+                Ret_e = s_FMKFDCAN_GetDlcFromBsp(bspRxITem_s.DataLength, &dataLenght_e);
+            
+                if(Ret_e == RC_OK)
+                {
+                    for(idxData_u8 = (t_uint8)0; idxData_u8 < (t_uint8)dataLenght_e ; idxData_u8++)
+                    {
+                        f_RxItem_ps->CanMsg_s.data_pu8[idxData_u8] = data_pu8[idxData_u8];
+                    }
+                    f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+                    f_RxItem_ps->CanMsg_s.Dlc_e = dataLenght_e;
+                    f_RxItem_ps->ItemId_s.Identifier_u32 = bspRxITem_s.Identifier;
+
+                    if (bspRxITem_s.IdType == FDCAN_STANDARD_ID)
+                    {
+                        f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_STANDARD;
+                    }
+                    else 
+                    {
+                        f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_EXTENDED;
+                    }
+                    
+                }
             }
+            else 
+            {
+                Ret_e = RC_WARNING_WRONG_RESULT;
+            }
+        }
+        if(Ret_e != RC_OK)
+        {
+            //---------- Get Default Data values ----------//
+
+            f_RxItem_ps->CanMsg_s.data_pu8 = (t_uint8 *)NULL;
+            f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+            f_RxItem_ps->CanMsg_s.Dlc_e = 0;
+            f_RxItem_ps->ItemId_s.Identifier_u32 = 0;
         }
     }
     return Ret_e;
@@ -931,11 +962,6 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
-    RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
-        .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
-        //---According to datasheet, it's PLLQ, which is currently set to 120Mhz---//
-        .FdcanClockSelection  = RCC_FDCANCLKSOURCE_PLL,
-    };
 
     if(f_Node_e > FMKFDCAN_NODE_NB)
     {
@@ -943,12 +969,6 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     }
     if(Ret_e == RC_OK)
     {
-        //-------------------Init FDCAN Clock Config----------------//
-        bspRet_e = HAL_RCCEx_PeriphCLKConfig(&periphNodeInit_s);
-        if(bspRet_e != HAL_OK)
-        {
-            Ret_e = RC_ERROR_WRONG_RESULT;
-        }
         //----------Configure Pin Init----------//
         if(Ret_e == RC_OK)
         {
@@ -2528,6 +2548,8 @@ void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorSt
 {
     s_FMKFDCAN_BspErrorEventCb(hfdcan, ErrorStatusITs);
 }
+
+#endif // APPSYS_MODULE_FMKCAN_ENABLE
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -2544,3 +2566,5 @@ void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorSt
  *
  *
  */
+
+

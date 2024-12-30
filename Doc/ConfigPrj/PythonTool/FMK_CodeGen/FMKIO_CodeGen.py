@@ -21,6 +21,10 @@ from .FMKCPU_CodeGen import TimerCfg_alreadyUsed, FMKCPU_CodeGen
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
+TARGET_EXTI_X_IRQN_START = "/* CAUTION : Automatic generated code section for Exti IRQN_Handler: Start */\n"
+TARGET_EXTI_X_IRQN_END   = "/* CAUTION : Automatic generated code section for Exti IRQN_Handler: End */\n"
+TARGET_SWITCH_GPIO_RCC_START = "        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: Start */\n"
+TARGET_SWITCH_GPIO_RCC_END   = "        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: End */\n"
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #
@@ -64,7 +68,7 @@ class FMKIO_CodeGen():
         OutDig_astr      = cls.code_gen.get_array_from_excel("FMKIO_OutputDig")
         SigCan_astr      = cls.code_gen.get_array_from_excel('FMKIO_CanCfg')
         SigSerial_astr   = cls.code_gen.get_array_from_excel('FMKIO_SerialCfg')[1:]
-
+        list_irqn_hdler  = cls.code_gen.get_array_from_excel('FMKIO_IRQNHandler')
         Descitpion_pwm_freq = ['GPIO_name','Pin_name','alternate function', 'Interrupt Line' ]
 
         sig_in_ana =  []
@@ -93,6 +97,8 @@ class FMKIO_CodeGen():
         var_OutDig = ""
         var_OutPWM = ""
         switch_gpio = ""
+        switch_gpio_rcc  = ""
+        func_irqn = ''
         gpio_enable_clk = "/**< Variable to store the state of GPIO Clock */\nt_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB] = {\n"
 
         enum_suffix_a: List[str] = []
@@ -123,6 +129,11 @@ class FMKIO_CodeGen():
                             + f"                *f_BspGpio_ps = GPIO{gpio_letter};\n" \
                             + f"                break;\n"
 
+            # Make switch case to found Rcc Clock from gpio Enum
+            switch_gpio_rcc += f'            case {ENUM_GPIO_PORT_ROOT}_{gpio_letter}:\n' \
+                            + f'                gpioClkPort_e = {ENUM_FMKCPU_RCC_ROOT}_GPIO{str(gpio_letter).upper()};\n' \
+                            + '                break;\n'
+            
             # Make GPIO clock default value
             gpio_enable_clk += f"    FMKCPU_CLOCKPORT_OPE_DISABLE, // {ENUM_GPIO_PORT_ROOT}_{gpio_letter}\n"
         gpio_enable_clk += "};\n\n"
@@ -140,6 +151,18 @@ class FMKIO_CodeGen():
                                                               "List of Pin available for each GPIO on this board", 
                                                               [f"Reference to bsp gpio pin {pin}" for pin in pin_list])
     
+        #----------------------------------------------------------------
+        #-----------------------------Make IRQNHandler-------------------
+        #----------------------------------------------------------------
+        for exti_irqn in list_irqn_hdler[1:]:
+            func_irqn += '/*********************************\n' \
+                        + f' * {exti_irqn[0]}\n' \
+                        + '*********************************/\n' \
+                        + f'void {exti_irqn[0]}(void)' \
+                        + " " * (42 - len(f'void {exti_irqn[0]}(void)')) \
+                        + '{' + 'return s_FMKIO_BspRqst_InterruptMngmt();' + '}\n\n'
+                        
+
         #---------------------------------------------------------------
         #-----------------make Pin mapping variable---------------------
         #---------------------------------------------------------------
@@ -152,6 +175,7 @@ class FMKIO_CodeGen():
 
         var_bsp_pin_map += "    };\n\n"
 
+        
         #-----------------------------------------------------------
         #-----------------make InAna cfg variable-------------------
         #-----------------------------------------------------------
@@ -475,12 +499,20 @@ class FMKIO_CodeGen():
         # for FMKIO
         print("\t- For FMKIO.c file")
         cls.code_gen.change_target_balise(TARGET_BALISE_SWITCH_GPIO_START, TARGET_BALISE_SWITCH_GPIO_END)
-        print("\t\t- switch case for Foud stm GPIO from enum")
+        print("\t\t- switch case to found stm GPIO from enum")
         cls.code_gen._write_into_file(switch_gpio, FMKIO_PATH)
+
+        cls.code_gen.change_target_balise(TARGET_SWITCH_GPIO_RCC_START, TARGET_SWITCH_GPIO_RCC_END)
+        print("\t\t- switch case to found Rcc clock for a GPIO")
+        cls.code_gen._write_into_file(switch_gpio_rcc, FMKIO_PATH)
 
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE[4:], TARGET_T_VARIABLE_END_LINE[4:])
         print("\t\t- variable for GPIO enum")
         cls.code_gen._write_into_file(gpio_enable_clk, FMKIO_PATH)
+
+        print('\t\t- Exti IRQN Handler')
+        cls.code_gen.change_target_balise(TARGET_EXTI_X_IRQN_START, TARGET_EXTI_X_IRQN_END)
+        cls.code_gen._write_into_file(func_irqn, FMKIO_PATH)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FMFIO Module>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")

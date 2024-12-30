@@ -1057,50 +1057,37 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
 /*********************************
  * HAL_ADC_ErrorCallback
  *********************************/
-#ifdef FMKCPU_STM32_ECU_FAMILY_F
-    /*********************************
-     * HAL_ADC_ErrorCallback
-     *********************************/
-    void ADC1_IRQHandler(void) 
-    {
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
-    }
-#elif defined FMKCPU_STM32_ECU_FAMILY_G
-    /*********************************
-     * ADC1_2_IRQHandler
-     *********************************/
-    void ADC1_2_IRQHandler(void) 
-    {
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_2].BspInit_s);
-    }
-    /*********************************
-     * ADC3_IRQHandler
-     *********************************/
-    void ADC3_IRQHandler(void) 
-    {
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_3].BspInit_s);
-    }
-    /*********************************
-     * ADC4_IRQHandler
-     *********************************/
-    void ADC4_IRQHandler(void) 
-    {
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_4].BspInit_s);
-    }
-    /*********************************
-     * ADC5_IRQHandler
-     *********************************/
-    void ADC5_IRQHandler(void) 
-    {
-        HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_5].BspInit_s);
-    }
-#else 
-    #error("Famille STM32 non supportée. Vérifiez la configuration.")
-
-#endif
-
-
+/* CAUTION : Automatic generated code section for ADCx IRQN_Handler: Start */
+/*********************************
+ * ADC1_2_IRQHandler
+*********************************/
+void ADC1_2_IRQHandler(void)
+{
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_1].BspInit_s);
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_2].BspInit_s);
+}
+/*********************************
+ * ADC3_IRQHandler
+*********************************/
+void ADC3_IRQHandler(void)
+{
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_3].BspInit_s);
+}
+/*********************************
+ * ADC4_IRQHandler
+*********************************/
+void ADC4_IRQHandler(void)
+{
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_4].BspInit_s);
+}
+/*********************************
+ * ADC5_IRQHandler
+*********************************/
+void ADC5_IRQHandler(void)
+{
+    HAL_ADC_IRQHandler(&g_AdcInfo_as[FMKCDA_ADC_5].BspInit_s);
+}
+/* CAUTION : Automatic generated code section for ADCx IRQN_Handler: End */
 
 //************************************************************************************
 // End of File
