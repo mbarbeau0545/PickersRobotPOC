@@ -1324,7 +1324,7 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveIdleMngmt(t_sFMKSRL_SerialInfo * f_
     }
     if(Ret_e == RC_OK)
     {
-        RxBuffer_s = (t_sFMKSRL_BufferInfo *)(&f_srlInfo_ps->RxInfo_s);
+        RxBuffer_s = (t_sFMKSRL_BufferInfo *)(&f_srlInfo_ps->RxInfo_s.Buffer_s);
         //------ Here as we don't know the amount of data received, 
         // we ask the maximum available in buffer ------//
         Ret_e = s_FMKSRL_UpdateRxBufferInfo(f_srlInfo_ps,
@@ -1651,8 +1651,8 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
 {
     t_eReturnCode Ret_e = RC_OK;
     t_sFMKSRL_BufferInfo * RxBuffer_s;
-    t_uint16 remainingSpace = (t_uint16)0;
-    t_uint16 firstChunk = (t_uint16)0;
+    t_uint16 remainingSpace_u16 = (t_uint16)0;
+    t_uint16 firstChunk_u16 = (t_uint16)0;
 
     if( (f_srlInfo_ps == (t_sFMKSRL_SerialInfo *)NULL)
     ||  (f_rcvDataSizeAccept_pu16 == (t_uint16 *)NULL))
@@ -1726,21 +1726,29 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
                 RxBuffer_s->bytesPending_u16 = (t_uint16)(*f_rcvDataSizeAccept_pu16);
                 *f_WriteIdx_u16 = (t_uint16)RxBuffer_s->writeIdx_u16;
             }
-
-            //------ Handle Circular Buffer ------//
-            if ((RxBuffer_s->writeIdx_u16 + f_rcvDataClaim_u16) > RxBuffer_s->buffferSize_u16)
+            if(Ret_e == RC_OK)
             {
-                //------ Wrap around if we exceed the buffer size ------//
-                remainingSpace = RxBuffer_s->buffferSize_u16 - RxBuffer_s->writeIdx_u16;
-                firstChunk = f_rcvDataClaim_u16 - remainingSpace;
+                //------ Handle Circular Buffer ------//
+                if ((RxBuffer_s->writeIdx_u16 + f_rcvDataClaim_u16) > RxBuffer_s->buffferSize_u16)
+                {
+                    //------ Wrap around if we exceed the buffer size ------//
+                    remainingSpace_u16 = RxBuffer_s->buffferSize_u16 - RxBuffer_s->writeIdx_u16;
+                    firstChunk_u16 = f_rcvDataClaim_u16 - remainingSpace_u16;
 
-                // Update write index after wrap-around ------//
-                RxBuffer_s->writeIdx_u16 = firstChunk;
-            }
-            else 
-            {
-                //------ Normal update of write index ------//
-                RxBuffer_s->writeIdx_u16 += f_rcvDataClaim_u16;
+                    // Update write index after wrap-around ------//
+                    RxBuffer_s->writeIdx_u16 = firstChunk_u16;
+                }
+                else 
+                {
+                    //------ Normal update of write index ------//
+                    RxBuffer_s->writeIdx_u16 += f_rcvDataClaim_u16;
+                }
+
+                //------ Check Write Idx Validity ------//
+                if(RxBuffer_s->writeIdx_u16 >= (t_uint16)RxBuffer_s->buffferSize_u16)
+                {
+                    RxBuffer_s->writeIdx_u16 = (t_uint16)0;
+                }
             }
         }
     }
@@ -2566,6 +2574,7 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
             case FMKSRL_BSP_RX_OPE_RECEIVE_IDLE:
             {
                 dataLength_u16 = f_InfoCb_u16;
+                
                 break;
             }
             case FMKSRL_BSP_RX_OPE_NB:
@@ -2603,18 +2612,14 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
 
         }
 
-        //--------- Update End Idx Buffer ---------//
-        RxBuffer_s->readIdx_u16 = endIdx_u16;
-    }
-
-    //--------- Update Bytes Pending ---------//
-    if(Ret_e == RC_OK)
-    {
-        RxBuffer_s->bytesPending_u16 = (t_uint16)(RxBuffer_s->bytesPending_u16 - dataLength_u16);
+        //--------- Update End Idx Buffer & BytesPending---------//
+        RxBuffer_s->readIdx_u16 = RxBuffer_s->writeIdx_u16;
+        RxBuffer_s->bytesPending_u16 = (t_uint16)0; // may be inaccurate
     }
 
     return Ret_e;
 }
+
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
 /*********************************
  * s_FMKSRL_SetUartAdvanceCfg
