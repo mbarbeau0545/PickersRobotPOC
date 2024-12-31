@@ -177,7 +177,7 @@ class LoadConfig_FromExcel():
         generatedCode_str = ""
         arrayEnum_a = self._get_array_from_excel(f_ArrayName_str)[1:]
         if(arrayEnum_a != None and isinstance(f_variableName_str,str) and os.path.isfile(f_scriptPath_str)):
-            generatedCode_str += "\ttypedef enum\n\t{\n"
+            generatedCode_str += "    typedef enum" + f' __{f_ArrayName_str if f_variableName_str == " " else f_variableName_str}\n' + '{\n'
             for idx, InstanceEnum_a in enumerate(arrayEnum_a):
                 # Male enum with the first column
                 # If value of enum is none and it's the first, initiliaze to 0 

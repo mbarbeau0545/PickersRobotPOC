@@ -32,109 +32,135 @@
 // ********************************************************************
 // *                      Types
 // ********************************************************************
+/**
+ * @brief Union to define hardware serial handles for UART and USART.
+ */
 typedef union __t_uFMKSRL_HardwareSerial
 {
-    UART_HandleTypeDef  uartH_s;
-    USART_HandleTypeDef usartH_s;
+    UART_HandleTypeDef  uartH_s;    /**< UART handle. */
+    USART_HandleTypeDef usartH_s;   /**< USART handle. */
 } t_uFMKSRL_HardwareHandle;
-/* CAUTION : Automatic generated code section for Enum: Start */
 
-/* CAUTION : Automatic generated code section for Enum: End */
-
-//-----------------------------ENUM TYPES-----------------------------//
+/**
+ * @brief Enumeration to represent the health status of a communication line.
+ */
 typedef enum __t_eFMKSRL_HealthLine
 {
-    FMKSRL_LINE_HEALTH_OK = 0x00U,
-    FMKSRL_LINE_HEALTH_ERR,
+    FMKSRL_LINE_HEALTH_OK = 0x00U,      /**< Communication line is healthy. */
+    FMKSRL_LINE_HEALTH_ERR,             /**< Communication line encountered an error. */
 } t_eFMKSRL_HealthLine;
 
+/**
+ * @brief Enumeration to represent the status of a buffer.
+ */
 typedef enum __t_eFMKSRL_BufferStatus
 {
-    FMKSRL_BUFFSTATUS_READY            = 0x00U,
-    FMKSRL_BUFFSTATUS_BUSY             = 0x01U,
-    FMKSRL_BUFFSTATUS_MSG_CUT          = 0x02U,
-    FMKSRL_BUFFSTATUS_MSG_PENDING      = 0x03U,
-    FMKSRL_BUFFSTATUS_EMPTY            = 0x04U,
-    FMKSRL_BUFFSTATUS_OVERFLOW         = 0x05U,
-    FMKSRL_BUFFSTATUS_ERROR            = 0x06U,
+    FMKSRL_BUFFSTATUS_READY = 0x00U,            /**< Buffer is ready for use. */
+    FMKSRL_BUFFSTATUS_BUSY = 0x01U,             /**< Buffer is currently busy. */
+    FMKSRL_BUFFSTATUS_MSG_CUT = 0x02U,          /**< Message was cut in the buffer. */
+    FMKSRL_BUFFSTATUS_MSG_PENDING = 0x03U,      /**< Message is pending in the buffer. */
+    FMKSRL_BUFFSTATUS_EMPTY = 0x04U,            /**< Buffer is empty. */
+    FMKSRL_BUFFSTATUS_OVERFLOW = 0x05U,         /**< Buffer overflow occurred. */
+    FMKSRL_BUFFSTATUS_ERROR = 0x06U,            /**< Buffer encountered an error. */
 } t_eFMKSRL_BufferStatus;
 
+/**
+ * @brief Enumeration to enable or disable timeout operations.
+ */
 typedef enum __t_eFMKSRL_TimeoutOpe
 {
-    FMKSRL_TIMEOUT_OPE_ACTIVATE = 0x00,
-    FMKSRL_TIMEOUT_OPE_DISACTIVATE,
-    
-    FMKSRL_TIMEOUT_OPE_NB
+    FMKSRL_TIMEOUT_OPE_ACTIVATE = 0x00,     /**< Enable timeout operations. */
+    FMKSRL_TIMEOUT_OPE_DISACTIVATE,         /**< Disable timeout operations. */
+
+    FMKSRL_TIMEOUT_OPE_NB                   /**< Number of timeout operation types. */
 } t_eFMKSRL_TimeoutOpe;
 
+/**
+ * @brief Enumeration for transmit callback events.
+ */
 typedef enum __t_eFMKSRL_BspCbTxEvnt
 {
-    FMKSRL_BSP_TX_CB_HALCPLT = 0x00,
-    FMKSRL_BSP_TX_CB_CPLT,
-    FMKSRL_BSP_TX_RX_CB_CPLT,
-    FMKSRL_BSP_TX_CB_NB
-    
+    FMKSRL_BSP_TX_CB_HALCPLT = 0x00,    /**< HAL transmit complete callback. */
+    FMKSRL_BSP_TX_CB_CPLT,              /**< Transmit complete callback. */
+    FMKSRL_BSP_TX_RX_CB_CPLT,           /**< Transmit and receive complete callback. */
+    FMKSRL_BSP_TX_CB_NB                 /**< Number of transmit callback event types. */
 } t_eFMKSRL_BspCbTxEvnt;
 
+/**
+ * @brief Enumeration for receive callback events.
+ */
 typedef enum __t_eFMKSRL_BspCbRxEvnt
 {
-    FMKSRL_BSP_RX_CB_HALCPLT = 0x00,
-    FMKSRL_BSP_RX_CB_CPLT,
-    FMKSRL_BSP_RX_CB_EVENT,
+    FMKSRL_BSP_RX_CB_HALCPLT = 0x00,    /**< HAL receive complete callback. */
+    FMKSRL_BSP_RX_CB_CPLT,              /**< Receive complete callback. */
+    FMKSRL_BSP_RX_CB_EVENT,             /**< General receive event callback. */
 
-    FMKSRL_BSP_RX_CB_NB
-    
+    FMKSRL_BSP_RX_CB_NB                 /**< Number of receive callback event types. */
 } t_eFMKSRL_BspCbRxEvnt;
+
 /* CAUTION : Automatic generated code section for Structure: Start */
 
 /* CAUTION : Automatic generated code section for Structure: End */
 //-----------------------------STRUCT TYPES---------------------------//
+
+/**
+ * @brief Buffer Information Structure
+ */
 typedef struct __t_sFMKSRL_BufferInfo
 {
-    t_uint8 * bufferAdd_pu8;
-    t_uint16 buffferSize_u16;
-    t_uint16 bytesPending_u16;
-    t_uint16 bytesSending_u16;
-    t_uint16 writeIdx_u16;
-    t_uint16 readIdx_u16;
-    t_uint16 status_u16; 
+    t_uint8 * bufferAdd_pu8;        /**< Pointor to buffer address */
+    t_uint16 buffferSize_u16;       /**< Buffer Size */
+    t_uint16 bytesPending_u16;      /**< Bytes currently in the buffer*/
+    t_uint16 bytesSending_u16;      /**< Bytes currently sending */
+    t_uint16 writeIdx_u16;          /**< Buffer Write Index  */
+    t_uint16 readIdx_u16;           /**< Buffer Read Index */
+    t_uint16 status_u16;            /**< Buffer Status/Info */
 } t_sFMKSRL_BufferInfo;
 
+/**
+ * @brief Transmit Line Information
+ */
 typedef struct __t_sFMKSRL_TxMngmt
 {
-    t_eFMKSRL_TxOpeMode                 OpeMode_e;
-    t_bool                              RqstTxRxOpe_b;
-    t_eFMKSRL_BspTransmitOpe            bspTxOpe_e;
-    t_sFMKSRL_BufferInfo                Buffer_s;
-    t_cbFMKSRL_TransmitMsgEvent         * TxUserCb_pcb;
-    t_bool                              NotifyUser_b;
+    t_eFMKSRL_TxOpeMode                 OpeMode_e;          /** Transmit Ope Mode */
+    t_eFMKSRL_BspTransmitOpe            bspTxOpe_e;         /**< Bsp transmit Ope Mode */
+    t_sFMKSRL_BufferInfo                Buffer_s;           /**< Tx Buffer Information */
+    t_bool                              RqstTxRxOpe_b;      /**< Flag to know if TxRX Ope is Requested */
+    t_cbFMKSRL_TransmitMsgEvent       * TxUserCb_pcb;       /**< Tx User callback */
+    t_bool                              NotifyUser_b;       /**< Wether or not we use Tx callback */
 } t_sFMKSRL_TxMngmt;
 
+/**
+ * @brief Receive Line Information
+ */
 typedef struct __t_sFMKSRL_RxMngmt
 {
-    t_eFMKSRL_RxOpeMode         OpeMode_e;
-    t_eFMKSRL_BspReceiveOpe     bspRxOpe_e;
-    t_sFMKSRL_BufferInfo        Buffer_s;
-    t_cbFMKSRL_RcvMsgEvent      * RxUserCb_pcb;
-    t_bool                      RqstCyclic_b;
-    t_uint16                    infoMode_u16;
+    t_eFMKSRL_RxOpeMode         OpeMode_e;          /** Receive Ope Mode */
+    t_eFMKSRL_BspReceiveOpe     bspRxOpe_e;         /**< Bsp Receive Ope Mode */
+    t_sFMKSRL_BufferInfo        Buffer_s;           /**< Rx Buffer Information */
+    t_cbFMKSRL_RcvMsgEvent    * RxUserCb_pcb;       /**< Rx User callback */
+    t_bool                      RqstCyclic_b;       /**< Flag to know if a Cyclic Ope is request */
+    t_uint16                    infoMode_u16;       /**< Store the TimeOut/Size in case of cyclic Operation */
 } t_sFMKSRL_RxMngmt;
 
+/**
+ * @brief Serial Line Information
+ */
 typedef struct __t_sFMKSRL_SerialInfo
 {
-    t_uFMKSRL_HardwareHandle            bspHandle_u;
-    const t_eFMKCPU_ClockPort           c_clockPort_e;
-    const t_eFMKCPU_IRQNType            c_IRQNType_e;
-    const t_eFMKSRL_HwProtocolType      c_HwType_e;
-    const t_eFMKMAC_DmaRqst             c_DmaRqstRx;
-    const t_eFMKMAC_DmaRqst             c_DmaRqstTx;
-    t_eFMKSRL_HwProtocolType            SoftType_e;
-    t_eFMKSRL_LineBaudrate              baudrate_e;
-    t_eFMKSRL_LineRunMode               runMode_e;
-    t_sFMKSRL_TxMngmt                   TxInfo_s;
-    t_sFMKSRL_RxMngmt                   RxInfo_s;
-    t_eFMKSRL_HealthLine                Health_e;
-    t_bool                              isLineConfigured_b;
+    t_uFMKSRL_HardwareHandle            bspHandle_u;            /**< UART/USART Handle of the Serial Line */
+    const t_eFMKCPU_ClockPort           c_clockPort_e;          /**< Clock Port of the UART/USART */
+    const t_eFMKCPU_IRQNType            c_IRQNType_e;           /**< IRQN Type for the UART/USART */
+    const t_eFMKSRL_HwProtocolType      c_HwType_e;             /**< know if the HandleTypeDef is an UART or USART */
+    const t_eFMKMAC_DmaRqst             c_DmaRqstRx;            /**< DMA Rx Channel */
+    const t_eFMKMAC_DmaRqst             c_DmaRqstTx;            /**< DMA Tx Channel */
+    t_eFMKSRL_HwProtocolType            SoftType_e;             /**< Store the software protocol set by user */
+    t_eFMKSRL_LineBaudrate              baudrate_e;             /**< Store the baudrate for timeout Operation */
+    t_eFMKSRL_LineRunMode               runMode_e;              /**< Store the run mode to use Transmit/Receive Operation */
+    t_sFMKSRL_TxMngmt                   TxInfo_s;               /**< Transmit Information */
+    t_sFMKSRL_RxMngmt                   RxInfo_s;               /**< Receive Information */
+    t_eFMKSRL_HealthLine                Health_e;               /**< Serial Line health */
+    t_bool                              isLineConfigured_b;     /**< Flag to know if Serial is configured */
 } t_sFMKSRL_SerialInfo;
 /* CAUTION : Automatic generated code section : Start */
 
@@ -1059,7 +1085,7 @@ t_eReturnCode FMKSRL_ConfigureReception(  t_eFMKSRL_SerialLine f_SrlLine_e,
         }
         if(Ret_e == RC_OK)
         {
-            //--------- Know if user wants cylic operation ---------//
+            //--------- Update Information ---------//
 
             g_SavedUserRxOpeMode_ae[f_SrlLine_e] = bspRxOpe_e;
             srlInfo_ps->RxInfo_s.OpeMode_e = f_OpeMode_e;
@@ -2332,7 +2358,7 @@ static t_eReturnCode s_FMKSRL_CopyData( t_sFMKSRL_BufferInfo * f_RxTxBuffer_s,
                                         spaceToEnd_u16);
                 if(Ret_e == RC_OK)
                 {
-                    Ret_e = SafeMem_memcpy( (void *)(&f_RxTxBuffer_s->bufferAdd_pu8[f_RxTxBuffer_s->writeIdx_u16]),
+                    Ret_e = SafeMem_memcpy( (void *)(f_RxTxBuffer_s->bufferAdd_pu8),
                                         f_data_pu8,
                                         (t_uint16)(f_dataSized_u16 - spaceToEnd_u16));
                 }
@@ -2612,14 +2638,14 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
             //--------- Second Part Data ---------//
             RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(RxBuffer_s->bufferAdd_pu8),
                                         (t_uint16)endIdx_u16,
-                                        FMKSRL_CB_INFO_RECEIVE_ENDING);
+                                        FMKSRL_CB_INFO_RECEIVE_OK);
         }
         else
         {
             //--------- All Data are aline, call User ---------//
             RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(&RxBuffer_s->bufferAdd_pu8[startIdx_u16]),
                                         (t_uint16)dataLength_u16,
-                                        FMKSRL_CB_INFO_RECEIVE_ENDING);
+                                        FMKSRL_CB_INFO_RECEIVE_OK);
 
         }
 

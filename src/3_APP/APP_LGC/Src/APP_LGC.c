@@ -62,9 +62,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void);
 static t_eReturnCode s_APPLGC_Callback(t_eFMKCPU_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
                                     t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_CallbackInfo f_InfoCb_e);
+                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
 
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_CallbackInfo f_InfoCb_e);
+static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -167,14 +167,14 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 //********************************************************************************
 static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8, 
                                     t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_CallbackInfo f_InfoCb_e)
+                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e)
 {
     t_eReturnCode Ret_e = RC_OK;
     char msgbuffer[20];
     sprintf(msgbuffer, "Got It\r\n");
 
 
-    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_ENDING)
+    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_OK)
     {
         if(f_rxData_pu8[0] == 'a')
         {
@@ -189,7 +189,7 @@ static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8,
     return;
 }
 
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_CallbackInfo f_InfoCb_e)
+static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e)
 {
     return;
 }
@@ -216,12 +216,12 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     Ret_e = FMKSRL_InitDrv(FMKSRL_SERIAL_LINE_1, SrlCfg_s,
                             s_APPLGC_RcvSrlEvent,
                             s_APPLGC_TranmistEvnt);
-    if(Ret_e == RC_OK)
+    /*if(Ret_e == RC_OK)
     {
         Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_1,
                                             FMKSRL_OPE_RX_CYCLIC_SIZE,
                                             (t_uint16)9);
-    }
+    }*/
     Ret_e = RC_OK;
     return Ret_e;
 }
@@ -241,7 +241,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    /*char msgbuffer[20];
+    char msgbuffer[20];
     sprintf(msgbuffer, "Hello World\r\n");
 
     Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_1,
@@ -249,7 +249,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
                             (t_uint8 * )msgbuffer,
                             strlen(msgbuffer),
                             (t_uint16)0,
-                            (t_bool)True);*/
+                            (t_bool)True);
     return RC_OK;
 }
 

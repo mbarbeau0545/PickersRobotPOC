@@ -150,6 +150,11 @@
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
+
+
+    /**
+     * @brief Bsp transmit Receive Function use in UART/USART Protocol.
+     */
     typedef struct __t_sFMKSRL_BspRxTxFunc
     {
         t_cbFMKSRL_BspRxTx_Poll *       bspRxTxPoll_pcb;
@@ -157,6 +162,9 @@
         t_cbFMKSRL_BspRxTx_DMA  *       bspRxTxDMA_pcb;
     } t_sFMKSRL_BspRxTxFunc;
 
+    /**
+     * @brief Bsp Abort Function use in UART/USART.
+     */
     typedef struct __t_sFMKSRL_BspAbortFunc
     {
         t_cbFMKSRL_BspAbort    *       bspAbortPoll_pcb;
@@ -172,30 +180,50 @@
     // *                      Variables
     // ********************************************************************
     //flag automatic generated code 
+    /**
+     * @brief Mapping between Serial Line And Bsp Handle Typedef
+     */
     USART_TypeDef * c_FmkSrl_BspInitIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
         USART2,
         UART4,
     };
+
+    /**
+     * @brief Bsp UART/USART Receive Function
+     */
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_RxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_Receive,      FMKSRL_HAL_UART_Receive_IT ,        FMKSRL_HAL_UART_Receive_DMA},   // FMKSRL_HW_PROTOCOL_UART
         {FMKSRL_HAL_USART_Receive,     FMKSRL_HAL_USART_Receive_IT,        FMKSRL_HAL_USART_Receive_DMA},  // FMKSRL_HW_PROTOCOL_USART
         
     };
 
+    /**
+     * @brief Bsp UART/USART Transmit Function
+     */
     const t_sFMKSRL_BspRxTxFunc c_FmkSrl_TxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_Transmit,      FMKSRL_HAL_UART_Transmit_IT ,        FMKSRL_HAL_UART_Transmit_DMA},   // FMKSRL_HW_PROTOCOL_UART
         {FMKSRL_HAL_USART_Transmit,     FMKSRL_HAL_USART_Transmit_IT,        FMKSRL_HAL_USART_Transmit_DMA},  // FMKSRL_HW_PROTOCOL_USART
-    };    
+    }; 
+
+    /**
+     * @brief Bsp UART/USART Abort Function 
+     */   
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_Abort,        FMKSRL_HAL_UART_Abort_IT,      FMKSRL_HAL_UART_Abort_IT},         // FMKSRL_HW_PROTOCOL_UART    
         {FMKSRL_HAL_USART_Abort,       FMKSRL_HAL_USART_Abort_IT,     FMKSRL_HAL_USART_Abort_IT},        // FMKSRL_HW_PROTOCOL_USART
     };
 
+    /**
+     * @brief Bsp Abort Receive for UART
+     */
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortRxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_AbortReceive,              FMKSRL_HAL_UART_AbortReceive_IT,         FMKSRL_HAL_UART_AbortReceive_IT},   // FMKSRL_HW_PROTOCOL_UART    
         {NULL_FONCTION,                             NULL_FONCTION,                           NULL_FONCTION},                     // FMKSRL_HW_PROTOCOL_USART
     };
 
+    /**
+     * @brief Bsp Abort Transmit for UART
+     */
     const t_sFMKSRL_BspAbortFunc c_FmkSrl_AbortTxBspFunc_apf[FMKSRL_HW_PROTOCOL_NB] = {
         {FMKSRL_HAL_UART_AbortTransmit,             FMKSRL_HAL_UART_AbortTransmit_IT,         FMKSRL_HAL_UART_AbortTransmit_IT},   // FMKSRL_HW_PROTOCOL_UART    
         {NULL_FONCTION,                             NULL_FONCTION,                            NULL_FONCTION},                      // FMKSRL_HW_PROTOCOL_USART
