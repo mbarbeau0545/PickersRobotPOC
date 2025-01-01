@@ -55,9 +55,6 @@ class FMKCDA_CodeGen():
 
     @classmethod
     def code_genration(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # load array needed
         cls.code_gen.load_excel_file(f_hw_cfg)
         #irqn_cfg_a = cls.code_gen.get_array_from_excel("GI_IRQN")
@@ -206,6 +203,9 @@ class FMKCDA_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKADC module---------------
         #-----------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMFCDA Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("\t- For configPublic file")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE, TARGET_T_ENUM_END_LINE)
         print("\t\t- Enum for adc cahnnel")
@@ -238,7 +238,7 @@ class FMKCDA_CodeGen():
         cls.code_gen._write_into_file(func_irqn, FMKCDA)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

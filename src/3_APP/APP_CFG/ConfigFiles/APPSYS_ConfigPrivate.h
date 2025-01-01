@@ -22,6 +22,7 @@
     #include "1_FMK/FMK_HAL/FMK_IO/Src/FMK_IO.h"
     #include "1_FMK/FMK_HAL/FMK_CDA/Src/FMK_CDA.h"
     #include "1_FMK/FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+    #include "1_FMK/FMK_HAL/FMK_MAC/Src/FMK_MAC.h"
     #include "1_FMK/FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
     #include "1_FMK/FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
     #include "3_APP/APP_CTRL/APP_ACT/Src/APP_ACT.h"
@@ -105,6 +106,7 @@
         {FMKCPU_Init,    FMKCPU_Cyclic,     FMKCPU_GetState,   FMKCPU_SetState},
         {FMKIO_Init,     FMKIO_Cyclic,      FMKIO_GetState,    FMKIO_SetState},
         {FMKCDA_Init,    FMKCDA_Cyclic,     FMKCDA_GetState,   FMKCDA_SetState},
+        {FMKMAC_Init,    FMKMAC_Cyclic,     FMKMAC_GetState,   FMKMAC_SetState},
 #ifdef APPSYS_MODULE_FMKCAN_ENABLE
         {FMKFDCAN_Init,  FMKFDCAN_Cyclic,   FMKFDCAN_GetState, FMKFDCAN_SetState},
 #endif // APPSYS_MODULE_FMKCAN_ENABLE

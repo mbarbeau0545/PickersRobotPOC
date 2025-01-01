@@ -50,9 +50,7 @@ class FMKIO_CodeGen():
     code_gen = LCFE()
     @classmethod
     def code_generation(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkIO Module>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
         TARGET_BALISE_SWITCH_GPIO_START = "            /* CAUTION : Automatic generated code section for GPIO switch case: Start */\n"
         TARGET_BALISE_SWITCH_GPIO_END   = "            /* CAUTION : Automatic generated code section for GPIO switch case: End */\n"
         
@@ -131,7 +129,7 @@ class FMKIO_CodeGen():
 
             # Make switch case to found Rcc Clock from gpio Enum
             switch_gpio_rcc += f'            case {ENUM_GPIO_PORT_ROOT}_{gpio_letter}:\n' \
-                            + f'                gpioClkPort_e = {ENUM_FMKCPU_RCC_ROOT}_GPIO{str(gpio_letter).upper()};\n' \
+                            + f'                *f_clockPort_pe = {ENUM_FMKCPU_RCC_ROOT}_GPIO{str(gpio_letter).upper()};\n' \
                             + '                break;\n'
             
             # Make GPIO clock default value
@@ -451,6 +449,9 @@ class FMKIO_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKIO module----------------
         #-----------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMKIO Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # for FMKIO Config Private 
         print("\t- For configPrivate file")
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE,TARGET_T_VARIABLE_END_LINE)
@@ -498,13 +499,7 @@ class FMKIO_CodeGen():
 
         # for FMKIO
         print("\t- For FMKIO.c file")
-        cls.code_gen.change_target_balise(TARGET_BALISE_SWITCH_GPIO_START, TARGET_BALISE_SWITCH_GPIO_END)
-        print("\t\t- switch case to found stm GPIO from enum")
-        cls.code_gen._write_into_file(switch_gpio, FMKIO_PATH)
-
-        cls.code_gen.change_target_balise(TARGET_SWITCH_GPIO_RCC_START, TARGET_SWITCH_GPIO_RCC_END)
-        print("\t\t- switch case to found Rcc clock for a GPIO")
-        cls.code_gen._write_into_file(switch_gpio_rcc, FMKIO_PATH)
+        
 
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE[4:], TARGET_T_VARIABLE_END_LINE[4:])
         print("\t\t- variable for GPIO enum")
@@ -513,9 +508,19 @@ class FMKIO_CodeGen():
         print('\t\t- Exti IRQN Handler')
         cls.code_gen.change_target_balise(TARGET_EXTI_X_IRQN_START, TARGET_EXTI_X_IRQN_END)
         cls.code_gen._write_into_file(func_irqn, FMKIO_PATH)
+        
+        # for FMKIO
+        print("\t- For FMKIO_ConfigSpec.c file")
+        cls.code_gen.change_target_balise(TARGET_BALISE_SWITCH_GPIO_START, TARGET_BALISE_SWITCH_GPIO_END)
+        print("\t\t- switch case to found stm GPIO from enum")
+        cls.code_gen._write_into_file(switch_gpio, FMKIO_CONFIGSPEC_C)
+
+        cls.code_gen.change_target_balise(TARGET_SWITCH_GPIO_RCC_START, TARGET_SWITCH_GPIO_RCC_END)
+        print("\t\t- switch case to found Rcc clock for a GPIO")
+        cls.code_gen._write_into_file(switch_gpio_rcc, FMKIO_CONFIGSPEC_C)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FMFIO Module>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

@@ -38,8 +38,10 @@ For the doxygen documentation search the file "index.html"
 ## bugs
 - Comprendre pourquoi HAL_Delay -> Infinite Loop
 - Comprendre pourquoi FDCAN marche po lo
+
 ## Left to do
 - Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
+
 
 - Utiliser la LED builtin pour informer le Développer de l'état du µC
     - LED clignote lentement   -> Phase d'initialisation 
@@ -47,7 +49,7 @@ For the doxygen documentation search the file "index.html"
     - LED clignote constamment -> L'application est dans un état d'erreur
     - LED clignote plus        -> L'application est lancé 
 
-- Rendre automatique l'implémentation des TIM_IRQ_Handler et tous enfaite dans chaque fichier
+
 - Faire un module Serial UART+USART
 - Faire un module Diagnostic Event Management
 - Faire un module Supply Voltage Control
@@ -64,6 +66,7 @@ For the doxygen documentation search the file "index.html"
     - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size. en gros un pointeur vers une varaible qui est un tableau généré dynamiquemeent par la config EXcel
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
-Dans FMKCPU, dans les fonctions de ChannelCfg
+- Mettre les IIRQN_Handler dans les fichier Specific car specific au CPU
+- Dans FMKCPU, dans les fonctions de ChannelCfg
     Mettre l'initialisation du timer dans une autre fonction pour réduire la complexité de la fonction 'channelCfg'
     Appeler cette fonction (qui initialise le timer) dans channelCfg

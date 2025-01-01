@@ -956,7 +956,7 @@ t_eReturnCode FMKSRL_Transmit(  t_eFMKSRL_SerialLine f_SrlLine_e,
                     //------ Transmit msg ------//
                     if(Ret_e == RC_OK)
                     {
-                        s_FMKSRL_BspTxOpeMngmt( FMKSRL_BSP_TX_OPE_TRANSMIT,
+                        Ret_e = s_FMKSRL_BspTxOpeMngmt( FMKSRL_BSP_TX_OPE_TRANSMIT,
                                                 srlInfo_ps);
                     }
                     break;
@@ -1803,7 +1803,7 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
  * s_FMKSRL_AbortMngmt
  *********************************/
 static t_eReturnCode s_FMKSRL_AbortMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps, 
-                                t_eFMKSRL_BspAbortOpe f_Ope_e)
+                                         t_eFMKSRL_BspAbortOpe f_Ope_e)
 {
     t_eReturnCode Ret_e = RC_OK;
 
@@ -1939,14 +1939,14 @@ static t_eReturnCode s_FMKSRL_CheckConfiguration(t_eFMKSRL_HwProtocolType f_hwCf
 static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,  t_sFMKSRL_DrvSerialCfg *f_DrvSrlCfg_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
-    UART_InitTypeDef * bspUartInit_ps;
-    USART_InitTypeDef * bspUsartInit_ps;
+    UART_InitTypeDef     * bspUartInit_ps;
+    USART_InitTypeDef    * bspUsartInit_ps;
     t_sFMKSRL_SerialInfo * srlInfo_ps;
-    t_uint32 bspLineBaudrate_u32 = (t_uint32)0;
-    t_uint32 bspLineParity_u32 = (t_uint32)0;
-    t_uint32 bspLineStopbit_u32 = (t_uint32)0;
-    t_uint32 bspLineMode_u32 = (t_uint32)0;
-    t_uint32 bspLineWordLenght_u32 = (t_uint32)0;
+    t_uint32 bspLineBaudrate_u32    = (t_uint32)0;
+    t_uint32 bspLineParity_u32      = (t_uint32)0;
+    t_uint32 bspLineStopbit_u32     = (t_uint32)0;
+    t_uint32 bspLineMode_u32        = (t_uint32)0;
+    t_uint32 bspLineWordLenght_u32  = (t_uint32)0;
 
     if(f_SrlLine_e >= FMKSRL_SERIAL_LINE_NB)
     {
@@ -2013,16 +2013,18 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                         (USART_TypeDef *)c_FmkSrl_BspInitIstcMapp_pas[f_SrlLine_e];
 
                 //------ Set DMA Configuration if needed ------//
-                if(srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
+                if(f_DrvSrlCfg_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
                 {
                     //------ Rx Line DMA ------//
                     Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                FMKMAC_DMA_TYPE_UART_RX,
                                                 (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
 
                     //------ Tx Line DMA ------//
                     if(Ret_e == RC_OK)
                     {
-                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
+                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx,
+                                                    FMKMAC_DMA_TYPE_UART_TX, 
                                                     (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
                     }                                                
 
@@ -2055,16 +2057,18 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                         (USART_TypeDef *)c_FmkSrl_BspInitIstcMapp_pas[f_SrlLine_e];
 
                 //------ Set DMA Configuration if needed ------//
-                if(srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
+                if(f_DrvSrlCfg_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
                 {
                     //------ Rx Line DMA ------//
                     Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                FMKMAC_DMA_TYPE_USART_RX,
                                                 (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
 
                     //------ Tx Line DMA ------//
                     if(Ret_e == RC_OK)
                     {
                         Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
+                                                    FMKMAC_DMA_TYPE_USART_TX,
                                                     (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
                     }                                                
 

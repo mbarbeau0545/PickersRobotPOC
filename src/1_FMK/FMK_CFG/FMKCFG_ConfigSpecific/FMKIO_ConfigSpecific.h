@@ -1,15 +1,15 @@
 /*********************************************************************
- * @file        APPSYS_ConfigPublic.h
+ * @file        FMKIO_ConfigSpecific.h
  * @brief       Template_BriefDescription.
- * @note        TemplateDetailsDescription.\n
+ * @details     TemplateDetailsDescription.\n
  *
  * @author      xxxxxx
  * @date        jj/mm/yyyy
  * @version     1.0
  */
   
-#ifndef APPSYS_CONFIGPUBLIC_H_INCLUDED
-#define APPSYS_CONFIGPUBLIC_H_INCLUDED
+#ifndef FMKIO_CONFIGSPECIFIC_H_INCLUDED
+#define FMKIO_CONFIGSPECIFIC_H_INCLUDED
 
 
 
@@ -18,54 +18,21 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    #include "TypeCommon.h"
+    #include "../FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
+    #include "../FMKCFG_ConfigFiles/FMKCPU_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
 
-    //#define APPSYS_MODULE_FMKCAN_ENABLE
-    #define APPSYS_MODULE_FMKSRL_ENABLE
-    #define APPSYS_MODULE_APPLGC_ENABLE
     // ********************************************************************
     // *                      Types
     // ********************************************************************
-	/* CAUTION : Automatic generated code section for Enum: Start */
 
-	/* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    // Flag automatic generate code
-    /**< enum for module list */
-    typedef enum
-    {
-        APPSYS_MODULE_FMK_CPU = 0,
-        APPSYS_MODULE_FMK_IO,
-        APPSYS_MODULE_FMK_CDA,
-        APPSYS_MODULE_FMK_MAC,
-#ifdef APPSYS_MODULE_FMKCAN_ENABLE
-        APPSYS_MODULE_FMK_CAN,
-#endif // APPSYS_MODULE_FMKCAN_ENABLE
 
-#ifdef APPSYS_MODULE_FMKSRL_ENABLE
-        APPSYS_MODULE_FMK_SERIAL,
-#endif // APPSYS_MODULE_FMKSRL_ENABLE
-
-        APPSYS_MODULE_APP_SNS,
-        APPSYS_MODULE_APP_ACT,
-        APPSYS_MODULE_APP_LGC,
-
-        APPSYS_MODULE_NB
-    } t_eAppSys_ModuleList;
-
-	/* CAUTION : Automatic generated code section for Structure: Start */
-
-	/* CAUTION : Automatic generated code section for Structure: End */
 	//-----------------------------STRUCT TYPES---------------------------//
-	/* CAUTION : Automatic generated code section : Start */
 
-	/* CAUTION : Automatic generated code section : End */
 	//-----------------------------TYPEDEF TYPES---------------------------//
-
-    
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -77,8 +44,38 @@
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************
+    /**
+    *
+    *	@brief      Get the Bsp Gpio Port Instance 
+    *
+    *
+    *	@param[in]  f_GpioPort_e       : GPIOPort enum from @ref t_eFMKIO_GpioPort
+    *	@param[in]  f_BspGpio_ps       : pointor to pointor to change the direction a the pointer
+    *
+    * @retval RC_OK                             @ref RC_OK
+    * @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    * @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
+    *
+    */
+    t_eReturnCode FMKIO_Get_BspGpioPort(t_eFMKIO_GpioPort f_GpioPort_e, GPIO_TypeDef **f_BspGpio_ps);
 
-#endif // APPSYS_CONFIGPUBLIC_H_INCLUDED           
+    /**
+    *
+    *	@brief      Get the Rcc Clock Port For a GPIO Clock Port
+    *
+    *
+    *	@param[in]  f_GpioPort_e       : GPIOPort enum from @ref t_eFMKIO_GpioPort
+    *	@param[in]  f_BspGpio_ps       : pointor to pointor to change the direction a the pointer
+    *
+    * @retval RC_OK                             @ref RC_OK
+    * @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    * @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
+    *
+    */
+    t_eReturnCode FMKIO_GetGpioRccClock(t_eFMKIO_GpioPort f_gpioPort_e, t_eFMKCPU_ClockPort * f_clockPort_pe);
+#endif // FMKIO_CONFIGSPECIFIC_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -86,11 +83,11 @@
 /**
  *
  *	@brief
- *	@note   
+ *	@note
  *
  *
- *	@params[in] 
- *	@params[out]
+ *	@param[in] 
+ *	@param[out]
  *	 
  *
  *

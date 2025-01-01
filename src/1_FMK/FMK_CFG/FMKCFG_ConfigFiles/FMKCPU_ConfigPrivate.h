@@ -53,7 +53,9 @@
     // *                      Types
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Number of timer enable in smt32xxx board */
+    /**
+    * @brief Number of timer enable in smt32xxx board.
+    */
     typedef enum
     {
         FMKCPU_TIMER_1 = 0x0,                  /**< Reference for HAL timer_1, this timer has 4 channel(s) */
@@ -72,7 +74,9 @@
         FMKCPU_TIMER_NB,
     } t_eFMKCPU_Timer;
 
-    /* Number max of channel enable by timer */
+    /**
+    * @brief Number max of channel enable by timer.
+    */
     typedef enum
     {
         FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */

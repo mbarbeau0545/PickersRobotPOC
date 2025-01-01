@@ -33,12 +33,14 @@
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Enum for the different request available for DMA service */
+    /**
+    * @brief Enum for the different request available for DMA service.
+    */
     typedef enum
     {
         FMKMAC_DMA_RQSTYPE_ADC1 = 0x0,               /**< Reference to Bsp Dma Request for ADC1 */
-        FMKMAC_DMA_RQSTYPE_SPI1,                     /**< Reference to Bsp Dma Request for SPI1 */
-        FMKMAC_DMA_RQSTYPE_SPI2,                     /**< Reference to Bsp Dma Request for SPI2 */
+        FMKMAC_DMA_RQSTYPE_ADC2,                     /**< Reference to Bsp Dma Request for ADC2 */
+        FMKMAC_DMA_RQSTYPE_ADC3,                     /**< Reference to Bsp Dma Request for ADC3 */
         FMKMAC_DMA_RQSTYPE_UART4_RX,                 /**< Reference to Bsp Dma Request for UART4_RX */
         FMKMAC_DMA_RQSTYPE_UART4_TX,                 /**< Reference to Bsp Dma Request for UART4_TX */
         FMKMAC_DMA_RQSTYPE_USART1_RX,                /**< Reference to Bsp Dma Request for USART1_RX */
@@ -49,7 +51,9 @@
         FMKMAC_DMA_RQSTYPE_NB,
     } t_eFMKMAC_DmaRqst;
 
-    /* Enum for Number of Dma */
+    /**
+    * @brief Enum for Number of Dma.
+    */
     typedef enum
     {
         FMKMAC_DMA_CTRL_1 = 0x0,                  /**< Reference to DMA 1 */
@@ -58,7 +62,9 @@
         FMKMAC_DMA_CTRL_NB,
     } t_eFMKMAC_DmaController;
 
-    /* Enum for number of channel in DMA */
+    /**
+    * @brief Enum for number of channel in DMA.
+    */
     typedef enum
     {
         FMKMAC_DMA_CHANNEL_1 = 0x0,                  /**< Reference to Channel 1 */
@@ -73,7 +79,31 @@
         FMKMAC_DMA_CHANNEL_NB,
     } t_eFMKMAC_DmaChnl;
 
+    /**
+    * @brief Enum for Number of Dma Multiplexage Controler.
+    */
+    typedef enum
+    {
+        FMKMAC_DMA_MUX_1 = 0x0,                  /**< Reference to DMAMUX 1 */
+    
+        FMKMAC_DMA_MUX_NB,
+    } t_eFMKMAC_DmaMux;
+
     /* CAUTION : Automatic generated code section for Enum: End */
+
+    typedef enum 
+    {
+        FMKMAC_DMA_TYPE_ADC = 0x00,
+        FMKMAC_DMA_TYPE_UART_RX,
+        FMKMAC_DMA_TYPE_UART_TX,
+        FMKMAC_DMA_TYPE_USART_RX,
+        FMKMAC_DMA_TYPE_USART_TX,
+        FMKMAC_DMA_TYPE_SPI,
+
+        FMKMAC_DMA_TYPE_NB,
+
+    } t_eFMKMAC_DmaType;
+
 
     /**< Reference to Dma Priority */
     typedef enum
@@ -96,6 +126,14 @@
         FMKMAC_DMA_TRANSDIR_NB
     } t_eFMKMAC_DmaTransferDir;
     //-----------------------------TYPEDEF TYPES---------------------------//
+    /**< Union to centralize Dma Handle TypeDef  */
+    typedef union 
+    {
+        ADC_HandleTypeDef   adcHandle_s;
+        USART_HandleTypeDef usartHandle_s;
+        UART_HandleTypeDef  uartHandle_s;
+        SPI_HandleTypeDef   spiHandle_s;
+    } t_uFMKMAC_DmaHandleType;
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 

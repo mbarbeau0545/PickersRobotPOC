@@ -176,15 +176,6 @@ static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8,
 
     if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_OK)
     {
-        if(f_rxData_pu8[0] == 'a')
-        {
-            Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_1,
-                                FMKSRL_TX_ONESHOT,
-                                (t_uint8 * )msgbuffer,
-                                strlen(msgbuffer),
-                                (t_uint16)0,
-                                (t_bool)True);
-        }
     }
     return;
 }
@@ -201,7 +192,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
 
     t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
     SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
     SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,

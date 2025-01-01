@@ -152,6 +152,9 @@ class AppAct_CodeGen():
         #-----------------------------------------------------------------
         #------------------------make code gen----------------------------
         #-----------------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for AppAct Module>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("\t- For configPublic file")
         print("\t\t- Write enum act, drv, unity")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE,TARGET_T_ENUM_END_LINE)
@@ -172,7 +175,7 @@ class AppAct_CodeGen():
         cls.code_gen._write_into_file(var_act_state, APPACT_C_PATH)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for AppSns Module>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 
     @classmethod
     def make_header_src_file(cls, f_act_name:str):

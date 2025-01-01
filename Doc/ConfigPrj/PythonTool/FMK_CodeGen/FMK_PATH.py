@@ -18,6 +18,7 @@ HARDWARE_CFG_PATH = "Doc\ConfigPrj\ExcelCfg\STM32F030R8\STM32F030R8_HwCfg.xlsx"
 FMKIO_CONFIGPRIVATE_PATH = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKIO_ConfigPrivate.h"
 FMKIO_ConfigPublic_PATH = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKIO_ConfigPublic.h"
 FMKIO_PATH = "src\\1_FMK\FMK_HAL\FMK_IO\Src\FMK_IO.c"
+FMKIO_CONFIGSPEC_C = 'src\\1_FMK\FMK_CFG\FMKCFG_ConfigSpecific\FMKIO_ConfigSpecific.c'
 
 FMKCPU_CONFIGPUBLIC = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKCPU_ConfigPublic.h"
 FMKCPU_CONFIGPRIVATE = "src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKCPU_ConfigPrivate.h"

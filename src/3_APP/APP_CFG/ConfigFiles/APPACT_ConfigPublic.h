@@ -27,7 +27,9 @@
     // *                      Types
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Enum for Actuators list */
+    /**
+    * @brief Enum for Actuators list.
+    */
     typedef enum
     {
         APPACT_ACTUATOR_CMD_IRRIGVALVE_TOMATE = 0x0,/**< Commande du relais pour irriger les tomates  */
@@ -37,7 +39,9 @@
         APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;
 
-    /* Enum for Actuators drivers list */
+    /**
+    * @brief Enum for Actuators drivers list.
+    */
     typedef enum
     {
     

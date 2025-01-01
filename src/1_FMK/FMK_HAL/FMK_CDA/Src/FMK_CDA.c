@@ -803,6 +803,7 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config
             Ret_e = FMKMAC_RqstDmaInit( g_AdcInfo_as[f_Adc_e].c_DmaAdc_e,
+                                        FMKMAC_DMA_TYPE_ADC,
                                         (void *)(&g_AdcInfo_as[f_Adc_e].BspInit_s));
         }
         if (Ret_e == RC_OK)

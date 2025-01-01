@@ -27,7 +27,9 @@
     // *                      Types
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Enum for Sensors list */
+    /**
+    * @brief Enum for Sensors list.
+    */
     typedef enum
     {
         APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Température local de l'air */
@@ -35,14 +37,18 @@
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
 
-    /* Enum for Sensors drivers list */
+    /**
+    * @brief Enum for Sensors drivers list.
+    */
     typedef enum
     {
     
         APPSNS_DRIVER_NB,
     } t_eAPPSNS_Drivers;
 
-    /* Enum for sensor conversion list */
+    /**
+    * @brief Enum for sensor conversion list.
+    */
     typedef enum
     {
         APPSNS_MEASTYPE_RAW = 0x0,                /**< Raw value is not changed */

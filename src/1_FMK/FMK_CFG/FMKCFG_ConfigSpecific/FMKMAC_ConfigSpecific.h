@@ -1,15 +1,15 @@
 /*********************************************************************
- * @file        APPSYS_ConfigPublic.h
+ * @file        FMKMAC_ConfigSpecific.h
  * @brief       Template_BriefDescription.
- * @note        TemplateDetailsDescription.\n
+ * @details     TemplateDetailsDescription.\n
  *
  * @author      xxxxxx
  * @date        jj/mm/yyyy
  * @version     1.0
  */
   
-#ifndef APPSYS_CONFIGPUBLIC_H_INCLUDED
-#define APPSYS_CONFIGPUBLIC_H_INCLUDED
+#ifndef FMKMAC_CONFIGSPECIFC
+#define FMKMAC_CONFIGSPECIFC
 
 
 
@@ -18,54 +18,21 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-    #include "TypeCommon.h"
+    #include "FMK_CFG/FMKCFG_ConfigFiles/FMKMAC_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
 
-    //#define APPSYS_MODULE_FMKCAN_ENABLE
-    #define APPSYS_MODULE_FMKSRL_ENABLE
-    #define APPSYS_MODULE_APPLGC_ENABLE
     // ********************************************************************
     // *                      Types
     // ********************************************************************
-	/* CAUTION : Automatic generated code section for Enum: Start */
 
-	/* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    // Flag automatic generate code
-    /**< enum for module list */
-    typedef enum
-    {
-        APPSYS_MODULE_FMK_CPU = 0,
-        APPSYS_MODULE_FMK_IO,
-        APPSYS_MODULE_FMK_CDA,
-        APPSYS_MODULE_FMK_MAC,
-#ifdef APPSYS_MODULE_FMKCAN_ENABLE
-        APPSYS_MODULE_FMK_CAN,
-#endif // APPSYS_MODULE_FMKCAN_ENABLE
 
-#ifdef APPSYS_MODULE_FMKSRL_ENABLE
-        APPSYS_MODULE_FMK_SERIAL,
-#endif // APPSYS_MODULE_FMKSRL_ENABLE
-
-        APPSYS_MODULE_APP_SNS,
-        APPSYS_MODULE_APP_ACT,
-        APPSYS_MODULE_APP_LGC,
-
-        APPSYS_MODULE_NB
-    } t_eAppSys_ModuleList;
-
-	/* CAUTION : Automatic generated code section for Structure: Start */
-
-	/* CAUTION : Automatic generated code section for Structure: End */
 	//-----------------------------STRUCT TYPES---------------------------//
-	/* CAUTION : Automatic generated code section : Start */
 
-	/* CAUTION : Automatic generated code section : End */
 	//-----------------------------TYPEDEF TYPES---------------------------//
 
-    
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -73,12 +40,29 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
+    
+
 
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************
+    /**
+    *
+    *	@brief      Link Dma Depending on the Request Type
+    *
+    *	@param[in]  f_channel_e              : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+    *	@param[in]  f_bspChnl_pu32           : storage for bsp channel.\n
+    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
+    *
+    */
+    t_eReturnCode FMKMAC_SetRequestType(t_eFMKMAC_DmaRqst f_RqstType_e,
+                                        DMA_HandleTypeDef * f_bspDma_ps);
 
-#endif // APPSYS_CONFIGPUBLIC_H_INCLUDED           
+#endif // FMKMAC_CONFIGSPECIFC           
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -86,11 +70,11 @@
 /**
  *
  *	@brief
- *	@note   
+ *	@note
  *
  *
- *	@params[in] 
- *	@params[out]
+ *	@param[in] 
+ *	@param[out]
  *	 
  *
  *

@@ -20,9 +20,19 @@ from PyCodeGene import LoadConfig_FromExcel as LCFE, TARGET_T_END_LINE,TARGET_T_
 #------------------------------------------------------------------------------
 ENUM_FMKMAC_DMA_CHANNEL = 'FMKMAC_DMA_CHANNEL'
 ENUM_FMKMAC_DMA_CTRL    = 'FMKMAC_DMA_CTRL'
+ENUM_FMKMAC_DMA_MUX    = 'FMKMAC_DMA_MUX'
 ENUM_FMKMAC_DMARQST     = 'FMKMAC_DMA_RQSTYPE' 
+ENUM_FMKMAC_DMATYPE     = 'FMKMAC_DMA_TYPE'
 ENUM_FMKMAC_DMA_TRANSPRIO          = 'FMKMAC_DMA_TRANSPRIO'
 
+TARGET_FMKMAC_IRQN_HANDLER_START = '/* CAUTION : Automatic generated code section for DMA_Channel IRQHandler: Start */\n'
+TARGET_FMKMAC_IRQN_HANDLER_END   = '/* CAUTION : Automatic generated code section for DMA_Channel IRQHandler: End */\n'
+TARGET_FMKMAC_SWITCH_RQST_START = '            /* CAUTION : Automatic generated code section for Request Dma: Start */\n'
+TARGET_FMKMAC_SWITCH_RQST_END   = '            /* CAUTION : Automatic generated code section for Request Dma: End */\n'
+TARGET_FMKMAC_SWITCH_DMATYPE_START = '            /* CAUTION : Automatic generated code section for Dma Type: Start */\n'
+TARGET_FMKMAC_SWITCH_DMATYPE_END = '            /* CAUTION : Automatic generated code section for Dma Type: End */\n'
+
+FMKMAC_CFGSPEC_C   = 'src\\1_FMK\FMK_CFG\FMKCFG_ConfigSpecific\FMKMAC_ConfigSpecific.c'
 FMKMAC_CFGPUBLIC   = 'src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKMAC_ConfigPublic.h'
 FMKMAC_CFGPRIVATE  = 'src\\1_FMK\FMK_CFG\FMKCFG_ConfigFiles\FMKMAC_ConfigPrivate.h'
 FMKMAC_CFILE       = 'src\\1_FMK\FMK_HAL\FMK_MAC\Src\FMK_MAC.c'
@@ -33,6 +43,9 @@ FMKMAC_CFILE       = 'src\\1_FMK\FMK_HAL\FMK_MAC\Src\FMK_MAC.c'
 #                                       CLASS
 #------------------------------------------------------------------------------
 class DMA_Chnl_AlreadyConfgigured(Exception):
+    pass
+
+class DMA_ConfigError(Exception):
     pass
 class FMKMAC_CodeGen():
     """
@@ -54,20 +67,29 @@ class FMKMAC_CodeGen():
 
     @classmethod
     def code_genration(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
         # load array needed
         cls.code_gen.load_excel_file(f_hw_cfg)
 
         info_array = cls.code_gen.get_array_from_excel('GI_DMA')[1:]
         cfg_array = cls.code_gen.get_array_from_excel('FMKMAC_Cfg')[1:]
-        
+        irqn_list = cls.code_gen.get_array_from_excel('FMKMAC_IRQN')[1:]
+        dmamux_list = cls.code_gen.get_array_from_excel('FMKMAC_DMAMUX')[1:]
         dmachnl_used = []
+        rqstype_list = []
+        
+        """
+            'DMA1' : [ADC1,USART1_RX, USART1_TX,,,,,],
+            'DMA2  : [FDCAN1_RX, FDCAN_TX, etc],
+        """
         var_info = ''
         cst_cfg = ''
         enm_rqst = ''
+        switch_rqst = ''
+        irqn_hdler = ''
         enm_channel = ''
+        enm_dmamux = ''
+        cst_dmamux_mapp = ''
         enm_dma = ''
         max_channel = 0
 
@@ -78,6 +100,13 @@ class FMKMAC_CodeGen():
         #----------------------------------------------------------------
         #-------------------------------Make Enum -----------------------
         #----------------------------------------------------------------
+
+        dmamux_nb = len(dmamux_list)
+        enm_dmamux = cls.code_gen.make_enum_from_variable(ENUM_FMKMAC_DMA_MUX, [(idx + 1) for idx in range(0, dmamux_nb)],
+                                                        't_eFMKMAC_DmaMux', 0,
+                                                        "Enum for Number of Dma Multiplexage Controler",
+                                                        [f'Reference to DMAMUX {(idx + 1)}' for idx in range(0, dmamux_nb)])
+            
         enm_channel = cls.code_gen.make_enum_from_variable(ENUM_FMKMAC_DMA_CHANNEL, [idx for idx in range(1, max_channel)],
                                                             't_eFMKMAC_DmaChnl', 0,
                                                             "Enum for number of channel in DMA",
@@ -97,14 +126,23 @@ class FMKMAC_CodeGen():
         #----------------------------Make Mapping Variable --------------
         #----------------------------------------------------------------
         cst_cfg += '    /**< Variable to mapp every Dma Request to a Dma Channel */\n' \
-                + '    const t_sFMKMAC_DmaRqstCfg c_FmkMac_DmaRqstCfg_as[FMKMAC_DMA_RQSTYPE_NB] = {\n'
+                + f'    const t_sFMKMAC_DmaRqstCfg c_FmkMac_DmaRqstCfg_as[{ENUM_FMKMAC_DMARQST}_NB] =' + '{\n'
         
+        cst_dmamux_mapp += '    /**< Variable to mapp every Dma Mux to a Rcc Clock */\n' \
+                + f'    const t_eFMKCPU_ClockPort c_FmkMac_DmaMuxRccMapp_ae[{ENUM_FMKMAC_DMA_MUX}_NB] =' + '{\n'
+        
+        cst_dmamux_mapp += ''.join(f'           {ENUM_FMKCPU_RCC_ROOT}_DMAMUX{idx + 1}\n' for idx in range(0, dmamux_nb))
+        cst_dmamux_mapp += '    };\n\n'
         for rqst_info in cfg_array:
 
             if (str(rqst_info[1]) + str(rqst_info[2])) in dmachnl_used:
                 raise DMA_Chnl_AlreadyConfgigured('Dma & Channel Already configured, please check your Excel Configuration')
             
+            # update information
             dmachnl_used.append((str(rqst_info[1]) + str(rqst_info[2])))
+            rqstype_list.append(rqst_info[0])
+            # store to the right idx in Dma1 or Dma2 the RqstType
+
             cst_cfg += '        {' \
                     + f'{ENUM_FMKMAC_DMA_CTRL}_{rqst_info[1][-1]},' \
                     + ' ' * (SPACE_VARIABLE - len(f'{ENUM_FMKMAC_DMA_CTRL}_{rqst_info[0][-1]}')) \
@@ -114,12 +152,39 @@ class FMKMAC_CodeGen():
                     + '},' \
                     + ' ' * (SPACE_VARIABLE - len(f'{ENUM_FMKMAC_DMA_TRANSPRIO}_{rqst_info[3]}')) \
                     + f'// {ENUM_FMKMAC_DMARQST}_{rqst_info[0]}\n'
-                    
-                    
-                   
             
-        cst_cfg += '    };\n\n'
+            # switch case rqst
+            switch_rqst += f'            case {ENUM_FMKMAC_DMARQST}_{rqst_info[0]}:\n' \
+                            + f'                f_bspDma_ps->Init.Request = DMA_REQUEST_{rqst_info[0]};\n' \
+                            +  '                break;\n'
 
+        cst_cfg += '    };\n\n'
+        #----------------------------------------------------------------
+        #----------------------------Make IRQN Handler -----------------
+        #----------------------------------------------------------------
+        for irqn_info in irqn_list:
+            if irqn_info[1] != None :
+                # reach the DMA idx & channel 
+                try:
+                    idx_dma = int(str(irqn_info[0])[3])
+                except (TypeError):
+                    raise DMA_ConfigError('Cannot reach the DMA Idx')
+                
+
+                irqn_hdler +='/**\n' \
+                            + f'* @brief This function handles {str(irqn_info[0])[:3]} {str(irqn_info[0])[5:-11]} interrupt.\n' \
+                            + '*/\n' \
+                            + f'void {irqn_info[0]}(void)\n' \
+                            + '{\n'
+                # Look for channel Idx
+                for char in str(irqn_info[0][5:]):
+                    if char.isdigit():
+                        irqn_hdler    += f'    if(g_DmaInfo_as[{ENUM_FMKMAC_DMA_CTRL}_{idx_dma}].channel_as[{ENUM_FMKMAC_DMA_CHANNEL}_{char}].isChnlConfigured_b == (t_bool)True)\n'\
+                                        + '    {\n' \
+                                        + f'       HAL_DMA_IRQHandler(&(g_DmaInfo_as[{ENUM_FMKMAC_DMA_CTRL}_{idx_dma}].channel_as[{ENUM_FMKMAC_DMA_CHANNEL}_{char}].bspDma_ps));\n' \
+                                        + '    }\n'
+
+                irqn_hdler += '    return;\n}\n'
         #----------------------------------------------------------------
         #----------------------------Make Variable Info -----------------
         #----------------------------------------------------------------
@@ -149,8 +214,14 @@ class FMKMAC_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKCPU module---------------
         #-----------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMFMAC Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print('\t- For Config Public File ')
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE, TARGET_T_ENUM_END_LINE)
+
+        print('\t\t- For Dma Multiplexage')
+        cls.code_gen._write_into_file(enm_dmamux, FMKMAC_CFGPUBLIC)
 
         print('\t\t- For Dma Channel')
         cls.code_gen._write_into_file(enm_channel, FMKMAC_CFGPUBLIC)
@@ -168,12 +239,27 @@ class FMKMAC_CodeGen():
         print('\t\t- For Mapping Rqst Type / Dma Controller')
         cls.code_gen._write_into_file(cst_cfg, FMKMAC_CFGPRIVATE)
 
+        print('\t\t- For Mapping Dma Mux Rcc Mapping')
+        cls.code_gen._write_into_file(cst_dmamux_mapp, FMKMAC_CFGPRIVATE)
+
 
         print('\t- For FMKMAC.c File ')
         cls.code_gen.change_target_balise(TARGET_VARIABLE_START_LINE, TARGET_VARIABLE_END_LINE)
 
         print('\t\t- For Dma Info variable')
         cls.code_gen._write_into_file(var_info, FMKMAC_CFILE)
+
+        print('\t\tFor IRQN Handler')
+        cls.code_gen.change_target_balise(TARGET_FMKMAC_IRQN_HANDLER_START, TARGET_FMKMAC_IRQN_HANDLER_END)
+        cls.code_gen._write_into_file(irqn_hdler, FMKMAC_CFILE)
+
+        print('\t- For FMKMAC_ConfigSpecific.c File ')
+        print('\t\tFor Switch case for Request Dma')
+        cls.code_gen.change_target_balise(TARGET_FMKMAC_SWITCH_RQST_START, TARGET_FMKMAC_SWITCH_RQST_END)
+        cls.code_gen._write_into_file(switch_rqst, FMKMAC_CFGSPEC_C)
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<End code generation for FMFMAC Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

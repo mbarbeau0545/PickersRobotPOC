@@ -149,23 +149,7 @@ static t_eReturnCode s_FMKIO_Get_BspPullMode(t_eFMKIO_PullMode f_pull_e, t_uint3
  *
  */
 static t_eReturnCode s_FMKIO_Get_BspSpdMode(t_eFMKIO_SpdMode f_spd_e, t_uint32 *f_bspSpd_pu32);
-/**
- *
- *	@brief      Get the Bsp Gpio Port Instance 
- *	@note       Using the enum f_spd_e and switch case, this function 
-                return the right GPIOPort Instance.\n
- *
- *
- *	@param[in]  f_GpioPort_e       : GPIOPort enum from @ref t_eFMKIO_GpioPort
- *	@param[in]  f_BspGpio_ps       : pointor to pointor to change the direction a the pointer
- *
- * @retval RC_OK                             @ref RC_OK
- * @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
- * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
- * @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
- *
- */
-static t_eReturnCode s_FMKIO_Get_BspGpioPort(t_eFMKIO_GpioPort f_GpioPort_e, GPIO_TypeDef **f_BspGpio_ps);
+
 /**
  *
  *	@brief      Get the Bsp trigger Mode for signal event
@@ -793,7 +777,7 @@ t_eReturnCode FMKIO_Set_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Get_BspGpioPort(c_OutDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
+        Ret_e = FMKIO_Get_BspGpioPort(c_OutDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
         if (Ret_e == RC_OK)
         {
             switch (f_value_e)
@@ -874,7 +858,7 @@ t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_Dig
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Get_BspGpioPort(c_InDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
+        Ret_e = FMKIO_Get_BspGpioPort(c_InDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
         if (Ret_e == RC_OK)
         {
             bspSigValue_e = HAL_GPIO_ReadPin(bspGpio_ps, c_BspPinMapping_ua16[c_InDigSigBspMap_as[f_signal_e].HwPin_e]);
@@ -1069,7 +1053,7 @@ t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Get_BspGpioPort(c_InDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
+        Ret_e = FMKIO_Get_BspGpioPort(c_InDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
         if (Ret_e == RC_OK)
         {
             bspSigValue_e = HAL_GPIO_ReadPin(bspGpio_ps, c_BspPinMapping_ua16[c_InDigSigBspMap_as[f_signal_e].HwPin_e]);
@@ -1375,57 +1359,6 @@ static t_eReturnCode s_FMKIO_Get_BspTriggerMode(t_eFMKIO_SigTrigCptr f_trigger_e
 }
 
 /*********************************
- * s_FMKIO_Get_BspGpioPort
- *********************************/
-static t_eReturnCode s_FMKIO_Get_BspGpioPort(t_eFMKIO_GpioPort f_GpioPort_e, GPIO_TypeDef **f_BspGpio_ps)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if (f_GpioPort_e > FMKIO_GPIO_PORT_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if (f_BspGpio_ps == (GPIO_TypeDef **)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if (Ret_e == RC_OK)
-    {
-        switch (f_GpioPort_e)
-        {
-            /* CAUTION : Automatic generated code section for GPIO switch case: Start */
-            case FMKIO_GPIO_PORT_A:
-                *f_BspGpio_ps = GPIOA;
-                break;
-            case FMKIO_GPIO_PORT_B:
-                *f_BspGpio_ps = GPIOB;
-                break;
-            case FMKIO_GPIO_PORT_C:
-                *f_BspGpio_ps = GPIOC;
-                break;
-            case FMKIO_GPIO_PORT_D:
-                *f_BspGpio_ps = GPIOD;
-                break;
-            case FMKIO_GPIO_PORT_E:
-                *f_BspGpio_ps = GPIOE;
-                break;
-            case FMKIO_GPIO_PORT_F:
-                *f_BspGpio_ps = GPIOF;
-                break;
-            case FMKIO_GPIO_PORT_G:
-                *f_BspGpio_ps = GPIOG;
-                break;
-            /* CAUTION : Automatic generated code section for GPIO switch case: End */
-            case FMKIO_GPIO_PORT_NB:
-            default:
-                Ret_e = RC_WARNING_NO_OPERATION;
-                break;
-        }
-    }
-    return Ret_e;
-}
-
-/*********************************
  * s_FMKIO_Set_BspSigCfg
  *********************************/
 static t_eReturnCode s_FMKIO_Set_BspSigCfg(t_eFMKIO_GpioPort f_gpioPort_e,
@@ -1447,7 +1380,7 @@ static t_eReturnCode s_FMKIO_Set_BspSigCfg(t_eFMKIO_GpioPort f_gpioPort_e,
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKIO_Get_BspGpioPort(f_gpioPort_e, &bspGpio_ps);
+        Ret_e = FMKIO_Get_BspGpioPort(f_gpioPort_e, &bspGpio_ps);
         if (Ret_e == RC_OK)
         {
             Ret_e = s_FMKIO_Get_BspPullMode(f_pull_e, &bspPull_32);
@@ -1490,43 +1423,17 @@ static t_eReturnCode s_FMKIO_Set_GpioClkState(t_eFMKIO_GpioPort f_gpioPort_e, t_
     }
     if (Ret_e == RC_OK)
     {
-        switch (f_gpioPort_e)
-        {
-        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: Start */
-            case FMKIO_GPIO_PORT_A:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOA;
-                break;
-            case FMKIO_GPIO_PORT_B:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOB;
-                break;
-            case FMKIO_GPIO_PORT_C:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOC;
-                break;
-            case FMKIO_GPIO_PORT_D:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOD;
-                break;
-            case FMKIO_GPIO_PORT_E:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOE;
-                break;
-            case FMKIO_GPIO_PORT_F:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOF;
-                break;
-            case FMKIO_GPIO_PORT_G:
-                gpioClkPort_e = FMKCPU_RCC_CLK_GPIOG;
-                break;
-        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: End */
+        //----- Get Rcc Clock For the GPIO Port -----//
+        Ret_e = FMKIO_GetGpioRccClock(f_gpioPort_e, &gpioClkPort_e);
 
-            case FMKIO_GPIO_PORT_NB:
-            default:
-                Ret_e = RC_WARNING_NO_OPERATION;
-                break;
-        }
         if (Ret_e == RC_OK)
         {
+            //----- Enable/Disable HArdware Clock -----//
             Ret_e = FMKCPU_Set_HwClock(gpioClkPort_e, f_ope_e);
         }
         if (Ret_e == RC_OK)
         {
+            //----- Update Information -----//
             g_IsGpioClockEnable_ae[f_gpioPort_e] = f_ope_e;
         }
     }

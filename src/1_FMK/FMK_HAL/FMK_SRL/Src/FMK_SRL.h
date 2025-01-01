@@ -307,7 +307,7 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct _t_sFMKSRL_LinCfg
     {
-        t_eFMKSRL_LinBreakLenght BreakLen_e;
+        t_eFMKSRL_LinBreakLenght BreakLen_e;        /**< Lin break Lenght */
     } t_sFMKSRL_LinCfg;
 
     /**
@@ -315,8 +315,8 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct _t_sFMKSRL_MProcessCfg
     {
-        t_eFMKSRL_MProcessWakeUpMeth WakeUpMethod_e;
-        t_uint8 IstcIdentifer_u8;
+        t_eFMKSRL_MProcessWakeUpMeth WakeUpMethod_e;        /**< Multi Process Wake Up Method */
+        t_uint8 IstcIdentifer_u8;                           /**< The identifier on the line for the CPU */
     } t_sFMKSRL_MProcessCfg;
 
     /**
@@ -324,8 +324,8 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef union __t_uFMKSRL_UartTypeCfgSpec
     {
-        t_sFMKSRL_LinCfg linCfg_s;
-        t_sFMKSRL_MProcessCfg MProcessCfg_s;
+        t_sFMKSRL_LinCfg linCfg_s;                          /**< LIN configuration specific */
+        t_sFMKSRL_MProcessCfg MProcessCfg_s;                /**< Multi Process Configuration */
     } t_uFMKSRL_UartTypeCfgSpec;
 
     typedef struct __t_sFMKSRL_UartAdvProtCfg
@@ -339,10 +339,10 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct __t_sFMKSRL_UsartCfgSpec
     {
-        t_eFMKSRL_UsartType             Type_e;
-        t_eFMKSRL_UsartClockPhase       clockPhase_e;
-        t_eFMKSRL_UsartLastBit          lastBit_e;
-        t_eFMKSRL_UsartClkPolarity      clkPolarity_e;
+        t_eFMKSRL_UsartType             Type_e;             /**< Usart Type of Protocol used */
+        t_eFMKSRL_UsartClkPolarity      clkPolarity_e;      /**< Usart Clock Polarity */
+        t_eFMKSRL_UsartClockPhase       clockPhase_e;       /**< Usart Clock Phase */
+        t_eFMKSRL_UsartLastBit          lastBit_e;          /**< Usart Last Bit */
     } t_sFMKSRL_UsartCfgSpec;
 
     /**
@@ -350,11 +350,11 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct __t_sFMKSRL_UartCfgSpec
     {
-        t_eFMKSRL_UartType Type_e;
-        t_uFMKSRL_UartTypeCfgSpec typeCfg_u;
+        t_eFMKSRL_UartType Type_e;                          /**< Uart Type of Protocol */
+        t_uFMKSRL_UartTypeCfgSpec typeCfg_u;                /**< Uart Config Specific of the Protocol */
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
-        t_sFMKSRL_UartAdvProtCfg    advProtCfg_s;
-        t_eFMKSRL_UartHwFlowCtrl    hwFlowCtrl_e;
+        t_sFMKSRL_UartAdvProtCfg    advProtCfg_s;           /**< Advance Configuration, not used at this point */
+        t_eFMKSRL_UartHwFlowCtrl    hwFlowCtrl_e;           /**< Hardware Flow Control */
 #endif
     } t_sFMKSRL_UartCfgSpec;
 
@@ -363,11 +363,11 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct __t_sFMKSRL_HwProtocolCfg
     {
-        t_eFMKSRL_LineBaudrate      Baudrate_e;
-        t_eFMKSRL_LineMode          Mode_e;
-        t_eFMKSRL_LineParity        Parity_e;
-        t_eFMKSRL_LineSoptbit       Stopbit_e;
-        t_eFMKSRL_LineWordLenght    wordLenght_e;
+        t_eFMKSRL_LineBaudrate      Baudrate_e;         /**< Uart/Usart Line Baudrate */
+        t_eFMKSRL_LineMode          Mode_e;             /**< Uart/Usart Rx/Tx Mode */
+        t_eFMKSRL_LineParity        Parity_e;           /**< Uart/Usart Line Parity*/
+        t_eFMKSRL_LineSoptbit       Stopbit_e;          /**< Uart/Usart Line Stop Bit */
+        t_eFMKSRL_LineWordLenght    wordLenght_e;       /**< Uart/Usart Word Lenght */
     } t_sFMKSRL_HwProtocolCfg;
 
 
@@ -412,8 +412,8 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef union __t_uSerialCfgSpec
     {
-        t_sFMKSRL_UartCfgSpec       uartCfg_s;
-        t_sFMKSRL_UsartCfgSpec      usartCfg_s;
+        t_sFMKSRL_UartCfgSpec       uartCfg_s;          /**< Serial Line Uart Configuration  */
+        t_sFMKSRL_UsartCfgSpec      usartCfg_s;         /**< Serial Line Usart Configuration */
     } t_uFMKSRL_SerialCfgSpec;
     
     /**
@@ -421,10 +421,10 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef struct __t_sFMKSRL_DrvSerialCfg
     {
-        t_sFMKSRL_HwProtocolCfg     hwCfg_s;
-        t_uFMKSRL_SerialCfgSpec     CfgSpec_u;
-        t_eFMKSRL_LineRunMode       runMode_e;
-        t_eFMKSRL_HwProtocolType    hwProtType_e;
+        t_sFMKSRL_HwProtocolCfg     hwCfg_s;            /**< Hardware Protocol Configuration */
+        t_uFMKSRL_SerialCfgSpec     CfgSpec_u;          /**< UART/USART Configuration */
+        t_eFMKSRL_LineRunMode       runMode_e;          /**< Transmit/ Receive Run Mode */
+        t_eFMKSRL_HwProtocolType    hwProtType_e;       /**< Uart/Usart Protocol used */
     } t_sFMKSRL_DrvSerialCfg;
     // ********************************************************************
     // *                      Prototypes
@@ -516,21 +516,21 @@ typedef enum __t_eFMKSRL_LineBaudrate
 
     /**
     *
-    *	@brief  transmit a Msg CAN threw Serial Line.
+    *	@brief  transmit a Message threw Serial Line.
     *   @note   This function allow user to choose a Tx Mode from t_eFMKSRL_TxOpeMode
     *           and transmit a message using Tx Line of f_SrlLine_e.
     *           f_msgData_pu8 is the pointor for the beginning of the message with f_dataSize_u16 bytes
-    *           to note that if the message is longer than the Tx Buffer Size in Excel Configuration 
+    *           To note that if the message is longer than the Tx Buffer Size in Excel Configuration 
     *           task is not accepted.
-    *           Ff user want's to know whenever the message has been transmit, it has to set 
+    *           If user want's to know whenever the message has been transmit, it has to set 
     *           to true f_EnableTxCb_b.
-    *           When User Configure a Cylic Receive Operation Before use TX_RX Operation, 
+    *           When User Configure a Cylic Receive Operation with ConfigureReception before use TX_RX Operation, 
     *           the Receive Cylcic Operation will be momentarily disable. In consequence 
     *           be aware that the data on the Rx Line are lost once this function is called.
     *           The Cyclic Operation will be automatically enable once the Rx Message is received and user is called with callback        
     *
     *  @details If the user wants to reduce the complexity of the use of this function, to debug for instance.
-    *           It can make a macro after make the Init if the Serial Line as so :
+    *           It can make a macro after make the InitDrv of the Serial Line as so :
     *           
     *           #define FMKSRL_DEBUGLOG(msg, size) FMKSRL_Transmit( FMKSRL_SERIAL_LINE_1, \
     *                                                               FMKSRL_TX_ONESHOT,    \
@@ -561,9 +561,17 @@ typedef enum __t_eFMKSRL_LineBaudrate
     /**
     *
     *	@brief      Configure a Reception Mode.
-    *   @note       
+    *   @note       Configure the Rx line with f_OpeMode_e Mode.
+    *               User will be called with data using the callback he gives in 
+    *               InitDrv once the trigger appears.
+    *               
     *
-    *	@param[in]  f_State_pe : store the value, value from @ref t_eCyclicModState
+    *	@param[in]  f_SrlLine_e        : The Serial Line on Which the Configuration will be made, value from @ref t_eFMKSRL_SerialLine
+    *	@param[in]  f_OpeMode_e        : Receive Ope Mode , value from @ref t_eFMKSRL_TxOpeMode
+    *	@param[in]  f_InfoMode_u16     : In FMKSRL_OPE_RX_ONESHOT/CYLIC_SIZE     -> f_InfoMode_u16 will be the size of data expected to be received.
+    *                                    In FMKSRL_OPE_RX_ONESHOT/CYCLIC_IDLE    -> f_InfoMode_u16 is not used.
+    *                                    In FMKSRL_OPE_RX_ONESHOT/CYCLIC_TIMEOUT -> f_InfoMode_u16 will be the amount of time after 
+    *                                                                                   we consider the line is quiet. then you'll be called 
     *
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NUL
