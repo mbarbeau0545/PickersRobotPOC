@@ -1653,6 +1653,8 @@ static t_eReturnCode s_FMKSRL_UpdateTxBufferInfo(   t_sFMKSRL_SerialInfo * f_srl
 {
     t_eReturnCode Ret_e = RC_OK;
     t_sFMKSRL_BufferInfo * TxBuffer_s;
+    t_uint16 buffEndSize_u16;
+    t_uint16 maxAllowedSize_u16;
 
     if(f_srlInfo_ps == (t_sFMKSRL_SerialInfo *)NULL)
     {
@@ -1661,55 +1663,67 @@ static t_eReturnCode s_FMKSRL_UpdateTxBufferInfo(   t_sFMKSRL_SerialInfo * f_srl
     if(Ret_e == RC_OK)
     {
         TxBuffer_s = (t_sFMKSRL_BufferInfo *)(&f_srlInfo_ps->TxInfo_s.Buffer_s);
-    
-        switch (f_srlInfo_ps->runMode_e)
+        buffEndSize_u16 = (t_uint16)(TxBuffer_s->buffferSize_u16 - TxBuffer_s->readIdx_u16);
+        maxAllowedSize_u16 = (TxBuffer_s->bytesPending_u16 > FMKSRL_MAX_BYTES_TO_SEND) 
+                                ? FMKSRL_MAX_BYTES_TO_SEND 
+                                : TxBuffer_s->bytesPending_u16;
+
+        //------ Check if a msg is currently send------//
+        if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY) == BIT_IS_SET_16B)
         {
-            case FMKSRL_LINE_RUNMODE_POLL:
-            {
-                *f_dataSizeAdmitted_pu16 = (t_uint16)TxBuffer_s->bytesPending_u16;
-                //------ Reset Sending Byte, 'cause all byte is about to be send------//
-                TxBuffer_s->bytesSending_u16 = (t_uint16)0;
-                break;
-            }
-            //------ Same Logic is Applied to Interrupt or DMA mode------//
-            case FMKSRL_LINE_RUNMODE_DMA:
-            case FMKSRL_LINE_RUNMODE_IT:
-            {
-
-                //------ Update Falg Ready ------//
-                if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY) == BIT_IS_SET_16B)
-                {
-                    SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
-                }
-
-                //------ Manage size to send ------//
-                if(TxBuffer_s->bytesPending_u16 > (t_uint16)FMKSRL_MAX_BYTES_TO_SEND)
-                {
-                    //------ Set Flag Msg Cut ------//
-                    SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_CUT);
-                    *f_dataSizeAdmitted_pu16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
-                    TxBuffer_s->bytesSending_u16 = (t_uint16)FMKSRL_MAX_BYTES_TO_SEND;
-                }
-                else 
-                {
-                    //------ Reset Flag Msg Pending------//
-                    if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_SET_16B)
-                    {
-                        RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING);
-                    }
-                    
-                    *f_dataSizeAdmitted_pu16 = TxBuffer_s->bytesPending_u16;
-                    TxBuffer_s->bytesSending_u16 = (t_uint16)TxBuffer_s->bytesPending_u16;
-                }
-                
-                break;
-
-            }
-            case FMKSRL_LINE_RUNMODE_NB:
-            default:
-                Ret_e = RC_ERROR_NOT_SUPPORTED;
-                break;
+            Ret_e = RC_WARNING_BUSY;
         }
+
+        //------ Transmit Msg OK------//
+        else 
+        {
+            //------ Update Flag ------//
+            RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
+            SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
+            
+             //------ Manage Data To send------//
+            switch (f_srlInfo_ps->runMode_e)
+            {
+                case FMKSRL_LINE_RUNMODE_POLL:
+                {
+                    *f_dataSizeAdmitted_pu16 = (t_uint16)TxBuffer_s->bytesPending_u16;
+                    //------ Reset Sending Byte, 'cause all byte is about to be send------//
+                    TxBuffer_s->bytesSending_u16 = (t_uint16)0;
+                    break;
+                }
+                //------ Same Logic is Applied to Interrupt or DMA mode------//
+                case FMKSRL_LINE_RUNMODE_DMA:
+                case FMKSRL_LINE_RUNMODE_IT:
+                {
+                    //------ Manage size to send ------//
+
+                    //------  Transmission Fragmented ------//
+                    if(maxAllowedSize_u16 > buffEndSize_u16)
+                    {
+                        
+                        SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING);
+                        *f_dataSizeAdmitted_pu16 = (t_uint16)buffEndSize_u16;
+                        TxBuffer_s->bytesSending_u16 = (t_uint16)buffEndSize_u16;
+                    }
+                    else 
+                    {
+                        //------ Reset Flag Msg Pending------//
+                        RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING);
+                        
+                        
+                        *f_dataSizeAdmitted_pu16 = maxAllowedSize_u16;
+                        TxBuffer_s->bytesSending_u16 = (t_uint16)maxAllowedSize_u16;
+                    }
+                    break;
+
+                }
+                case FMKSRL_LINE_RUNMODE_NB:
+                default:
+                    Ret_e = RC_ERROR_NOT_SUPPORTED;
+                    break;
+            }
+        }
+        
         if(Ret_e == RC_OK)
         {
             TxBuffer_s->bytesPending_u16 = (t_uint16)(TxBuffer_s->bytesPending_u16 - 
@@ -1822,7 +1836,7 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
                             remainingSpace_u16 = RxBuffer_s->buffferSize_u16 - RxBuffer_s->writeIdx_u16;
                             //------ Wrap around if we exceed the buffer size ------//
                             firstChunk_u16 = f_rcvDataClaim_u16 - remainingSpace_u16;
-                            // Update write index after wrap-around ------//
+                            //------ Update write index after wrap-around ------//
                             RxBuffer_s->writeIdx_u16 = firstChunk_u16;
                         }
                     }
@@ -2416,7 +2430,7 @@ static t_eReturnCode s_FMKSRL_CopyData( t_sFMKSRL_BufferInfo * f_RxTxBuffer_s,
                 if(Ret_e == RC_OK)
                 {
                     Ret_e = SafeMem_memcpy( (void *)(f_RxTxBuffer_s->bufferAdd_pu8),
-                                        f_data_pu8,
+                                        (const void *)(&f_data_pu8[spaceToEnd_u16]),
                                         (t_uint16)(f_dataSized_u16 - spaceToEnd_u16));
                 }
                 if(Ret_e == RC_OK)
@@ -2572,11 +2586,12 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                 case FMKSRL_BSP_TX_CB_CPLT:
                 {
                     //--------- Update Tx Buffer Information ---------//
+                    RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
                     TxBuffer_s->readIdx_u16 = (t_uint16)((TxBuffer_s->readIdx_u16 + 
                                                     TxBuffer_s->bytesSending_u16) % TxBuffer_s->buffferSize_u16);
 
                     //--------- if datas are pending, send more data from the callback ---------//
-                    if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_CUT) == BIT_IS_SET_16B)
+                    if(GETBIT(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_MSG_PENDING) == BIT_IS_SET_16B)
                     {
                         Ret_e = s_FMKSRL_BspTxOpeMngmt(srlInfo_ps->TxInfo_s.bspTxOpe_e, srlInfo_ps);
                         
@@ -2614,7 +2629,6 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                         {
                             //--------- Update Tx Line Information ---------//
                             TxBuffer_s->bytesSending_u16 = (t_uint16)0;
-                            RESETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
                             SETBIT_16B(TxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
                         }
                     }
