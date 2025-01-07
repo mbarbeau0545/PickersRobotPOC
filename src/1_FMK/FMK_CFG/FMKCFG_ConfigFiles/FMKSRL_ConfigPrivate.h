@@ -33,31 +33,40 @@
     // *                      Types
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
+    /**
+     * @brief Bsp Transmission Operation
+     */
     typedef enum __t_eFMKSRL_BspTransmitOpe
     {
-        FMKSRL_BSP_TX_OPE_TRANSMIT = 0x00,
-        FMKSRL_BSP_TX_OPE_TRANSMIT_RECEIVE,
+        FMKSRL_BSP_TX_OPE_TRANSMIT = 0x00,      /**< Bsp Transmission Operation */
+        FMKSRL_BSP_TX_OPE_TRANSMIT_RECEIVE,     /**< Bsp Transmission/Reception Operation */
 
-        FMKSRL_BSP_TX_OPE_NB
+        FMKSRL_BSP_TX_OPE_NB                    /**< Bsp Transmission Operation Number */
     } t_eFMKSRL_BspTransmitOpe;
 
+    /**
+     * @brief Bsp Reception Operation
+     */
     typedef enum __t_eFMKSRL_BspReceiveOpe
     {
-        FMKSRL_BSP_RX_OPE_RECEIVE = 0x00,
-        FMKSRL_BSP_RX_OPE_RECEIVE_IDLE,
+        FMKSRL_BSP_RX_OPE_RECEIVE = 0x00,       /**< Bsp Reception Size Operation */
+        FMKSRL_BSP_RX_OPE_RECEIVE_IDLE,         /**< Bsp Reception Idle Operation */
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
-        FMKSRL_BSP_RX_OPE_RECEIVE_TIMEOUT,
+        FMKSRL_BSP_RX_OPE_RECEIVE_TIMEOUT,      /**< Bsp Reception Timeout Operation */
 #endif
-        FMKSRL_BSP_RX_OPE_NB
+        FMKSRL_BSP_RX_OPE_NB                    /**< Bsp Reception Operation Number */
     } t_eFMKSRL_BspReceiveOpe;
 
+    /**
+     * @brief Bsp Abort Operation
+     */
     typedef enum __t_eFMKSRL_BspAbortOpe
     {
-        FMKSRL_OPE_ABORT_RECEPTION = 0x00,
-        FMKSRL_OPE_ABORT_TRANSMISSION,
-        FMKSRL_OPE_ABORT_BOTH,
+        FMKSRL_OPE_ABORT_RECEPTION = 0x00,       /**< Bsp Abort Operation : Reception */
+        FMKSRL_OPE_ABORT_TRANSMISSION,           /**< Bsp Abort Operation : Transmssion */
+        FMKSRL_OPE_ABORT_BOTH,                   /**< Bsp Abort Operation : Reception/Transmssion */
 
-        FMKSRL_OPE_ABORT_NB
+        FMKSRL_OPE_ABORT_NB                     /**< Bsp Abort Operation Number */
     } t_eFMKSRL_BspAbortOpe;
     /* CAUTION : Automatic generated code section for Enum: Start */
 

@@ -24,16 +24,17 @@ For the doxygen documentation search the file "index.html"
 
 
 ## Annexe 1
-- Take te datasheet of your stm32 microcontrôler
+- Take te datasheet of your stm32 µC, Also take the .startup of your µc
 - Open the Hardware_Configuration file
 - Go to the General Info sheet
 - Put the hardware configuration as ask by the arrays on this sheet, the first array, you just have to copied/pasted the enum IRQn_Type in file stm32fXXYY
 - For RCC Clock, go to the stm32_hal_rcc.h file and find 'RCC_Exported_Macros', copy every clock in the excel array.
 - For timer/adc/dac/dma etc put the right information and keep it as so for example for timers it's 'timer' + '_' + 'number'
-- Go to the sheet FMKIO and filled all tables as asking, Find The alternate Function in Datasheet, alll information are in the array
+- Go to the sheet FMKIO and filled all tables as asking, Find The alternate Function in Datasheet, all information are in the array
+
 	for PWM purpose be careful on which timer you choose, some of them are not meant to make pwm signal
 - Go to the sheet CPU and inform the timer used for event timers whhich means periodic timer
-- Save and Generate code from Doc/ConfigPrj/PythonToolmain.py file.
+- Save and Generate code from Doc/ConfigPrj/PythonTool/somethnig.bat file.
 
 ## bugs
 - Comprendre pourquoi HAL_Delay -> Infinite Loop
@@ -49,8 +50,6 @@ For the doxygen documentation search the file "index.html"
     - LED clignote constamment -> L'application est dans un état d'erreur
     - LED clignote plus        -> L'application est lancé 
 
-
-- Faire un module Serial UART+USART
 - Faire un module Diagnostic Event Management
 - Faire un module Supply Voltage Control
 - Faire l'intégration MatLab du projet
@@ -66,7 +65,6 @@ For the doxygen documentation search the file "index.html"
     - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size. en gros un pointeur vers une varaible qui est un tableau généré dynamiquemeent par la config EXcel
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
-- Mettre les IIRQN_Handler dans les fichier Specific car specific au CPU
 - Dans FMKCPU, dans les fonctions de ChannelCfg
     Mettre l'initialisation du timer dans une autre fonction pour réduire la complexité de la fonction 'channelCfg'
     Appeler cette fonction (qui initialise le timer) dans channelCfg

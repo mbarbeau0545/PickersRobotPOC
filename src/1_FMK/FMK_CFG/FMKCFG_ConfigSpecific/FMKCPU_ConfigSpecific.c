@@ -919,6 +919,7 @@ t_eReturnCode FMKCPU_SetPeriphClockCfg(t_eFMKCPU_ClockPort f_clockPort_e)
                 Ret_e = RC_ERROR_WRONG_RESULT;
             }
         }
+        //------ No Need To Transfer this return code ------//
         if(Ret_e == RC_WARNING_NO_OPERATION)
         {
             Ret_e = RC_OK;

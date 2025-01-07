@@ -193,7 +193,7 @@ static t_eReturnCode s_APPSYS_PreOperational(void)
         }
     }
     if(ModuleInitCnt_u8 >= (t_uint8)APPSYS_MODULE_NB)
-    {// set the all state module to ope
+    {// set the all state module to pre-ope
         for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
         {
             if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
@@ -248,8 +248,8 @@ static t_eReturnCode s_APPSYS_Operational(void)
  *	@note   
  *
  *
- *	@params[in] 
- *	@params[out]
+ *	@param[in] 
+ *	@param[out]
  *	 
  *
  *

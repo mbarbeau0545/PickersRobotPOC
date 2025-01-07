@@ -20,15 +20,15 @@ from PyCodeGene import LoadConfig_FromExcel as LCFE, TARGET_T_END_LINE,TARGET_T_
 #------------------------------------------------------------------------------
 ENUM_FMKMAC_DMA_CHANNEL = 'FMKMAC_DMA_CHANNEL'
 ENUM_FMKMAC_DMA_CTRL    = 'FMKMAC_DMA_CTRL'
-ENUM_FMKMAC_DMA_MUX    = 'FMKMAC_DMA_MUX'
+ENUM_FMKMAC_DMA_MUX     = 'FMKMAC_DMA_MUX'
 ENUM_FMKMAC_DMARQST     = 'FMKMAC_DMA_RQSTYPE' 
 ENUM_FMKMAC_DMATYPE     = 'FMKMAC_DMA_TYPE'
 ENUM_FMKMAC_DMA_TRANSPRIO          = 'FMKMAC_DMA_TRANSPRIO'
 
 TARGET_FMKMAC_IRQN_HANDLER_START = '/* CAUTION : Automatic generated code section for DMA_Channel IRQHandler: Start */\n'
 TARGET_FMKMAC_IRQN_HANDLER_END   = '/* CAUTION : Automatic generated code section for DMA_Channel IRQHandler: End */\n'
-TARGET_FMKMAC_SWITCH_RQST_START = '            /* CAUTION : Automatic generated code section for Request Dma: Start */\n'
-TARGET_FMKMAC_SWITCH_RQST_END   = '            /* CAUTION : Automatic generated code section for Request Dma: End */\n'
+TARGET_FMKMAC_SWITCH_RQST_START  = '            /* CAUTION : Automatic generated code section for Request Dma: Start */\n'
+TARGET_FMKMAC_SWITCH_RQST_END    = '            /* CAUTION : Automatic generated code section for Request Dma: End */\n'
 TARGET_FMKMAC_SWITCH_DMATYPE_START = '            /* CAUTION : Automatic generated code section for Dma Type: Start */\n'
 TARGET_FMKMAC_SWITCH_DMATYPE_END = '            /* CAUTION : Automatic generated code section for Dma Type: End */\n'
 
@@ -184,7 +184,7 @@ class FMKMAC_CodeGen():
                                         + f'       HAL_DMA_IRQHandler(&(g_DmaInfo_as[{ENUM_FMKMAC_DMA_CTRL}_{idx_dma}].channel_as[{ENUM_FMKMAC_DMA_CHANNEL}_{char}].bspDma_ps));\n' \
                                         + '    }\n'
 
-                irqn_hdler += '    return;\n}\n'
+                irqn_hdler += '    return;\n}\n\n'
         #----------------------------------------------------------------
         #----------------------------Make Variable Info -----------------
         #----------------------------------------------------------------

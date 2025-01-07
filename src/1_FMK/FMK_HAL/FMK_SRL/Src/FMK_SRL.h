@@ -516,7 +516,7 @@ typedef enum __t_eFMKSRL_LineBaudrate
 
     /**
     *
-    *	@brief  transmit a Message threw Serial Line.
+    *	@brief  Transmit a Message threw Serial Line.
     *   @note   This function allow user to choose a Tx Mode from t_eFMKSRL_TxOpeMode
     *           and transmit a message using Tx Line of f_SrlLine_e.
     *           f_msgData_pu8 is the pointor for the beginning of the message with f_dataSize_u16 bytes

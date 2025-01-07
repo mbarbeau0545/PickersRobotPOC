@@ -672,6 +672,10 @@ t_eReturnCode FMKCPU_Set_HardwareInit(void)
     {
         Ret_e = FMKCPU_Set_HwClock(FMKCPU_RCC_CLK_PWR, FMKCPU_CLOCKPORT_OPE_ENABLE);
     }
+    if(Ret_e == RC_OK)
+    {
+        HAL_PWREx_DisableUCPDDeadBattery();
+    }
 #endif
 
     if(Ret_e != RC_OK)

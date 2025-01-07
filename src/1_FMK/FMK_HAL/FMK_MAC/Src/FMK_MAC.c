@@ -447,15 +447,14 @@ static t_eReturnCode s_FMKMAC_SetDmaHwInit(t_eFMKMAC_DmaController f_dmaCtrl_e)
     static t_bool s_isDmaMuxCfgDone_b = False;
 
     t_uint8 idxDmaMux_u8;
-    t_uint8 idxDmaCtrl_u8;
     
     //--------- Set Dma Mux Hardware Clock ---------//
     if(s_isDmaMuxCfgDone_b == (t_bool)False)
     {
         for(idxDmaMux_u8 = (t_uint8)0 ; 
-            (idxDmaMux_u8 < FMKMAC_DMA_MUX_NB) 
-         && (Ret_e == RC_OK) ; 
-        idxDmaMux_u8++)
+             (idxDmaMux_u8 < FMKMAC_DMA_MUX_NB) 
+         &&  (Ret_e == RC_OK) ; 
+            idxDmaMux_u8++)
         {
             Ret_e = FMKCPU_Set_HwClock(c_FmkMac_DmaMuxRccMapp_ae[idxDmaMux_u8], FMKCPU_CLOCKPORT_OPE_ENABLE);
         }
@@ -541,7 +540,7 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
                 }
                 case FMKMAC_DMA_TYPE_UART_TX:
                 {
-                    f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
+                    f_bspDma_ps->Init.Direction = DMA_MEMORY_TO_PERIPH;
                     f_bspDma_ps->Init.Mode      = FMKMAC_UART_TX_DMA_MODE;
                     f_bspDma_ps->Init.PeriphInc = DMA_PINC_DISABLE;
                     f_bspDma_ps->Init.MemInc    = DMA_MINC_ENABLE;
@@ -551,11 +550,13 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
                 }
                 case FMKMAC_DMA_TYPE_USART_RX:
                 {
+                    //DMA_PERIPH_TO_MEMORY
                     Ret_e = RC_ERROR_MISSING_CONFIG;
                     break;
                 }
                 case FMKMAC_DMA_TYPE_USART_TX:
                 {
+                    //DMA_MEMORY_TO_PERIPH
                     Ret_e = RC_ERROR_MISSING_CONFIG;
                     break;
                 }
