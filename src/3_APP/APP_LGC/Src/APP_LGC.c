@@ -174,7 +174,7 @@ static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8,
     sprintf(msgbuffer, "Got It\r\n");
 
 
-    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_OK)
+    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_ENDING)
     {
     }
     return;

@@ -22,7 +22,6 @@
     #include "stm32g4xx_hal.h"
     #include "stm32g4xx.h"
     /* CAUTION : Automatic generated code section for CPU Configuration: End */
-    // flag automatic generate code
     #include "TypeCommon.h"
     #include "Constant.h"
     // ********************************************************************

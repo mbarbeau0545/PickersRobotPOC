@@ -33,28 +33,25 @@
     //-----------------------------ENUM TYPES-----------------------------//
     
     /* CAUTION : Automatic generated code section for Enum: Start */
+    /**
+    * @brief Enum for Serial Line Available on CPU.
+    */
+    typedef enum
+    {
+        FMKSRL_SERIAL_LINE_1 = 0x0,                  /**< Reference to Hardware Instance USART1 */
+        FMKSRL_SERIAL_LINE_2,                        /**< Reference to Hardware Instance USART2 */
+        FMKSRL_SERIAL_LINE_3,                        /**< Reference to Hardware Instance USART3 */
+        FMKSRL_SERIAL_LINE_4,                        /**< Reference to Hardware Instance UART4 */
+        FMKSRL_SERIAL_LINE_5,                        /**< Reference to Hardware Instance UART5 */
+    
+        FMKSRL_SERIAL_LINE_NB,
+    } t_eFMKSRL_SerialLine;
 
     /* CAUTION : Automatic generated code section for Enum: End */
 
     //-----------------------------TYPEDEF TYPES---------------------------//
     
     //-----------------------------STRUCT TYPES---------------------------//
-    /* CAUTION : Automatic generated code section for Structure: Start */
-
-    /* CAUTION : Automatic generated code section for Structure: End */
-    // Flag automatic 
-    
-    /**
-     * @brief Serial Line Available on CPU
-     */
-    typedef enum __t_eFMKSRL_SerialLine
-    {
-        FMKSRL_SERIAL_LINE_1 = 0x00, /**< Reference to USART 2 */
-        FMKSRL_SERIAL_LINE_2,        /**< Reference to UART 4 */
-
-        FMKSRL_SERIAL_LINE_NB,
-    } t_eFMKSRL_SerialLine;
-
     /**
      * @brief Hardware Protocol Manage by the module
      */

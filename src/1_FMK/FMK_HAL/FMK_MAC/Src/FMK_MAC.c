@@ -685,6 +685,7 @@ void DMA2_Channel1_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel2 interrupt.
 */
@@ -696,6 +697,7 @@ void DMA2_Channel2_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel3 interrupt.
 */
@@ -707,6 +709,7 @@ void DMA2_Channel3_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel4 interrupt.
 */
@@ -718,6 +721,7 @@ void DMA2_Channel4_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel5 interrupt.
 */
@@ -729,6 +733,7 @@ void DMA2_Channel5_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel1 interrupt.
 */
@@ -740,6 +745,7 @@ void DMA1_Channel1_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel2 interrupt.
 */
@@ -751,6 +757,7 @@ void DMA1_Channel2_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel3 interrupt.
 */
@@ -762,6 +769,7 @@ void DMA1_Channel3_IRQHandler(void)
     }
     return;
 }
+
 /**
 * @brief This function handles DMA Channel4 interrupt.
 */
@@ -773,6 +781,7 @@ void DMA1_Channel4_IRQHandler(void)
     }
     return;
 }
+
 /* CAUTION : Automatic generated code section for DMA_Channel IRQHandler: End */
 
 //************************************************************************************

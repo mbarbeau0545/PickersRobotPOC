@@ -188,14 +188,19 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
-    //flag automatic generated code 
+    /* CAUTION : Automatic generated code section for Variable: Start */
     /**
-     * @brief Mapping between Serial Line And Bsp Handle Typedef
-     */
+    * @brief Mapping between Serial Line And Bsp Handle Typedef
+    */
     USART_TypeDef * c_FmkSrl_BspInitIstcMapp_pas[FMKSRL_SERIAL_LINE_NB] = {
-        USART2,
-        UART4,
+        USART1,                         // Reference to Serial Line 1 
+        USART2,                         // Reference to Serial Line 2 
+        USART3,                         // Reference to Serial Line 3 
+        UART4,                          // Reference to Serial Line 4 
+        UART5,                          // Reference to Serial Line 5 
     };
+
+    /* CAUTION : Automatic generated code section for Variable: End */
 
     /**
      * @brief Bsp UART/USART Receive Function

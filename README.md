@@ -53,7 +53,7 @@ For the doxygen documentation search the file "index.html"
 - Faire un module Diagnostic Event Management
 - Faire un module Supply Voltage Control
 - Faire l'intégration MatLab du projet
-
+- Mettre les IRQN Handlers dans les fichiers        spécifics car propre à chaque CPU ??
 - Mettre à jour la documentation 
     - Mettre à jour la documentaiton drawio
     - Créer un script python qui fait une documentation générale du Projet avec toutes les API par Modules ?

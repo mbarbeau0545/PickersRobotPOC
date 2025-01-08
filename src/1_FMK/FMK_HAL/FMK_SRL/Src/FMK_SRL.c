@@ -173,36 +173,78 @@ typedef struct __t_sFMKSRL_SerialInfo
 
 // ********************************************************************
 // *                      Variables
-// ********************************************************************
+
 static t_eCyclicModState g_FmkSrl_ModState_e = STATE_CYCLIC_CFG;
 
 static t_uint8 g_MProcessIdUsed[FMKSRL_SERIAL_LINE_NB];
 
 static t_eFMKSRL_BspReceiveOpe g_SavedUserRxOpeMode_ae[FMKSRL_SERIAL_LINE_NB];
 
-// Flag Automatic Generated Code 
-static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
-    [FMKSRL_SERIAL_LINE_1] = {
-        .c_clockPort_e = FMKCPU_RCC_CLK_USART2,
-        .c_HwType_e = FMKSRL_HW_PROTOCOL_USART,
-        .c_IRQNType_e = FMKCPU_NVIC_USART2_IRQN,
-        .c_DmaRqstRx = FMKMAC_DMA_RQSTYPE_USART2_RX,
-        .c_DmaRqstTx = FMKMAC_DMA_RQSTYPE_USART2_TX,
-    },
-    [FMKSRL_SERIAL_LINE_2] = {
-        .c_clockPort_e = FMKCPU_RCC_CLK_UART4,
-        .c_HwType_e = FMKSRL_HW_PROTOCOL_UART,
-        .c_IRQNType_e = FMKCPU_NVIC_UART4_IRQN,
-        .c_DmaRqstRx = FMKMAC_DMA_RQSTYPE_UART4_RX,
-        .c_DmaRqstTx = FMKMAC_DMA_RQSTYPE_UART4_TX,
-    },
-};
+/* CAUTION : Automatic generated code section for Variable: Start */
+//--------- Tx, Rx Buffer for Serial Line 1 ---------//
+static t_uint8 g_SrlLine_1_RxBuffer_ua8[0];
+static t_uint8 g_SrlLine_1_TxBuffer_ua8[0];
 
-// Flag Automatic Generated Code 
-static t_uint8 g_SrlLine1TxBuffer_ua8[24];
-static t_uint8 g_SrlLine1RxBuffer_ua8[24];
-static t_uint8 g_SrlLine2TxBuffer_ua8[24];
-static t_uint8 g_SrlLine2RxBuffer_ua8[24];
+//--------- Tx, Rx Buffer for Serial Line 2 ---------//
+static t_uint8 g_SrlLine_2_RxBuffer_ua8[256];
+static t_uint8 g_SrlLine_2_TxBuffer_ua8[256];
+
+//--------- Tx, Rx Buffer for Serial Line 3 ---------//
+static t_uint8 g_SrlLine_3_RxBuffer_ua8[0];
+static t_uint8 g_SrlLine_3_TxBuffer_ua8[0];
+
+//--------- Tx, Rx Buffer for Serial Line 4 ---------//
+static t_uint8 g_SrlLine_4_RxBuffer_ua8[256];
+static t_uint8 g_SrlLine_4_TxBuffer_ua8[256];
+
+//--------- Tx, Rx Buffer for Serial Line 5 ---------//
+static t_uint8 g_SrlLine_5_RxBuffer_ua8[0];
+static t_uint8 g_SrlLine_5_TxBuffer_ua8[0];
+
+/**< Store the Serial Info for all lines */
+static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {    [FMKSRL_SERIAL_LINE_1] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
+        .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
+        .c_IRQNType_e  = FMKCPU_NVIC_USART1_IRQN,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+    },
+
+    [FMKSRL_SERIAL_LINE_2] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_USART2,
+        .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
+        .c_IRQNType_e  = FMKCPU_NVIC_USART2_IRQN,
+        .c_DmaRqstRx   = FMKMAC_DMA_RQSTYPE_USART2_RX,
+        .c_DmaRqstTx   = FMKMAC_DMA_RQSTYPE_USART2_TX,
+    },
+
+    [FMKSRL_SERIAL_LINE_3] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_USART3,
+        .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
+        .c_IRQNType_e  = FMKCPU_NVIC_USART3_IRQN,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+    },
+
+    [FMKSRL_SERIAL_LINE_4] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_UART4,
+        .c_HwType_e    = FMKSRL_HW_PROTOCOL_UART,
+        .c_IRQNType_e  = FMKCPU_NVIC_UART4_IRQN,
+        .c_DmaRqstRx   = FMKMAC_DMA_RQSTYPE_UART4_RX,
+        .c_DmaRqstTx   = FMKMAC_DMA_RQSTYPE_UART4_TX,
+    },
+
+    [FMKSRL_SERIAL_LINE_5] = {
+        .c_clockPort_e = FMKCPU_RCC_CLK_UART5,
+        .c_HwType_e    = FMKSRL_HW_PROTOCOL_UART,
+        .c_IRQNType_e  = FMKCPU_NVIC_UART5_IRQN,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+    },
+
+};
+/* CAUTION : Automatic generated code section for Variable: End */
+
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -350,7 +392,7 @@ static t_eReturnCode s_FMKSRL_SetUartBspInit(   t_eFMKSRL_SerialLine      f_SrlL
 *	@brief      Set Uart Driver Init Configuration.\n
 *   @note       This function set the Usart Specific Init 
 *               and then call the right Bsp Function thanks to the USART_Type.\n
-*               At this point there is onyly one mode but we never know
+*               At this point there is only one mode but we never know
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
 *	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
@@ -366,7 +408,7 @@ static t_eReturnCode s_FMKSRL_SetUsartBspInit(  t_sFMKSRL_SerialInfo     * f_srl
 /**
 *
 *	@brief      Bsp Tx Callback Management.\n
-*   @note       This function reach the right Serial Info, 
+*   @note       This function found the right Serial Info Structure, 
 *               then depending on f_Evnt_e this function makes actions.\n
 *               FMKSRL_BSP_TX_CB_HALCPLT -> No actions are made
 *               FMKSRL_BSP_TX_CB_CPLT -> if the flag msg_cut is set
@@ -379,8 +421,6 @@ static t_eReturnCode s_FMKSRL_SetUsartBspInit(  t_sFMKSRL_SerialInfo     * f_srl
 *	@param[in]  f_Handle_pu                : pointor to Bsp UART/USART Instance
 *	@param[in]  f_Evnt_e                  : enum valuer to know who make interuruption
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
 */
 static void s_FMKSRL_BspTxEventCbMngmt( t_uFMKSRL_HardwareHandle * f_Handle_pu,
                                         t_eFMKSRL_BspCbTxEvnt f_Evnt_e);
@@ -388,13 +428,20 @@ static void s_FMKSRL_BspTxEventCbMngmt( t_uFMKSRL_HardwareHandle * f_Handle_pu,
 /**
 *
 *	@brief      Bsp Rx Callback Management.\n
-*   @note       
-* 
-*	@param[in]  f_Handle_pu                : pointor to Bsp UART/USART Instance
-*	@param[in]  f_Evnt_e                  : enum valuer to know who make interuruption
+*   @note       This function found the right Serial Info Structure, 
+*               then depending on f_Evnt_e this function makes actions.\n
+*               FMKSRL_BSP_RX_CB_HALCPLT -> nothing is made for now.\n
+*               FMKSRL_BSP_RX_CB_CPLT 
+*               FMKSRL_BSP_RX_CB_EVENT -> we call user with receive data into buffer
+*                                            with the size that user put in the function ( size
+*                                            actually received in Idle Mode) ConfigureReception. 
+*                                            In timeout mode don't know yet.
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+* 
+*	@param[in]  f_Handle_pu      : pointor to Bsp UART/USART Instance
+*	@param[in]  f_Evnt_e         : enum valuer to know who make interuruption
+*	@param[in]  f_InfoCb_u16     : Info Return by the Callback
+*
 */
 static void s_FMKSRL_BspRxEventCbMngmt( t_uFMKSRL_HardwareHandle * f_Handle_pu,
                                         t_eFMKSRL_BspCbRxEvnt f_Evnt_e,
@@ -402,8 +449,10 @@ static void s_FMKSRL_BspRxEventCbMngmt( t_uFMKSRL_HardwareHandle * f_Handle_pu,
 
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Rx Abort Management.\n
+*   @note       Depending on f_Ope_e, this function abort 
+*               Transmission / Reception in UART mode only 
+*               or abort Both in UART/USART mode.\n
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
 *	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
@@ -415,13 +464,16 @@ static t_eReturnCode s_FMKSRL_AbortMngmt(   t_sFMKSRL_SerialInfo * f_srlInfo_ps,
                                             t_eFMKSRL_BspAbortOpe f_Ope_e);
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Rx Operation Timeout Managment.\n
+*   @note       This function configure the timeout and confgiure
+*               the reception.\n
 * 
-*	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
-*	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
+*	@param[in]  f_srlInfo_ps      : pointor to Serial Info 
+*	@param[in]  f_Ope_e           : Enum Value for TimeOut operation, @ref t_eFMKSRL_TimeoutOpe
+*	@param[in]  f_timeOutMs_u16   : Timeout in ms after considering the msg done
 *
 *   @retval RC_OK                               @ref RC_OK
+*   @retval RC_ERROR_PARAM_INVALID              @ref RC_ERROR_PARAM_INVALID
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
 */
 static t_eReturnCode s_FMKSRL_BspRxOpeTimeOutMngmt( t_sFMKSRL_SerialInfo     * f_srlInfo_ps, 
@@ -430,25 +482,31 @@ static t_eReturnCode s_FMKSRL_BspRxOpeTimeOutMngmt( t_sFMKSRL_SerialInfo     * f
 
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Receive Management.\n
+*   @note       After updated Buffer Information, Depending 
+*               on the run mode and SoftType, this function call the right BSP 
+*               reception function (HAL_UART/USART_Receive( , IT, DMA)).\n 
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
-*	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
+*	@param[in]  f_rcvDataSize_u16          : Size in byte expected to be received
 *
 *   @retval RC_OK                               @ref RC_OK
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+*   @retval RC_ERROR_PTR_NULL                   @ref RC_ERROR_PTR_NULL
+*   @retval RC_ERROR_WRONG_RESULT               @ref RC_ERROR_WRONG_RESULT
+*   @retval RC_ERROR_NOT_SUPPORTED              @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_BspRxOpeReceiveMngmt( t_sFMKSRL_SerialInfo     * f_srlInfo_ps,
                                                     t_uint16                   f_rcvDataSize_u16);
 
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Receive Idle Management.\n
+*   @note       After updated Buffer Information, Depending 
+*               on the run mode and SoftType, this function call the right BSP 
+*               reception function (HAL_UART/USART_Receive_Idle( , IT, DMA)).\n 
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
-*	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
 *
 *   @retval RC_OK                               @ref RC_OK
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
@@ -457,8 +515,10 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveIdleMngmt(t_sFMKSRL_SerialInfo     
 
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Rx Transmit Management.\n
+*   @note       After updated Buffer Information, Depending 
+*               on the run mode and SoftType, this function call the right BSP 
+*               reception function (HAL_UART/USART_Transmit( , IT, DMA)).\n 
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
 *	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
@@ -470,16 +530,21 @@ static t_eReturnCode s_FMKSRL_BspTxOpeTransmitMngmt(t_sFMKSRL_SerialInfo     * f
 
 /**
 *
-*	@brief      Bsp Rx Callback Management.\n
-*   @note       
+*	@brief      Bsp Transmit Receive Operation Management.\n
+*   @note       In USART Mode only, this function allow user to 
+*               transmit and receive a msg in synchronous way,
+*               Be aware that in this mode Protocol, the size 
+*               expected to be receive appears to be the same size send.\n
 * 
 *	@param[in]  f_srlInfo_ps               : pointor to Serial Info 
-*	@param[in]  f_DrvSrlCfg_ps             : pointor to Serial Configuration 
 *
 *   @retval RC_OK                               @ref RC_OK
+*   @retval RC_ERROR_PTR_NULL                   @ref RC_ERROR_PTR_NULL
 *   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+*   @retval RC_ERROR_NOT_SUPPORTED              @ref RC_ERROR_NOT_SUPPORTED
+*   @retval RC_ERROR_WRONG_RESULT               @ref RC_ERROR_WRONG_RESULT
 */
-static t_eReturnCode s_FMKSRL_BspTxOpeTransmitReceiveMngmt(t_sFMKSRL_SerialInfo     * f_srlInfo_ps);
+static t_eReturnCode s_FMKSRL_BspTxOpeTransmitReceiveMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps);
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
 
     /**
@@ -535,6 +600,11 @@ static t_eReturnCode s_FMKSRL_CopyData( t_sFMKSRL_BufferInfo * f_RxTxBuffer_s,
 /**
 *
 *	@brief      Call User Managment.\n
+*   @note       Depending opn the Reception Mode (Size, Idle, Timeout),
+*               we retrieve we amount of data received in the RxBuffer;
+*               Then, we call user with data, if the data arr cut between the 
+*               end the start in buffer circular, we call user twice.\n
+*               Finally we update the Right/Read Index.\n
 * 
 *   @retval RC_OK                               @ref RC_OK
 * 
@@ -631,8 +701,10 @@ static t_eReturnCode s_FMKSRL_GetBspWordLenght( t_eFMKSRL_HwProtocolType f_HwPro
  *	@param[in]      f_lineWordLenght_e         : enum value for line Word lenght, value from @ref t_eFMKSRL_LineWordLenght.\n
  *	@param[out]     f_bspLineWordLenght_pu32   : Storage for Bsp baudrate.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_GetUartBspHwFlowCtrl(t_eFMKSRL_UartHwFlowCtrl f_HwFlowCtrl_e, t_uint32 * f_bspHwFlowCtrl_pu32);
 
@@ -642,8 +714,10 @@ static t_eReturnCode s_FMKSRL_GetUartBspHwFlowCtrl(t_eFMKSRL_UartHwFlowCtrl f_Hw
  *	@param[in]      f_BreakLenght_e             : enum value for LIN break detection lenght, value from @ref t_eFMKSRL_LinBreakLenght.\n
  *	@param[out]     f_bspLineWordLenght_pu32   : Storage for Bsp baudrate.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMMKSRL_GetBspLinBreakLen(t_eFMKSRL_LinBreakLenght f_BreakLenght_e, t_uint32 * f_bspBreakLenght_pu32);
 
@@ -653,8 +727,10 @@ static t_eReturnCode s_FMMKSRL_GetBspLinBreakLen(t_eFMKSRL_LinBreakLenght f_Brea
  *	@param[in]      f_WakeUpMeth_e             : enum value for MProccess WakeUp Method, value from @ref t_eFMKSRL_LinBreakLenght.\n
  *	@param[out]     f_bspWakeUpMeth_pu32       : Storage for Bsp baudrate.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_GetBspMProcessWakeUpMethod(t_eFMKSRL_MProcessWakeUpMeth f_WakeUpMeth_e, t_uint32 * f_bspWakeUpMeth_pu32);
 
@@ -664,8 +740,10 @@ static t_eReturnCode s_FMKSRL_GetBspMProcessWakeUpMethod(t_eFMKSRL_MProcessWakeU
  *	@param[in]      f_ClkPolarity_e             : enum value for Usart Clock Polarity, value from @ref t_eFMKSRL_UsartClkPolaritys.\n
  *	@param[out]     f_bspClkPolarity_pu32       : Storage for Bsp Usart Clock Polarity.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_GetUsartBspClkPolarity(t_eFMKSRL_UsartClkPolarity f_ClkPolarity_e, t_uint32 * f_bspClkPolarity_pu32);
 
@@ -675,8 +753,10 @@ static t_eReturnCode s_FMKSRL_GetUsartBspClkPolarity(t_eFMKSRL_UsartClkPolarity 
  *	@param[in]      f_LastBit_e             : enum value for Usart Clock Phase, value from @ref t_eFMKSRL_UsartLastBit.\n
  *	@param[out]     f_bspLastbit_pu32       : Storage for Bsp Usart Clock Phase.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_GetUsartBspLastbit(t_eFMKSRL_UsartLastBit f_LastBit_e, t_uint32 * f_bspLastbit_pu32);
 
@@ -686,8 +766,10 @@ static t_eReturnCode s_FMKSRL_GetUsartBspLastbit(t_eFMKSRL_UsartLastBit f_LastBi
  *	@param[in]      f_ClkPhase_e             : enum value for Clock Last Bit, value from @ref t_eFMKSRL_UsartClockPhase.\n
  *	@param[out]     f_bspClkPhase_pu32       : Storage for Bsp for Clock Last Bit.\n
 *
-*   @retval RC_OK                               @ref RC_OK
-*   @retval RC_ERROR_NOT_ALLOWED                @ref RC_ERROR_NOT_ALLOWED
+ *  @retval RC_OK                             @ref RC_OK
+ *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+ *  @retval RC_ERROR_NOT_SUPPORTED            @ref RC_ERROR_NOT_SUPPORTED
 */
 static t_eReturnCode s_FMKSRL_GetUsartBspClkPhase(t_eFMKSRL_UsartClockPhase f_ClkPhase_e, t_uint32 * f_bspClkPhase_pu32);
 //****************************************************************************
@@ -734,20 +816,48 @@ t_eReturnCode FMKSRL_Init(void)
         g_SavedUserRxOpeMode_ae[idxSrlLine_u8] = FMKSRL_OPE_RX_NB;
         g_MProcessIdUsed[idxSrlLine_u8] = (t_uint8)0;
     }   
-    // Flag automatic generated code start
-    // Serial Line 1 
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine1RxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
+    /* CAUTION : Automatic generated code section for Buffer Mapping: Start */
+    //--------- Buffer Mapping for Serial Line 1 ---------//
+    //--------- Rx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_1_RxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
+//--------- Tx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_1_TxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
 
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine1TxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
+    //--------- Buffer Mapping for Serial Line 2 ---------//
+    //--------- Rx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_2_RxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+//--------- Tx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_2_TxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
 
-    // Serial Line 2
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine2RxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
+    //--------- Buffer Mapping for Serial Line 3 ---------//
+    //--------- Rx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_3_RxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
+//--------- Tx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_3_TxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
 
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine2TxBuffer_ua8);
-    g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)24;
+    //--------- Buffer Mapping for Serial Line 4 ---------//
+    //--------- Rx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_4_RxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+//--------- Tx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_4_TxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
+
+    //--------- Buffer Mapping for Serial Line 5 ---------//
+    //--------- Rx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_5_RxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
+//--------- Tx Buffer ---------//
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_5_TxBuffer_ua8);
+    g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
+
+    /* CAUTION : Automatic generated code section for Buffer Mapping: End */
     
     return RC_OK;
 }
@@ -957,6 +1067,7 @@ t_eReturnCode FMKSRL_Transmit(  t_eFMKSRL_SerialLine f_SrlLine_e,
                     break;
                 }
                 //------ Configure a Reception Msg with Callback Control base on Sized ------//
+                //------ Depending on the softType (UART/USART), we don't call the same function ------//
                 case FMKSRL_TX_RX_SIZE:
                 {
                     srlInfo_ps->TxInfo_s.RqstTxRxOpe_b = (t_bool)True;
@@ -2709,14 +2820,14 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
             //--------- Second Part Data ---------//
             RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(RxBuffer_s->bufferAdd_pu8),
                                         (t_uint16)endIdx_u16,
-                                        FMKSRL_CB_INFO_RECEIVE_OK);
+                                        FMKSRL_CB_INFO_RECEIVE_ENDING);
         }
         else
         {
             //--------- All Data are aline, call User ---------//
             RxMngmt_ps->RxUserCb_pcb(   (t_uint8 *)(&RxBuffer_s->bufferAdd_pu8[startIdx_u16]),
                                         (t_uint16)dataLength_u16,
-                                        FMKSRL_CB_INFO_RECEIVE_OK);
+                                        FMKSRL_CB_INFO_RECEIVE_ENDING);
 
         }
 
@@ -3512,13 +3623,16 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 /***********************************************************
  * USART CALLBACK MANAGEMENT
  **********************************************************/
-// flag automatic genereted code
-void USART2_IRQHandler(void)
+/* CAUTION : Automatic generated code section for UART/USART IRQHandler: Start */
+/*********************************
+USART1_IRQHandler
+*********************************/
+void USART1_IRQHandler(void)
 {
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-        {
+            {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3527,12 +3641,16 @@ void USART2_IRQHandler(void)
         }
     }
 }
-void UART4_IRQHandler(void)
+
+/*********************************
+USART2_IRQHandler
+*********************************/
+void USART2_IRQHandler(void)
 {
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-        {
+            {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3541,6 +3659,63 @@ void UART4_IRQHandler(void)
         }
     }
 }
+
+/*********************************
+USART3_IRQHandler
+*********************************/
+void USART3_IRQHandler(void)
+{
+    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].isLineConfigured_b == (t_bool)True)
+    {
+        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
+            {
+            HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].bspHandle_u));
+        }
+        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
+        {
+            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].bspHandle_u));
+        }
+    }
+}
+
+/*********************************
+UART4_IRQHandler
+*********************************/
+void UART4_IRQHandler(void)
+{
+    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].isLineConfigured_b == (t_bool)True)
+    {
+        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
+            {
+            HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].bspHandle_u));
+        }
+        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
+        {
+            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].bspHandle_u));
+        }
+    }
+}
+
+/*********************************
+UART5_IRQHandler
+*********************************/
+void UART5_IRQHandler(void)
+{
+    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].isLineConfigured_b == (t_bool)True)
+    {
+        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
+            {
+            HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].bspHandle_u));
+        }
+        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
+        {
+            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].bspHandle_u));
+        }
+    }
+}
+
+/* CAUTION : Automatic generated code section for UART/USART IRQHandler: End */
+
 /***************************************
  * HAL_USART_TxHalfCpltCallback
  ***************************************/

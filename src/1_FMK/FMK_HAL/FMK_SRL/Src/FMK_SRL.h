@@ -280,7 +280,7 @@ typedef enum __t_eFMKSRL_LineBaudrate
      */
     typedef enum 
     {
-        FMKSRL_CB_INFO_RECEIVE_OK = 0x00,           /**< The message has been is complete in the callback*/
+        FMKSRL_CB_INFO_RECEIVE_ENDING = 0x00,           /**< The message has been is complete in the callback*/
         FMKSRL_CB_INFO_RECEIVE_PENDING,             /**< The message has been cut and is not complete, user callback is about to
                                                             be called again to get the rest of the msg*/
         
@@ -564,6 +564,9 @@ typedef enum __t_eFMKSRL_LineBaudrate
     *   @note       Configure the Rx line with f_OpeMode_e Mode.
     *               User will be called with data using the callback he gives in 
     *               InitDrv once the trigger appears.
+    *               Be aware that in DMA mode, it is possible that the msg is cut between the end and 
+    *               the beginning of the buffer. In this case user will be called once 
+    *               with  f_InfoCb_e = MSG_CUT and a second time with f_InfoCb_e = 'MSG_END'
     *               
     *
     *	@param[in]  f_SrlLine_e        : The Serial Line on Which the Configuration will be made, value from @ref t_eFMKSRL_SerialLine
