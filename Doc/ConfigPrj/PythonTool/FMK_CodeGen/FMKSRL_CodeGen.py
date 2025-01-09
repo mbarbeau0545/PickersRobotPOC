@@ -129,7 +129,7 @@ class FMKSRL_CodeGen():
             
             if is_istce_used:
                 var_srl_info +=  f'        .c_DmaRqstRx   = {ENUM_FMKMAC_DMARQST}_{line_info[0]}_RX,\n' \
-                            + f'        .c_DmaRqstTx   = {ENUM_FMKMAC_DMARQST}_{line_info[0]}_TX,\n' 
+                                + f'        .c_DmaRqstTx   = {ENUM_FMKMAC_DMARQST}_{line_info[0]}_TX,\n' 
             else: 
                 var_srl_info +=  f'        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,\n' \
                              + f'        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,\n' 

@@ -53,7 +53,7 @@ t_eReturnCode FMKMAC_SetRequestType(t_eFMKMAC_DmaRqst f_RqstType_e,
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_RqstType_e > FMKMAC_DMA_RQSTYPE_NB)
+    if(f_RqstType_e >= FMKMAC_DMA_RQSTYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

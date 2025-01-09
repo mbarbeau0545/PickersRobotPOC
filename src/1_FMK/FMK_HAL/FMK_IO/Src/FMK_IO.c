@@ -400,7 +400,7 @@ t_eReturnCode FMKIO_Set_InDigSigCfg(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_PullM
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_GpioPort gpioPort_e;
 
-    if (f_signal_e > FMKIO_INPUT_SIGDIG_NB || f_pull_e > FMKIO_PULL_MODE_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGDIG_NB || f_pull_e >= FMKIO_PULL_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -434,7 +434,7 @@ t_eReturnCode FMKIO_Set_InAnaSigCfg(t_eFMKIO_InAnaSig f_signal_e,
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_signal_e > FMKIO_INPUT_SIGANA_NB || f_pull_e > FMKIO_PULL_MODE_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGANA_NB || f_pull_e >= FMKIO_PULL_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -478,9 +478,9 @@ t_eReturnCode FMKIO_Set_InFreqSigCfg(t_eFMKIO_InFreqSig f_signal_e,
     t_eFMKCPU_ChnlMeasTrigger cpu_trigger_e = FMKCPU_CHNL_MEAS_NB;
     t_eFMKCPU_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e > FMKIO_INPUT_SIGFREQ_NB 
-    || f_trigger_e > FMKIO_STC_NB 
-    || f_freqMeas_e > FMKIO_FREQ_MEAS_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGFREQ_NB 
+    || f_trigger_e >= FMKIO_STC_NB 
+    || f_freqMeas_e >= FMKIO_FREQ_MEAS_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -543,7 +543,7 @@ t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e,
     t_eFMKIO_GpioPort gpioPort_e;
     t_uint32 bspTrigger_u32;
 
-    if (f_signal_e > FMKIO_INPUT_SIGEVNT_NB || f_pull_e > FMKIO_PULL_MODE_NB || f_trigger_e > FMKIO_STC_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGEVNT_NB || f_pull_e >= FMKIO_PULL_MODE_NB || f_trigger_e >= FMKIO_STC_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -596,7 +596,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
     t_eFMKIO_GpioPort gpioPort_e = FMKIO_GPIO_PORT_NB;
     t_eFMKCPU_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGPWM_NB || f_pull_e > FMKIO_PULL_MODE_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB || f_pull_e >= FMKIO_PULL_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -639,7 +639,9 @@ t_eReturnCode FMKIO_Set_OutDigSigCfg(t_eFMKIO_OutDigSig f_signal_e,
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_GpioPort gpioPort_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGDIG_NB || f_pull_e > FMKIO_PULL_MODE_NB || f_spd_e > FMKIO_SPD_MODE_NB)
+    if ((f_signal_e >= FMKIO_OUTPUT_SIGDIG_NB )
+    ||  (f_pull_e >= FMKIO_PULL_MODE_NB) 
+    ||  (f_spd_e >= FMKIO_SPD_MODE_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -673,7 +675,7 @@ t_eReturnCode FMKIO_Set_ComCanCfg(t_eFMKIO_ComSigCan f_SigCan_e)
     t_eReturnCode Ret_e = RC_OK;
     t_sFMKIO_RxTxComCfg *bspSigCanCfg_ps;
 
-    if(f_SigCan_e > FMKIO_COM_SIGNAL_CAN_NB)
+    if(f_SigCan_e >= FMKIO_COM_SIGNAL_CAN_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -718,7 +720,7 @@ t_eReturnCode FMKIO_Set_ComSerialCfg(t_eFMKIO_ComSigSerial f_SigSerial_e)
     t_eReturnCode Ret_e = RC_OK;
     t_sFMKIO_RxTxComCfg *bspSigSerialCfg_ps;
 
-    if(f_SigSerial_e > FMKIO_COM_SIGNAL_SERIAL_NB)
+    if(f_SigSerial_e >= FMKIO_COM_SIGNAL_SERIAL_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -763,7 +765,7 @@ t_eReturnCode FMKIO_Set_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     GPIO_TypeDef *bspGpio_ps = (GPIO_TypeDef *)NULL;
     GPIO_PinState bspSigValue_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGDIG_NB || f_value_e > FMKIO_DIG_VALUE_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGDIG_NB || f_value_e >= FMKIO_DIG_VALUE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -811,7 +813,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGPWM_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -840,7 +842,7 @@ t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_Dig
     GPIO_TypeDef *bspGpio_ps = (GPIO_TypeDef *)NULL;
     GPIO_PinState bspSigValue_e;
 
-    if (f_signal_e > FMKIO_INPUT_SIGDIG_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGDIG_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -888,7 +890,7 @@ t_eReturnCode FMKIO_Get_InAnaSigValue(t_eFMKIO_InAnaSig f_signal_e, t_uint16 *f_
     t_eReturnCode Ret_e = RC_OK;
     t_uint16 anaValue_16 = 0;
 
-    if (f_signal_e > FMKIO_INPUT_SIGANA_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGANA_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -943,7 +945,7 @@ t_eReturnCode FMKIO_Get_InFreqSigValue(t_eFMKIO_InFreqSig f_signal_e, t_uint32 *
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 value_u32 = 0;
-    if (f_signal_e > FMKIO_INPUT_SIGFREQ_NB)
+    if (f_signal_e >= FMKIO_INPUT_SIGFREQ_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1002,7 +1004,7 @@ t_eReturnCode FMKIO_Get_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 *
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGPWM_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1035,7 +1037,7 @@ t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     GPIO_TypeDef *bspGpio_ps = (GPIO_TypeDef *)NULL;
     GPIO_PinState bspSigValue_e;
 
-    if (f_signal_e > FMKIO_OUTPUT_SIGDIG_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGDIG_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1254,7 +1256,7 @@ static t_eReturnCode s_FMKIO_Get_BspPullMode(t_eFMKIO_PullMode f_pull_e, t_uint3
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_pull_e > FMKIO_PULL_MODE_NB)
+    if (f_pull_e >= FMKIO_PULL_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1291,7 +1293,7 @@ static t_eReturnCode s_FMKIO_Get_BspSpdMode(t_eFMKIO_SpdMode f_spd_e, t_uint32 *
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_spd_e > FMKIO_SPD_MODE_NB)
+    if (f_spd_e >= FMKIO_SPD_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1328,7 +1330,7 @@ static t_eReturnCode s_FMKIO_Get_BspTriggerMode(t_eFMKIO_SigTrigCptr f_trigger_e
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_trigger_e > FMKIO_STC_NB)
+    if (f_trigger_e >= FMKIO_STC_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1373,8 +1375,11 @@ static t_eReturnCode s_FMKIO_Set_BspSigCfg(t_eFMKIO_GpioPort f_gpioPort_e,
     GPIO_InitTypeDef bspInit_s;
     t_uint32 bspPull_32 = 0;
     t_uint32 bspSpd_u32 = 0;
-
-    if (f_gpioPort_e > FMKIO_GPIO_PORT_NB || f_pin_e > FMKIO_GPIO_PIN_NB || f_pull_e > FMKIO_PULL_MODE_NB || f_spd_e > FMKIO_SPD_MODE_NB)
+ 
+    if ((f_gpioPort_e >= FMKIO_GPIO_PORT_NB)
+    ||  (f_pin_e >= FMKIO_GPIO_PIN_NB)
+    ||  (f_pull_e >= FMKIO_PULL_MODE_NB)
+    ||  (f_spd_e >= FMKIO_SPD_MODE_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1417,7 +1422,7 @@ static t_eReturnCode s_FMKIO_Set_GpioClkState(t_eFMKIO_GpioPort f_gpioPort_e, t_
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_ClockPort gpioClkPort_e;
 
-    if (f_gpioPort_e > FMKIO_GPIO_PORT_NB)
+    if (f_gpioPort_e >= FMKIO_GPIO_PORT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

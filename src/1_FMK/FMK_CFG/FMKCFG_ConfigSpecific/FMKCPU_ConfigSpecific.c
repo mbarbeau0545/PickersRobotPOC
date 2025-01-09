@@ -123,8 +123,8 @@ t_eReturnCode FMKCPU_GetPwmTimerInitParam(t_uint8  f_idxTimRccClock_u8,
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if((f_idxTimRccClock_u8 > FMKCPU_RCC_CLK_NB)
-    || (f_timOscSrc_e > FMKCPU_SYS_CLOCK_NB))
+    if((f_idxTimRccClock_u8 >= FMKCPU_RCC_CLK_NB)
+    || (f_timOscSrc_e >= FMKCPU_SYS_CLOCK_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -239,7 +239,6 @@ t_eReturnCode FMKCPU_GetPwmTimerInitParam(t_uint8  f_idxTimRccClock_u8,
             }
         }
         //----Verify Range Validity--------//
-        // 0xFFFF or 0xFFFFFFFF , no need to create a variable just for that
         if(realPrescaler_u32 > (t_uint32)(maxNumberBit_u32))
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
@@ -336,8 +335,8 @@ t_eReturnCode FMKCPU_GetEvntTimerInitParam(t_uint8  f_idxTimRccClock_u8,
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if((f_idxTimRccClock_u8 > FMKCPU_RCC_CLK_NB)
-    || (f_timOscSrc_e > FMKCPU_SYS_CLOCK_NB))
+    if((f_idxTimRccClock_u8 >= FMKCPU_RCC_CLK_NB)
+    || (f_timOscSrc_e >= FMKCPU_SYS_CLOCK_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -459,7 +458,7 @@ t_eReturnCode FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_b
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_IRQN_e > FMKCPU_NVIC_NB)
+    if(f_IRQN_e >= FMKCPU_NVIC_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

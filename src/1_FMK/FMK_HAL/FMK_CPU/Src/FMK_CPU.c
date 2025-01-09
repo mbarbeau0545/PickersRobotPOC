@@ -573,7 +573,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
     t_sFMKCPU_SysOscCfg * bspOscCfg_ps;
 
 
-    if(f_SystemCoreFreq_e > FMKCPU_CORE_CLOCK_SPEED_NB)
+    if(f_SystemCoreFreq_e >= FMKCPU_CORE_CLOCK_SPEED_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -695,7 +695,7 @@ t_eReturnCode FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_O
     t_uint32 BspPriority_u32 = 0;
     IRQn_Type bspIRQN_e;
 
-    if (f_IRQN_e > (t_eFMKCPU_IRQNType)FMKCPU_NVIC_NB || f_OpeState_e > FMKCPU_NVIC_OPE_NB)
+    if (f_IRQN_e > (t_eFMKCPU_IRQNType)FMKCPU_NVIC_NB || f_OpeState_e >= FMKCPU_NVIC_OPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -741,7 +741,7 @@ t_eReturnCode FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_clkPort_e > FMKCPU_RCC_CLK_NB || f_OpeState_e > FMKCPU_CLOCKPORT_OPE_NB)
+    if (f_clkPort_e >= FMKCPU_RCC_CLK_NB || f_OpeState_e >= FMKCPU_CLOCKPORT_OPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -847,7 +847,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine
     t_eFMKCPU_InterruptChnl chnl_e;
     
 
-    if (f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if (f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -877,7 +877,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if((f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if((f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     || (f_dutyCycle_u16 < (t_uint16)FMKCPU_PWM_MIN_DUTY_CYLCE) 
     || (f_dutyCycle_u16 > (t_uint16)FMKCPU_PWM_MAX_DUTY_CYLCE))
     {
@@ -945,7 +945,7 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     t_eFMKCPU_InterruptChnl chnl_e;
 
 
-   if(f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+   if(f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1008,8 +1008,8 @@ t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if( (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
-    || (f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB))
+    if( (f_MeasTrigger_e >= FMKCPU_CHNL_MEAS_NB)
+    || (f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1043,7 +1043,7 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if (f_EvntITLine_e > FMKCPU_INTERRUPT_LINE_EVNT_NB)
+    if (f_EvntITLine_e >= FMKCPU_INTERRUPT_LINE_EVNT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1077,7 +1077,7 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if(f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if(f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1121,8 +1121,8 @@ t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLine
     t_eFMKCPU_Timer timer_e = FMKCPU_TIMER_NB;
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
 
-    if((f_channelState_e > FMKCPU_CHNLST_NB)
-    || (f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB))
+    if((f_channelState_e >= FMKCPU_CHNLST_NB)
+    || (f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1159,7 +1159,7 @@ t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_InterruptLineType f_ITLine
     t_eFMKCPU_Timer timer_e = FMKCPU_TIMER_NB;
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
 
-    if(f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB)
+    if(f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1199,7 +1199,7 @@ t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
     t_uint32 bspChannel_u32 = 0;
 
-    if(f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB)
+    if(f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1894,7 +1894,7 @@ static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_channel_e > FMKCPU_CHANNEL_NB)
+    if (f_channel_e >= FMKCPU_CHANNEL_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1942,7 +1942,7 @@ static t_eReturnCode s_FMKCPU_Get_BspICTrigger(t_eFMKCPU_ChnlMeasTrigger f_MeasT
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
+    if (f_MeasTrigger_e >= FMKCPU_CHNL_MEAS_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1980,7 +1980,7 @@ static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_prior
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_priority_e > FMKCPU_NVIC_PRIORITY_NB)
+    if (f_priority_e >= FMKCPU_NVIC_PRIORITY_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

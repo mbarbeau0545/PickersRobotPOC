@@ -821,7 +821,7 @@ t_eReturnCode FMKSRL_Init(void)
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_1_RxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
-//--------- Tx Buffer ---------//
+    //--------- Tx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_1_TxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
 
@@ -829,7 +829,7 @@ t_eReturnCode FMKSRL_Init(void)
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_2_RxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
-//--------- Tx Buffer ---------//
+    //--------- Tx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_2_TxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
 
@@ -837,7 +837,7 @@ t_eReturnCode FMKSRL_Init(void)
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_3_RxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
-//--------- Tx Buffer ---------//
+    //--------- Tx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_3_TxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
 
@@ -845,7 +845,7 @@ t_eReturnCode FMKSRL_Init(void)
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_4_RxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
-//--------- Tx Buffer ---------//
+    //--------- Tx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_4_TxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)256;
 
@@ -853,7 +853,7 @@ t_eReturnCode FMKSRL_Init(void)
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_5_RxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].RxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
-//--------- Tx Buffer ---------//
+    //--------- Tx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].TxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_5_TxBuffer_ua8);
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].TxInfo_s.Buffer_s.buffferSize_u16 = (t_uint16)0;
 
@@ -3625,7 +3625,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
  **********************************************************/
 /* CAUTION : Automatic generated code section for UART/USART IRQHandler: Start */
 /*********************************
-USART1_IRQHandler
+* USART1_IRQHandler
 *********************************/
 void USART1_IRQHandler(void)
 {
@@ -3643,7 +3643,7 @@ void USART1_IRQHandler(void)
 }
 
 /*********************************
-USART2_IRQHandler
+* USART2_IRQHandler
 *********************************/
 void USART2_IRQHandler(void)
 {
@@ -3661,7 +3661,7 @@ void USART2_IRQHandler(void)
 }
 
 /*********************************
-USART3_IRQHandler
+* USART3_IRQHandler
 *********************************/
 void USART3_IRQHandler(void)
 {
@@ -3679,7 +3679,7 @@ void USART3_IRQHandler(void)
 }
 
 /*********************************
-UART4_IRQHandler
+* UART4_IRQHandler
 *********************************/
 void UART4_IRQHandler(void)
 {
@@ -3697,7 +3697,7 @@ void UART4_IRQHandler(void)
 }
 
 /*********************************
-UART5_IRQHandler
+* UART5_IRQHandler
 *********************************/
 void UART5_IRQHandler(void)
 {

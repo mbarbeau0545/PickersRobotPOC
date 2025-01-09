@@ -760,7 +760,7 @@ t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFM
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxCounter_u8 = (t_uint8)0;
 
-    if((f_Node_e > FMKFDCAN_NODE_NB)
+    if((f_Node_e >= FMKFDCAN_NODE_NB)
     || (f_RxItemCfg_s.callback_cb == (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -802,7 +802,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     t_uint32 fifoLevel_u32 = 0;
 
 
-    if(f_Node_e > FMKFDCAN_NODE_NB)
+    if(f_Node_e >= FMKFDCAN_NODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -963,7 +963,7 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
-    if(f_Node_e > FMKFDCAN_NODE_NB)
+    if(f_Node_e >= FMKFDCAN_NODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1780,8 +1780,8 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
     t_uint32 bspFifo_u32;
     t_uint8 idxTxFifo_u8;
 
-    if((f_bspCb_e > FMKFDCAN_BSP_CB_NB)
-    || (f_status_e > FMKFDCAN_CALLBACK_STATUS_NB))
+    if((f_bspCb_e >= FMKFDCAN_BSP_CB_NB)
+    || (f_status_e >= FMKFDCAN_CALLBACK_STATUS_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1860,7 +1860,7 @@ static t_eReturnCode s_FMKFDCAN_SetHwFifoOpeMode(t_eFMKFDCAN_NodeList f_Node_e ,
     t_uint32 bspFifoOpeMode_u32;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
-    if(f_fifoMode_e > FMKFDCAN_FIFO_OPEMODE_NB)
+    if(f_fifoMode_e >= FMKFDCAN_FIFO_OPEMODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1898,7 +1898,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFramePurpose(t_eFMKFDCAN_FramePurpose f_fr
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_frameType_e > FMKFDCAN_FRAME_PURPOSE_NB)
+    if(f_frameType_e >= FMKFDCAN_FRAME_PURPOSE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1933,7 +1933,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspIdType(t_eFMKFDCAN_IdentifierType f_IdType
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_IdType > FMKFDCAN_IDTYPE_NB)
+    if(f_IdType >= FMKFDCAN_IDTYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1969,7 +1969,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_BitRate_e > FMKFDCAN_BITRATE_SWITCH_NB)
+    if(f_BitRate_e >= FMKFDCAN_BITRATE_SWITCH_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2005,7 +2005,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_DataLength f_Dlc_e, t_uint
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Dlc_e > FMKFDCAN_DLC_NB)
+    if(f_Dlc_e >= FMKFDCAN_DLC_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2149,7 +2149,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Callback_e > FMKFDCAN_BSP_CB_NB)
+    if(f_Callback_e >= FMKFDCAN_BSP_CB_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2198,7 +2198,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspRxFifoId(t_eFMKFDCAN_HwRxFifoList f_RxFifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_RxFifoId_e > FMKFDCAN_HW_RX_FIFO_NB)
+    if(f_RxFifoId_e >= FMKFDCAN_HW_RX_FIFO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2233,7 +2233,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspTxFifoId(t_eFMKFDCAN_HwTxFifoList f_TxFifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_TxFifoId_e > FMKFDCAN_HW_TX_BUFFER_NB)
+    if(f_TxFifoId_e >= FMKFDCAN_HW_TX_BUFFER_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2272,7 +2272,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFDFormat(t_eFMKFDCAN_FrameFormat f_formatT
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_formatType_e > FMKFDCAN_FRAME_FORMAT_NB)
+    if(f_formatType_e >= FMKFDCAN_FRAME_FORMAT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2307,7 +2307,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspQueueType(t_eFMKFDCAN_HwTxQueueType f_queu
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_queueType_e > FMKFDCAN_HWQUEUE_TYPE_NB)
+    if(f_queueType_e >= FMKFDCAN_HWQUEUE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2343,7 +2343,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFifoOpeMode(t_eFMKFDCAN_FifoOpeMode f_fifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_fifoOpeMode > FMKFDCAN_FIFO_OPEMODE_NB)
+    if(f_fifoOpeMode >= FMKFDCAN_FIFO_OPEMODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2376,7 +2376,7 @@ static t_eReturnCode s_FMKFDCAN_GetClockKernelDivider(t_eFMKFDCAN_ClockKernelDiv
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_ClkDiv_e > FMKFDCAN_CLOCK_KERNEL_DIV_NB)
+    if(f_ClkDiv_e >= FMKFDCAN_CLOCK_KERNEL_DIV_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

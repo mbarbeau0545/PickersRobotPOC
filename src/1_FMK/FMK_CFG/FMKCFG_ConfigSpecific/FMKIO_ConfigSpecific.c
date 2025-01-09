@@ -53,7 +53,7 @@ t_eReturnCode FMKIO_Get_BspGpioPort(t_eFMKIO_GpioPort f_GpioPort_e, GPIO_TypeDef
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_GpioPort_e > FMKIO_GPIO_PORT_NB)
+    if (f_GpioPort_e >= FMKIO_GPIO_PORT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

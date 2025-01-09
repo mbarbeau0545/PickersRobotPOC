@@ -491,7 +491,7 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 bspPriority_u32 = 0;
 
-    if(f_RqstType_e > FMKMAC_DMA_RQSTYPE_NB)
+    if(f_RqstType_e >= FMKMAC_DMA_RQSTYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -585,7 +585,7 @@ static t_eReturnCode s_FMKMAC_Get_DmaBspPriority(t_eFMKMAC_DmaTransferPriority f
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_priority_e > FMKMAC_DMA_TRANSPRIO_NB)
+    if(f_priority_e >= FMKMAC_DMA_TRANSPRIO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -627,7 +627,7 @@ static t_eReturnCode s_FMKMAC_LinkDma(  t_eFMKMAC_DmaType f_DmaType_e,
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_DmaType_e > FMKMAC_DMA_TYPE_NB)
+    if(f_DmaType_e >= FMKMAC_DMA_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

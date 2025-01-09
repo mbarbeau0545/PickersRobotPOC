@@ -558,7 +558,7 @@
               <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCDA_TIME_BTWN_DIAG_MS"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#add8c925937eeaba53f5ff866d1aba303"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_AdcMaxChnl_ua8"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#a6b132742a44271d37d3ad4f322beaca1"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_HwInternalSnsAddress_pas16"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#aab64861a1f453240948230f597944a0d"><param name="ImageNumber" value="11"></OBJECT>
-              <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_HwInternalSnsCfg"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#a8e2ec07fcbbcba2e76555e230446f36b"><param name="ImageNumber" value="11"></OBJECT>
+              <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_HwInternalSnsCfg_as"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#a8e2ec07fcbbcba2e76555e230446f36b"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_HwVrefCfg"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#acb6e29eb8d6b1c830fdd7534aa689310"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="c_FmkCda_VrefCalibAddress_pas16"><param name="Local" value="_f_m_k_c_d_a___config_private_8h.html#ac9185f5ba22a1052cdd218ee2c1bd18e"><param name="ImageNumber" value="11"></OBJECT>
               </UL>
