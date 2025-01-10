@@ -208,12 +208,12 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
                             SrlCfg_s,
                             s_APPLGC_RcvSrlEvent,
                             s_APPLGC_TranmistEvnt);
-    /*if(Ret_e == RC_OK)
+    if(Ret_e == RC_OK)
     {
-        Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_1,
+        Ret_e = FMKSRL_ConfigureReception(  FMKSRL_SERIAL_LINE_2,
                                             FMKSRL_OPE_RX_CYCLIC_SIZE,
-                                            (t_uint16)9);
-    }*/
+                                            (t_uint16)3);
+    }
     Ret_e = RC_OK;
     return Ret_e;
 }
