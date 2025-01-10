@@ -43,8 +43,24 @@ TARGET_PERIP_PRESCALER_START = '            /* CAUTION : Automatic generated cod
 TARGET_PERIP_PRESCALER_END = '            /* CAUTION : Automatic generated code section for Peripheric Prescaler switch case: End */\n'
 TARGET_FUNC_PERIPH_PRESC_START = '    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: Start */\n'
 TARGET_FUNC_PERIPH_PRESC_END   = '    /* CAUTION : Automatic generated code section for Function Prescaler Configuration: End */\n'
+TARGET_SWITCH_PERIPH_CLK_CFG_START = '            /* CAUTION : Automatic generated code section for Periph Clock Cfg: Start */\n'
+TARGET_SWITCH_PERIPH_CLK_CFG_END = '            /* CAUTION : Automatic generated code section for Periph Clock Cfg: End */\n'
 
 PERIPH_CLOCK_NEED_PRESCALER = ['ADC', 'I2C', 'I2S', 'LPTIM', 'TIM', 'LPUART', 'QUADSPI', 'RNG', 'USB', 'SAI1', 'FDCAN', 'CAN', 'UART', 'USART', 'HRTIM']
+
+PERIPH_TO_CLKSRC:Dict[str,str] = {
+    'HSE'      :  'LSE',
+    'HSI'      :  'HSI',
+    'SYSTEM'   :  'SYSCLK',
+    'HCLK1'    :   None,
+    'AHB1'     :   None,
+    'AHB2'     :   None,
+    'APB1'     :  'PCLK1',
+    'APB2'     :  'PCLK2',
+    'PLLQ'     :  'PLL',
+    'PLLP'     :  'PLL',
+
+}
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #
@@ -52,6 +68,9 @@ PERIPH_CLOCK_NEED_PRESCALER = ['ADC', 'I2C', 'I2S', 'LPTIM', 'TIM', 'LPUART', 'Q
 #                                       CLASS
 #------------------------------------------------------------------------------
 class TimerCfg_alreadyUsed(Exception):
+    pass
+
+class PeriphClockCfgError(Exception):
     pass
 
 class FMKCPU_CodeGen():
@@ -89,19 +108,18 @@ class FMKCPU_CodeGen():
     #-------------------------
     @classmethod
     def code_generation(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCpu Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
         cls.code_gen.load_excel_file(f_hw_cfg)
-        irqn_cfg_a    = cls.code_gen.get_array_from_excel("GI_IRQN")
-        timer_cfg_a   = cls.code_gen.get_array_from_excel("GI_Timer")
-        rcclock_cfg_a = cls.code_gen.get_array_from_excel("GI_RCC_CLOCK")
-        evnt_cfg_a    = cls.code_gen.get_array_from_excel("FMKCPU_EvntTimer")
-        cpu_cfg       = cls.code_gen.get_array_from_excel("CPU_Config")[1][0]
+        irqn_cfg_a      = cls.code_gen.get_array_from_excel("GI_IRQN")
+        timer_cfg_a     = cls.code_gen.get_array_from_excel("GI_Timer")
+        rcclock_cfg_a   = cls.code_gen.get_array_from_excel("GI_RCC_CLOCK")
+        evnt_cfg_a      = cls.code_gen.get_array_from_excel("FMKCPU_EvntTimer")
+        cpu_cfg         = cls.code_gen.get_array_from_excel("CPU_Config")[1][0]
         osc_clock_a     = cls.code_gen.get_array_from_excel('GI_OSCILLATOR')[1:]
+        list_irqn_hdler = cls.code_gen.get_array_from_excel('FMKCPU_IRQNHandler')[1:]
 
         enum_osc_freq = ""       
-        enum_clokc_periph_ext = ""
+
         enum_channel = ""
         enum_timer = ""
         enum_rcc = ""
@@ -129,6 +147,7 @@ class FMKCPU_CodeGen():
         def_tim_max_chnl = ""
         var_tim_max_chnl = ""
         switch_irqn = ""
+        switch_clk_periph = ''
         max_channel: int = 0
         include_cpu = ""
         nb_evnt_channel = len(evnt_cfg_a[1:])
@@ -154,43 +173,43 @@ class FMKCPU_CodeGen():
                                                             "t_eFMKCPU_ClockPort", 0, 
                                                             "Enum for rcc clock state reference",
                                                             [f'Reference to RCC Clock {rcclock_cfg[0]}' for rcclock_cfg in rcclock_cfg_a[1:]])
-        #----------------------------------------------------------------
-        #-----------------------------Make clock Periph Type-------------
-        #----------------------------------------------------------------
-        enum_clokc_periph_ext = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_CLOCK_PERIPH_TYPE, [str(clockType) for clockType in PERIPH_CLOCK_NEED_PRESCALER],
-                                                            "t_eFMKCPU_ClockPeriphExtType", 0, 
-                                                            "Enum for Independent Clock Domain",
-                                                            [f'Reference to Independant Clock Domain {clockType}' for clockType in PERIPH_CLOCK_NEED_PRESCALER])
         #-------------------make rcc variable bus & switch case & decl --
         #-----------------------------------------------------------------
         const_osc_rcc_src += f'    const t_eFMKCPU_SysClkOsc c_FmkCpu_RccClockOscSrc_ae[{ENUM_FMKCPU_RCC_ROOT}_NB] = ' + '{\n' 
         rcc_prsc_done = []
+        # Store the rcc clock enum that don't need Periph init
+        periph_clk_brk = []
         for rcc_cfg in rcclock_cfg_a[1:]:
-            const_osc_rcc_src += f'    {ENUM_FMKCPU_SYS_CLOCK}_{rcc_cfg[1]},' \
+            const_osc_rcc_src += f'        {ENUM_FMKCPU_SYS_CLOCK}_{rcc_cfg[1]},' \
                               +  " " * (SPACE_VARIABLE - len(f"{ENUM_FMKCPU_SYS_CLOCK}_{rcc_cfg[1]}")) \
                               + f'   // {ENUM_FMKCPU_RCC_ROOT}_{rcc_cfg[0]}\n'
-        
-            # Check if the value is in prescaler config
-            for rcc_ref in PERIPH_CLOCK_NEED_PRESCALER:
-                if str(rcc_ref).upper() in str(rcc_cfg[0]).upper():
-                    if str(rcc_ref).upper() not in rcc_prsc_done:
-                        rcc_ref_capitalize = str(rcc_ref).capitalize()
-                        osc_prsc_decl += f"    //Function to Get the Prescaler of {rcc_ref_capitalize} Configuration from {rcc_ref_capitalize} frequency constraint and the Bus used\n" \
-                                     + f'    t_eReturnCode FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(t_eFMKCPU_SysClkOsc f_{rcc_ref_capitalize}OscSrc_e,\n' \
-                                     + f'                                            t_uint8 * f_SysClockValues_ua8,\n' \
-                                     + f'                                            t_uint8 f_idx{rcc_ref_capitalize}RccClock_u8,\n' \
-                                     + f'                                            t_uint32 f_InfoPeriph_u32,\n' \
-                                     + f'                                            t_uint32 * f_bsp{rcc_ref_capitalize}Prescaler_pu32);\n\n'
-                        switch_rcc_prsc += f'            case {ENUM_FMKCPU_CLOCK_PERIPH_TYPE}_{str(rcc_ref).upper()}:\n' \
-                                        + f'                Ret_e = FMKCPU_GetPrescalerFor{rcc_ref_capitalize}(OscPeriphSrc_e,\n' \
-                                        +  '                                                 g_SysClockValue_ua8,\n' \
-                                        +  '                                                (t_uint8)f_idxRccPeriphExt_u8\n,' \
-                                        +  '                                                (t_uint32)f_InfoPeriph_u32\n,' \
-                                        + f'                                                f_bspPrescaler_pu32);\n' \
-                                        +  '                break;\n'
-                        
-                        rcc_prsc_done.append(str(rcc_ref).upper())
-                    
+            # make  switch case for Periph Clock Init 
+
+            if rcc_cfg[2] == 'No':
+                periph_clk_brk.append(f'{ENUM_FMKCPU_RCC_ROOT}_{rcc_cfg[0]}')
+            
+            elif rcc_cfg[2] == 'Yes':
+
+                preiph_clk_src = PERIPH_TO_CLKSRC.get(rcc_cfg[1], None)
+
+                if preiph_clk_src == None:
+                    PeriphClockCfgError(f'Cannot found periph clock Source for {rcc_cfg[1]}')
+
+                switch_clk_periph +=  f'            case {ENUM_FMKCPU_RCC_ROOT}_{rcc_cfg[0]}:\n' \
+                                    + f'                PeriphClkCfg_s.{str(rcc_cfg[0]).capitalize()}ClockSelection = ' \
+                                    + f'RCC_PERIPHCLK_{str(rcc_cfg[0]).upper()};\n' \
+                                    + f'                //------ Reference Clock  Source {rcc_cfg[1]} ------//\n' \
+                                    + f'                PeriphClkCfg_s.PeriphClockSelection = RCC_{str(rcc_cfg[0]).upper()}CLKSOURCE_{preiph_clk_src.upper()};\n' \
+                                    +  '                break;\n'
+            else:
+                PeriphClockCfgError(f'{rcc_cfg[2]} is not allowed, only Yes or No value allowed')
+          
+            
+        switch_clk_periph += "".join(
+            [f"            case {rcc_no_periph}:\n"
+            for rcc_no_periph in periph_clk_brk]
+        )
+        switch_clk_periph += f'            case {ENUM_FMKCPU_RCC_ROOT}_NB:\n            default:\n                Ret_e = RC_WARNING_NO_OPERATION;\n                break;\n'
         switch_rcc_prsc + '\n'
         const_osc_rcc_src += '    };\n\n'
         #----------------------------------------------------------------
@@ -264,7 +283,7 @@ class FMKCPU_CodeGen():
 
             var_timinfo += "    {\n" \
                         + f"        // Timer_{idx_timer}\n" \
-                        + f"        .BspTimer_ps.Instance = TIM{idx_timer},\n" \
+                        + f"        .bspTimer_s.Instance = TIM{idx_timer},\n" \
                         + f"        .c_clock_e = {ENUM_FMKCPU_RCC_ROOT}_TIM{idx_timer},\n" \
                         + f"        .c_IRQNType_e = {ENUM_FMKCPU_NVIC_ROOT}_{str(timer_cfg[2]).upper()}\n" \
                         + "    },\n"
@@ -277,11 +296,6 @@ class FMKCPU_CodeGen():
                                 + " " * (SPACE_VARIABLE - len(f"FMKCPU_MAX_CHNL_TIMER_{idx_timer},")) \
                                 + f"// {ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}\n"  
                 
-            # Make hardware IRQ handler function impleementation  
-            func_imple += f"void TIM{idx_timer}_IRQHandler(void)" \
-                        + "{return HAL_TIM_IRQHandler(&g_TimerInfo_as" \
-                        + f"[{ENUM_FMKCPU_TIMER_ROOT}_{idx_timer}].BspTimer_ps);" \
-                        + "}\n"
             # make const var for tim clock source 
             const_tim_clk_src += f'        {ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]},' \
                             + " " * (SPACE_VARIABLE - len(f"{ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]}")) \
@@ -353,7 +367,18 @@ class FMKCPU_CodeGen():
         enum_channel = cls.code_gen.make_enum_from_variable(ENUM_FMKCPU_CHANNEL_ROOT, [str(int(idx + 1)) for idx in range(max_channel)],
                                                              "t_eFMKCPU_InterruptChnl", 0, "Number max of channel enable by timer",
                                                              [f"Reference to HAL channel {idx}" for idx in range(max_channel)])
-
+        #----------------------------------------------------------------
+        #-------------------make IRQN HANDLER DECALRATION----------------
+        #----------------------------------------------------------------
+        for irqn_handler in list_irqn_hdler:
+            # found the timer number
+            idx_nb_tim = int(str(irqn_handler[1]).index('_')+ 1)
+            func_imple += '/*********************************\n' \
+                        + f' * {irqn_handler[0]}\n' \
+                        + '*********************************/\n' \
+                        + f'void {irqn_handler[0]}(void)' \
+                        + " " * (42 - len(f'void {irqn_handler[0]}(void)')) \
+                        + '{' + f'return HAL_TIM_IRQHandler(&g_TimerInfo_as[{ENUM_FMKCPU_TIMER_ROOT}_{str(irqn_handler[1])[idx_nb_tim:]}].bspTimer_s);' + '}\n'
         #----------------------------------------------------------------
         #-----------------------------make var evnt cfg------------------
         #-----------------------------make eenum evnt channel------------
@@ -407,6 +432,9 @@ class FMKCPU_CodeGen():
         #------------code genration for FMKCPU module---------------
         #-----------------------------------------------------------
         #---------------------For FMKCPU_Config Public---------------------#
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMFCPU Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("\t- For configPublic file")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE,TARGET_T_ENUM_END_LINE)
 
@@ -426,7 +454,6 @@ class FMKCPU_CodeGen():
         cls.code_gen._write_into_file(enum_it_lines_gp, FMKCPU_CONFIGPUBLIC)
 
         print('\t\t enum for oscillator management')
-        cls.code_gen._write_into_file(enum_clokc_periph_ext, FMKCPU_CONFIGPUBLIC)
         cls.code_gen._write_into_file(enum_osc_freq, FMKCPU_CONFIGPUBLIC)
 
         print("\t\t include for cpu")
@@ -452,9 +479,7 @@ class FMKCPU_CodeGen():
 
         print('\t\t- varriable for oscillator management')
         cls.code_gen._write_into_file(const_osc_rcc_src, FMKCPU_CONFIGPRIVATE)
-        #print('\t\t- Variable for timer clock source')
-        #cls.code_gen._write_into_file(const_tim_clk_src, FMKCPU_CONFIGPRIVATE)
-
+      
         print("\t\t- Variable for max channel per timer")
         cls.code_gen._write_into_file(var_tim_max_chnl, FMKCPU_CONFIGPRIVATE)
 
@@ -464,17 +489,18 @@ class FMKCPU_CodeGen():
         print("\t\t- Configuration for nvic priority")
         cls.code_gen._write_into_file(var_nvic_prio, FMKCPU_CONFIGPRIVATE)
 
-        print("DAC Purpose Timer_Channel Mapping")
+        print("\t\t- DAC Purpose Timer_Channel Mapping")
         cls.code_gen._write_into_file(const_mapp_dac_tim, FMKCPU_CONFIGPRIVATE)
 
-        print("Event Purpose Timer_Channel Mapping")
+        print("\t\t- Event Purpose Timer_Channel Mapping")
         cls.code_gen._write_into_file(const_mapp_evnt_tim, FMKCPU_CONFIGPRIVATE)
 
-        print("General Purpose Timer_Channel Mapping")
+        print("\t\t- General Purpose Timer_Channel Mapping")
         cls.code_gen._write_into_file(const_mapp_gp_tim, FMKCPU_CONFIGPRIVATE)
 
         
         #---------------------For FMKCPU_Config Spec---------------------#
+        print('\t For Config Specific File')
         print("\t\t- Function for enable/disable RCC clock")
         cls.code_gen.change_target_balise(TARGET_c_clock_eNABLE_IMPL_START, TARGET_c_clock_eNABLE_IMPL_END)
         cls.code_gen._write_into_file(rcc_ena_imple, FMKCPU_CONFIGSPECIFIC_C)
@@ -488,23 +514,30 @@ class FMKCPU_CodeGen():
         cls.code_gen.change_target_balise(TARGET_CLOCK_DISABLE_DECL_START, TARGET_CLOCK_DISABLE_DECL_END)
         cls.code_gen._write_into_file(rcc_dis_decl, FMKCPU_CONFIGSPECIFIC_H)
 
+        print("\t\t- switch case to find stm NVIC from enum")
+        cls.code_gen.change_target_balise(TARGET_SWITCH_NVIC_START, TARGET_SWITCH_NVIC_END)
+        cls.code_gen._write_into_file(switch_irqn, FMKCPU_CONFIGSPECIFIC_C)
+
+        print("\t\t- switch case to set Periph Clock Config")
+        cls.code_gen.change_target_balise(TARGET_SWITCH_PERIPH_CLK_CFG_START, TARGET_SWITCH_PERIPH_CLK_CFG_END)
+        cls.code_gen._write_into_file(switch_clk_periph, FMKCPU_CONFIGSPECIFIC_C)
+
         print('\t\t- Function for Prescaler Peripherique External Clock')
-        #cls.code_gen.change_target_balise(TARGET_FUNC_PERIPH_PRESC_START, TARGET_FUNC_PERIPH_PRESC_END)
-        #cls.code_gen._write_into_file(osc_prsc_decl, FMKCPU_CONFIGSPECIFIC_H)
         #---------------------For FMKCPU.c---------------------#
         print("\t- For FMKCPU.c file")
         cls.code_gen.change_target_balise(TARGET_TIMER_INFO_START, TARGET_TIMER_INFO_END)
         print("\t\t- variable for timer information")
         cls.code_gen._write_into_file(var_timinfo, FMKCPU)
-        cls.code_gen.change_target_balise(TARGET_SWITCH_NVIC_START, TARGET_SWITCH_NVIC_END)
-        print("\t\t- switch case to find stm NVIC from enum")
-        cls.code_gen._write_into_file(switch_irqn, FMKCPU)
+        
+        print("\t\t- Timer IRQN Handler start")
         cls.code_gen.change_target_balise(TARGET_TIMER_X_IRQH_START, TARGET_TIMER_X_IRQH_END)
         cls.code_gen._write_into_file(func_imple, FMKCPU)
 
+        
+
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FmkCpu Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 
     #-------------------------
     # get_tim_chnl_used

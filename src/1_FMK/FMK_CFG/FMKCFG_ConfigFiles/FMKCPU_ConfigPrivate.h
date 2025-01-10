@@ -31,7 +31,7 @@
     #define FMKCPU_MAX_CHNL_TIMER_5 ((t_uint8)4)
     #define FMKCPU_MAX_CHNL_TIMER_6 ((t_uint8)1)
     #define FMKCPU_MAX_CHNL_TIMER_7 ((t_uint8)1)
-    #define FMKCPU_MAX_CHNL_TIMER_8 ((t_uint8)4)
+    #define FMKCPU_MAX_CHNL_TIMER_8 ((t_uint8)6)
     #define FMKCPU_MAX_CHNL_TIMER_15 ((t_uint8)2)
     #define FMKCPU_MAX_CHNL_TIMER_16 ((t_uint8)1)
     #define FMKCPU_MAX_CHNL_TIMER_17 ((t_uint8)1)
@@ -53,7 +53,9 @@
     // *                      Types
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Number of timer enable in smt32xxx board */
+    /**
+    * @brief Number of timer enable in smt32xxx board.
+    */
     typedef enum
     {
         FMKCPU_TIMER_1 = 0x0,                  /**< Reference for HAL timer_1, this timer has 4 channel(s) */
@@ -63,7 +65,7 @@
         FMKCPU_TIMER_5,                        /**< Reference for HAL timer_5, this timer has 4 channel(s) */
         FMKCPU_TIMER_6,                        /**< Reference for HAL timer_6, this timer has 1 channel(s) */
         FMKCPU_TIMER_7,                        /**< Reference for HAL timer_7, this timer has 1 channel(s) */
-        FMKCPU_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 4 channel(s) */
+        FMKCPU_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 6 channel(s) */
         FMKCPU_TIMER_15,                       /**< Reference for HAL timer_15, this timer has 2 channel(s) */
         FMKCPU_TIMER_16,                       /**< Reference for HAL timer_16, this timer has 1 channel(s) */
         FMKCPU_TIMER_17,                       /**< Reference for HAL timer_17, this timer has 1 channel(s) */
@@ -72,17 +74,18 @@
         FMKCPU_TIMER_NB,
     } t_eFMKCPU_Timer;
 
-    /* Number max of channel enable by timer */
+    /**
+    * @brief Number max of channel enable by timer.
+    */
     typedef enum
     {
-        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 1 */
-        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 2 */
-        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 3 */
-        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 4 */
-#ifdef FMKCPU_STM32_ECU_FAMILY_G
-        FMKCPU_CHANNEL_5,                        /**< Reference to HAL channel 5 */
-        FMKCPU_CHANNEL_6,                        /**< Reference to HAL channel 6 */
-#endif
+        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */
+        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 1 */
+        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 2 */
+        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 3 */
+        FMKCPU_CHANNEL_5,                        /**< Reference to HAL channel 4 */
+        FMKCPU_CHANNEL_6,                        /**< Reference to HAL channel 5 */
+    
         FMKCPU_CHANNEL_NB,
     } t_eFMKCPU_InterruptChnl;
 
@@ -235,7 +238,7 @@
     /**< Structure for repertory all HAL_TIM function */
     typedef struct
     {
-        t_cbFMKCPU_GetTimerState             * GetTimerState_cb;        /**< HAL_TIM function to get the timer state */
+        t_cbFMKCPU_GetTimerState             * GetTimerState_pcb;        /**< HAL_TIM function to get the timer state */
         t_cbFMKCPU_TimerInitFunc             * TimerInit_pcb;           /**< HAL_TIM function to set a timer init */
         t_cbFMKCPU_TimerDeInitFunc           * TimerDeInit_pcb;         /**< HAL_TIM function to set a timer deinit */
         t_cbFMKCPU_TimStartFuncModePolling   * StartFuncPoll_pcb;       /**< HAL_TIM function to start a timer_channel in polling mode */
@@ -287,12 +290,6 @@
     // ********************************************************************
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
     //---------Configuration Clock System---------------------------//
-    // SysClock -> 120 Mhz
-    // HCLK     -> 120 MHz
-    // APB1     -> 60 MHz
-    // APB2     -> 60  MHz
-    // PLLQ     -> 60  MHz
-    // PLLP     -> 40  MHz
     const t_sFMKCPU_SysOscCfg c_FmkCpu_SysOscCfg_as[FMKCPU_CORE_CLOCK_SPEED_NB] = {
     //   PLLM_Divider_u32         PPLN_Multplier_u32         PLLR_Divider_u32        PPLQ_Divider_u32         PLLP_Divider_u32            AHB_Divider                  APB1_Divider_u32        APB2_Divider_u32
         {RCC_PLLM_DIV2,         (t_uint32)12,                RCC_PLLR_DIV8,          RCC_PLLQ_DIV2,           RCC_PLLP_DIV2,              RCC_SYSCLK_DIV1,             RCC_HCLK_DIV1,          RCC_HCLK_DIV1}, // FMKCPU_CORE_CLOCK_SPEED_8MHZ
@@ -308,7 +305,7 @@
     };
 
     const t_uint8 c_FmkCpu_CoreClkValue_ua8[FMKCPU_CORE_CLOCK_SPEED_NB][FMKCPU_SYS_CLOCK_NB] = 
-    {//    HSE                                      HSI                             SYSTEM                           HCLK1                         AHB1                          AHB2                          APB1                          APB2                          PLLQ                          PLLP 
+    {//    HSE                                      HSI                             SYSTEM                           HCLK1                         AHB1                          AHB2                       APB1/PCLK1                      APB2/PCLK2                   PLLQ                          PLLP 
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)12,                   (t_uint8)12,                    (t_uint8)12,                 (t_uint8)12,                 (t_uint8)12,                    (t_uint8)12,                  (t_uint8)48,                  (t_uint8)48},  //  FMKCPU_CORE_CLOCK_SPEED_8MHZ
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)16,                   (t_uint8)16,                    (t_uint8)16,                 (t_uint8)16,                 (t_uint8)16,                    (t_uint8)16,                  (t_uint8)64,                  (t_uint8)42},  //  FMKCPU_CORE_CLOCK_SPEED_16MHZ
         {(t_uint8)8,                            (t_uint8)16,                      (t_uint8)32,                   (t_uint8)32,                    (t_uint8)32,                 (t_uint8)32,                 (t_uint8)32,                    (t_uint8)32,                  (t_uint8)96,                  (t_uint8)48},  //  FMKCPU_CORE_CLOCK_SPEED_32MHZ
@@ -384,6 +381,8 @@
         {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_62
         {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_63
         {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_64
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_5},    // FMKCPU_INTERRUPT_LINE_IO_65
+        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_6},    // FMKCPU_INTERRUPT_LINE_IO_66
         {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_71
         {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_72
         {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_73
@@ -589,63 +588,63 @@
     };
 
     const t_eFMKCPU_SysClkOsc c_FmkCpu_RccClockOscSrc_ae[FMKCPU_RCC_CLK_NB] = {
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMA1
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMA2
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMAMUX1
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_CORDIC
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_FMAC
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_FLASH
-    FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_CRC
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOG
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOF
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOE
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOD
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOC
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOB
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOA
-    FMKCPU_SYS_CLOCK_PLLP,            // FMKCPU_RCC_CLK_ADC12
-    FMKCPU_SYS_CLOCK_PLLP,            // FMKCPU_RCC_CLK_ADC345
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC2
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC3
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC4
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_RNG
-    FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_FMC
-    FMKCPU_SYS_CLOCK_PLLQ,            // FMKCPU_RCC_CLK_QSPI
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM2
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM3
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM4
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM5
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM6
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM7
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_CRS
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_RTCAPB
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_WWDG
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_SPI2
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_SPI3
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USART2
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USART3
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UART4
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UART5
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_I2C2
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USB
-    FMKCPU_SYS_CLOCK_PLLQ,            // FMKCPU_RCC_CLK_FDCAN
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_PWR
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_I2C3
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_LPTIM1
-    FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UCPD1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SYSCFG
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SPI1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM8
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_USART1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SPI4
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM15
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM16
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM17
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM20
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SAI1
-    FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_HRTIM1
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMA1
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMA2
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_DMAMUX1
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_CORDIC
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_FMAC
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_FLASH
+        FMKCPU_SYS_CLOCK_AHB1,            // FMKCPU_RCC_CLK_CRC
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOG
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOF
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOE
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOD
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOC
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOB
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_GPIOA
+        FMKCPU_SYS_CLOCK_PLLP,            // FMKCPU_RCC_CLK_ADC12
+        FMKCPU_SYS_CLOCK_PLLP,            // FMKCPU_RCC_CLK_ADC345
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC2
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC3
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_DAC4
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_RNG
+        FMKCPU_SYS_CLOCK_AHB2,            // FMKCPU_RCC_CLK_FMC
+        FMKCPU_SYS_CLOCK_PLLQ,            // FMKCPU_RCC_CLK_QSPI
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM2
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM3
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM4
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM5
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM6
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_TIM7
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_CRS
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_RTCAPB
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_WWDG
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_SPI2
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_SPI3
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USART2
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USART3
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UART4
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UART5
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_I2C2
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_USB
+        FMKCPU_SYS_CLOCK_PLLQ,            // FMKCPU_RCC_CLK_FDCAN
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_PWR
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_I2C3
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_LPTIM1
+        FMKCPU_SYS_CLOCK_APB1,            // FMKCPU_RCC_CLK_UCPD1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SYSCFG
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SPI1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM8
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_USART1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SPI4
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM15
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM16
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM17
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM20
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SAI1
+        FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_HRTIM1
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

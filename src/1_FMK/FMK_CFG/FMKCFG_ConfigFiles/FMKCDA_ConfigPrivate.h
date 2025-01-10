@@ -25,7 +25,11 @@
     // *                      Defines
     // ********************************************************************
     /* CAUTION : Automatic generated code section for ADC channels number: Start */
-    #define FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
+    #define FMKCDA_ADC_INTERN_VREFINT_CAL_1_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
+    #define FMKCDA_ADC_INTERN_VREFINT_CAL_2_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
+    #define FMKCDA_ADC_INTERN_VREFINT_CAL_3_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
+    #define FMKCDA_ADC_INTERN_VREFINT_CAL_4_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
+    #define FMKCDA_ADC_INTERN_VREFINT_CAL_5_ADDRESS ((volatile t_uint16 *)0x1FFF75AA)
     #define FMKCDA_ADC_INTERN_TS_CAL1_ADDRESS ((volatile t_uint16*)0x1FFF75A8)
     #define FMKCDA_ADC_INTERN_TS_CAL2_ADDRESS ((volatile t_uint16*)0x1FFF75CA)
     #define FMKCDA_ADC_1_MAX_CHANNELS ((t_uint8)18)
@@ -78,16 +82,24 @@
 
     /**<     Variable for voltage ref calibration value */
     const volatile t_uint16* c_FmkCda_VrefCalibAddress_pas16[FMKCDA_ADC_NB] = {
-        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_ADDRESS,                       // FMKCDA_ADC_1
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_1_ADDRESS,                     // FMKCDA_ADC_1
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_2_ADDRESS,                     // FMKCDA_ADC_2
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_3_ADDRESS,                     // FMKCDA_ADC_3
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_4_ADDRESS,                     // FMKCDA_ADC_4
+        (volatile t_uint16 *)FMKCDA_ADC_INTERN_VREFINT_CAL_5_ADDRESS,                     // FMKCDA_ADC_5
     };
 
     /**< Variable for Hardware configuration adc and channel for Voltage Reference for each adc */
     const t_sFMKCDA_HwAdcCfg c_FmkCda_HwVrefCfg[FMKCDA_ADC_NB] = {
         {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_1
+        {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_2
+        {FMKCDA_ADC_3,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_3
+        {FMKCDA_ADC_4,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_4
+        {FMKCDA_ADC_5,                         FMKCDA_ADC_CHANNEL_17},                // for FMKCDA_ADC_5
     };
 
     /**< Variable for Interna Sensors configuration*/
-    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg[FMKCDA_ADC_INTERN_NB] ={
+    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg_as[FMKCDA_ADC_INTERN_NB] ={
         {FMKCDA_ADC_1,                         FMKCDA_ADC_CHANNEL_16},                // for FMKCDA_ADC_INTERN_TS_CAL1
         {FMKCDA_ADC_5,                         FMKCDA_ADC_CHANNEL_4},                 // for FMKCDA_ADC_INTERN_TS_CAL2
     };

@@ -21,6 +21,10 @@ from .FMKCPU_CodeGen import TimerCfg_alreadyUsed, FMKCPU_CodeGen
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
+TARGET_EXTI_X_IRQN_START = "/* CAUTION : Automatic generated code section for Exti IRQN_Handler: Start */\n"
+TARGET_EXTI_X_IRQN_END   = "/* CAUTION : Automatic generated code section for Exti IRQN_Handler: End */\n"
+TARGET_SWITCH_GPIO_RCC_START = "        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: Start */\n"
+TARGET_SWITCH_GPIO_RCC_END   = "        /* CAUTION : Automatic generated code section for Switch Case GPIO to RCC: End */\n"
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #
@@ -46,23 +50,23 @@ class FMKIO_CodeGen():
     code_gen = LCFE()
     @classmethod
     def code_generation(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkIO Module>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
         TARGET_BALISE_SWITCH_GPIO_START = "            /* CAUTION : Automatic generated code section for GPIO switch case: Start */\n"
         TARGET_BALISE_SWITCH_GPIO_END   = "            /* CAUTION : Automatic generated code section for GPIO switch case: End */\n"
         
         cls.code_gen.load_excel_file(f_hw_cfg)
         
         # load the needed array 
-        gpio_astr = cls.code_gen.get_array_from_excel("GI_GPIO")[1:]
-        InDig_astr = cls.code_gen.get_array_from_excel("FMKIO_InputDig")
-        InAna_astr = cls.code_gen.get_array_from_excel("FMKIO_InputAna")
-        InEvnt_astr = cls.code_gen.get_array_from_excel("FMKIO_InputEvnt")
-        InFreq_astr = cls.code_gen.get_array_from_excel("FMKIO_InputFreq")
-        OutPWM_astr = cls.code_gen.get_array_from_excel("FMKIO_OutputPwm")
-        OutDig_astr = cls.code_gen.get_array_from_excel("FMKIO_OutputDig")
-        SigCan_astr = cls.code_gen.get_array_from_excel('FMKIO_CanCfg')
+        gpio_astr        = cls.code_gen.get_array_from_excel("GI_GPIO")[1:]
+        InDig_astr       = cls.code_gen.get_array_from_excel("FMKIO_InputDig")
+        InAna_astr       = cls.code_gen.get_array_from_excel("FMKIO_InputAna")
+        InEvnt_astr      = cls.code_gen.get_array_from_excel("FMKIO_InputEvnt")
+        InFreq_astr      = cls.code_gen.get_array_from_excel("FMKIO_InputFreq")
+        OutPWM_astr      = cls.code_gen.get_array_from_excel("FMKIO_OutputPwm")
+        OutDig_astr      = cls.code_gen.get_array_from_excel("FMKIO_OutputDig")
+        SigCan_astr      = cls.code_gen.get_array_from_excel('FMKIO_CanCfg')
+        SigSerial_astr   = cls.code_gen.get_array_from_excel('FMKSRL_INFO')[1:]
+        list_irqn_hdler  = cls.code_gen.get_array_from_excel('FMKIO_IRQNHandler')
         Descitpion_pwm_freq = ['GPIO_name','Pin_name','alternate function', 'Interrupt Line' ]
 
         sig_in_ana =  []
@@ -73,6 +77,8 @@ class FMKIO_CodeGen():
         sig_in_evnt = []
         enum_can = ''
         const_can = ''
+        enum_serial = ''
+        const_serial = ''
         enum_gpio = ""
         enum_pin = ""
         enum_InDig = ""
@@ -89,6 +95,8 @@ class FMKIO_CodeGen():
         var_OutDig = ""
         var_OutPWM = ""
         switch_gpio = ""
+        switch_gpio_rcc  = ""
+        func_irqn = ''
         gpio_enable_clk = "/**< Variable to store the state of GPIO Clock */\nt_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB] = {\n"
 
         enum_suffix_a: List[str] = []
@@ -119,6 +127,11 @@ class FMKIO_CodeGen():
                             + f"                *f_BspGpio_ps = GPIO{gpio_letter};\n" \
                             + f"                break;\n"
 
+            # Make switch case to found Rcc Clock from gpio Enum
+            switch_gpio_rcc += f'            case {ENUM_GPIO_PORT_ROOT}_{gpio_letter}:\n' \
+                            + f'                *f_clockPort_pe = {ENUM_FMKCPU_RCC_ROOT}_GPIO{str(gpio_letter).upper()};\n' \
+                            + '                break;\n'
+            
             # Make GPIO clock default value
             gpio_enable_clk += f"    FMKCPU_CLOCKPORT_OPE_DISABLE, // {ENUM_GPIO_PORT_ROOT}_{gpio_letter}\n"
         gpio_enable_clk += "};\n\n"
@@ -136,6 +149,18 @@ class FMKIO_CodeGen():
                                                               "List of Pin available for each GPIO on this board", 
                                                               [f"Reference to bsp gpio pin {pin}" for pin in pin_list])
     
+        #----------------------------------------------------------------
+        #-----------------------------Make IRQNHandler-------------------
+        #----------------------------------------------------------------
+        for exti_irqn in list_irqn_hdler[1:]:
+            func_irqn += '/*********************************\n' \
+                        + f' * {exti_irqn[0]}\n' \
+                        + '*********************************/\n' \
+                        + f'void {exti_irqn[0]}(void)' \
+                        + " " * (42 - len(f'void {exti_irqn[0]}(void)')) \
+                        + '{' + 'return s_FMKIO_BspRqst_InterruptMngmt();' + '}\n\n'
+                        
+
         #---------------------------------------------------------------
         #-----------------make Pin mapping variable---------------------
         #---------------------------------------------------------------
@@ -148,6 +173,7 @@ class FMKIO_CodeGen():
 
         var_bsp_pin_map += "    };\n\n"
 
+        
         #-----------------------------------------------------------
         #-----------------make InAna cfg variable-------------------
         #-----------------------------------------------------------
@@ -326,11 +352,41 @@ class FMKIO_CodeGen():
                         + " " * (5 - len(f"{pin_dig_cfg[1][4:]}")) \
                         + f"// {ENUM_OUTSIGDIG_ROOT}_{idx + 1},\n"
         var_OutDig += "    };\n\n"
+        #-----------------------------------------------------------
+        #-----------------make Serial cfg--------------------------
+        #-----------------------------------------------------------
+        const_serial += '    /**< Variable for RxTx Reference for Serial Line */\n'
+        const_serial += f'    const t_sFMKIO_RxTxComCfg c_FmkIo_SerialSigCfg_as[{ENUM_FMKIO_SERIAL_ROOT}_NB] =' + '{\n'
+        const_serial += '        // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function\n'
+        serial_sig = []
 
+        for idx, serial_cfg in enumerate(SigSerial_astr):
+            RxPin = str(f"P{serial_cfg[4][5:]}{serial_cfg[5][4:]}")
+            TxPin = str(f"P{serial_cfg[6][5:]}{serial_cfg[7][4:]}")
+            if (RxPin in stm_pin
+            or TxPin in stm_pin):
+                raise GPIO_AlreadyConfgigured(f"{RxPin} or {TxPin} has already been configured")
+
+            serial_sig.append([RxPin, TxPin])
+            stm_pin.append(TxPin)
+            stm_pin.append(RxPin)
+
+            const_serial += '        {' + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[4][5:]},' \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[4][5:]}")) \
+                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[5][4:]}" + "}," \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[5][4:]}")) \
+                    + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[6][5:]},'\
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[6][5:]}")) \
+                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[7][4:]}" + "}," \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[7][4:]}")) \
+                    + f'{serial_cfg[8]}' + '},' + f' // {ENUM_FMKIO_SERIAL_ROOT}_{(idx + 1)}' \
+                    + '\n'
+        const_serial += '    };\n'
         #-----------------------------------------------------------
         #-----------------make can cfg------------------------------
         #-----------------------------------------------------------
-        const_can += f'    const t_sFMKIO_CanSigCfg c_FmkIo_CanSigCfg_as[{ENUM_FMKIO_CAN_ROOT}_NB] =' + '{\n'
+        const_can += '    /**< Variable for RxTx Reference for Can Node */\n'
+        const_can += f'    const t_sFMKIO_RxTxComCfg c_FmkIo_CanSigCfg_as[{ENUM_FMKIO_CAN_ROOT}_NB] =' + '{\n'
         const_can += '        // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function\n'
         can_sig = []
         for idx, can_cfg in enumerate(SigCan_astr[1:]):
@@ -361,7 +417,11 @@ class FMKIO_CodeGen():
         enum_can = cls.code_gen.make_enum_from_variable(ENUM_FMKIO_CAN_ROOT, [str(idx+1) for idx in range(len(SigCan_astr[1:]))],
                                                         't_eFMKIO_ComSigCan', 0, 'List of signals used for CAN communication',
                                                         [f'Rx -> {value[0]}, Tx -> {value[1]}, Reference to CAN {idx}' for idx,value in enumerate(can_sig)])
-
+        
+        enum_serial = cls.code_gen.make_enum_from_variable(ENUM_FMKIO_SERIAL_ROOT, [str(idx+1) for idx in range(len(SigSerial_astr))],
+                                                        't_eFMKIO_ComSigSerial', 0, 'List of signals used for Serial communication',
+                                                        [f'Rx -> {value[0]}, Tx -> {value[1]}, Reference to Serial {SigSerial_astr[idx][5]}' for idx,value in enumerate(serial_sig)])
+        
         enum_InAna = cls.code_gen.make_enum_from_variable(ENUM_INSIGANA_ROOT, [str(idx + 1) for idx in range((len(InAna_astr[1:])))],
                                                             "t_eFMKIO_InAnaSig", 0, "List of input Analog pin available on this board",
                                                             [f'Reference to {sig_name}' for sig_name in sig_in_ana])
@@ -389,9 +449,14 @@ class FMKIO_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKIO module----------------
         #-----------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMKIO Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # for FMKIO Config Private 
         print("\t- For configPrivate file")
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE,TARGET_T_VARIABLE_END_LINE)
+        print('\t\t- configuration for Serial signals')
+        cls.code_gen._write_into_file(const_serial, FMKIO_CONFIGPRIVATE_PATH)
         print('\t\t- configuration for CAN signals')
         cls.code_gen._write_into_file(const_can, FMKIO_CONFIGPRIVATE_PATH)
         print("\t\t- configuration for PWN output signal")
@@ -411,6 +476,8 @@ class FMKIO_CodeGen():
         print("\t- For configPublic file")
         # for FMKIO Config public
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE, TARGET_T_ENUM_END_LINE)
+        print('\t\t- enum for Serial Communication')
+        cls.code_gen._write_into_file(enum_serial, FMKIO_ConfigPublic_PATH)
         print('\t\t- enum for CAN Communication')
         cls.code_gen._write_into_file(enum_can, FMKIO_ConfigPublic_PATH)
         print("\t\t- enum for PWM output signal")
@@ -432,16 +499,28 @@ class FMKIO_CodeGen():
 
         # for FMKIO
         print("\t- For FMKIO.c file")
-        cls.code_gen.change_target_balise(TARGET_BALISE_SWITCH_GPIO_START, TARGET_BALISE_SWITCH_GPIO_END)
-        print("\t\t- switch case for Foud stm GPIO from enum")
-        cls.code_gen._write_into_file(switch_gpio, FMKIO_PATH)
+        
 
         cls.code_gen.change_target_balise(TARGET_T_VARIABLE_START_LINE[4:], TARGET_T_VARIABLE_END_LINE[4:])
         print("\t\t- variable for GPIO enum")
         cls.code_gen._write_into_file(gpio_enable_clk, FMKIO_PATH)
+
+        print('\t\t- Exti IRQN Handler')
+        cls.code_gen.change_target_balise(TARGET_EXTI_X_IRQN_START, TARGET_EXTI_X_IRQN_END)
+        cls.code_gen._write_into_file(func_irqn, FMKIO_PATH)
+        
+        # for FMKIO
+        print("\t- For FMKIO_ConfigSpec.c file")
+        cls.code_gen.change_target_balise(TARGET_BALISE_SWITCH_GPIO_START, TARGET_BALISE_SWITCH_GPIO_END)
+        print("\t\t- switch case to found stm GPIO from enum")
+        cls.code_gen._write_into_file(switch_gpio, FMKIO_CONFIGSPEC_C)
+
+        cls.code_gen.change_target_balise(TARGET_SWITCH_GPIO_RCC_START, TARGET_SWITCH_GPIO_RCC_END)
+        print("\t\t- switch case to found Rcc clock for a GPIO")
+        cls.code_gen._write_into_file(switch_gpio_rcc, FMKIO_CONFIGSPEC_C)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FMFIO Module>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

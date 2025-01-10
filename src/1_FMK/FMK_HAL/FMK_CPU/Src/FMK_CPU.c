@@ -50,7 +50,7 @@ typedef struct
 /**< Structure of information on a timer*/
 typedef struct
 {
-    TIM_HandleTypeDef BspTimer_ps;                      /**< The Timer structure for HAL STM32*/
+    TIM_HandleTypeDef bspTimer_s;                      /**< The Timer structure for HAL STM32*/
     t_eFMKCPU_HwTimerCfg HwCfg_e;                       /**< The hardware configuration of the timer */
     t_sFMKCPU_ChnlInfo Channel_as[FMKCPU_CHANNEL_NB];   /**< Channels info structure */
     const t_eFMKCPU_IRQNType c_IRQNType_e;              /**< IRQN type related to the timer */
@@ -78,73 +78,73 @@ t_uint8 g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_NB];
 t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
     {
         // Timer_1
-        .BspTimer_ps.Instance = TIM1,
+        .bspTimer_s.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
     },
     {
         // Timer_2
-        .BspTimer_ps.Instance = TIM2,
+        .bspTimer_s.Instance = TIM2,
         .c_clock_e = FMKCPU_RCC_CLK_TIM2,
         .c_IRQNType_e = FMKCPU_NVIC_TIM2_IRQN
     },
     {
         // Timer_3
-        .BspTimer_ps.Instance = TIM3,
+        .bspTimer_s.Instance = TIM3,
         .c_clock_e = FMKCPU_RCC_CLK_TIM3,
         .c_IRQNType_e = FMKCPU_NVIC_TIM3_IRQN
     },
     {
         // Timer_4
-        .BspTimer_ps.Instance = TIM4,
+        .bspTimer_s.Instance = TIM4,
         .c_clock_e = FMKCPU_RCC_CLK_TIM4,
         .c_IRQNType_e = FMKCPU_NVIC_TIM4_IRQN
     },
     {
         // Timer_5
-        .BspTimer_ps.Instance = TIM5,
+        .bspTimer_s.Instance = TIM5,
         .c_clock_e = FMKCPU_RCC_CLK_TIM5,
         .c_IRQNType_e = FMKCPU_NVIC_TIM5_IRQN
     },
     {
         // Timer_6
-        .BspTimer_ps.Instance = TIM6,
+        .bspTimer_s.Instance = TIM6,
         .c_clock_e = FMKCPU_RCC_CLK_TIM6,
         .c_IRQNType_e = FMKCPU_NVIC_TIM6_DAC_IRQN
     },
     {
         // Timer_7
-        .BspTimer_ps.Instance = TIM7,
+        .bspTimer_s.Instance = TIM7,
         .c_clock_e = FMKCPU_RCC_CLK_TIM7,
         .c_IRQNType_e = FMKCPU_NVIC_TIM7_DAC_IRQN
     },
     {
         // Timer_8
-        .BspTimer_ps.Instance = TIM8,
+        .bspTimer_s.Instance = TIM8,
         .c_clock_e = FMKCPU_RCC_CLK_TIM8,
         .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN
     },
     {
         // Timer_15
-        .BspTimer_ps.Instance = TIM15,
+        .bspTimer_s.Instance = TIM15,
         .c_clock_e = FMKCPU_RCC_CLK_TIM15,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
     },
     {
         // Timer_16
-        .BspTimer_ps.Instance = TIM16,
+        .bspTimer_s.Instance = TIM16,
         .c_clock_e = FMKCPU_RCC_CLK_TIM16,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
     },
     {
         // Timer_17
-        .BspTimer_ps.Instance = TIM17,
+        .bspTimer_s.Instance = TIM17,
         .c_clock_e = FMKCPU_RCC_CLK_TIM17,
         .c_IRQNType_e = FMKCPU_NVIC_TIM1_TRG_COM_TIM17_IRQN
     },
     {
         // Timer_20
-        .BspTimer_ps.Instance = TIM20,
+        .bspTimer_s.Instance = TIM20,
         .c_clock_e = FMKCPU_RCC_CLK_TIM20,
         .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN
     },
@@ -257,6 +257,7 @@ static t_eReturnCode s_FMKCPU_Set_EvntChannelCfg(t_eFMKCPU_Timer f_Timer_e,
                                                t_uint32 f_periodMs_u32,
                                                t_cbFMKCPU_InterruptLine f_ITChannel_cb);
 
+
 /**
  *
  *	@brief      Function to set the state ON/OFF of timer channel
@@ -343,20 +344,7 @@ static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e
  *
  */
 static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_priority_e, t_uint32 *BspNVICPriority_pu32);
-/**
- *
- *	@brief      Function to get the bsp IRQN enum
- *
- *	@param[in]  f_IRQN_e              : enum value for the priority, value from @ref t_eFMKCPU_IRQNType
- *	@param[in]  f_bspIRQN_pe          : storage for NVIC priority.\n
- *
- *  @retval RC_OK                             @ref RC_OK
- *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
- *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
- *  @retval RC_ERROR_PARAM_NOT_SUPPORTED      @ref RC_ERROR_PARAM_NOT_SUPPORTED
- *
- */
-static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe);
+
 /**
  *
  *	@brief      Function to get the bsp IRQN enum
@@ -423,7 +411,7 @@ t_eReturnCode FMKCPU_Init(void)
     return RC_OK;
 }
 /*********************************
- * FMKCPU_Set_Delay
+ * FMKCPU_Cyclic
  *********************************/
 t_eReturnCode FMKCPU_Cyclic(void)
 {
@@ -585,7 +573,7 @@ t_eReturnCode FMKCPU_Set_SysClockCfg(t_eFMKCPU_CoreClockSpeed f_SystemCoreFreq_e
     t_sFMKCPU_SysOscCfg * bspOscCfg_ps;
 
 
-    if(f_SystemCoreFreq_e > FMKCPU_CORE_CLOCK_SPEED_NB)
+    if(f_SystemCoreFreq_e >= FMKCPU_CORE_CLOCK_SPEED_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -684,6 +672,10 @@ t_eReturnCode FMKCPU_Set_HardwareInit(void)
     {
         Ret_e = FMKCPU_Set_HwClock(FMKCPU_RCC_CLK_PWR, FMKCPU_CLOCKPORT_OPE_ENABLE);
     }
+    if(Ret_e == RC_OK)
+    {
+        HAL_PWREx_DisableUCPDDeadBattery();
+    }
 #endif
 
     if(Ret_e != RC_OK)
@@ -703,13 +695,13 @@ t_eReturnCode FMKCPU_Set_NVICState(t_eFMKCPU_IRQNType f_IRQN_e, t_eFMKCPU_NVIC_O
     t_uint32 BspPriority_u32 = 0;
     IRQn_Type bspIRQN_e;
 
-    if (f_IRQN_e > (t_eFMKCPU_IRQNType)FMKCPU_NVIC_NB || f_OpeState_e > FMKCPU_NVIC_OPE_NB)
+    if (f_IRQN_e > (t_eFMKCPU_IRQNType)FMKCPU_NVIC_NB || f_OpeState_e >= FMKCPU_NVIC_OPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = s_FMKCPU_Get_BspIRQNType(f_IRQN_e, &bspIRQN_e);
+        Ret_e = FMKCPU_Get_BspIRQNType(f_IRQN_e, &bspIRQN_e);
     }
     if(Ret_e == RC_OK)
     {
@@ -749,7 +741,7 @@ t_eReturnCode FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if (f_clkPort_e > FMKCPU_RCC_CLK_NB || f_OpeState_e > FMKCPU_CLOCKPORT_OPE_NB)
+    if (f_clkPort_e >= FMKCPU_RCC_CLK_NB || f_OpeState_e >= FMKCPU_CLOCKPORT_OPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -759,14 +751,23 @@ t_eReturnCode FMKCPU_Set_HwClock(t_eFMKCPU_ClockPort f_clkPort_e,
         {
         case FMKCPU_CLOCKPORT_OPE_ENABLE:
         {
-            if (c_FMKCPU_ClkFunctions_apcb[f_clkPort_e].EnableClk_pcb != (t_cbFMKCPU_ClockDisable *)NULL_FONCTION)
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
+            //------------------- Set Peripheral Clock config if needed----------------//
+            Ret_e = FMKCPU_SetPeriphClockCfg(f_clkPort_e);
+#endif
+            if(Ret_e == RC_OK)
             {
-                c_FMKCPU_ClkFunctions_apcb[f_clkPort_e].EnableClk_pcb();
+                if (c_FMKCPU_ClkFunctions_apcb[f_clkPort_e].EnableClk_pcb != (t_cbFMKCPU_ClockDisable *)NULL_FONCTION)
+                {
+                    c_FMKCPU_ClkFunctions_apcb[f_clkPort_e].EnableClk_pcb();
+                }
+                else
+                {
+                    Ret_e = RC_WARNING_NO_OPERATION;
+                }
+
             }
-            else
-            {
-                Ret_e = RC_WARNING_NO_OPERATION;
-            }
+            
             break;
         }
         case FMKCPU_CLOCKPORT_OPE_DISABLE:
@@ -846,7 +847,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine
     t_eFMKCPU_InterruptChnl chnl_e;
     
 
-    if (f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if (f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -876,7 +877,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if((f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if((f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     || (f_dutyCycle_u16 < (t_uint16)FMKCPU_PWM_MIN_DUTY_CYLCE) 
     || (f_dutyCycle_u16 > (t_uint16)FMKCPU_PWM_MAX_DUTY_CYLCE))
     {
@@ -905,7 +906,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
         {
             //-------Calculate new CCR value-------------//
             CCRxValue_u32 = (t_uint32)((t_float32)f_dutyCycle_u16 / (t_float32)FMKCPU_PWM_MAX_DUTY_CYLCE *
-                        (t_float32)(g_TimerInfo_as[timer_e].BspTimer_ps.Init.Period + (t_uint32)1));
+                        (t_float32)(g_TimerInfo_as[timer_e].bspTimer_s.Init.Period + (t_uint32)1));
 
             if (g_TimerInfo_as[timer_e].Channel_as[chnl_e].State_e == FMKCPU_CHNLST_DISACTIVATED)
             {
@@ -919,7 +920,7 @@ t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
             if (Ret_e == RC_OK)
             {
                 //-------Update Duty Cycle-------------//
-                __HAL_TIM_SET_COMPARE(&g_TimerInfo_as[timer_e].BspTimer_ps, BspChannel_u32, (t_uint32)CCRxValue_u32);
+                __HAL_TIM_SET_COMPARE(&g_TimerInfo_as[timer_e].bspTimer_s, BspChannel_u32, (t_uint32)CCRxValue_u32);
             }
         }
     }
@@ -944,7 +945,7 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
     t_eFMKCPU_InterruptChnl chnl_e;
 
 
-   if(f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+   if(f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -983,10 +984,10 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
             if (Ret_e == RC_OK)
             {
                 //---------use BSP function to know dutycyle---------//
-                comparedValue_u32 = (t_uint32)HAL_TIM_ReadCapturedValue(&g_TimerInfo_as[timer_e].BspTimer_ps, BspChannel_u32);
+                comparedValue_u32 = (t_uint32)HAL_TIM_ReadCapturedValue(&g_TimerInfo_as[timer_e].bspTimer_s, BspChannel_u32);
                 //---------use formule in description---------//
                 *f_dutyCycle_u16 = (t_uint16)(((t_float32)comparedValue_u32 * 1000) /
-                                                (t_float32)(g_TimerInfo_as[timer_e].BspTimer_ps.Init.Period + 1));
+                                                (t_float32)(g_TimerInfo_as[timer_e].bspTimer_s.Init.Period + 1));
             }
         }
     }
@@ -997,7 +998,7 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
  *********************************/
 t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb)
+                                         t_cbFMKCPU_InterruptLine  * f_ITChannel_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_Timer timer_e;
@@ -1007,8 +1008,8 @@ t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if( (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
-    || (f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB))
+    if( (f_MeasTrigger_e >= FMKCPU_CHNL_MEAS_NB)
+    || (f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1042,7 +1043,7 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if (f_EvntITLine_e > FMKCPU_INTERRUPT_LINE_EVNT_NB)
+    if (f_EvntITLine_e >= FMKCPU_INTERRUPT_LINE_EVNT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1076,7 +1077,7 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
     t_eFMKCPU_Timer timer_e;
     t_eFMKCPU_InterruptChnl chnl_e;
 
-    if(f_InterruptLine_e > FMKCPU_INTERRUPT_LINE_IO_NB)
+    if(f_InterruptLine_e >= FMKCPU_INTERRUPT_LINE_IO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1120,8 +1121,8 @@ t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLine
     t_eFMKCPU_Timer timer_e = FMKCPU_TIMER_NB;
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
 
-    if((f_channelState_e > FMKCPU_CHNLST_NB)
-    || (f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB))
+    if((f_channelState_e >= FMKCPU_CHNLST_NB)
+    || (f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1132,6 +1133,10 @@ t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLine
                                                f_IT_line_u,
                                                &timer_e,
                                                &chnl_e);
+        if(g_TimerInfo_as[timer_e].IsTimerConfigured_b == (t_bool)False)
+        {
+            Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
+        }
         if(Ret_e == RC_OK)
         {
             //---------Set Start/Stop of channel---------//
@@ -1154,7 +1159,7 @@ t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_InterruptLineType f_ITLine
     t_eFMKCPU_Timer timer_e = FMKCPU_TIMER_NB;
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
 
-    if(f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB)
+    if(f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1194,7 +1199,7 @@ t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e
     t_eFMKCPU_InterruptChnl chnl_e = FMKCPU_CHANNEL_NB;
     t_uint32 bspChannel_u32 = 0;
 
-    if(f_ITLineType_e > FMKCPU_INTERRUPT_LINE_TYPE_NB)
+    if(f_ITLineType_e >= FMKCPU_INTERRUPT_LINE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1218,7 +1223,7 @@ t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e
         
                 if(Ret_e == RC_OK)
                 {
-                    *f_CCRxValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&g_TimerInfo_as[timer_e].BspTimer_ps,  bspChannel_u32);
+                    *f_CCRxValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&g_TimerInfo_as[timer_e].bspTimer_s,  bspChannel_u32);
                 }
             }
             else 
@@ -1279,8 +1284,8 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
         if(timerInfo_ps->IsTimerRunning_b == (t_bool)True)
         {
             //-----------Timer diagnostic-----------//
-            bspTimerState_e = c_FMKCPU_TimerFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_cb(
-                                    &timerInfo_ps->BspTimer_ps);
+            bspTimerState_e = c_FMKCPU_TimerFunc_apf[timerInfo_ps->HwCfg_e].GetTimerState_pcb(
+                                    &timerInfo_ps->bspTimer_s);
 
             if((bspTimerState_e  != HAL_TIM_STATE_BUSY)
             && (bspTimerState_e  != HAL_TIM_STATE_READY)) // busy/ Ready means ok for stm32
@@ -1316,7 +1321,7 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
                     Ret_e = s_FMKCPU_Get_BspChannel(CLLI_u8, &bspChannel_u32);
                     if(Ret_e == RC_OK)
                     {
-                        bspChnlState_e = HAL_TIM_GetChannelState(&timerInfo_ps->BspTimer_ps, bspChannel_u32);
+                        bspChnlState_e = HAL_TIM_GetChannelState(&timerInfo_ps->bspTimer_s, bspChannel_u32);
                         if((bspChnlState_e != HAL_TIM_CHANNEL_STATE_BUSY)) // busy means ok
                         {
                             timerInfo_ps->Channel_as[CLLI_u8].ErrState_e |= FMKCPU_ERRSTATE_OFF_UNEXPECTED;
@@ -1329,6 +1334,7 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
     
     return Ret_e;
 }
+
 
 /*********************************
  * s_FMKCPU_PerformDiagnostic
@@ -1380,7 +1386,7 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
                                                         (t_uint32)TIM_AUTORELOAD_PRELOAD_DISABLE); // Irreveleent in PWM                           
             masterCfg_s.MasterOutputTrigger = TIM_TRGO_RESET;
             masterCfg_s.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-            BspRet_e = HAL_TIMEx_MasterConfigSynchronization(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+            BspRet_e = HAL_TIMEx_MasterConfigSynchronization(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                                 &masterCfg_s);
             if(BspRet_e != HAL_OK)
             {
@@ -1407,7 +1413,7 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
         if (Ret_e == RC_OK)
         {
             //-------see if channel state is ok-------//
-            bspChannelState_e = HAL_TIM_GetChannelState(&g_TimerInfo_as[f_timer_e].BspTimer_ps, bspChannel_u32);
+            bspChannelState_e = HAL_TIM_GetChannelState(&g_TimerInfo_as[f_timer_e].bspTimer_s, bspChannel_u32);
             if(bspChannelState_e == HAL_TIM_CHANNEL_STATE_READY)
             {
                 BspOcInit_s.OCMode = TIM_OCMODE_PWM1;       // Mode PWM1
@@ -1419,7 +1425,7 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
             BspOcInit_s.OCIdleState = TIM_OCIDLESTATE_RESET; // État au repos à 0
             BspOcInit_s.OCNIdleState = TIM_OCNIDLESTATE_RESET; // Non utilisé si pas de signal complémentaire
 #endif
-                BspRet_e = HAL_TIM_PWM_ConfigChannel(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                BspRet_e = HAL_TIM_PWM_ConfigChannel(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                         &BspOcInit_s,
                                                         (uint32_t)bspChannel_u32);  
                 if (BspRet_e != HAL_OK)
@@ -1509,7 +1515,7 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
         }
         if(Ret_e == RC_OK)
         {
-            bspChannelState_e = HAL_TIM_GetChannelState(&g_TimerInfo_as[f_timer_e].BspTimer_ps, bspChannel_u32);
+            bspChannelState_e = HAL_TIM_GetChannelState(&g_TimerInfo_as[f_timer_e].bspTimer_s, bspChannel_u32);
             
             if(bspChannelState_e == HAL_TIM_CHANNEL_STATE_READY)
             {
@@ -1518,7 +1524,7 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
                 BspICInit_s.ICSelection = (t_uint32)TIM_ICSELECTION_DIRECTTI;
                 BspICInit_s.ICPrescaler = (t_uint32)TIM_ICPSC_DIV1;
                 BspICInit_s.ICFilter = (t_uint32)0;
-                BspRet_e = HAL_TIM_IC_ConfigChannel(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                BspRet_e = HAL_TIM_IC_ConfigChannel(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                     &BspICInit_s,
                                                     bspChannel_u32);
                 if (BspRet_e != HAL_OK)
@@ -1528,7 +1534,7 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
             }
             else
             {
-                Ret_e = RC_ERROR_BUSY;
+                Ret_e = RC_WARNING_BUSY;
             }
         }
         if (Ret_e == RC_OK)
@@ -1648,12 +1654,12 @@ static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                         {
                         case FMKCPU_CNHL_RUNMODE_POLLING:
                             bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].
-                                            StartFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                            StartFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                               (t_uint32)bspChannel_u32);
                             break;
                         case FMKCPU_CNHL_RUNMODE_INTERRUPT:
                             bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].
-                                            StartFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                            StartFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                                    (t_uint32)bspChannel_u32);
                             break;
                         case FMKCPU_CNHL_RUNMODE_NB:
@@ -1680,12 +1686,12 @@ static t_eReturnCode s_FMKCPU_Set_HwChannelState(t_eFMKCPU_Timer f_timer_e,
                         {
                             case FMKCPU_CNHL_RUNMODE_POLLING:
                                 bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].
-                                                StopFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                                StopFuncPoll_pcb(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                 (t_uint32)bspChannel_u32);
                                 break;
                             case FMKCPU_CNHL_RUNMODE_INTERRUPT:
                                 bspRet_e = c_FMKCPU_TimerFunc_apf[timer_ps->HwCfg_e].
-                                                StopFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].BspTimer_ps,
+                                                StopFuncInterrupt_pcb(&g_TimerInfo_as[f_timer_e].bspTimer_s,
                                                                        (t_uint32)bspChannel_u32);
                                 break;
                             case FMKCPU_CNHL_RUNMODE_NB:
@@ -1742,13 +1748,13 @@ static t_eReturnCode s_FMKCPU_Set_BspTimerInit(t_sFMKCPU_TimerInfo * f_timer_ps,
     }
     if (Ret_e == RC_OK)
     {
-        f_timer_ps->BspTimer_ps.Init.Prescaler = f_prescaler_u32;
-        f_timer_ps->BspTimer_ps.Init.Period = f_period_u32;
-        f_timer_ps->BspTimer_ps.Init.CounterMode = f_counterMode_32;
-        f_timer_ps->BspTimer_ps.Init.ClockDivision = f_clockDivision_u32;
-        f_timer_ps->BspTimer_ps.Init.AutoReloadPreload = f_autoRePreload_u32;
+        f_timer_ps->bspTimer_s.Init.Prescaler = f_prescaler_u32;
+        f_timer_ps->bspTimer_s.Init.Period = f_period_u32;
+        f_timer_ps->bspTimer_s.Init.CounterMode = f_counterMode_32;
+        f_timer_ps->bspTimer_s.Init.ClockDivision = f_clockDivision_u32;
+        f_timer_ps->bspTimer_s.Init.AutoReloadPreload = f_autoRePreload_u32;
 
-        bspRet_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->BspTimer_ps);
+        bspRet_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->bspTimer_s);
         if(bspRet_e != HAL_OK)
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
@@ -1780,7 +1786,7 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
     // loop to know  which timer it is
     for (LLI_u8 = (t_uint8)0; LLI_u8 < (t_uint8)FMKCPU_TIMER_NB; LLI_u8++)
     {
-        if (&g_TimerInfo_as[LLI_u8].BspTimer_ps == (TIM_HandleTypeDef *)f_timerIstce_ps)
+        if (&g_TimerInfo_as[LLI_u8].bspTimer_s == (TIM_HandleTypeDef *)f_timerIstce_ps)
         {
             Calltimer_e = (t_eFMKCPU_Timer)LLI_u8;
             break;
@@ -1794,7 +1800,7 @@ static void s_FMKCPU_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
     else
     {
         //------------Find Bsp Channel which triggered the interruption------------//
-        BspITChnl_e = HAL_TIM_GetActiveChannel(&g_TimerInfo_as[Calltimer_e].BspTimer_ps);
+        BspITChnl_e = HAL_TIM_GetActiveChannel(&g_TimerInfo_as[Calltimer_e].bspTimer_s);
         switch (BspITChnl_e)
         {
             case HAL_TIM_ACTIVE_CHANNEL_1:
@@ -1888,7 +1894,7 @@ static t_eReturnCode s_FMKCPU_Get_BspChannel(t_eFMKCPU_InterruptChnl f_channel_e
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_channel_e > FMKCPU_CHANNEL_NB)
+    if (f_channel_e >= FMKCPU_CHANNEL_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1936,7 +1942,7 @@ static t_eReturnCode s_FMKCPU_Get_BspICTrigger(t_eFMKCPU_ChnlMeasTrigger f_MeasT
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_MeasTrigger_e > FMKCPU_CHNL_MEAS_NB)
+    if (f_MeasTrigger_e >= FMKCPU_CHNL_MEAS_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1974,7 +1980,7 @@ static t_eReturnCode s_FMKCPU_Get_BspNVICPriority(t_eFMKCPU_NVICPriority f_prior
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if (f_priority_e > FMKCPU_NVIC_PRIORITY_NB)
+    if (f_priority_e >= FMKCPU_NVIC_PRIORITY_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2040,340 +2046,7 @@ static t_eReturnCode s_FMKCPU_Get_TimChnlFromITLine(t_eFMKCPU_InterruptLineType 
     return Ret_e;
 }
 
-/*********************************
- * s_FMKCPU_Get_BspTimer
- *********************************/
-static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_Type *f_bspIRQN_pe)
-{
-    t_eReturnCode Ret_e = RC_OK;
 
-    if(f_IRQN_e > FMKCPU_NVIC_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(f_bspIRQN_pe == (IRQn_Type *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if(Ret_e == RC_OK)
-    {
-        switch (f_IRQN_e)
-        {
-            /* CAUTION : Automatic generated code section for IRQNType switch case: Start */
-            case FMKCPU_NVIC_WWDG_IRQN:
-                *f_bspIRQN_pe = WWDG_IRQn;
-                break;
-            case FMKCPU_NVIC_PVD_PVM_IRQN:
-                *f_bspIRQN_pe = PVD_PVM_IRQn;
-                break;
-            case FMKCPU_NVIC_RTC_TAMP_LSECSS_IRQN:
-                *f_bspIRQN_pe = RTC_TAMP_LSECSS_IRQn;
-                break;
-            case FMKCPU_NVIC_RTC_WKUP_IRQN:
-                *f_bspIRQN_pe = RTC_WKUP_IRQn;
-                break;
-            case FMKCPU_NVIC_FLASH_IRQN:
-                *f_bspIRQN_pe = FLASH_IRQn;
-                break;
-            case FMKCPU_NVIC_RCC_IRQN:
-                *f_bspIRQN_pe = RCC_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI0_IRQN:
-                *f_bspIRQN_pe = EXTI0_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI1_IRQN:
-                *f_bspIRQN_pe = EXTI1_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI2_IRQN:
-                *f_bspIRQN_pe = EXTI2_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI3_IRQN:
-                *f_bspIRQN_pe = EXTI3_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI4_IRQN:
-                *f_bspIRQN_pe = EXTI4_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL1_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel1_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL2_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel2_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL3_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel3_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL4_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel4_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL5_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel5_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL6_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel6_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL7_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel7_IRQn;
-                break;
-            case FMKCPU_NVIC_ADC1_2_IRQN:
-                *f_bspIRQN_pe = ADC1_2_IRQn;
-                break;
-            case FMKCPU_NVIC_USB_HP_IRQN:
-                *f_bspIRQN_pe = USB_HP_IRQn;
-                break;
-            case FMKCPU_NVIC_USB_LP_IRQN:
-                *f_bspIRQN_pe = USB_LP_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN1_IT0_IRQN:
-                *f_bspIRQN_pe = FDCAN1_IT0_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN1_IT1_IRQN:
-                *f_bspIRQN_pe = FDCAN1_IT1_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI9_5_IRQN:
-                *f_bspIRQN_pe = EXTI9_5_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN:
-                *f_bspIRQN_pe = TIM1_BRK_TIM15_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM1_UP_TIM16_IRQN:
-                *f_bspIRQN_pe = TIM1_UP_TIM16_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM1_TRG_COM_TIM17_IRQN:
-                *f_bspIRQN_pe = TIM1_TRG_COM_TIM17_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM1_CC_IRQN:
-                *f_bspIRQN_pe = TIM1_CC_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM2_IRQN:
-                *f_bspIRQN_pe = TIM2_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM3_IRQN:
-                *f_bspIRQN_pe = TIM3_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM4_IRQN:
-                *f_bspIRQN_pe = TIM4_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C1_EV_IRQN:
-                *f_bspIRQN_pe = I2C1_EV_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C1_ER_IRQN:
-                *f_bspIRQN_pe = I2C1_ER_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C2_EV_IRQN:
-                *f_bspIRQN_pe = I2C2_EV_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C2_ER_IRQN:
-                *f_bspIRQN_pe = I2C2_ER_IRQn;
-                break;
-            case FMKCPU_NVIC_SPI1_IRQN:
-                *f_bspIRQN_pe = SPI1_IRQn;
-                break;
-            case FMKCPU_NVIC_SPI2_IRQN:
-                *f_bspIRQN_pe = SPI2_IRQn;
-                break;
-            case FMKCPU_NVIC_USART1_IRQN:
-                *f_bspIRQN_pe = USART1_IRQn;
-                break;
-            case FMKCPU_NVIC_USART2_IRQN:
-                *f_bspIRQN_pe = USART2_IRQn;
-                break;
-            case FMKCPU_NVIC_USART3_IRQN:
-                *f_bspIRQN_pe = USART3_IRQn;
-                break;
-            case FMKCPU_NVIC_EXTI15_10_IRQN:
-                *f_bspIRQN_pe = EXTI15_10_IRQn;
-                break;
-            case FMKCPU_NVIC_RTC_ALARM_IRQN:
-                *f_bspIRQN_pe = RTC_Alarm_IRQn;
-                break;
-            case FMKCPU_NVIC_USBWAKEUP_IRQN:
-                *f_bspIRQN_pe = USBWakeUp_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM8_BRK_IRQN:
-                *f_bspIRQN_pe = TIM8_BRK_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM8_UP_IRQN:
-                *f_bspIRQN_pe = TIM8_UP_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM8_TRG_COM_IRQN:
-                *f_bspIRQN_pe = TIM8_TRG_COM_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM8_CC_IRQN:
-                *f_bspIRQN_pe = TIM8_CC_IRQn;
-                break;
-            case FMKCPU_NVIC_ADC3_IRQN:
-                *f_bspIRQN_pe = ADC3_IRQn;
-                break;
-            case FMKCPU_NVIC_FMC_IRQN:
-                *f_bspIRQN_pe = FMC_IRQn;
-                break;
-            case FMKCPU_NVIC_LPTIM1_IRQN:
-                *f_bspIRQN_pe = LPTIM1_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM5_IRQN:
-                *f_bspIRQN_pe = TIM5_IRQn;
-                break;
-            case FMKCPU_NVIC_SPI3_IRQN:
-                *f_bspIRQN_pe = SPI3_IRQn;
-                break;
-            case FMKCPU_NVIC_UART4_IRQN:
-                *f_bspIRQN_pe = UART4_IRQn;
-                break;
-            case FMKCPU_NVIC_UART5_IRQN:
-                *f_bspIRQN_pe = UART5_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM6_DAC_IRQN:
-                *f_bspIRQN_pe = TIM6_DAC_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM7_DAC_IRQN:
-                *f_bspIRQN_pe = TIM7_DAC_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL1_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel1_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL2_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel2_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL3_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel3_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL4_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel4_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL5_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel5_IRQn;
-                break;
-            case FMKCPU_NVIC_ADC4_IRQN:
-                *f_bspIRQN_pe = ADC4_IRQn;
-                break;
-            case FMKCPU_NVIC_ADC5_IRQN:
-                *f_bspIRQN_pe = ADC5_IRQn;
-                break;
-            case FMKCPU_NVIC_UCPD1_IRQN:
-                *f_bspIRQN_pe = UCPD1_IRQn;
-                break;
-            case FMKCPU_NVIC_COMP1_2_3_IRQN:
-                *f_bspIRQN_pe = COMP1_2_3_IRQn;
-                break;
-            case FMKCPU_NVIC_COMP4_5_6_IRQN:
-                *f_bspIRQN_pe = COMP4_5_6_IRQn;
-                break;
-            case FMKCPU_NVIC_COMP7_IRQN:
-                *f_bspIRQN_pe = COMP7_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_MASTER_IRQN:
-                *f_bspIRQN_pe = HRTIM1_Master_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIMA_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIMA_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIMB_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIMB_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIMC_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIMC_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIMD_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIMD_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIME_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIME_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_FLT_IRQN:
-                *f_bspIRQN_pe = HRTIM1_FLT_IRQn;
-                break;
-            case FMKCPU_NVIC_HRTIM1_TIMF_IRQN:
-                *f_bspIRQN_pe = HRTIM1_TIMF_IRQn;
-                break;
-            case FMKCPU_NVIC_CRS_IRQN:
-                *f_bspIRQN_pe = CRS_IRQn;
-                break;
-            case FMKCPU_NVIC_SAI1_IRQN:
-                *f_bspIRQN_pe = SAI1_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM20_BRK_IRQN:
-                *f_bspIRQN_pe = TIM20_BRK_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM20_UP_IRQN:
-                *f_bspIRQN_pe = TIM20_UP_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM20_TRG_COM_IRQN:
-                *f_bspIRQN_pe = TIM20_TRG_COM_IRQn;
-                break;
-            case FMKCPU_NVIC_TIM20_CC_IRQN:
-                *f_bspIRQN_pe = TIM20_CC_IRQn;
-                break;
-            case FMKCPU_NVIC_FPU_IRQN:
-                *f_bspIRQN_pe = FPU_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C4_EV_IRQN:
-                *f_bspIRQN_pe = I2C4_EV_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C4_ER_IRQN:
-                *f_bspIRQN_pe = I2C4_ER_IRQn;
-                break;
-            case FMKCPU_NVIC_SPI4_IRQN:
-                *f_bspIRQN_pe = SPI4_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN2_IT0_IRQN:
-                *f_bspIRQN_pe = FDCAN2_IT0_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN2_IT1_IRQN:
-                *f_bspIRQN_pe = FDCAN2_IT1_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN3_IT0_IRQN:
-                *f_bspIRQN_pe = FDCAN3_IT0_IRQn;
-                break;
-            case FMKCPU_NVIC_FDCAN3_IT1_IRQN:
-                *f_bspIRQN_pe = FDCAN3_IT1_IRQn;
-                break;
-            case FMKCPU_NVIC_RNG_IRQN:
-                *f_bspIRQN_pe = RNG_IRQn;
-                break;
-            case FMKCPU_NVIC_LPUART1_IRQN:
-                *f_bspIRQN_pe = LPUART1_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C3_EV_IRQN:
-                *f_bspIRQN_pe = I2C3_EV_IRQn;
-                break;
-            case FMKCPU_NVIC_I2C3_ER_IRQN:
-                *f_bspIRQN_pe = I2C3_ER_IRQn;
-                break;
-            case FMKCPU_NVIC_DMAMUX_OVR_IRQN:
-                *f_bspIRQN_pe = DMAMUX_OVR_IRQn;
-                break;
-            case FMKCPU_NVIC_QUADSPI_IRQN:
-                *f_bspIRQN_pe = QUADSPI_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA1_CHANNEL8_IRQN:
-                *f_bspIRQN_pe = DMA1_Channel8_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL6_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel6_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL7_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel7_IRQn;
-                break;
-            case FMKCPU_NVIC_DMA2_CHANNEL8_IRQN:
-                *f_bspIRQN_pe = DMA2_Channel8_IRQn;
-                break;
-            case FMKCPU_NVIC_CORDIC_IRQN:
-                *f_bspIRQN_pe = CORDIC_IRQn;
-                break;
-            case FMKCPU_NVIC_FMAC_IRQN:
-                *f_bspIRQN_pe = FMAC_IRQn;
-                break;
-            /* CAUTION : Automatic generated code section for IRQNType switch case: End */
-            case FMKCPU_NVIC_NB:
-            default:
-            {
-                Ret_e = RC_ERROR_NOT_ALLOWED;
-            }
-
-        }
-    }
-    return Ret_e;
-}
 //********************************************************************************
 //                      HAL_Callback Implementation
 //********************************************************************************
@@ -2383,27 +2056,59 @@ static t_eReturnCode s_FMKCPU_Get_BspIRQNType(t_eFMKCPU_IRQNType f_IRQN_e, IRQn_
  *
  */
 /* CAUTION : Automatic generated code section for TIMx IRQHandler: Start */
-
+/*********************************
+ * TIM1_BRK_TIM15_IRQHandler
+*********************************/
+void TIM1_BRK_TIM15_IRQHandler(void)      {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_15].bspTimer_s);}
+/*********************************
+ * TIM1_UP_TIM16_IRQHandler
+*********************************/
+void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_16].bspTimer_s);}
+/*********************************
+ * TIM1_TRG_COM_TIM17_IRQHandler
+*********************************/
+void TIM1_TRG_COM_TIM17_IRQHandler(void)  {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_17].bspTimer_s);}
+/*********************************
+ * TIM1_CC_IRQHandler
+*********************************/
+void TIM1_CC_IRQHandler(void)             {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_1].bspTimer_s);}
+/*********************************
+ * TIM2_IRQHandler
+*********************************/
+void TIM2_IRQHandler(void)                {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_2].bspTimer_s);}
+/*********************************
+ * TIM3_IRQHandler
+*********************************/
+void TIM3_IRQHandler(void)                {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_3].bspTimer_s);}
+/*********************************
+ * TIM4_IRQHandler
+*********************************/
+void TIM4_IRQHandler(void)                {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_4].bspTimer_s);}
+/*********************************
+ * TIM6_DAC_IRQHandler
+*********************************/
+void TIM6_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_6].bspTimer_s);}
+/*********************************
+ * TIM7_DAC_IRQHandler
+*********************************/
+void TIM7_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_7].bspTimer_s);}
+/*********************************
+ * TIM20_BRK_IRQHandler
+*********************************/
+void TIM20_BRK_IRQHandler(void)           {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].bspTimer_s);}
+/*********************************
+ * TIM20_UP_IRQHandler
+*********************************/
+void TIM20_UP_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].bspTimer_s);}
+/*********************************
+ * TIM20_TRG_COM_IRQHandler
+*********************************/
+void TIM20_TRG_COM_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].bspTimer_s);}
+/*********************************
+ * TIM20_CC_IRQHandler
+*********************************/
+void TIM20_CC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].bspTimer_s);}
 /* CAUTION : Automatic generated code section for TIMx IRQHandler: End */
-
-void TIM1_CC_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_1].BspTimer_ps);}
-void TIM2_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_2].BspTimer_ps);}
-void TIM3_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_3].BspTimer_ps);}
-void TIM4_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_4].BspTimer_ps);}
-void TIM5_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_5].BspTimer_ps);}
-void TIM6_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_6].BspTimer_ps);}
-void TIM7_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_7].BspTimer_ps);}
-void TIM8_BRK_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_8].BspTimer_ps);}
-void TIM8_UP_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_8].BspTimer_ps);}
-void TIM8_TRG_COM_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_15].BspTimer_ps);}
-void TIM8_CC_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_15].BspTimer_ps);}
-void TIM1_BRK_TIM15_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_15].BspTimer_ps);}
-void TIM1_UP_TIM16_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_16].BspTimer_ps);}
-void TIM1_TRG_COM_TIM17_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_17].BspTimer_ps);}
-void TIM20_BRK_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].BspTimer_ps);}
-void TIM20_UP_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].BspTimer_ps);}
-void TIM20_TRG_COM_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].BspTimer_ps);}
-void TIM20_CC_IRQHandler(void){return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKCPU_TIMER_20].BspTimer_ps);}
 
 /**
  *

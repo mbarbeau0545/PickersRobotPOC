@@ -16,8 +16,9 @@
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
-
 #include "./FMK_FDCAN.h"
+#ifdef APPSYS_MODULE_FMKCAN_ENABLE
+
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPrivate.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
@@ -25,6 +26,7 @@
 #include "Library/Queue/Src/LIBQueue.h"
 #include "Library/SafeMem/SafeMem.h"
 #include "stm32g4xx_hal.h"
+
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -40,7 +42,7 @@
 /**
  * @brief Enumeration for the list of FDCAN BSP callback events.
  */
-typedef enum 
+typedef enum __t_eFMKFDCAN_BspCallbackList
 {
     FMKFDCAN_BSP_TX_CB_EVENT = 0x00,       /**< General Tx callback event. */
     FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,    /**< Tx buffer transmission completed. */
@@ -58,7 +60,7 @@ typedef enum
 /**
  * @brief Bsp Callback Status
  */
-typedef enum 
+typedef enum __t_eFMKFDCAN_BspStatusCb
 {
     FMKFDCAN_CALLBACK_STATUS_ACTIVATE = 0x00,       /**< The Callback needs activated by software */
     FMKFDCAN_CALLBACK_STATUS_DEACTIVATE,            /**< The Callback needs deactivated by software */
@@ -74,7 +76,7 @@ typedef enum
 /**
  * @brief Soft flags structure to manage various FDCAN software flags.
  */
-typedef struct 
+typedef struct __t_sFMKFDCAN_FlagSoft
 {
     t_bool TxQueuePending_b;       /**< Indicates if there are pending frames in the Tx queue. */
     t_bool RxQueuePending_b;       /**< Indicates if there are pending frames in the Rx queue. */
@@ -85,22 +87,22 @@ typedef struct
 /**
  * @brief Node information structure for FDCAN configuration and status.
  */
-typedef struct
+typedef struct __t_sFMKFDCAN_NodeInfo
 {
-    FDCAN_HandleTypeDef bspNode_s;         /**< BSP handle for FDCAN peripheral. */
-    const t_eFMKCPU_ClockPort c_Clock_e;   /**< Clock port associated with the FDCAN node. */
-    const t_eFMKCPU_IRQNType c_IrqnLine1_e;/**< IRQ line 1 associated with the FDCAN peripheral. */
-    const t_eFMKCPU_IRQNType c_IrqnLine2_e;/**< IRQ line 2 associated with the FDCAN peripheral. */
-    t_sFMKFDCAN_FlagSoft Flag_s;           /**< Software flags related to the FDCAN node. */
-    t_bool isNodeConfigured_b;             /**< Indicates if the FDCAN node has been configured. */
-    t_bool isNodeActive_b;                 /**< Indicates if the FDCAN node is active and operational. */
-    t_eFMKFDCAN_NodeStatus nodeHealth_e;    /**< Node status */
+    FDCAN_HandleTypeDef bspNode_s;           /**< BSP handle for FDCAN peripheral. */
+    const t_eFMKCPU_ClockPort c_Clock_e;     /**< Clock port associated with the FDCAN node. */
+    const t_eFMKCPU_IRQNType c_IrqnLine1_e;  /**< IRQ line 1 associated with the FDCAN peripheral. */
+    const t_eFMKCPU_IRQNType c_IrqnLine2_e;  /**< IRQ line 2 associated with the FDCAN peripheral. */
+    t_sFMKFDCAN_FlagSoft Flag_s;             /**< Software flags related to the FDCAN node. */
+    t_bool isNodeConfigured_b;               /**< Indicates if the FDCAN node has been configured. */
+    t_bool isNodeActive_b;                   /**< Indicates if the FDCAN node is active and operational. */
+    t_eFMKFDCAN_NodeStatus nodeHealth_e;      /**< Node status */
 } t_sFMKFDCAN_NodeInfo;
 
 /**
  * @brief Rx item buffer structure for receiving FDCAN frames.
  */
-typedef struct 
+typedef struct __t_sFMKFDCAN_RxItemBuffer
 {
     FDCAN_RxHeaderTypeDef bspRxItem_s; /**< FDCAN BSP Rx header structure for frame details. */
     t_uint8 data_ua8[FMKFDCAN_DLC_8];  /**< Data buffer for the received frame. */
@@ -758,7 +760,7 @@ t_eReturnCode FMKFDCAN_ConfigureRxItemEvent(t_eFMKFDCAN_NodeList f_Node_e, t_sFM
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxCounter_u8 = (t_uint8)0;
 
-    if((f_Node_e > FMKFDCAN_NODE_NB)
+    if((f_Node_e >= FMKFDCAN_NODE_NB)
     || (f_RxItemCfg_s.callback_cb == (t_cbFMKFDCAN_RcvItem *)NULL_FONCTION))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -800,7 +802,7 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
     t_uint32 fifoLevel_u32 = 0;
 
 
-    if(f_Node_e > FMKFDCAN_NODE_NB)
+    if(f_Node_e >= FMKFDCAN_NODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -840,11 +842,11 @@ t_eReturnCode FMKFDCAN_SendTxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_TxI
                 }
                 //----------Write Into Software Queue----------//
                 Ret_e = LIBQUEUE_WriteElement(&g_TxSoftQueue_as[f_Node_e], &SoTxitem_s);
-                ///----------update flag Tx Item to send/----------//
+                //----------update flag Tx Item to send/----------//
                 if(Ret_e == RC_OK)
                 {
                     g_NodeInfo_as[f_Node_e].Flag_s.TxQueuePending_b = True;
-                    ///----------Activate Notification /----------//
+                    //----------Activate Notification /----------//
                     Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(f_Node_e, 
                                                             FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
                                                             FMKFDCAN_CALLBACK_STATUS_ACTIVATE);
@@ -868,8 +870,10 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
     t_eReturnCode Ret_e = RC_OK;
     //t_uint8 LLI_u8;
     //t_sFMKFDCAN_RxItemBuffer *itemBuff_ps;
-    t_uint8 fifoLevel_u8;
-    t_uint32 FIFO_Id_u32;
+    t_uint8 fifoLevel_u8 = (t_uint8)0;
+    t_uint8 idxData_u8 = (t_uint8)0;
+    t_eFMKFDCAN_DataLength dataLenght_e;
+    t_uint32 FIFO_Id_u32 = (t_uint32)0;
     FDCAN_RxHeaderTypeDef bspRxITem_s;
     t_uint8 data_pu8[8];
     HAL_StatusTypeDef bspRet_e = HAL_OK;
@@ -906,16 +910,43 @@ t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxIt
 
             if(bspRet_e == HAL_OK)
             {
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[2];
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[3];
-                f_RxItem_ps->CanMsg_s.data_pu8[2] = data_pu8[4];
-                f_RxItem_ps->CanMsg_s.data_pu8[0] = data_pu8[0];
-                f_RxItem_ps->CanMsg_s.data_pu8[1] = data_pu8[1];
-                f_RxItem_ps->CanMsg_s.Direction_e = 1;
-                f_RxItem_ps->CanMsg_s.Dlc_e = FMKFDCAN_DLC_8;
-                f_RxItem_ps->ItemId_s.Identifier_u32 = bspRxITem_s.Identifier;
-                f_RxItem_ps->ItemId_s.IdType_e = bspRxITem_s.IdType;
+                //---------- Get the number of data ----------//
+                Ret_e = s_FMKFDCAN_GetDlcFromBsp(bspRxITem_s.DataLength, &dataLenght_e);
+            
+                if(Ret_e == RC_OK)
+                {
+                    for(idxData_u8 = (t_uint8)0; idxData_u8 < (t_uint8)dataLenght_e ; idxData_u8++)
+                    {
+                        f_RxItem_ps->CanMsg_s.data_pu8[idxData_u8] = data_pu8[idxData_u8];
+                    }
+                    f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+                    f_RxItem_ps->CanMsg_s.Dlc_e = dataLenght_e;
+                    f_RxItem_ps->ItemId_s.Identifier_u32 = bspRxITem_s.Identifier;
+
+                    if (bspRxITem_s.IdType == FDCAN_STANDARD_ID)
+                    {
+                        f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_STANDARD;
+                    }
+                    else 
+                    {
+                        f_RxItem_ps->ItemId_s.IdType_e = FMKFDCAN_IDTYPE_EXTENDED;
+                    }
+                    
+                }
             }
+            else 
+            {
+                Ret_e = RC_WARNING_WRONG_RESULT;
+            }
+        }
+        if(Ret_e != RC_OK)
+        {
+            //---------- Get Default Data values ----------//
+
+            f_RxItem_ps->CanMsg_s.data_pu8 = (t_uint8 *)NULL;
+            f_RxItem_ps->CanMsg_s.Direction_e = FMKFDCAN_NODE_DIRECTION_RX;
+            f_RxItem_ps->CanMsg_s.Dlc_e = 0;
+            f_RxItem_ps->ItemId_s.Identifier_u32 = 0;
         }
     }
     return Ret_e;
@@ -931,24 +962,13 @@ static t_eReturnCode s_FMKFDCAN_InitDriver(t_eFMKFDCAN_NodeList f_Node_e, t_sFMK
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
-    RCC_PeriphCLKInitTypeDef periphNodeInit_s = {
-        .PeriphClockSelection = RCC_PERIPHCLK_FDCAN,
-        //---According to datasheet, it's PLLQ, which is currently set to 120Mhz---//
-        .FdcanClockSelection  = RCC_FDCANCLKSOURCE_PLL,
-    };
 
-    if(f_Node_e > FMKFDCAN_NODE_NB)
+    if(f_Node_e >= FMKFDCAN_NODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
     if(Ret_e == RC_OK)
     {
-        //-------------------Init FDCAN Clock Config----------------//
-        bspRet_e = HAL_RCCEx_PeriphCLKConfig(&periphNodeInit_s);
-        if(bspRet_e != HAL_OK)
-        {
-            Ret_e = RC_ERROR_WRONG_RESULT;
-        }
         //----------Configure Pin Init----------//
         if(Ret_e == RC_OK)
         {
@@ -1201,6 +1221,7 @@ static void s_FMKFDCAN_BspTxEventCb(FDCAN_HandleTypeDef *f_bspInfo_ps,
                             Ret_e = s_FMKFDCAN_SetHwBspCallbackStatus(idxNode_u8, 
                                                                     FMKFDCAN_BSP_TX_CB_BUFFER_COMPLETE,
                                                                     FMKFDCAN_CALLBACK_STATUS_DEACTIVATE);
+                                                                    
                             g_NodeInfo_as[idxNode_u8].Flag_s.TxQueuePending_b = (t_bool)False;
                         }
                     }
@@ -1759,8 +1780,8 @@ static t_eReturnCode s_FMKFDCAN_SetHwBspCallbackStatus(t_eFMKFDCAN_NodeList f_No
     t_uint32 bspFifo_u32;
     t_uint8 idxTxFifo_u8;
 
-    if((f_bspCb_e > FMKFDCAN_BSP_CB_NB)
-    || (f_status_e > FMKFDCAN_CALLBACK_STATUS_NB))
+    if((f_bspCb_e >= FMKFDCAN_BSP_CB_NB)
+    || (f_status_e >= FMKFDCAN_CALLBACK_STATUS_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1839,7 +1860,7 @@ static t_eReturnCode s_FMKFDCAN_SetHwFifoOpeMode(t_eFMKFDCAN_NodeList f_Node_e ,
     t_uint32 bspFifoOpeMode_u32;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
 
-    if(f_fifoMode_e > FMKFDCAN_FIFO_OPEMODE_NB)
+    if(f_fifoMode_e >= FMKFDCAN_FIFO_OPEMODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1877,7 +1898,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFramePurpose(t_eFMKFDCAN_FramePurpose f_fr
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_frameType_e > FMKFDCAN_FRAME_PURPOSE_NB)
+    if(f_frameType_e >= FMKFDCAN_FRAME_PURPOSE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1912,7 +1933,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspIdType(t_eFMKFDCAN_IdentifierType f_IdType
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_IdType > FMKFDCAN_IDTYPE_NB)
+    if(f_IdType >= FMKFDCAN_IDTYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1948,7 +1969,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspBitRateStatus(t_eFMKFDCAN_BitRateSwitchSta
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_BitRate_e > FMKFDCAN_BITRATE_SWITCH_NB)
+    if(f_BitRate_e >= FMKFDCAN_BITRATE_SWITCH_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1984,7 +2005,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspDlc(t_eFMKFDCAN_DataLength f_Dlc_e, t_uint
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Dlc_e > FMKFDCAN_DLC_NB)
+    if(f_Dlc_e >= FMKFDCAN_DLC_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2128,7 +2149,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspCallbackId(t_eFMKFDCAN_BspCallbackList f_C
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Callback_e > FMKFDCAN_BSP_CB_NB)
+    if(f_Callback_e >= FMKFDCAN_BSP_CB_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2177,7 +2198,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspRxFifoId(t_eFMKFDCAN_HwRxFifoList f_RxFifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_RxFifoId_e > FMKFDCAN_HW_RX_FIFO_NB)
+    if(f_RxFifoId_e >= FMKFDCAN_HW_RX_FIFO_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2212,7 +2233,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspTxFifoId(t_eFMKFDCAN_HwTxFifoList f_TxFifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_TxFifoId_e > FMKFDCAN_HW_TX_BUFFER_NB)
+    if(f_TxFifoId_e >= FMKFDCAN_HW_TX_BUFFER_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2251,7 +2272,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFDFormat(t_eFMKFDCAN_FrameFormat f_formatT
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_formatType_e > FMKFDCAN_FRAME_FORMAT_NB)
+    if(f_formatType_e >= FMKFDCAN_FRAME_FORMAT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2286,7 +2307,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspQueueType(t_eFMKFDCAN_HwTxQueueType f_queu
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_queueType_e > FMKFDCAN_HWQUEUE_TYPE_NB)
+    if(f_queueType_e >= FMKFDCAN_HWQUEUE_TYPE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2322,7 +2343,7 @@ static t_eReturnCode s_FMKFDCAN_GetBspFifoOpeMode(t_eFMKFDCAN_FifoOpeMode f_fifo
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_fifoOpeMode > FMKFDCAN_FIFO_OPEMODE_NB)
+    if(f_fifoOpeMode >= FMKFDCAN_FIFO_OPEMODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2355,7 +2376,7 @@ static t_eReturnCode s_FMKFDCAN_GetClockKernelDivider(t_eFMKFDCAN_ClockKernelDiv
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_ClkDiv_e > FMKFDCAN_CLOCK_KERNEL_DIV_NB)
+    if(f_ClkDiv_e >= FMKFDCAN_CLOCK_KERNEL_DIV_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -2527,6 +2548,8 @@ void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorSt
 {
     s_FMKFDCAN_BspErrorEventCb(hfdcan, ErrorStatusITs);
 }
+
+#endif // APPSYS_MODULE_FMKCAN_ENABLE
 //************************************************************************************
 // End of File
 //************************************************************************************
@@ -2543,3 +2566,5 @@ void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorSt
  *
  *
  */
+
+

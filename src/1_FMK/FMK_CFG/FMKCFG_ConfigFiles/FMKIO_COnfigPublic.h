@@ -33,7 +33,9 @@
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* List of gpio port available on this board */
+    /**
+    * @brief List of gpio port available on this board.
+    */
     typedef enum
     {
         FMKIO_GPIO_PORT_A = 0x0,                  /**< Reference to bsp gpio A register */
@@ -47,7 +49,9 @@
         FMKIO_GPIO_PORT_NB,
     } t_eFMKIO_GpioPort;
 
-    /* List of Pin available for each GPIO on this board */
+    /**
+    * @brief List of Pin available for each GPIO on this board.
+    */
     typedef enum
     {
         FMKIO_GPIO_PIN_0 = 0x0,                  /**< Reference to bsp gpio pin 0 */
@@ -70,7 +74,9 @@
         FMKIO_GPIO_PIN_NB,
     } t_eFMKIO_BspGpioPin;
 
-    /* /List of input digital pin available on this board */
+    /**
+    * @brief /List of input digital pin available on this board.
+    */
     typedef enum
     {
         FMKIO_INPUT_SIGDIG_1 = 0x0,                  /**< Reference to PA14 */
@@ -86,7 +92,9 @@
         FMKIO_INPUT_SIGDIG_NB,
     } t_eFMKIO_InDigSig;
 
-    /* List of input Analog pin available on this board */
+    /**
+    * @brief List of input Analog pin available on this board.
+    */
     typedef enum
     {
         FMKIO_INPUT_SIGANA_1 = 0x0,                  /**< Reference to PC0 */
@@ -97,13 +105,15 @@
         FMKIO_INPUT_SIGANA_6,                        /**< Reference to PA7 */
         FMKIO_INPUT_SIGANA_7,                        /**< Reference to PB0 */
         FMKIO_INPUT_SIGANA_8,                        /**< Reference to PB1 */
-        FMKIO_INPUT_SIGANA_9,                        /**< Reference to PA2 */
-        FMKIO_INPUT_SIGANA_10,                       /**< Reference to PA3 */
+        FMKIO_INPUT_SIGANA_9,                        /**< Reference to PF2 */
+        FMKIO_INPUT_SIGANA_10,                       /**< Reference to PF3 */
     
         FMKIO_INPUT_SIGANA_NB,
     } t_eFMKIO_InAnaSig;
 
-    /* List of input frequency pin available on this board */
+    /**
+    * @brief List of input frequency pin available on this board.
+    */
     typedef enum
     {
         FMKIO_INPUT_SIGFREQ_1 = 0x0,                  /**< Reference to PE2 */
@@ -113,7 +123,9 @@
         FMKIO_INPUT_SIGFREQ_NB,
     } t_eFMKIO_InFreqSig;
 
-    /* List of input event pin available on this board */
+    /**
+    * @brief List of input event pin available on this board.
+    */
     typedef enum
     {
         FMKIO_INPUT_SIGEVNT_1 = 0x0,                  /**< Reference to PB10 */
@@ -122,7 +134,9 @@
         FMKIO_INPUT_SIGEVNT_NB,
     } t_eFMKIO_InEvntSig;
 
-    /* List of output digital pin available on this board */
+    /**
+    * @brief List of output digital pin available on this board.
+    */
     typedef enum
     {
         FMKIO_OUTPUT_SIGDIG_1 = 0x0,                  /**< Reference to PB12 */
@@ -138,7 +152,9 @@
         FMKIO_OUTPUT_SIGDIG_NB,
     } t_eFMKIO_OutDigSig;
 
-    /* List of output PWM pin available on this board */
+    /**
+    * @brief List of output PWM pin available on this board.
+    */
     typedef enum
     {
         FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< Reference to PC7 */
@@ -153,7 +169,9 @@
         FMKIO_OUTPUT_SIGPWM_NB,
     } t_eFMKIO_OutPwmSig;
 
-    /* List of signals used for CAN communication */
+    /**
+    * @brief List of signals used for CAN communication.
+    */
     typedef enum
     {
         FMKIO_COM_SIGNAL_CAN_1 = 0x0,                  /**< Rx -> PA11, Tx -> PA12, Reference to CAN 0 */
@@ -163,52 +181,21 @@
         FMKIO_COM_SIGNAL_CAN_NB,
     } t_eFMKIO_ComSigCan;
 
-    /* CAUTION : Automatic generated code section for Enum: End */
-    /**< List of alternate function*/
+    /**
+    * @brief List of signals used for Serial communication.
+    */
     typedef enum
     {
-        FMKIO_AF0_EVENTOUT = 0x0U,  /*!< AF0: EVENTOUT Alternate Function mapping */
-        FMKIO_AF0_MCO,           /*!< AF0: MCO Alternate Function mapping */
-        FMKIO_AF0_SPI1,          /*!< AF0: SPI1 Alternate Function mapping */
-        FMKIO_AF0_SPI2,          /*!< AF0: SPI2 Alternate Function mapping */
-        FMKIO_AF0_TIM15,         /*!< AF0: TIM15 Alternate Function mapping */
-        FMKIO_AF0_TIM17,         /*!< AF0: TIM17 Alternate Function mapping */
-        FMKIO_AF0_SWDIO,         /*!< AF0: SWDIO Alternate Function mapping */
-        FMKIO_AF0_SWCLK,         /*!< AF0: SWCLK Alternate Function mapping */
-        FMKIO_AF0_TIM14,         /*!< AF0: TIM14 Alternate Function mapping */
-        FMKIO_AF0_USART1,        /*!< AF0: USART1 Alternate Function mapping */
-        FMKIO_AF0_IR,            /*!< AF0: IR Alternate Function mapping */
-        FMKIO_AF0_TIM3,          /*!< AF0: TIM3 Alternate Function mapping */
+        FMKIO_COM_SIGNAL_SERIAL_1 = 0x0,                  /**< Rx -> PG3, Tx -> PG4, Reference to Serial PIN_3 */
+        FMKIO_COM_SIGNAL_SERIAL_2,                        /**< Rx -> PA3, Tx -> PA2, Reference to Serial PIN_3 */
+        FMKIO_COM_SIGNAL_SERIAL_3,                        /**< Rx -> PG5, Tx -> PG6, Reference to Serial PIN_5 */
+        FMKIO_COM_SIGNAL_SERIAL_4,                        /**< Rx -> PG7, Tx -> PG8, Reference to Serial PIN_7 */
+        FMKIO_COM_SIGNAL_SERIAL_5,                        /**< Rx -> PG9, Tx -> PG10, Reference to Serial PIN_9 */
+    
+        FMKIO_COM_SIGNAL_SERIAL_NB,
+    } t_eFMKIO_ComSigSerial;
 
-        FMKIO_AF1_TIM3,          /*!< AF1: TIM3 Alternate Function mapping */
-        FMKIO_AF1_TIM15,         /*!< AF1: TIM15 Alternate Function mapping */
-        FMKIO_AF1_USART1,        /*!< AF1: USART1 Alternate Function mapping */
-        FMKIO_AF1_USART2,        /*!< AF1: USART2 Alternate Function mapping */
-        FMKIO_AF1_EVENTOUT,      /*!< AF1: EVENTOUT Alternate Function mapping */
-        FMKIO_AF1_I2C1,          /*!< AF1: I2C1 Alternate Function mapping */
-        FMKIO_AF1_I2C2,          /*!< AF1: I2C2 Alternate Function mapping */
-        FMKIO_AF1_IR,            /*!< AF1: IR Alternate Function mapping */
-
-        FMKIO_AF2_TIM1,          /*!< AF2: TIM1 Alternate Function mapping */
-        FMKIO_AF2_TIM16,         /*!< AF2: TIM16 Alternate Function mapping */
-        FMKIO_AF2_TIM17,         /*!< AF2: TIM17 Alternate Function mapping */
-        FMKIO_AF2_EVENTOUT,      /*!< AF2: EVENTOUT Alternate Function mapping */
-
-        FMKIO_AF3_EVENTOUT,      /*!< AF3: EVENTOUT Alternate Function mapping */
-        FMKIO_AF3_I2C1,          /*!< AF3: I2C1 Alternate Function mapping */
-        FMKIO_AF3_TIM15,         /*!< AF3: TIM15 Alternate Function mapping */
-
-        FMKIO_AF4_TIM14,         /*!< AF4: TIM14 Alternate Function mapping */
-
-        FMKIO_AF5_TIM16,         /*!< AF5: TIM16 Alternate Function mapping */
-        FMKIO_AF5_TIM17,         /*!< AF5: TIM17 Alternate Function mapping */
-
-        FMKIO_AF6_EVENTOUT,      /*!< AF6: EVENTOUT Alternate Function mapping */
-
-        FMKIO_AF_NB              /*!< Total number of alternate functions */
-    } t_eFMKIO_AlternateFunc;
-
-
+    /* CAUTION : Automatic generated code section for Enum: End */
 
     //-----------------------------TYPEDEF TYPES---------------------------//
     //-----------------------------STRUCT TYPES---------------------------//

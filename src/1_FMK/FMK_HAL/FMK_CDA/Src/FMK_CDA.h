@@ -52,8 +52,8 @@
         FMKCDA_ERRSTATE_ERR_DMA          = 0x04U,            /**< Dma error detetected on channel */
         FMKCDA_ERRSTATE_CB               = 0x08U,            /**< callback error detetected on channel */
         FMKCDA_ERRSTATE_JQOVF            = 0x10U,            /**< to do */
-        FMKCDA_ERRSTATE_PRESENTS         = 0x40U,            /**< Conversio no longer operate when dma mode circular is choosen */
-        FMKCDA_ERRSTATE_UNKNOWN          = 0x20U,            /**< Unknown error detected */
+        FMKCDA_ERRSTATE_PRESENTS         = 0x20U,            /**< Conversio no longer operate when dma mode circular is choosen */
+        FMKCDA_ERRSTATE_UNKNOWN          = 0x40U,            /**< Unknown error detected */
 
     } t_eFMKCDA_ChnlErrState;
     /* CAUTION : Automatic generated code section for Enum: Start */
@@ -127,7 +127,7 @@
     *   @note       If the Adc config is not congigured yet it will be with f_adcCfg_e.\n
     *               Keep in mind that once the ADC is configured with a config every channel 
     *               of the ADC has the same configuration.\n That means every channel from an ADC 
-    *               should have the same hardware config.\n If not, a error is reach.\n
+    *               should have the same hardware config.\n If not, an error is reach.\n
     * 
     *	@param[in]  f_Adc_e               : enum adc, value from @ref t_eFMKCDA_Adc
     *	@param[in]  f_channel_e           : enum adc channel, value from @ref t_eFMKCDA_AdcChannel
@@ -137,9 +137,9 @@
     *   @retval RC_WARNING_WRONG_STATE              @ref RC_ERROR_WARNING_STATE
     *   @retval RC_ERROR_ALREADY_CONFIGURED             @ref RC_ERROR_ALREADY_CONFIGURED
     */
-    t_eReturnCode FMKCDA_Set_AdcChannelCfg(t_eFMKCDA_Adc f_Adc_e, 
-                                       t_eFMKCDA_AdcChannel f_channel_e,
-                                       t_eFMKCDA_HwAdcCfg   f_adcCfg_e);
+    t_eReturnCode FMKCDA_Set_AdcChannelCfg( t_eFMKCDA_Adc f_Adc_e, 
+                                            t_eFMKCDA_AdcChannel f_channel_e,
+                                            t_eFMKCDA_HwAdcCfg   f_adcCfg_e);
     /**
     *
     *	@brief      Function to get the analog value from a adc channel
@@ -159,7 +159,9 @@
     *   @retval RC_WARNING_NO_OPERATION             @ref RC_WARNING_NO_OPERATION
     *   @retval RC_ERROR_MODULE_NOT_INITIALIZED     @ref RC_ERROR_MODULE_NOT_INITIALIZED
     */
-    t_eReturnCode FMKCDA_Get_AnaChannelMeasure(t_eFMKCDA_Adc f_Adc_e, t_eFMKCDA_AdcChannel f_channel_e, t_uint16 *f_AnaMeasure_u16);
+    t_eReturnCode FMKCDA_Get_AnaChannelMeasure( t_eFMKCDA_Adc f_Adc_e, 
+                                                t_eFMKCDA_AdcChannel f_channel_e, 
+                                                t_uint16 *f_AnaMeasure_u16);
     /**
     *
     *	@brief      Function to get the error code for a adc_channel

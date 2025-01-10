@@ -24,34 +24,47 @@ For the doxygen documentation search the file "index.html"
 
 
 ## Annexe 1
-- Take te datasheet of your stm32 microcontrôler
+- Take te datasheet of your stm32 µC, Also take the .startup of your µc
 - Open the Hardware_Configuration file
 - Go to the General Info sheet
 - Put the hardware configuration as ask by the arrays on this sheet, the first array, you just have to copied/pasted the enum IRQn_Type in file stm32fXXYY
 - For RCC Clock, go to the stm32_hal_rcc.h file and find 'RCC_Exported_Macros', copy every clock in the excel array.
 - For timer/adc/dac/dma etc put the right information and keep it as so for example for timers it's 'timer' + '_' + 'number'
-- Go to the sheet FMKIO and filled all tables as asking, Find The alternate Function in Datasheet, alll information are in the array
+- Go to the sheet FMKIO and filled all tables as asking, Find The alternate Function in Datasheet, all information are in the array
+
 	for PWM purpose be careful on which timer you choose, some of them are not meant to make pwm signal
 - Go to the sheet CPU and inform the timer used for event timers whhich means periodic timer
-- Save and Generate code from Doc/ConfigPrj/PythonToolmain.py file.
+- Save and Generate code from Doc/ConfigPrj/PythonTool/somethnig.bat file.
+
+## bugs
+- Comprendre pourquoi HAL_Delay -> Infinite Loop
+- Comprendre pourquoi FDCAN marche po lo
 
 ## Left to do
+- Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
+
+
+- Utiliser la LED builtin pour informer le Développer de l'état du µC
+    - LED clignote lentement   -> Phase d'initialisation 
+    - LED clignote rapidement  -> Phase d'initialisation échoué
+    - LED clignote constamment -> L'application est dans un état d'erreur
+    - LED clignote plus        -> L'application est lancé 
+
 - Faire un module Diagnostic Event Management
 - Faire un module Supply Voltage Control
 - Faire l'intégration MatLab du projet
-- Faire un module USART
-
+- Mettre les IRQN Handlers dans les fichiers        spécifics car propre à chaque CPU ??
 - Mettre à jour la documentation 
     - Mettre à jour la documentaiton drawio
     - Créer un script python qui fait une documentation générale du Projet avec toutes les API par Modules ?
+
 - Dans le module FDCAN
-    - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size.
+    - Rendre InitDrv Public, ne pas supposer que tout le monde va l'utiliser 
+    -  Inverser l'ordre de l'init, d'abord set Hw Clock et après Init
+    - Update du flag FlagError Detected et gestion dans la cylic
+    - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size. en gros un pointeur vers une varaible qui est un tableau généré dynamiquemeent par la config EXcel
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
-Dans la Cfg FMKCPU
-    - revoir la configuration des horloges et des prescalers de chaque module 
-        la rendre  automatique en fonction des valeurs des fréquences de SYS_CLOCK
-
-Dans FMKCPU, dans les fonctions de ChannelCfg
+- Dans FMKCPU, dans les fonctions de ChannelCfg
     Mettre l'initialisation du timer dans une autre fonction pour réduire la complexité de la fonction 'channelCfg'
     Appeler cette fonction (qui initialise le timer) dans channelCfg

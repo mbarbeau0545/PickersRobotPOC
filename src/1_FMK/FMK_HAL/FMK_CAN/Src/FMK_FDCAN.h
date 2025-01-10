@@ -19,6 +19,8 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    #include "APP_CFG/ConfigFiles/APPSYS_ConfigPublic.h"
+    #ifdef APPSYS_MODULE_FMKCAN_ENABLE
     #include "FMK_CFG/FMKCFG_ConfigFiles/FMKFDCAN_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
@@ -34,21 +36,21 @@
  */
 typedef enum
 {
-    FMKFDCAN_DLC_0 = 0x00, /**< Data length of 0 bytes. */
-    FMKFDCAN_DLC_1,        /**< Data length of 1 byte. */
-    FMKFDCAN_DLC_2,        /**< Data length of 2 bytes. */
-    FMKFDCAN_DLC_3,        /**< Data length of 3 bytes. */
-    FMKFDCAN_DLC_4,        /**< Data length of 4 bytes. */
-    FMKFDCAN_DLC_5,        /**< Data length of 5 bytes. */
-    FMKFDCAN_DLC_6,        /**< Data length of 6 bytes. */
-    FMKFDCAN_DLC_7,        /**< Data length of 7 bytes. */
-    FMKFDCAN_DLC_8,        /**< Data length of 8 bytes. */
-    FMKFDCAN_DLC_16,       /**< Data length of 16 bytes. */
-    FMKFDCAN_DLC_20,       /**< Data length of 20 bytes. */
-    FMKFDCAN_DLC_24,       /**< Data length of 24 bytes. */
-    FMKFDCAN_DLC_32,       /**< Data length of 32 bytes. */
-    FMKFDCAN_DLC_48,       /**< Data length of 48 bytes. */
-    FMKFDCAN_DLC_64,       /**< Data length of 64 bytes. */
+    FMKFDCAN_DLC_0  = 0x00,       /**< Data length of 0 bytes. */
+    FMKFDCAN_DLC_1  = 0x01,       /**< Data length of 1 byte. */
+    FMKFDCAN_DLC_2  = 0x02,       /**< Data length of 2 bytes. */
+    FMKFDCAN_DLC_3  = 0x03,       /**< Data length of 3 bytes. */
+    FMKFDCAN_DLC_4  = 0x04,       /**< Data length of 4 bytes. */
+    FMKFDCAN_DLC_5  = 0x05,       /**< Data length of 5 bytes. */
+    FMKFDCAN_DLC_6  = 0x06,       /**< Data length of 6 bytes. */
+    FMKFDCAN_DLC_7  = 0x07,       /**< Data length of 7 bytes. */
+    FMKFDCAN_DLC_8  = 0x08,       /**< Data length of 8 bytes. */
+    FMKFDCAN_DLC_16 = 0x10,       /**< Data length of 16 bytes. */
+    FMKFDCAN_DLC_20 = 0x14,       /**< Data length of 20 bytes. */
+    FMKFDCAN_DLC_24 = 0x18,       /**< Data length of 24 bytes. */
+    FMKFDCAN_DLC_32 = 0x20,       /**< Data length of 32 bytes. */
+    FMKFDCAN_DLC_48 = 0x30,       /**< Data length of 48 bytes. */
+    FMKFDCAN_DLC_64 = 0x40,       /**< Data length of 64 bytes. */
 
     FMKFDCAN_DLC_NB        /**< Total number of DLC options. */
 } t_eFMKFDCAN_DataLength;
@@ -95,9 +97,9 @@ typedef struct
  */
 typedef struct 
 {
-    t_eFMKFDCAN_DataLength Dlc_e;               /**< Data length code (DLC) for the message. */
-    t_eFMKFDCAN_MsgDirection Direction_e;       /**< Direction of the message (Rx or Tx). */
-    t_uint8 *data_pu8;                          /**< Pointer to the message data buffer. */
+    t_eFMKFDCAN_DataLength Dlc_e;                /**< Data length code (DLC) for the message. */
+    t_eFMKFDCAN_MsgDirection Direction_e;        /**< Direction of the message (Rx or Tx). */
+    t_uint8 * data_pu8;                          /**< Pointer to the message data buffer. */
 } t_sFMKFDCAN_NodeMessage;
 
 /**
@@ -258,7 +260,8 @@ typedef struct
     *
     */
     t_eReturnCode FMKFDCAN_GetRxItem(t_eFMKFDCAN_NodeList f_Node_e, t_sFMKFDCAN_RxItemEvent *f_RxItem_ps);
-
+    #endif // APPSYS_MODULE_FMKCAN_ENABLE
+    
 #endif // FMKFDCAN_H_INCLUDED           
 //************************************************************************************
 // End of File

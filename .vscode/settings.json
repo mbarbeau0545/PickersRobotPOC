@@ -58,7 +58,10 @@
     "fmk_fdcan.h": "c",
     "safemem.h": "c",
     "libqueue.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "appact_spec_cmd_irrigvalve_courgette.h": "c",
+    "fmksrl_configspecific.c.h": "c",
+    "fmkio_configspecific.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",

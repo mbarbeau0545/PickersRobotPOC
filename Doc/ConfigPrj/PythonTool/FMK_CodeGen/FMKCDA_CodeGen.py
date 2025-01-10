@@ -22,7 +22,8 @@ TARGET_ADC_SWITCH_START = "            /* CAUTION : Automatic generated code sec
 TARGET_ADC_SWITCH_END   = "            /* CAUTION : Automatic generated code section for switch_case ADC channel: End */\n"
 TARGET_ADC_CHNLNB_START = "    /* CAUTION : Automatic generated code section for ADC channels number: Start */\n"
 TARGET_ADC_CHNLNB_END   = "    /* CAUTION : Automatic generated code section for ADC channels number: End */\n"
-
+TARGET_ADC_X_IRQN_START = "/* CAUTION : Automatic generated code section for ADCx IRQN_Handler: Start */\n"
+TARGET_ADC_X_IRQN_END = "/* CAUTION : Automatic generated code section for ADCx IRQN_Handler: End */\n"
 # CAUTION : Automatic generated code section: Start #
 
 # CAUTION : Automatic generated code section: End #
@@ -54,9 +55,6 @@ class FMKCDA_CodeGen():
 
     @classmethod
     def code_genration(cls, f_hw_cfg) -> None:
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         # load array needed
         cls.code_gen.load_excel_file(f_hw_cfg)
         #irqn_cfg_a = cls.code_gen.get_array_from_excel("GI_IRQN")
@@ -64,7 +62,7 @@ class FMKCDA_CodeGen():
         dac_astr   = cls.code_gen.get_array_from_excel("GI_DAC")[1:]
         vref_astr  = cls.code_gen.get_array_from_excel("FMKCDA_VoltageRef")[1:]
         calib_astr = cls.code_gen.get_array_from_excel("FMKCDA_CalibrationOthers")[1:]
-
+        list_irqn  = cls.code_gen.get_array_from_excel('FMKCDA_IRQNHandler')
         enum_adc = ""
         enum_adc_channel = ""
         switch_adc_channel = ""
@@ -77,6 +75,7 @@ class FMKCDA_CodeGen():
         var_other_cfg = ""
         var_vref_calib = ""
         var_rank_counter = ""
+        func_irqn = ''
         var_adc_max_channel = ""
         def_adcx_max_channel = ""
         max_adc_channel: int = 0
@@ -134,6 +133,21 @@ class FMKCDA_CodeGen():
                                                                   [f"Reference to HAL adc channel {int(idx)}" for idx in range(max_adc_channel)])
 
         #----------------------------------------------------------------
+        #-----------------------------Make IRQNHandler-------------------
+        #----------------------------------------------------------------
+        for adc_irqn in list_irqn[1:]:
+            func_irqn += '/*********************************\n' \
+                        + f' * {adc_irqn[0]}\n' \
+                        + '*********************************/\n' \
+                        + f'void {adc_irqn[0]}(void)\n' \
+                        + '{\n'  
+            list_adc_asso = str(adc_irqn[1]).split(',')
+            for adc_asso in list_adc_asso:
+                adc_asso = adc_asso.replace(' ', '')
+                func_irqn   += '    HAL_ADC_IRQHandler(&g_AdcInfo_as[' \
+                            + f'{ENUM_ADC_ISCT_ROOT}_{adc_asso[-1]}].BspInit_s);\n'
+            func_irqn += '}\n'
+        #----------------------------------------------------------------
         #-----------------------------make channel switch case-----------
         #-----------------------------------------------------------------
         for idx in range(max_adc_channel):
@@ -167,7 +181,7 @@ class FMKCDA_CodeGen():
         #------------make define/ var for interna sensors-----------
         #-----------------------------------------------------------
         var_other_cfg   += "    /**< Variable for Interna Sensors configuration*/\n"
-        var_other_cfg   += f"    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg[{ENUM_ADC_INTERN_SENSOR}_NB] =" + "{\n"
+        var_other_cfg   += f"    const t_sFMKCDA_HwAdcCfg c_FmkCda_HwInternalSnsCfg_as[{ENUM_ADC_INTERN_SENSOR}_NB] =" + "{\n"
         var_other_calib += "    /**< Variable for Internal Sensors Calibration address */\n"
         var_other_calib += "    const volatile t_uint16* c_FmkCda_HwInternalSnsAddress_pas16[FMKCDA_ADC_INTERN_NB] = {\n"
         for idx, other_calib_info in enumerate(calib_astr):
@@ -189,6 +203,9 @@ class FMKCDA_CodeGen():
         #-----------------------------------------------------------
         #------------code genration for FMKADC module---------------
         #-----------------------------------------------------------
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<Start code generation for FMFCDA Module>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("\t- For configPublic file")
         cls.code_gen.change_target_balise(TARGET_T_ENUM_START_LINE, TARGET_T_ENUM_END_LINE)
         print("\t\t- Enum for adc cahnnel")
@@ -215,9 +232,13 @@ class FMKCDA_CodeGen():
         print("\t\t- variable for Adc Info")
         cls.code_gen._write_into_file(var_rank_counter, FMKCDA)
         cls.code_gen._write_into_file(var_adc_info, FMKCDA)
+
+        print('\t\t- Irqn Handler Function Declaration')
+        cls.code_gen.change_target_balise(TARGET_ADC_X_IRQN_START, TARGET_ADC_X_IRQN_END)
+        cls.code_gen._write_into_file(func_irqn, FMKCDA)
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         print("<<<<<<<<<<<<<<<<<<<<End code generation for FmkCda Module>>>>>>>>>>>>>>>>>>>")
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
 #------------------------------------------------------------------------------
 #                             FUNCTION IMPLMENTATION
 #------------------------------------------------------------------------------

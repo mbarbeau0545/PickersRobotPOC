@@ -17,18 +17,18 @@
 SOFTWARE_CFG_PATH = "Doc\ConfigPrj\ExcelCfg\Software_Configuration.xlsm"
 
 SNS_SPEC_FOLDER_PATH = "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific"
-SNS_SPEC_FOLDER_FULLPATH = "src\\2_APP\APP_CFG\ConfigSpecific\AppSns_ConfigSpecific"
+SNS_SPEC_FOLDER_FULLPATH = "src\\3_APP\APP_CFG\ConfigSpecific\AppSns_ConfigSpecific"
 
-ACT_SPEC_FOLDER_FULLPATH = "src\\2_APP\APP_CFG\ConfigSpecific\AppAct_ConfigSpecific"
+ACT_SPEC_FOLDER_FULLPATH = "src\\3_APP\APP_CFG\ConfigSpecific\AppAct_ConfigSpecific"
 ACT_SPEC_FOLDER_PATH = "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific"
 
-APPSNS_CONFIGPUBLIC_PATH = "src\\2_APP\APP_CFG\ConfigFiles\APPSNS_ConfigPublic.h"
-APPSNS_CONFIGPRIVATE_PATH = "src\\2_APP\APP_CFG\ConfigFiles\APPSNS_ConfigPrivate.h"
-APPSNS_C_PATH = "src\\2_APP\APP_CTRL\APP_SNS\Src\APP_SNS.c"
+APPSNS_CONFIGPUBLIC_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPSNS_ConfigPublic.h"
+APPSNS_CONFIGPRIVATE_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPSNS_ConfigPrivate.h"
+APPSNS_C_PATH = "src\\3_APP\APP_CTRL\APP_SNS\Src\APP_SNS.c"
 
-APPACT_CONFIGPUBLIC_PATH = "src\\2_APP\APP_CFG\ConfigFiles\APPACT_ConfigPublic.h"
-APPACT_CONFIGPRIVATE_PATH = "src\\2_APP\APP_CFG\ConfigFiles\APPACT_ConfigPrivate.h"
-APPACT_C_PATH = "src\\2_APP\APP_CTRL\APP_ACT\Src\APP_ACT.c"
+APPACT_CONFIGPUBLIC_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPACT_ConfigPublic.h"
+APPACT_CONFIGPRIVATE_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPACT_ConfigPrivate.h"
+APPACT_C_PATH = "src\\3_APP\APP_CTRL\APP_ACT\Src\APP_ACT.c"
 
 
 TPL_APP_SPC_PATH_H = "Doc\ConfigPrj\PythonTool\App_CodeGen\\template_files\APPSPEC_tpl.h"

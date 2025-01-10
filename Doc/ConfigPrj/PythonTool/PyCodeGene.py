@@ -37,7 +37,9 @@ TARGET_T_ENUM_START_LINE = "    /* CAUTION : Automatic generated code section fo
 TARGET_T_ENUM_END_LINE =   "    /* CAUTION : Automatic generated code section for Enum: End */\n"
 
 TARGET_T_VARIABLE_START_LINE = "    /* CAUTION : Automatic generated code section for Variable: Start */\n"
+TARGET_VARIABLE_START_LINE = "/* CAUTION : Automatic generated code section for Variable: Start */\n"
 TARGET_T_VARIABLE_END_LINE   = "    /* CAUTION : Automatic generated code section for Variable: End */\n"
+TARGET_VARIABLE_END_LINE   = "/* CAUTION : Automatic generated code section for Variable: End */\n"
 TARGET_T_STRUCT_START_LINE   = "    /* CAUTION : Automatic generated code section for Structure: Start */\n"
 TARGET_T_STRUCT_END_LINE      ="    /* CAUTION : Automatic generated code section for Structure: End */\n"
 
@@ -175,7 +177,7 @@ class LoadConfig_FromExcel():
         generatedCode_str = ""
         arrayEnum_a = self._get_array_from_excel(f_ArrayName_str)[1:]
         if(arrayEnum_a != None and isinstance(f_variableName_str,str) and os.path.isfile(f_scriptPath_str)):
-            generatedCode_str += "\ttypedef enum\n\t{\n"
+            generatedCode_str += "    typedef enum" + f' __{f_ArrayName_str if f_variableName_str == " " else f_variableName_str}\n' + '{\n'
             for idx, InstanceEnum_a in enumerate(arrayEnum_a):
                 # Male enum with the first column
                 # If value of enum is none and it's the first, initiliaze to 0 
@@ -252,7 +254,7 @@ class LoadConfig_FromExcel():
         if(f_enum_description != ""):
             if f_IsHfile_b:
                 rc_enum += "    "
-            rc_enum += f"/* {f_enum_description} */\n"
+            rc_enum += f"/**\n    * @brief {f_enum_description}.\n    */\n"
             if f_IsHfile_b:
                 rc_enum += "    "
             rc_enum += "typedef enum\n    {\n"

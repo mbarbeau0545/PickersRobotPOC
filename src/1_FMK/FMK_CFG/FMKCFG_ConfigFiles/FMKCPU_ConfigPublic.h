@@ -22,7 +22,6 @@
     #include "stm32g4xx_hal.h"
     #include "stm32g4xx.h"
     /* CAUTION : Automatic generated code section for CPU Configuration: End */
-    // flag automatic generate code
     #include "TypeCommon.h"
     #include "Constant.h"
     // ********************************************************************
@@ -108,7 +107,9 @@
         FMKCPU_INTERRUPT_LINE_TYPE_NB,
     } t_eFMKCPU_InterruptLineType;
     /* CAUTION : Automatic generated code section for Enum: Start */
-    /* Enum for System Oscillator Clock */
+    /**
+    * @brief Enum for System Oscillator Clock.
+    */
     typedef enum
     {
         FMKCPU_SYS_CLOCK_HSE = 0x0,                /**< Reference to Hardware Bus HSE */
@@ -125,29 +126,9 @@
         FMKCPU_SYS_CLOCK_NB,
     } t_eFMKCPU_SysClkOsc;
 
-    /* Enum for Independent Clock Domain */
-    typedef enum
-    {
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_ADC = 0x0,                /**< Reference to Independant Clock Domain ADC */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2C,                      /**< Reference to Independant Clock Domain I2C */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_I2S,                      /**< Reference to Independant Clock Domain I2S */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPTIM,                    /**< Reference to Independant Clock Domain LPTIM */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_TIM,                      /**< Reference to Independant Clock Domain TIM */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_LPUART,                   /**< Reference to Independant Clock Domain LPUART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_QUADSPI,                  /**< Reference to Independant Clock Domain QUADSPI */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_RNG,                      /**< Reference to Independant Clock Domain RNG */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USB,                      /**< Reference to Independant Clock Domain USB */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_SAI1,                     /**< Reference to Independant Clock Domain SAI1 */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_FDCAN,                    /**< Reference to Independant Clock Domain FDCAN */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_CAN,                      /**< Reference to Independant Clock Domain CAN */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_UART,                     /**< Reference to Independant Clock Domain UART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_USART,                    /**< Reference to Independant Clock Domain USART */
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_HRTIM,                    /**< Reference to Independant Clock Domain HRTIM */
-    
-        FMKCPU_CLOCK_PERIPH_EXT_TYPE_NB,
-    } t_eFMKCPU_ClockPeriphExtType;
-
-    /* Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse */
+    /**
+    * @brief Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse.
+    */
     typedef enum
     {
         FMKCPU_INTERRUPT_LINE_IO_11 = 0x0,                 /**< General Purpose Timer, Reference to Timer 1 Channel 1 */
@@ -174,6 +155,8 @@
         FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
         FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
         FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
+        FMKCPU_INTERRUPT_LINE_IO_65,                       /**< General Purpose Timer, Reference to Timer 8 Channel 5 */
+        FMKCPU_INTERRUPT_LINE_IO_66,                       /**< General Purpose Timer, Reference to Timer 8 Channel 6 */
         FMKCPU_INTERRUPT_LINE_IO_71,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
         FMKCPU_INTERRUPT_LINE_IO_72,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
         FMKCPU_INTERRUPT_LINE_IO_73,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */
@@ -182,7 +165,9 @@
         FMKCPU_INTERRUPT_LINE_IO_NB,
     } t_eFMKCPU_InterruptLineIO;
 
-    /* Number of Event Purpose Interrupt Line */
+    /**
+    * @brief Number of Event Purpose Interrupt Line.
+    */
     typedef enum
     {
         FMKCPU_INTERRUPT_LINE_EVNT_1 = 0x0,                  /**< Event Purpose Timer, Reference to Timer 15 Channel 1 */
@@ -193,7 +178,9 @@
         FMKCPU_INTERRUPT_LINE_EVNT_NB,
     } t_eFMKCPU_InterruptLineEvnt;
 
-    /* Number of DAC Purpose Interrupt Line */
+    /**
+    * @brief Number of DAC Purpose Interrupt Line.
+    */
     typedef enum
     {
         FMKCPU_INTERRUPT_LINE_DAC_1 = 0x0,                  /**< Dac Purpose Timer, Reference to Timer 6 Channel 1 */
@@ -202,7 +189,9 @@
         FMKCPU_INTERRUPT_LINE_DAC_NB,
     } t_eFMKCPU_InterruptLineDAC;
 
-    /* Enum for rcc clock state reference */
+    /**
+    * @brief Enum for rcc clock state reference.
+    */
     typedef enum
     {
         FMKCPU_RCC_CLK_DMA1 = 0x0,               /**< Reference to RCC Clock DMA1 */
@@ -266,7 +255,9 @@
         FMKCPU_RCC_CLK_NB,
     } t_eFMKCPU_ClockPort;
 
-    /* Enum for NVIC list */
+    /**
+    * @brief Enum for NVIC list.
+    */
     typedef enum
     {
         FMKCPU_NVIC_WWDG_IRQN = 0x0,          /**< Reference to HAL nvic WWDG_IRQn */
