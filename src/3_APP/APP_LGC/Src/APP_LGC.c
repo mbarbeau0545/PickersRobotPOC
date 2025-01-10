@@ -192,7 +192,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
 
     t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
     SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
     SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,

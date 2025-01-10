@@ -1181,11 +1181,6 @@ t_eReturnCode FMKSRL_ConfigureReception(  t_eFMKSRL_SerialLine f_SrlLine_e,
         Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
     }
 
-    //------ Check Module State ------//
-    if(g_FmkSrl_ModState_e != STATE_CYCLIC_OPE)
-    {
-        Ret_e = RC_WARNING_BUSY;
-    }
     if(Ret_e == RC_OK)
     {
         srlInfo_ps = (t_sFMKSRL_SerialInfo *)(&g_SerialInfo_as[f_SrlLine_e]);
@@ -1880,13 +1875,11 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
             Ret_e = RC_WARNING_BUSY;
         }
 
-        //------ Task Accepted ------//
         else 
         {
             //------ Check Buffer status state ------//
             if(GETBIT(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY) == BIT_IS_SET_16B)
             {
-                //------ Check if TxOpe Mode required RxBuffer ------//
                 if(f_srlInfo_ps->TxInfo_s.RqstTxRxOpe_b == (t_bool)True)
                 {
                     //------ Abort Operation Currently On Going ------//
@@ -1906,18 +1899,22 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
                     //------ Update Information ------//
                     RxBuffer_s->bytesPending_u16 = (t_uint16)0;
                 }
-
                 //------ Task Not Accepted, A Reception is in progress ------//
                 else 
                 {
+                    *f_rcvDataSizeAccept_pu16 = (t_uint16)0;
+                    *f_WriteIdx_pu16 = (t_uint16)0;
                     Ret_e = RC_WARNING_BUSY;
                 }
             }
-            else 
+
+            //------ Task Accepted ------//
+            if(Ret_e == RC_OK)
             {
                 //------ Update flag ------//
                 SETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_BUSY);
                 RESETBIT_16B(RxBuffer_s->status_u16, FMKSRL_BUFFSTATUS_READY);
+                
                 //------ Reset pending bytes as no data has been accepted yet ------//
                 RxBuffer_s->bytesPending_u16 = (t_uint16)0;
 
