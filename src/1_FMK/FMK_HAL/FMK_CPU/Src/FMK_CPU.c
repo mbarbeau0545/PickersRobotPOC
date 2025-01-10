@@ -998,7 +998,7 @@ t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLin
  *********************************/
 t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb)
+                                         t_cbFMKCPU_InterruptLine  * f_ITChannel_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_Timer timer_e;
@@ -1534,7 +1534,7 @@ static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
             }
             else
             {
-                Ret_e = RC_ERROR_BUSY;
+                Ret_e = RC_WARNING_BUSY;
             }
         }
         if (Ret_e == RC_OK)

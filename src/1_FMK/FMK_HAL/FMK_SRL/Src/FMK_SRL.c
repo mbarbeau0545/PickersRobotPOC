@@ -206,8 +206,8 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {    [FMKSR
         .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART1_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
     },
 
     [FMKSRL_SERIAL_LINE_2] = {
@@ -222,8 +222,8 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {    [FMKSR
         .c_clockPort_e = FMKCPU_RCC_CLK_USART3,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART3_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
     },
 
     [FMKSRL_SERIAL_LINE_4] = {
@@ -238,8 +238,8 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {    [FMKSR
         .c_clockPort_e = FMKCPU_RCC_CLK_UART5,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_UART,
         .c_IRQNType_e  = FMKCPU_NVIC_UART5_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)NULL,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)NULL,
+        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
     },
 
 };
@@ -1087,7 +1087,6 @@ t_eReturnCode FMKSRL_Transmit(  t_eFMKSRL_SerialLine f_SrlLine_e,
                     }
                     else if(srlInfo_ps->SoftType_e == FMKSRL_HW_PROTOCOL_USART)
                     {
-                        srlInfo_ps->TxInfo_s.RqstTxRxOpe_b = (t_bool)True;
                         //------ In USART Mode A function already exists to transmit & receive ------//
                         s_FMKSRL_BspTxOpeMngmt( FMKSRL_BSP_TX_OPE_TRANSMIT_RECEIVE,
                                                 srlInfo_ps);
@@ -1481,7 +1480,11 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveMngmt( t_sFMKSRL_SerialInfo * f_srl
                 Ret_e = RC_ERROR_NOT_SUPPORTED;
             }
         }
-        if(bspRet_e != HAL_OK)
+        if(bspRet_e == HAL_BUSY)
+        {
+            Ret_e = RC_WARNING_BUSY;
+        }
+        else if (bspRet_e != HAL_OK)
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
         }

@@ -502,10 +502,13 @@ t_eReturnCode FMKIO_Set_InFreqSigCfg(t_eFMKIO_InFreqSig f_signal_e,
             {
                 case FMKIO_STC_RISING_EDGE:
                     cpu_trigger_e = FMKCPU_CHNL_MEAS_RISING_EDGE;
+                    break;
                 case FMKIO_STC_FALLING_EDGE:
                     cpu_trigger_e = FMKCPU_CHNL_MEAS_FALLING_EDGE;
+                    break;
                 case FMKIO_STC_BOTH_EDGE:
                     cpu_trigger_e = FMKCPU_CHNL_MEAS_BOTH_EDGE;
+                    break;
                 case FMKIO_STC_NB:
                 default:
                     Ret_e = RC_ERROR_WRONG_CONFIG;

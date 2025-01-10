@@ -356,7 +356,7 @@
     */
     t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                          t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
+                                         t_cbFMKCPU_InterruptLine * f_ITChannel_cb);
     /**
     *
     *	@brief    Configure a timer channel on event configuration.\n
