@@ -233,6 +233,15 @@ static void s_FMKIO_BspRqst_InterruptMngmt(void);
 static t_eReturnCode s_FMKIO_Operational(void);
 /**
  *
+ *	@brief      Function to perform diag on siganl used 
+ *
+ * @retval RC_OK                             @ref RC_OK
+ * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *
+ */
+static t_eReturnCode s_FMKIO_PreOperational(void);
+/**
+ *
  *	@brief      Perform diagnostic cyclic on signal configured.\n 
  *
  * @retval RC_OK                             @ref RC_OK
@@ -340,7 +349,11 @@ t_eReturnCode FMKIO_Cyclic(void)
         }
         case STATE_CYCLIC_PREOPE:
         {
-            g_FmkIO_ModState_e = STATE_CYCLIC_OPE;
+            Ret_e = s_FMKIO_PreOperational();
+            if(Ret_e == RC_OK)
+            {
+                g_FmkIO_ModState_e = STATE_CYCLIC_OPE;
+            }
             // nothing to do, just wait all module are Ope
             break;
         }
@@ -1082,6 +1095,29 @@ t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
+/*********************************
+ * s_FMKIO_PreOperational
+ *********************************/
+static t_eReturnCode s_FMKIO_PreOperational(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxSigFreq_u8 = 0;
+    t_uFMKCPU_InterruptLine FreqLine_u;
+
+    //----- Start Frequency Measurement -----//
+    for(idxSigFreq_u8 = (t_uint8)0 ;
+        (idxSigFreq_u8 < FMKIO_INPUT_SIGFREQ_NB)
+    &&  (g_InFreqSigInfo_as[idxSigFreq_u8].IsSigConfigured_b == (t_bool)True)
+    &&  (Ret_e == RC_OK); 
+        idxSigFreq_u8++)
+    {
+        FreqLine_u.ITLine_IO_e = c_InFreqSigBspMap_as[idxSigFreq_u8].ITLine_e;
+        Ret_e = FMKCPU_Set_InterruptLineState(  FMKCPU_INTERRUPT_LINE_TYPE_IO,
+                                                FreqLine_u,
+                                                FMKCPU_CHNLST_ACTIVATED);
+    }
+
+}
 /*********************************
  * s_FMKIO_Operational
  *********************************/

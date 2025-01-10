@@ -78,7 +78,7 @@
     /**
      * @brief Enum for return function
      */
-    typedef enum
+    typedef enum __t_eReturnCode
     {
         RC_ERROR_INSTANCE_NOT_INITIALIZED = -18, /**< The Instance or Structure should be initialized before use the function */
         RC_ERROR_ALREADY_CONFIGURED = -17,        /**< The operation is not accepted because the instance has already been configured */
@@ -114,7 +114,7 @@
     /**
      * @brief Enum for Cyclic function management
      */
-    typedef enum
+    typedef enum __t_eCyclicModState
     {
         STATE_CYCLIC_CFG = 0x00U,     /**< The module is making configuration to run properly */
         STATE_CYCLIC_PREOPE,          /**< The module needs to make actions before the operational state */

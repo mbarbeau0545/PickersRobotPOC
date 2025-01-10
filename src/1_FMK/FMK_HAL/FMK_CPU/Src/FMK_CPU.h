@@ -448,16 +448,6 @@
     t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e,
                                           t_uFMKCPU_InterruptLine f_IT_line_u,
                                           t_uint32 * f_CCRxValue_pu32);
-    /**
-     *  @brief Declaration for hardware IRQnHandler call
-     */
-    // flag automatic generated code 
-    void TIM1_IRQHandler(void);
-    void TIM3_IRQHandler(void);
-    void TIM14_IRQHandler(void);
-    void TIM15_IRQHandler(void);
-    void TIM16_IRQHandler(void);
-    void TIM17_IRQHandler(void);
 #endif // FMKCPU_H_INCLUDED           
 //************************************************************************************
 // End of File

@@ -227,10 +227,10 @@ static t_eReturnCode s_FMKCPU_Set_PwmChannelCfg(t_eFMKCPU_Timer f_timer_e,
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    static t_eReturnCode s_FMKCPU_Set_ICChannelCfg(t_eFMKCPU_Timer f_timer_e,
-                                         t_eFMKCPU_InterruptChnl f_channel_e, 
-                                         t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
+    static t_eReturnCode s_FMKCPU_Set_ICChannelCfg( t_eFMKCPU_Timer f_timer_e,
+                                                    t_eFMKCPU_InterruptChnl f_channel_e, 
+                                                    t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
+                                                    t_cbFMKCPU_InterruptLine f_ITChannel_cb);
 /**
 *
 *	@brief    Configure a timer channel on event configuration.\n
@@ -1114,8 +1114,8 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
  * FMKCPU_Set_InterruptLineState
  *********************************/
 t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLineType_e,
-                                                t_uFMKCPU_InterruptLine f_IT_line_u,
-                                                t_eFMKCPU_ChnlState f_channelState_e)
+                                            t_uFMKCPU_InterruptLine f_IT_line_u,
+                                            t_eFMKCPU_ChnlState f_channelState_e)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKCPU_Timer timer_e = FMKCPU_TIMER_NB;
@@ -1133,6 +1133,7 @@ t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLine
                                                f_IT_line_u,
                                                &timer_e,
                                                &chnl_e);
+
         if(g_TimerInfo_as[timer_e].IsTimerConfigured_b == (t_bool)False)
         {
             Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;

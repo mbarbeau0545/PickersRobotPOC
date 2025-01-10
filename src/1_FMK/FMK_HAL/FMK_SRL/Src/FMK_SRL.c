@@ -173,7 +173,7 @@ typedef struct __t_sFMKSRL_SerialInfo
 
 // ********************************************************************
 // *                      Variables
-
+// ********************************************************************
 static t_eCyclicModState g_FmkSrl_ModState_e = STATE_CYCLIC_CFG;
 
 static t_uint8 g_MProcessIdUsed[FMKSRL_SERIAL_LINE_NB];
@@ -818,6 +818,7 @@ t_eReturnCode FMKSRL_Init(void)
         g_MProcessIdUsed[idxSrlLine_u8] = (t_uint8)0;
     }   
     /* CAUTION : Automatic generated code section for Buffer Mapping: Start */
+    
     //--------- Buffer Mapping for Serial Line 1 ---------//
     //--------- Rx Buffer ---------//
     g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].RxInfo_s.Buffer_s.bufferAdd_pu8 = (t_uint8 *)(&g_SrlLine_1_RxBuffer_ua8);

@@ -276,7 +276,13 @@ t_eReturnCode FMKCPU_GetICTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                           t_uint32 * f_bspTimARR_pu32,
                                           t_uint32 * f_bspTimPrescaler_pu32)
 {
-    return RC_ERROR_INSTANCE_NOT_INITIALIZED;
+    
+    return FMKCPU_GetPwmTimerInitParam( f_idxTimRccClock_u8,
+                                        f_timOscSrc_e,
+                                        f_SysClockValues_ua8,
+                                        f_RqstTimerFreq_f32,
+                                        f_bspTimARR_pu32,
+                                        f_bspTimPrescaler_pu32);
 }
 
 /*********************************
