@@ -186,8 +186,11 @@
     */
     typedef enum
     {
-        FMKIO_COM_SIGNAL_SERIAL_1 = 0x0,                  /**< Rx -> PA3, Tx -> PA2, Reference to Serial USART2 */
-        FMKIO_COM_SIGNAL_SERIAL_2,                        /**< Rx -> PC11, Tx -> PC10, Reference to Serial UART4 */
+        FMKIO_COM_SIGNAL_SERIAL_1 = 0x0,                  /**< Rx -> PG3, Tx -> PG4, Reference to Serial PIN_3 */
+        FMKIO_COM_SIGNAL_SERIAL_2,                        /**< Rx -> PA3, Tx -> PA2, Reference to Serial PIN_3 */
+        FMKIO_COM_SIGNAL_SERIAL_3,                        /**< Rx -> PG5, Tx -> PG6, Reference to Serial PIN_5 */
+        FMKIO_COM_SIGNAL_SERIAL_4,                        /**< Rx -> PG7, Tx -> PG8, Reference to Serial PIN_7 */
+        FMKIO_COM_SIGNAL_SERIAL_5,                        /**< Rx -> PG9, Tx -> PG10, Reference to Serial PIN_9 */
     
         FMKIO_COM_SIGNAL_SERIAL_NB,
     } t_eFMKIO_ComSigSerial;

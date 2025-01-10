@@ -65,7 +65,7 @@ class FMKIO_CodeGen():
         OutPWM_astr      = cls.code_gen.get_array_from_excel("FMKIO_OutputPwm")
         OutDig_astr      = cls.code_gen.get_array_from_excel("FMKIO_OutputDig")
         SigCan_astr      = cls.code_gen.get_array_from_excel('FMKIO_CanCfg')
-        SigSerial_astr   = cls.code_gen.get_array_from_excel('FMKIO_SerialCfg')[1:]
+        SigSerial_astr   = cls.code_gen.get_array_from_excel('FMKSRL_INFO')[1:]
         list_irqn_hdler  = cls.code_gen.get_array_from_excel('FMKIO_IRQNHandler')
         Descitpion_pwm_freq = ['GPIO_name','Pin_name','alternate function', 'Interrupt Line' ]
 
@@ -361,25 +361,25 @@ class FMKIO_CodeGen():
         serial_sig = []
 
         for idx, serial_cfg in enumerate(SigSerial_astr):
-            RxPin = str(f"P{serial_cfg[0][5:]}{serial_cfg[1][4:]}")
-            TxPin = str(f"P{serial_cfg[2][5:]}{serial_cfg[3][4:]}")
-            if (RxPin in stm_pin 
+            RxPin = str(f"P{serial_cfg[4][5:]}{serial_cfg[5][4:]}")
+            TxPin = str(f"P{serial_cfg[6][5:]}{serial_cfg[7][4:]}")
+            if (RxPin in stm_pin
             or TxPin in stm_pin):
                 raise GPIO_AlreadyConfgigured(f"{RxPin} or {TxPin} has already been configured")
-            
+
             serial_sig.append([RxPin, TxPin])
             stm_pin.append(TxPin)
             stm_pin.append(RxPin)
 
-            const_serial += '        {' + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[0][5:]},' \
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[0][5:]}")) \
-                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[1][4:]}" + "}," \
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[1][4:]}")) \
-                    + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[2][5:]},'\
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[2][5:]}")) \
-                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[3][4:]}" + "}," \
-                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[3][5:]}")) \
-                    + f'{serial_cfg[4]}' + '},' + f' // {ENUM_FMKIO_SERIAL_ROOT}_{(idx + 1)}' \
+            const_serial += '        {' + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[4][5:]},' \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[4][5:]}")) \
+                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[5][4:]}" + "}," \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[5][4:]}")) \
+                    + '{' + f'{ENUM_GPIO_PORT_ROOT}_{serial_cfg[6][5:]},'\
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[6][5:]}")) \
+                    + f"{ENUM_GPIO_PIN_ROOT}_{serial_cfg[7][4:]}" + "}," \
+                    + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{serial_cfg[7][4:]}")) \
+                    + f'{serial_cfg[8]}' + '},' + f' // {ENUM_FMKIO_SERIAL_ROOT}_{(idx + 1)}' \
                     + '\n'
         const_serial += '    };\n'
         #-----------------------------------------------------------

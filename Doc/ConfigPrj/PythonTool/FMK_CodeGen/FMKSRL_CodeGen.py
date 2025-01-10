@@ -87,7 +87,7 @@ class FMKSRL_CodeGen():
                         +    '    */\n' \
                         + f'    USART_TypeDef * c_FmkSrl_BspInitIstcMapp_pas[{ENUM_FMKSRL_LINE}_NB]' +  ' = {\n'
         var_srl_info += '/**< Store the Serial Info for all lines */\n' \
-                     + f'static t_sFMKSRL_SerialInfo g_SerialInfo_as[{ENUM_FMKSRL_LINE}_NB]' + ' = {'
+                     + f'static t_sFMKSRL_SerialInfo g_SerialInfo_as[{ENUM_FMKSRL_LINE}_NB]' + ' = {\n'
         
         tx_size_buff = 0
         rx_size_buff = 0
@@ -144,7 +144,7 @@ class FMKSRL_CodeGen():
                         + f'void {line_info[1]}(void)\n' \
                         + '{\n' + f'    if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].isLineConfigured_b == (t_bool)True)\n' \
                         + '    {\n' + f'        if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].SoftType_e == FMKSRL_HW_PROTOCOL_UART)\n' \
-                        + '            {\n' + f'            HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].bspHandle_u));\n' + '        }\n' \
+                        + '        {\n' + f'            HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].bspHandle_u));\n' + '        }\n' \
                         + f'        else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].SoftType_e == FMKSRL_HW_PROTOCOL_USART)\n' \
                         + '        {\n' + f'            HAL_USART_IRQHandler((USART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_{idx_line}].bspHandle_u));\n' + '        }\n' \
                         + '    }\n' + '}\n\n'

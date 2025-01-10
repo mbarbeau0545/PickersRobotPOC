@@ -202,7 +202,8 @@ static t_uint8 g_SrlLine_5_RxBuffer_ua8[0];
 static t_uint8 g_SrlLine_5_TxBuffer_ua8[0];
 
 /**< Store the Serial Info for all lines */
-static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {    [FMKSRL_SERIAL_LINE_1] = {
+static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
+    [FMKSRL_SERIAL_LINE_1] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART1_IRQN,
@@ -3635,7 +3636,7 @@ void USART1_IRQHandler(void)
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-            {
+        {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_1].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3653,7 +3654,7 @@ void USART2_IRQHandler(void)
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-            {
+        {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_2].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3671,7 +3672,7 @@ void USART3_IRQHandler(void)
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-            {
+        {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_3].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3689,7 +3690,7 @@ void UART4_IRQHandler(void)
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-            {
+        {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_4].SoftType_e == FMKSRL_HW_PROTOCOL_USART)
@@ -3707,7 +3708,7 @@ void UART5_IRQHandler(void)
     if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].isLineConfigured_b == (t_bool)True)
     {
         if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].SoftType_e == FMKSRL_HW_PROTOCOL_UART)
-            {
+        {
             HAL_UART_IRQHandler((UART_HandleTypeDef *)(&g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].bspHandle_u));
         }
         else if(g_SerialInfo_as[FMKSRL_SERIAL_LINE_5].SoftType_e == FMKSRL_HW_PROTOCOL_USART)

@@ -181,8 +181,11 @@
     /**< Variable for RxTx Reference for Serial Line */
     const t_sFMKIO_RxTxComCfg c_FmkIo_SerialSigCfg_as[FMKIO_COM_SIGNAL_SERIAL_NB] ={
         // Rx Gpio Port                        Rx Pin                       Tx Gpio Port                      Tx Pin                    Alternate Function
-        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_3},              {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_2},              GPIO_AF7_USART2}, // FMKIO_COM_SIGNAL_SERIAL_1
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_11},             {FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_10},             GPIO_AF5_UART4}, // FMKIO_COM_SIGNAL_SERIAL_2
+        {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_3},              {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_4},             GPIO_AF7_USART1}, // FMKIO_COM_SIGNAL_SERIAL_1
+        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_3},              {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_2},             GPIO_AF7_USART2}, // FMKIO_COM_SIGNAL_SERIAL_2
+        {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_5},              {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_6},             GPIO_AF7_USART3}, // FMKIO_COM_SIGNAL_SERIAL_3
+        {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_7},              {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_8},             GPIO_AF14_UART4}, // FMKIO_COM_SIGNAL_SERIAL_4
+        {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_9},              {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_10},            GPIO_AF8_UART5}, // FMKIO_COM_SIGNAL_SERIAL_5
     };
     /* CAUTION : Automatic generated code section for Variable: End */
 

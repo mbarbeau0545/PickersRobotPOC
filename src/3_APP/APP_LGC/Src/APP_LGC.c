@@ -204,7 +204,8 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
     SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
 
-    Ret_e = FMKSRL_InitDrv(FMKSRL_SERIAL_LINE_2, SrlCfg_s,
+    Ret_e = FMKSRL_InitDrv( FMKSRL_SERIAL_LINE_2, 
+                            SrlCfg_s,
                             s_APPLGC_RcvSrlEvent,
                             s_APPLGC_TranmistEvnt);
     /*if(Ret_e == RC_OK)
@@ -236,14 +237,14 @@ static t_eReturnCode s_APPLGC_Operational(void)
     char msgbuffer[20];
     sprintf(msgbuffer, "Hello World\r\n");
 
-    //if(counter_u16 == (t_uint16)0)
+    if(counter_u16 == (t_uint16)0)
     {
         Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_2,
-                            FMKSRL_TX_ONESHOT,
-                            (t_uint8 * )msgbuffer,
-                            strlen(msgbuffer),
-                            (t_uint16)3,
-                            (t_bool)False);
+                                FMKSRL_TX_RX_IDLE,
+                                (t_uint8 * )msgbuffer,
+                                strlen(msgbuffer),
+                                (t_uint16)3,
+                                (t_bool)False);
     }
     counter_u16 += (t_uint16)1;
     if(counter_u16 == 256)
