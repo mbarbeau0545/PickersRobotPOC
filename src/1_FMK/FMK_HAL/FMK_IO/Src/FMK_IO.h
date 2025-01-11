@@ -129,7 +129,7 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_uint8 f_debugInfo1_u8, t_uint8 f_debugInfo2_u8);
+    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_uint16 f_debugInfo1_u16, t_uint16 f_debugInfo2_u16);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 

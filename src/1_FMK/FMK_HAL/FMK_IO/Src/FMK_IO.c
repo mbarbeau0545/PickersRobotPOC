@@ -1145,7 +1145,7 @@ static t_eReturnCode s_FMKIO_PerformDiagnostic(void)
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 LLI_u8;
     t_eFMKCPU_ChnlErrorState cpuChnlStatus_e;
-    t_eFMKCDA_ChnlErrState   adcChnlStatus_e;
+    t_uint16 adcChnlStatus_u16;
     t_uFMKCPU_InterruptLine ITLineVal_u;
     t_eFMKCPU_InterruptLineType ITLineType_e;
 
@@ -1179,9 +1179,9 @@ static t_eReturnCode s_FMKIO_PerformDiagnostic(void)
             ITLineVal_u.ITLine_IO_e = c_InFreqSigBspMap_as[LLI_u8].ITLine_e;
             ITLineType_e = FMKCPU_INTERRUPT_LINE_TYPE_IO;
             //------Get Error Status------//
-            Ret_e = FMKCPU_Get_ChannelErrorStatus(ITLineType_e, 
-                                                  ITLineVal_u,
-                                                  &cpuChnlStatus_e);
+            Ret_e = FMKCPU_Get_ChannelErrorStatus(  ITLineType_e, 
+                                                    ITLineVal_u,
+                                                    &cpuChnlStatus_e);
 
             if((Ret_e == RC_OK)
             && (cpuChnlStatus_e != FMKCPU_ERRSTATE_OK)
@@ -1196,14 +1196,14 @@ static t_eReturnCode s_FMKIO_PerformDiagnostic(void)
     {
         if(g_InAnaSigInfo_as[LLI_u8].IsSigConfigured_b == (t_bool)True)
         {
-            Ret_e = FMKCDA_Get_AdcError(c_InAnaSigBspMap_as[LLI_u8].adc_e,
-                                             &adcChnlStatus_e);
+            Ret_e = FMKCDA_Get_AdcError(    c_InAnaSigBspMap_as[LLI_u8].adc_e,
+                                            &adcChnlStatus_u16);
 
             if((Ret_e == RC_OK)
-            && (adcChnlStatus_e != FMKCDA_ERRSTATE_OK)
+            && (GETBIT(adcChnlStatus_u16, FMKCDA_ERRSTATE_OK) == BIT_IS_RESET_16B)
             && (g_InAnaSigInfo_as[LLI_u8].sigError_cb != (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION))
             {
-                g_InAnaSigInfo_as[LLI_u8].sigError_cb(adcChnlStatus_e, 0);
+                g_InAnaSigInfo_as[LLI_u8].sigError_cb(adcChnlStatus_u16, 0);
             }
         }
     } 

@@ -46,14 +46,14 @@
     /**< enum for Channel error status*/
     typedef enum
     {
-        FMKCDA_ERRSTATE_OK               = 0x00U,            /**< No error detected on channel */
-        FMKCDA_ERRSTATE_ERR_INTERNAL     = 0x01U,            /**< Internal/ bsp error detected on channel */
-        FMKCDA_ERRSTATE_ERR_OVR          = 0x02U,            /**< overrun error detetcted on channel */
-        FMKCDA_ERRSTATE_ERR_DMA          = 0x04U,            /**< Dma error detetected on channel */
-        FMKCDA_ERRSTATE_CB               = 0x08U,            /**< callback error detetected on channel */
-        FMKCDA_ERRSTATE_JQOVF            = 0x10U,            /**< to do */
-        FMKCDA_ERRSTATE_PRESENTS         = 0x20U,            /**< Conversio no longer operate when dma mode circular is choosen */
-        FMKCDA_ERRSTATE_UNKNOWN          = 0x40U,            /**< Unknown error detected */
+        FMKCDA_ERRSTATE_OK               = 0x00U,           /**< No error detected on channel */
+        FMKCDA_ERRSTATE_ERR_INTERNAL,                       /**< Internal/ bsp error detected on channel */
+        FMKCDA_ERRSTATE_ERR_OVR,                            /**< overrun error detetcted on channel */
+        FMKCDA_ERRSTATE_ERR_DMA,                            /**< Dma error detetected on channel */
+        FMKCDA_ERRSTATE_CB,                                 /**< callback error detetected on channel */
+        FMKCDA_ERRSTATE_JQOVF,                              /**< to do */
+        FMKCDA_ERRSTATE_PRESENTS,                           /**< Conversio no longer operate when dma mode circular is choosen */
+        FMKCDA_ERRSTATE_UNKNOWN,                            /**< Unknown error detected */
 
     } t_eFMKCDA_ChnlErrState;
     /* CAUTION : Automatic generated code section for Enum: Start */
@@ -167,14 +167,14 @@
     *	@brief      Function to get the error code for a adc_channel
     *
     *	@param[in]  f_adc_e                : enum value for the adc, value from @ref f_adc_e
-    *	@param[in]  f_chnlErrInfo_pe         : storage for channel error.\n
+    *	@param[in]  f_chnlErrInfo_pu16         : storage for channel error as a mask.\n
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnCode FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_eFMKCDA_ChnlErrState *f_chnlErrInfo_pe);
+    t_eReturnCode FMKCDA_Get_AdcError(t_eFMKCDA_Adc f_adc_e, t_uint16 *f_chnlErrInfo_pu16);
     
 #endif // FMKCPU_H_INCLUDED           
 //************************************************************************************

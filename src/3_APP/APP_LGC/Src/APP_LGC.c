@@ -174,12 +174,15 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 
     t_sFMKSRL_DrvSerialCfg drcCfg_s;
     drcCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
+
     drcCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_115200;
     drcCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
     drcCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_EVEN;
     drcCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1_5;
-    drcCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS;
+    drcCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_9BITS;
+
     drcCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
+
     drcCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
     drcCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART;
 
@@ -213,10 +216,10 @@ static t_eReturnCode s_APPLGC_Operational(void)
     if(counter_u16 == (t_uint16)0)
     {
         Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_2,
-                                FMKSRL_TX_RX_SIZE,
+                                FMKSRL_TX_ONESHOT,
                                 (t_uint8 * )msgbuffer,
                                 strlen(msgbuffer),
-                                (t_uint16)54,
+                                (t_uint16)55,
                                 (t_bool)False);
     }
     counter_u16 += (t_uint16)1;
