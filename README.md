@@ -43,7 +43,7 @@ For the doxygen documentation search the file "index.html"
 ## Left to do
 - Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
 
-
+- Dans les callback Error rajouter de quelle Timer/SerialLine/Pin l'errreur provient
 - Utiliser la LED builtin pour informer le Développer de l'état du µC
     - LED clignote lentement   -> Phase d'initialisation 
     - LED clignote rapidement  -> Phase d'initialisation échoué

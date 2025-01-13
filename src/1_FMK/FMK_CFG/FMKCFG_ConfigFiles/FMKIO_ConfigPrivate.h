@@ -130,6 +130,7 @@
     };
 
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
+    #warning('Change IO for Freq in Order to test it')
     const t_sFMKIO_BspTimerSigCfg c_InFreqSigBspMap_as[FMKIO_INPUT_SIGFREQ_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
         {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_2},              GPIO_AF9_TIM15,                FMKCPU_INTERRUPT_LINE_IO_61},    // FMKIO_INPUT_SIGFREQ_1,

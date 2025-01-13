@@ -59,11 +59,7 @@ static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
 static t_eReturnCode s_APPLGC_PreOperational(void);
 static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_ConfigurationState(void);
-static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
-                                    t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
 
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -172,24 +168,18 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    t_sFMKSRL_DrvSerialCfg drcCfg_s;
-    drcCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
+    Ret_e = FMKIO_Set_InFreqSigCfg( FMKIO_INPUT_SIGFREQ_1,
+                                    FMKIO_STC_RISING_EDGE,
+                                    FMKIO_FREQ_MEAS_FREQ,
+                                    NULL_FONCTION);
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = FMKIO_Set_OutDigSigCfg( FMKIO_OUTPUT_SIGDIG_1,
+                                        FMKIO_PULL_MODE_DISABLE,
+                                        FMKIO_SPD_MODE_MEDIUM);
+    }
+    
 
-    drcCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_115200;
-    drcCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
-    drcCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_EVEN;
-    drcCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1_5;
-    drcCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_9BITS;
-
-    drcCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
-
-    drcCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
-    drcCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART;
-
-    Ret_e = FMKSRL_InitDrv(FMKSRL_SERIAL_LINE_2,
-                            drcCfg_s,
-                            s_APPLGC_RcvSrlEvent,
-                            s_APPLGC_TranmistEvnt);
     return Ret_e;
 }
 
@@ -207,61 +197,25 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    
-    static t_uint16 counter_u16 = 0;
-    char msgbuffer[54];
+    static t_bool isValueHigh_b = False;
+    t_uint32 freqMeas_u32 = 0;
 
-    sprintf(msgbuffer, "In the grimdark of 41 millenare, there is only war\r\n");
-
-    if(counter_u16 == (t_uint16)0)
+    Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &freqMeas_u32);
+    if(freqMeas_u32 >= 190 && Ret_e == RC_OK)
     {
-        Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_2,
-                                FMKSRL_TX_ONESHOT,
-                                (t_uint8 * )msgbuffer,
-                                strlen(msgbuffer),
-                                (t_uint16)55,
-                                (t_bool)False);
+        if(isValueHigh_b == (t_bool)False)
+        {
+            Ret_e = FMKIO_Set_OutDigSigValue(FMKIO_OUTPUT_SIGDIG_1, FMKIO_DIG_VALUE_HIGH);
+            isValueHigh_b = True;
+        }
+        else 
+        {
+            Ret_e = FMKIO_Set_OutDigSigValue(FMKIO_OUTPUT_SIGDIG_1, FMKIO_DIG_VALUE_LOW);
+            isValueHigh_b = False;
+        }
     }
-    counter_u16 += (t_uint16)1;
-    if(counter_u16 == 55)
-    {
-        counter_u16 = (t_uint16)0;
-    }
-    return RC_OK;
-}
 
-/*********************************
- * s_APPLGC_Operational
- *********************************/
-static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8, 
-                                    t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e)
-{
-    t_eReturnCode Ret_e = RC_OK;
-    static t_uint16 counter_u16 = 1;
-    char msgbuffer[54];
-
-    sprintf(msgbuffer, "In the grimdark of 41 millenare, there is only war\r\n");
-
-    if(counter_u16 == (t_uint16)0)
-    {
-        Ret_e = FMKSRL_Transmit(FMKSRL_SERIAL_LINE_2,
-                                FMKSRL_TX_RX_SIZE,
-                                (t_uint8 * )msgbuffer,
-                                strlen(msgbuffer),
-                                (t_uint16)54,
-                                (t_bool)False);
-    }
-    counter_u16 += (t_uint16)1;
-    if(counter_u16 == 55)
-    {
-        counter_u16 = (t_uint16)0;
-    }
-}
-
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e)
-{
-    return;
+    return Ret_e;
 }
 //************************************************************************************
 // End of File

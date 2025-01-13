@@ -1666,7 +1666,7 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveIdleMngmt(t_sFMKSRL_SerialInfo * f_
                 {
                     f_srlInfo_ps->RxInfo_s.RxUserCb_pcb((t_uint8 *)(&RxBuffer_s->bufferAdd_pu8[writeIdx_u16]),
                                                         rcvDataIdle_u16,
-                                                        f_srlInfo_ps->Health_e);
+                                                        f_srlInfo_ps->Health_u16);
                 }
                 //------ CALL user with error ------//
                 else 
@@ -1845,7 +1845,7 @@ static t_eReturnCode s_FMKSRL_BspTxOpeTransmitReceiveMngmt(t_sFMKSRL_SerialInfo 
                 // as we cannot know the rcv data size, let the user deals with it------//
                 f_srlInfo_ps->RxInfo_s.RxUserCb_pcb(    (t_uint8 *)(&RxBuffer_s->bufferAdd_pu8[RxBuffer_s->readIdx_u16]),
                                                         (t_uint32)RxBuffer_s->buffferSize_u16,
-                                                        f_srlInfo_ps->Health_e);
+                                                        f_srlInfo_ps->Health_u16);
                 break;
             }
             
@@ -2765,7 +2765,7 @@ static void s_FMKSRL_BspRxEventCbMngmt(t_uFMKSRL_HardwareHandle * f_Handle_pu,
                     if (Ret_e < RC_OK)
                     {
                         // Notify the user of error
-                        srlInfo_ps->RxInfo_s.RxUserCb_pcb(NULL, 0, srlInfo_ps->Health_e);
+                        srlInfo_ps->RxInfo_s.RxUserCb_pcb(NULL, 0, srlInfo_ps->Health_u16);
                     }
                 }
             }
@@ -2845,7 +2845,7 @@ static void s_FMKSRL_BspTxEventCbMngmt(   t_uFMKSRL_HardwareHandle * f_Handle_pu
                         if( (srlInfo_ps->TxInfo_s.NotifyUser_b == (t_bool)True)
                         &&  (srlInfo_ps->TxInfo_s.TxUserCb_pcb != (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION))
                         {
-                            srlInfo_ps->TxInfo_s.TxUserCb_pcb(True, srlInfo_ps->Health_e);
+                            srlInfo_ps->TxInfo_s.TxUserCb_pcb(True, srlInfo_ps->Health_u16);
                         }
 
                         //--------- See if a msg is pending ---------//
@@ -2898,7 +2898,7 @@ static void s_FMKSRL_BspErrorEventCbMngmt(  t_uFMKSRL_HardwareHandle * f_Handle_
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
-    if(f_Evnt_e >= FMKSRL_BSP_TX_CB_NB)
+    if(f_Evnt_e >= FMKSRL_BSP_ERR_CB_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -3944,12 +3944,12 @@ void HAL_USART_TxRxCpltCallback(USART_HandleTypeDef *husart)
 /***************************************
  * Error Callback
  ***************************************/
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)              { return s_FMKSRL_BspErrorEventCbMngmt(huart,  FMKSRL_BSP_ERR_CB_ERROR);}
-void HAL_UART_AbortCpltCallback(UART_HandleTypeDef *huart)          { return s_FMKSRL_BspErrorEventCbMngmt(huart,  FMKSRL_BSP_ERR_CB_ABORT_ALL);}
-void HAL_UART_AbortTransmitCpltCallback(UART_HandleTypeDef *huart)  { return s_FMKSRL_BspErrorEventCbMngmt(huart,  FMKSRL_BSP_ERR_CB_ABORT_RX);}
-void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart)   { return s_FMKSRL_BspErrorEventCbMngmt(huart, FMKSRL_BSP_ERR_CB_ABORT_TX);}
-void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)           { return s_FMKSRL_BspErrorEventCbMngmt(husart,  FMKSRL_BSP_ERR_CB_ERROR);}
-void HAL_USART_AbortCpltCallback(USART_HandleTypeDef *husart)       { return s_FMKSRL_BspErrorEventCbMngmt(husart,  FMKSRL_BSP_ERR_CB_ABORT_ALL);}
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)              { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)huart,  FMKSRL_BSP_ERR_CB_ERROR);}
+void HAL_UART_AbortCpltCallback(UART_HandleTypeDef *huart)          { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)huart,  FMKSRL_BSP_ERR_CB_ABORT_ALL);}
+void HAL_UART_AbortTransmitCpltCallback(UART_HandleTypeDef *huart)  { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)huart,  FMKSRL_BSP_ERR_CB_ABORT_RX);}
+void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart)   { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)huart, FMKSRL_BSP_ERR_CB_ABORT_TX);}
+void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)           { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)husart,  FMKSRL_BSP_ERR_CB_ERROR);}
+void HAL_USART_AbortCpltCallback(USART_HandleTypeDef *husart)       { return s_FMKSRL_BspErrorEventCbMngmt((t_uFMKSRL_HardwareHandle *)husart,  FMKSRL_BSP_ERR_CB_ABORT_ALL);}
 /***********************************************************
  * USART CALLBACK MANAGEMENT
  **********************************************************/

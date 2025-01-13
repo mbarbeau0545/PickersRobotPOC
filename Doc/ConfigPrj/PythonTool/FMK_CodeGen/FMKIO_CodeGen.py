@@ -97,7 +97,7 @@ class FMKIO_CodeGen():
         switch_gpio = ""
         switch_gpio_rcc  = ""
         func_irqn = ''
-        gpio_enable_clk = "/**< Variable to store the state of GPIO Clock */\nt_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB] = {\n"
+        gpio_enable_clk = "/**< Variable to store the state of GPIO Clock */\nt_eFMKCPU_ClockPortOpe g_IsGpioClockEnable_ae[FMKIO_GPIO_PORT_NB];\n"
 
         enum_suffix_a: List[str] = []
         enum_description = ""
@@ -132,9 +132,6 @@ class FMKIO_CodeGen():
                             + f'                *f_clockPort_pe = {ENUM_FMKCPU_RCC_ROOT}_GPIO{str(gpio_letter).upper()};\n' \
                             + '                break;\n'
             
-            # Make GPIO clock default value
-            gpio_enable_clk += f"    FMKCPU_CLOCKPORT_OPE_DISABLE, // {ENUM_GPIO_PORT_ROOT}_{gpio_letter}\n"
-        gpio_enable_clk += "};\n\n"
         enum_gpio = cls.code_gen.make_enum_from_variable(ENUM_GPIO_PORT_ROOT, enum_suffix_a, 
                                                           "t_eFMKIO_GpioPort", 0, enum_description, 
                                                            element_description_a)
