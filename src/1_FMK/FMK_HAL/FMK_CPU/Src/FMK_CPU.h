@@ -303,6 +303,26 @@
                                             t_uint32 f_pwmFreq_u32);
     /**
     *
+    *	@brief      Configure an tinterrupt line in PWM configuration.\n
+    *   @note       First, this configuration set the bsp timer cfg in PWM mode.\n
+    *               Once it's done, this function configure the bsp channel in PWM mode too.\n
+    *               IMPORTANT, the PWM generation is based on a timer configuration which share
+    *               multiple channels, in a sense that, frequency is shared by all PWM channels.\n
+    *               In result, the modification of the timer configuration reverbate for all channels.\n     
+    *               For Instance, every FMKCPU_INTERRUPT_LINE_IO_0Y, Y belong to [0, Innfini] shared the same timer.\n
+    *
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  f_EcdrFreq_u32          : the frequency timer.
+    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
+    *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
+    */
+    t_eReturnCode FMKCPU_Set_EcdrChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
+                                            t_uint32 f_EcdrFreq_u32);
+    /**
+    *
     *	@brief    Set the DutyCycle to a timer channel
     *   @note     Modify the CCRx register to change the dutyCycle.\n
     *             If the timer channel is disable, and the value is diferrent from 0,

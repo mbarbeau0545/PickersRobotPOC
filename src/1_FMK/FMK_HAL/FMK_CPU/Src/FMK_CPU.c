@@ -1232,7 +1232,8 @@ t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e
         
                 if(Ret_e == RC_OK)
                 {
-                    *f_CCRxValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s,  bspChannel_u32);
+                    *f_CCRxValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s,  
+                                                                            bspChannel_u32);
                 }
             }
             else 
@@ -1276,12 +1277,12 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     HAL_TIM_StateTypeDef bspTimerState_e;
-    t_eFMKCPU_ChnlErrorState channelErr_e = FMKCPU_ERRSTATE_OK;
+    t_uint16 channelErr_u16 = (t_uint16)0;
     HAL_TIM_ChannelStateTypeDef bspChnlState_e = HAL_TIM_CHANNEL_STATE_READY;
     t_uint32 bspChannel_u32 = 0;
     t_sFMKCPU_TimerInfo * timerInfo_ps;
     t_sFMKCPU_ChnlInfo * chnlInfo_ps;
-    t_uint8 CLLI_u8; /**< Channel loop  */
+    t_uint8 CLLI_u8; /**< Channel loop */
     t_uint8 TLLI_u8; /**< Timer loop  */
 
     for(TLLI_u8 = (t_uint8)0 ; TLLI_u8 < FMKCPU_TIMER_NB ; TLLI_u8++)
@@ -1302,15 +1303,15 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
                 //----------- associate bsp err with channel FMKCPU err-----------//
                 if(bspTimerState_e  == HAL_TIM_STATE_RESET)
                 {
-                    channelErr_e |= FMKCPU_ERRSTATE_NOT_CONFIGURED;
+                    SETBIT_16B(channelErr_u16, FMKCPU_ERRSTATE_NOT_CONFIGURED); 
                 }
                 if(bspTimerState_e  == HAL_TIM_STATE_TIMEOUT)
                 {
-                    channelErr_e |= FMKCPU_ERRSTATE_TIMEOUT;
+                    SETBIT_16B(channelErr_u16, FMKCPU_ERRSTATE_TIMEOUT);
                 }
                 if(bspTimerState_e == HAL_TIM_STATE_ERROR)
                 {
-                    channelErr_e |= FMKCPU_ERRSTATE_UNKNOWN;   
+                    SETBIT_16B(channelErr_u16, HAL_TIM_STATE_ERROR);  
                 }
 
                 //-----------Propagate this error to every channel from this timer-----------//
@@ -1319,7 +1320,8 @@ static t_eReturnCode s_FMKCPU_PerformDiagnostic(void)
                 &&  (timerInfo_ps->Channel_as[CLLI_u8].State_e == FMKCPU_CHNLST_ACTIVATED) ; 
                     CLLI_u8++)
                 {
-                    SETBIT_16B(timerInfo_ps->Channel_as[CLLI_u8].ErrState_u16, channelErr_e);
+                    timerInfo_ps->Channel_as[CLLI_u8].ErrState_u16 |= channelErr_u16;
+                    RESETBIT_16B(timerInfo_ps->Channel_as[CLLI_u8].ErrState_u16, FMKCPU_ERRSTATE_OK);
                 }
             }
             //-----------diag for the channel currently used-----------//
@@ -1779,19 +1781,20 @@ static t_eReturnCode s_FMKCPU_Set_BspTimerInit( t_sFMKCPU_TimerInfo * f_timer_ps
                 break;
             }
         }
-        
-
-
-        bspRet_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->bspTimer_s);
-        if(bspRet_e != HAL_OK)
+        //------- Call the Right Bsp Timer Init -----//
+        if(Ret_e == RC_OK)
         {
-            Ret_e = RC_ERROR_WRONG_RESULT;
-        }
-        else 
-        {
-            f_timer_ps->HwCfg_e = f_hwTimCfg_e;
-            f_timer_ps->IsTimerConfigured_b = (t_bool)True;
-        }
+            bspRet_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].TimerInit_pcb(&f_timer_ps->bspTimer_s);
+            if(bspRet_e != HAL_OK)
+            {
+                Ret_e = RC_ERROR_WRONG_RESULT;
+            }
+            else 
+            {
+                f_timer_ps->HwCfg_e = f_hwTimCfg_e;
+                f_timer_ps->IsTimerConfigured_b = (t_bool)True;
+            }
+        }        
     }
 
     return Ret_e;
