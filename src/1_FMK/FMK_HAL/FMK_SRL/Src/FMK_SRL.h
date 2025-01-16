@@ -20,11 +20,7 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define FMKSRL_DEBUGLOG(msg, size) FMKSRL_Transmit( FMKSRL_SERIAL_LINE_1, \
-                                                        FMKSRL_TX_ONESHOT,    \
-                                                        msg,                  \
-                                                        size,                 \
-                                                        False)
+    
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -298,6 +294,23 @@ typedef enum __t_eFMKSRL_LineBaudrate
         FMKSRL_CB_INFO_TRANSMIT_OVERFLOW,           /**< The message hasn't be correctly send du to overflow error */
         FMKSRL_CB_INFO_TRANSMIT_ERR,                /**< The message hasn't be correctly send du to an unknown error */
     } t_eFMKSRL_TxCallbackInfo;
+
+    /**
+     * @brief Enumeration to represent the health status of a communication line.
+     */
+    typedef enum __t_eFMKSRL_LineHealth
+    {
+        FMKSRL_LINE_STATUS_OK = 0x00,       /**< UART/USART No Error detected */
+        FMKSRL_LINE_STATUS_PE,              /**< UART/USART Line Parity Error */
+        FMKSRL_LINE_STATUS_NE,              /**< UART/USART Noise Error */
+        FMKSRL_LINE_STATUS_FE,              /**< UART/USART Frame Error */
+        FMKSRL_LINE_STATUS_ORE,             /**< UART/USART Overrun Error */
+        FMKSRL_LINE_STATUS_DMA,             /**< UART/USART DMA Transfer Error */
+        FMKSRL_LINE_STATUS_RTO,             /**< UART/USART Receiver Timeout Error */
+        FMKSRL_LINE_STATUS_UDR,            /**< USART SPI Slave Underrun Error */
+
+        FMKSRL_LINE_STATUS_NB               /**< Number of Error Possible */
+    } t_eFMKSRL_LineHealth;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
 	/* CAUTION : Automatic generated code section for Structure: End */
@@ -485,8 +498,11 @@ typedef enum __t_eFMKSRL_LineBaudrate
     *               - Set the NVIC state if the runMode is different from polling.\n
     *               - Set the Rx,Tx Line IO Configuration using FMKIO_Set_ComSerialCfg.\n
     *               - Set the bsp Serial Init UART/USART depending on hwProtType_e.\n
+    *   @warning 
+    *               If the parity is not None, be aware that the lenght of data bit (WordLen) 
+    *               is impacted and reduce by 1, see the documentation on UART/USART protocol for more details 
     * 
-    *   @example UART Basic COnfiguration 
+    *   @example UART Basic Configuration 
     *               
     *            t_sFMKSRL_DrvSerialCfg SrlCfg_s;
     *            SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;

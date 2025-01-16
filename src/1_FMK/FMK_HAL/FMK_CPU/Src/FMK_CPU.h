@@ -65,6 +65,7 @@
         FMKCPU_CNHL_RUNMODE_POLLING = 0x0U,     /**< The channel is running in polling mode (standard mode) */
         FMKCPU_CNHL_RUNMODE_INTERRUPT,          /**< The channel is running in interrupt mode, which means HAL error callback is active,
                                                  among other things*/
+        FMKCPU_CHNL_RUNMODE_DMA,                /**< The channel is running in DMA Mode */
 
         FMKCPU_CNHL_RUNMODE_NB                  /**< Number of channel run mode take in charge (DMA currently not available) */
     } t_eFMKCPU_ChnlRunMode; 
@@ -100,15 +101,15 @@
     /**< Enum for timer channel  error */
     typedef enum
     {
-        FMKCPU_ERRSTATE_OK              = 0X00U,     /**< No error detected */
-        FMKCPU_ERRSTATE_INVALID_CHANNEL = 0x01U,     /**< Invalid canal */
-        FMKCPU_ERRSTATE_TIMEOUT         = 0x02U,     /**< time waiting excedeed */
-        FMKCPU_ERRSTATE_OVERFLOW        = 0x04U,     /**< overflow capacity */
-        FMKCPU_ERRSTATE_UNDERFLOW       = 0x08U,     /**< Under flow capacity */
-        FMKCPU_ERRSTATE_NOT_CONFIGURED  = 0x10U,     /**< timer or channel not configured */
-        FMKCPU_ERRSTATE_OFF_UNEXPECTED  = 0x20U,     /**< channel is busy */
-        FMKCPU_ERRSTATE_INIT_FAILED     = 0x04U,     /**< Failed during intitialize of channel */
-        FMKCPU_ERRSTATE_UNKNOWN         = 0x80U,     /**< unknown error detected */
+        FMKCPU_ERRSTATE_OK = 0X00U,                  /**< No error detected */
+        FMKCPU_ERRSTATE_INVALID_CHANNEL,             /**< Invalid canal */
+        FMKCPU_ERRSTATE_TIMEOUT,                     /**< time waiting excedeed */
+        FMKCPU_ERRSTATE_OVERFLOW,                    /**< overflow capacity */
+        FMKCPU_ERRSTATE_UNDERFLOW,                   /**< Under flow capacity */
+        FMKCPU_ERRSTATE_NOT_CONFIGURED,              /**< timer or channel not configured */
+        FMKCPU_ERRSTATE_OFF_UNEXPECTED,              /**< channel is busy */
+        FMKCPU_ERRSTATE_INIT_FAILED,                 /**< Failed during intitialize of channel */
+        FMKCPU_ERRSTATE_UNKNOWN,                     /**< unknown error detected */
 
     } t_eFMKCPU_ChnlErrorState;
 
@@ -298,7 +299,28 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint32 f_pwmFreq_u32);
+    t_eReturnCode FMKCPU_Set_PWMChannelCfg( t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
+                                            t_uint32 f_pwmFreq_u32);
+    /**
+    *
+    *	@brief      Configure an tinterrupt line in PWM configuration.\n
+    *   @note       First, this configuration set the bsp timer cfg in PWM mode.\n
+    *               Once it's done, this function configure the bsp channel in PWM mode too.\n
+    *               IMPORTANT, the PWM generation is based on a timer configuration which share
+    *               multiple channels, in a sense that, frequency is shared by all PWM channels.\n
+    *               In result, the modification of the timer configuration reverbate for all channels.\n     
+    *               For Instance, every FMKCPU_INTERRUPT_LINE_IO_0Y, Y belong to [0, Innfini] shared the same timer.\n
+    *
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  f_EcdrFreq_u32          : the frequency timer.
+    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
+    *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
+    */
+    t_eReturnCode FMKCPU_Set_EcdrChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
+                                            t_uint32 f_EcdrFreq_u32);
     /**
     *
     *	@brief    Set the DutyCycle to a timer channel
@@ -315,7 +337,8 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint16 f_dutyCycle_u16);
+    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+                                            t_uint16 f_dutyCycle_u16);
     /**
     *
     *	@brief    Get the DutyCycle from a timer channel
@@ -330,7 +353,8 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
     */
-    t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, t_uint16 *f_dutyCycle_u16);
+    t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
+                                            t_uint16 *f_dutyCycle_u16);
     /**
     *
     *	@brief    Configure a timer channel in Input Compare configuration.\n
@@ -354,9 +378,9 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
-                                         t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
-                                         t_cbFMKCPU_InterruptLine * f_ITChannel_cb);
+    t_eReturnCode FMKCPU_Set_ICChannelCfg(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+                                            t_eFMKCPU_ChnlMeasTrigger f_MeasTrigger_e,
+                                            t_cbFMKCPU_InterruptLine * f_ITChannel_cb);
     /**
     *
     *	@brief    Configure a timer channel on event configuration.\n
@@ -378,9 +402,9 @@
     *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
-                                         t_uint32 f_periodms_u32,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb);
+    t_eReturnCode FMKCP_Set_EvntTimerCfg(   t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
+                                            t_uint32 f_periodms_u32,
+                                            t_cbFMKCPU_InterruptLine f_ITChannel_cb);
     /**
     *
     *	@brief      Add a callback function to a timer channel.\n
@@ -397,8 +421,8 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
-                                             t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
+    t_eReturnCode FMKCPU_AddTimerChnlCallback(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+                                                t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
     /**
     *
     *	@brief      Set a InterruptLine  state ON/OFF.\n
@@ -422,7 +446,7 @@
     *
     *	@param[in]  f_timer_e                : enum value for the timer, value from @ref t_eFMKCPU_Timer
     *	@param[in]  f_channel_e              : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
-    *	@param[in]  f_chnlErrInfo_pe         : storage for channel error.\n
+    *	@param[in]  f_chnlErrInfo_pu16       : storage for channel error.\n
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
@@ -431,7 +455,7 @@
     */
     t_eReturnCode FMKCPU_Get_ChannelErrorStatus(t_eFMKCPU_InterruptLineType f_ITLineType_e,
                                                 t_uFMKCPU_InterruptLine f_IT_line_u,
-                                                t_eFMKCPU_ChnlErrorState *f_chnlErrInfo_pe);
+                                                t_uint16 *f_chnlErrInfo_pu16);
     /**
     *
     *	@brief      Function to get CCRx register value
@@ -445,19 +469,9 @@
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
-    t_eReturnCode FMKCPU_Get_RegisterCRRx(t_eFMKCPU_InterruptLineType f_ITLineType_e,
-                                          t_uFMKCPU_InterruptLine f_IT_line_u,
-                                          t_uint32 * f_CCRxValue_pu32);
-    /**
-     *  @brief Declaration for hardware IRQnHandler call
-     */
-    // flag automatic generated code 
-    void TIM1_IRQHandler(void);
-    void TIM3_IRQHandler(void);
-    void TIM14_IRQHandler(void);
-    void TIM15_IRQHandler(void);
-    void TIM16_IRQHandler(void);
-    void TIM17_IRQHandler(void);
+    t_eReturnCode FMKCPU_Get_RegisterCRRx(  t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                            t_uFMKCPU_InterruptLine f_IT_line_u,
+                                            t_uint32 * f_CCRxValue_pu32);
 #endif // FMKCPU_H_INCLUDED           
 //************************************************************************************
 // End of File

@@ -230,6 +230,28 @@
     */
     typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStopFuncModeInterrupt)(TIM_HandleTypeDef *f_handleTimer_s, uint32_t f_channel_u32);
 
+    /**
+    *
+    *	@brief      HAL Timer function in DMA Mode  
+    *	@note       This function repertory in stm32f00xx_hal_tim,
+    *               is used in Dma mode 
+    *
+    *	@param[in]      f_handleTimer_s : the bsp config structure 
+    *	@param[out]     f_channel_u32   : the channel 
+    *	@param[out]     f_data_pu32     : Pointor to data
+    *	@param[out]     f_channel_u32   : Lenght data  
+    *
+    *   @retval HAL_OK                     @ref HAL_OK
+    *   @retval HAL_ERROR                  @ref HAL_ERROR
+    */
+    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStartFuncModeDMA)( TIM_HandleTypeDef *f_handleTimer_s,
+                                                                uint32_t f_channel_u32, 
+                                                                t_uint32 * f_data1_pu32, 
+                                                                t_uint32 * f_data2_pu32, 
+                                                                t_uint16 f_lenght_u16);
+
+    typedef t_cbFMKCPU_TimStartFuncModeInterrupt t_cbFMKCPU_TimStopFuncModeDMA;
+
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -245,6 +267,8 @@
         t_cbFMKCPU_TimStopFuncModePolling    * StopFuncPoll_pcb;        /**< HAL_TIM function to start a timer_channel in interruption mode */
         t_cbFMKCPU_TimStartFuncModeInterrupt * StartFuncInterrupt_pcb;  /**< HAL_TIM function to stop a timer_channel in polling mode */
         t_cbFMKCPU_TimStopFuncModeInterrupt  * StopFuncInterrupt_pcb;   /**< HAL_TIM function to stop a timer_channel in interruption mode */
+        t_cbFMKCPU_TimStartFuncModeDMA       * StartFuncDma_pcb;        /**< HAL_TIM function to start a timer un DMA Mode */
+        t_cbFMKCPU_TimStopFuncModeDMA        * StopFuncDma_pcb;         /**< HAL_TIM function to stop a timer un DMA Mode*/
         t_cbFMKCPU_GetTimerInfoInit          * GetTimerInfoInit_pcb;    /**< Specific Function to found the best PSC & ARR value for Freq and OscFreq */
     } t_sFMKCPU_TimChannelFunc;
 
@@ -335,14 +359,14 @@
 
     /**< Referencing all HAL_TIM function*/
     const t_sFMKCPU_TimChannelFunc c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_NB] = 
-    {//    Get Timer State                 Init Timer                       DeInitTimer                   StartPolling Func                StopPolling Funnc            Start Interrupt Func             Stop Interrupt Func
-        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,           FMKCPU_GetPwmTimerInitParam},         // FMKCPU_CHANNEL_CFG_PWM 
-        {HAL_TIM_IC_GetState,              HAL_TIM_IC_Init,                 HAL_TIM_IC_DeInit,            HAL_TIM_IC_Start,                HAL_TIM_IC_Stop,              HAL_TIM_IC_Start_IT,            HAL_TIM_IC_Stop_IT,            FMKCPU_GetICTimerInitParam},          // FMKCPU_CHANNEL_CFG_IC
-        {HAL_TIM_OC_GetState,              HAL_TIM_OC_Init,                 HAL_TIM_OC_DeInit,            HAL_TIM_OC_Start,                HAL_TIM_OC_Stop,              HAL_TIM_OC_Start_IT,            HAL_TIM_OC_Stop_IT,            FMKCPU_GetOCTimerInitParam},          // FMKCPU_CHANNEL_CFG_OC
-        {HAL_TIM_OnePulse_GetState,        NULL_FONCTION,                   HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT,      FMKCPU_GetOPTimerInitParam},          // FMKCPU_CHANNEL_CFG_OP
-        {HAL_TIM_Base_GetState,            HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT,   FMKCPU_GetEvntTimerInitParam},        // FMKCPU_CHANNEL_CFG_EVNT
-        {HAL_TIM_Encoder_GetState,         NULL_FONCTION,                   HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT,       FMKCPU_GetECDRTimerInitParam},        // FMKCPU_CHANNEL_CFG_ECDR
-        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,           FMKCPU_GetDacTimerInitParam},         // FMKCPU_CHANNEL_CFG_DAC 
+    {//    Get Timer State                 Init Timer                       DeInitTimer                   StartPolling Func                StopPolling Funnc            Start Interrupt Func             Stop Interrupt Func                Start Dma Func                         Stop Dma Func                     Get Init Timer Param
+        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,               FMKCPU_HAL_TIM_PWM_Start_DMA,          HAL_TIM_PWM_Stop_DMA,            FMKCPU_GetPwmTimerInitParam},         // FMKCPU_CHANNEL_CFG_PWM 
+        {HAL_TIM_IC_GetState,              HAL_TIM_IC_Init,                 HAL_TIM_IC_DeInit,            HAL_TIM_IC_Start,                HAL_TIM_IC_Stop,              HAL_TIM_IC_Start_IT,            HAL_TIM_IC_Stop_IT,                FMKCPU_HAL_TIM_IC_Start_DMA,           HAL_TIM_IC_Stop_DMA,             FMKCPU_GetICTimerInitParam},          // FMKCPU_CHANNEL_CFG_IC
+        {HAL_TIM_OC_GetState,              HAL_TIM_OC_Init,                 HAL_TIM_OC_DeInit,            HAL_TIM_OC_Start,                HAL_TIM_OC_Stop,              HAL_TIM_OC_Start_IT,            HAL_TIM_OC_Stop_IT,                FMKCPU_HAL_TIM_OC_Start_DMA,           HAL_TIM_OC_Stop_DMA,             FMKCPU_GetOCTimerInitParam},          // FMKCPU_CHANNEL_CFG_OC
+        {HAL_TIM_OnePulse_GetState,        NULL_FONCTION,                   HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT,          NULL_FONCTION,                         NULL_FONCTION,                   FMKCPU_GetOPTimerInitParam},          // FMKCPU_CHANNEL_CFG_OP
+        {HAL_TIM_Base_GetState,            HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT,       FMKCPU_HAL_TIM_Base_Start_DMA,         FMKCPU_HAL_TIM_Base_Stop_DMA,    FMKCPU_GetEvntTimerInitParam},        // FMKCPU_CHANNEL_CFG_EVNT
+        {HAL_TIM_Encoder_GetState,         NULL_FONCTION,                   HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT,           FMKCPU_HAL_TIM_Encoder_Start_DMA,      HAL_TIM_Encoder_Stop_DMA,        FMKCPU_GetECDRTimerInitParam},        // FMKCPU_CHANNEL_CFG_ECDR
+        {HAL_TIM_PWM_GetState,             HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,               FMKCPU_HAL_TIM_PWM_Start_DMA,          HAL_TIM_PWM_Stop_DMA,            FMKCPU_GetDacTimerInitParam},         // FMKCPU_CHANNEL_CFG_DAC 
     };
 
     /**< Hardware configuration watchdog Period Timer */

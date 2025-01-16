@@ -276,7 +276,13 @@ t_eReturnCode FMKCPU_GetICTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                           t_uint32 * f_bspTimARR_pu32,
                                           t_uint32 * f_bspTimPrescaler_pu32)
 {
-    return RC_ERROR_INSTANCE_NOT_INITIALIZED;
+    
+    return FMKCPU_GetPwmTimerInitParam( f_idxTimRccClock_u8,
+                                        f_timOscSrc_e,
+                                        f_SysClockValues_ua8,
+                                        f_RqstTimerFreq_f32,
+                                        f_bspTimARR_pu32,
+                                        f_bspTimPrescaler_pu32);
 }
 
 /*********************************
@@ -929,6 +935,98 @@ t_eReturnCode FMKCPU_SetPeriphClockCfg(t_eFMKCPU_ClockPort f_clockPort_e)
 }
 #endif
 
+/**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Start
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start(htim);}
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Stop
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop(htim);}
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Start_IT
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start_IT(htim);}
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Stop_IT
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_IT(htim);}
+
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Start_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16)
+{
+    UNUSED(Channel); 
+    UNUSED(pdata2_pu32);
+    return HAL_TIM_Base_Start_DMA(htim, pdata1_pu32, lenght_u16);
+}
+/*********************************
+ * FMKCPU_HAL_TIM_OC_Start_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16)
+{
+    UNUSED(pdata2_pu32);
+    return HAL_TIM_OC_Start_DMA(htim,Channel ,pdata1_pu32, lenght_u16);
+}
+/*********************************
+ * FMKCPU_HAL_TIM_PWM_Start_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16)
+{
+    UNUSED(pdata2_pu32);
+    return HAL_TIM_PWM_Start_DMA(htim, Channel, pdata1_pu32, lenght_u16);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_IC_Start_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16)
+{
+    UNUSED(pdata2_pu32);
+    return HAL_TIM_IC_Start_DMA(htim, Channel, pdata1_pu32, lenght_u16);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_Encoder_Start_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                    uint32_t Channel, 
+                                                    uint32_t *pdata1_pu32,
+                                                    uint32_t *pdata2_pu32,
+                                                    uint16_t lenght_u16)
+{
+    UNUSED(pdata2_pu32);
+    return HAL_TIM_Encoder_Start_DMA(htim, Channel, pdata1_pu32, pdata2_pu32, lenght_u16);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_Base_Stop_DMA
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_DMA(htim);}
+
 
 /* CAUTION : Automatic generated code section for Enable Clk Implementation: Start */
 /**< Function to enable DMA1 rcc clock*/
@@ -1164,11 +1262,6 @@ void FMKCPU_Disable_SAI1_Clock(void) {__HAL_RCC_SAI1_CLK_DISABLE();}
 void FMKCPU_Disable_HRTIM1_Clock(void) {__HAL_RCC_HRTIM1_CLK_DISABLE();}
 /* CAUTION : Automatic generated code section for Disable Clk Implementation: End */
 
-/**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Start_IT(htim);}
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_IT(htim);}
 
 //********************************************************************************
 //                      Local functions - Implementation

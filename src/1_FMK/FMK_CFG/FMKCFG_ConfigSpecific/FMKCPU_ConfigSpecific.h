@@ -214,6 +214,40 @@
                                                 t_uint32 * f_bspARR_pu32,
                                                 t_uint32 * f_bspTimPrescaler_pu32);
 
+    /**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16);
+HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                uint32_t Channel, 
+                                                uint32_t *pdata1_pu32,
+                                                uint32_t *pdata2_pu32,
+                                                uint16_t lenght_u16);
+
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                    uint32_t Channel, 
+                                                    uint32_t *pdata1_pu32,
+                                                    uint32_t *pdata2_pu32,
+                                                    uint16_t lenght_u16);
+
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+
     /* CAUTION : Automatic generated code section for Enable Clk Declaration: Start */
     /**< Function to enable  DMA1 rcc clock*/
     void FMKCPU_Enable_DMA1_Clock(void);
@@ -448,11 +482,6 @@
     void FMKCPU_Disable_HRTIM1_Clock(void);
     /* CAUTION : Automatic generated code section for Disable Clk Declaration: End */
 
-/**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
 #endif // FMKPU_CONFIGSPECIFIC_H_INCLUDED           
 //************************************************************************************
 // End of File

@@ -29,6 +29,8 @@
     #define FMKSRL_TIMEOUT_POLLING ((t_uint32)0x0000FFFF)
 
     #define FMKSRL_MAX_BYTES_TO_SEND ((t_uint16)256)
+
+    #define FMKSRL_MAX_ERR_CNT       ((t_uint8)10)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -155,6 +157,17 @@
     *   @retval HAL_ERROR                  @ref HAL_ERROR
     */
     typedef HAL_StatusTypeDef (t_cbFMKSRL_BspAbort_IT)(void * bspHandle_pv);
+
+    /**
+    *
+    *	@brief      HAL UART.USART function Abort Interrupt Mode
+    *
+    *	@param[in]      bspHandle_pv        : the UART/USART Handle_TypeDef
+    *
+    *   @retval HAL_OK                     @ref HAL_OK
+    *   @retval HAL_ERROR                  @ref HAL_ERROR
+    */
+    typedef HAL_StatusTypeDef (t_cbFMKSRL_GetError)(void * bspHandle_pv);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
