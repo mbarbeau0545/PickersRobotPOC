@@ -113,6 +113,58 @@
 
     } t_eFMKCPU_ChnlErrorState;
 
+    /**
+     * @brief Input Capture Selection
+     */
+    typedef enum 
+    {
+        FMKCPU_ICSELECT_DIRECT_TI = 0x00,      /**< TIM Input 1, 2, 3 or 4 is selected to be
+                                                         connected to IC1, IC2, IC3 or IC4, respectively */
+        FMKCPU_ICSELECT_INDIRECT_TI,           /**< TIM Input 1, 2, 3 or 4 is selected to be
+                                                           connected to IC2, IC1, IC4 or IC3, respectively */
+        FMKCPU_ICSELECT_TRC                    /**< TIM Input 1, 2, 3 or 4 is selected to be connected to TRC */
+    } t_eFMKCPU_ICSelection;
+
+    /**
+     * @brief Encoder Mode Selection
+     */
+    typedef enum 
+    {
+        FMKCPU_ECDR_MODE_TI1 = 0x00,
+        FMKCPU_ECDR_MODE_TI2,
+        FMKCPU_ECDR_MODE_TI12,
+        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X2,
+        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X1,
+        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X2,
+        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X1_TI12,
+        FMKCPU_ECDR_MODE_X1_TI1,
+        FMKCPU_ECDR_MODE_X1_TI12,
+
+        FMKCPU_ECDR_MODE_NB,
+    } t_eFMKCPU_EcdrMode;
+
+    /**
+     * @brief Encoder Channel Mode Selection
+     */
+    typedef enum
+    {
+        FMKCPU_ECDR_ACTIVE_CHNL_1 = 0x00,       /**< Channel 1 will be activated for Direction Or Position */
+        FMKCPU_ECDR_ACTIVE_CHNL_2,              /**< Channel 2 will be activated for Direction Or Position */
+        FMKCPU_ECDR_ACTIVE_BOTH_CHNL,           /**< Channel 1 and 2 will be activated for Direction and Position */
+
+        FMKCPU_ECDR_ACTIVE_NB,
+    } t_eFMKCPU_EcdrActiveCfg;
+    /**
+     * @brief Encoder Input Polarity Selection
+     */
+    typedef enum 
+    {
+        FMKCPU_ECDR_ECDR_IN_POLARITY_RISING = 0x00,     /**< Encoder input with rising edge polarity  */
+        FMKCPU_ECDR_ECDR_IN_POLARITY_FALLING,           /**< Encoder input with falling edge polarity */
+
+        FMKCPU_ECDR_ECDR_IN_POLARITY_NB,
+    } t_eFMKCPU_EcdrInPolarity;
+
     /**< union for Centralize Certain Function */
     typedef union
     {
@@ -135,7 +187,28 @@
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
-    
+    /**
+     * @brief Encoder Input Compare Channel Configuration
+     */
+    typedef struct 
+    {
+        t_eFMKCPU_ICSelection Selection_e;
+        t_eFMKCPU_EcdrInPolarity Polarity_e;
+    } t_sFMKCPU_ICCfg;
+
+    /**
+     * @brief Encoder Configuration
+     */
+    typedef struct 
+    {
+        t_eFMKCPU_EcdrMode HwMode_e;        /**< The Encoder Mode */
+        t_eFMKCPU_ChnlRunMode RunMode_e;    /**< Channel Run Mode */
+        t_uint32 freqEcdr_u32;              /**< Frequency Encode sampling, Must four times superrior than Max Signal Frequency 
+                                                where Fsignal = SpeedMax(tr/min) / (PPR / 60)
+                                                where PPR = Pulse Per Revolution */
+        t_sFMKCPU_ICCfg IC1_s;              /**< Input Compare Channel 1 Configuration */
+        t_sFMKCPU_ICCfg IC2_s;              /**< Input Compare Channel 2 Configuration */
+    } t_sFMKCPU_EcdrCfg;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -283,7 +356,7 @@
     t_eReturnCode FMKCPU_ResetWwdg(void);
     /**
     *
-    *	@brief      Configure an tinterrupt line in PWM configuration.\n
+    *	@brief      Configure an interrupt line in PWM configuration.\n
     *   @note       First, this configuration set the bsp timer cfg in PWM mode.\n
     *               Once it's done, this function configure the bsp channel in PWM mode too.\n
     *               IMPORTANT, the PWM generation is based on a timer configuration which share
@@ -303,16 +376,13 @@
                                             t_uint32 f_pwmFreq_u32);
     /**
     *
-    *	@brief      Configure an tinterrupt line in PWM configuration.\n
-    *   @note       First, this configuration set the bsp timer cfg in PWM mode.\n
-    *               Once it's done, this function configure the bsp channel in PWM mode too.\n
-    *               IMPORTANT, the PWM generation is based on a timer configuration which share
-    *               multiple channels, in a sense that, frequency is shared by all PWM channels.\n
-    *               In result, the modification of the timer configuration reverbate for all channels.\n     
-    *               For Instance, every FMKCPU_INTERRUPT_LINE_IO_0Y, Y belong to [0, Innfini] shared the same timer.\n
+    *	@brief      Configure an interrupt line in Ecdr configuration.\n
+    *   @note       First, this configuration set the bsp timer cfg in Ecdr mode.\n
+    *               .\n
+    *  @warning     Channel use in this mode are always CHANNEL_1 & CHANNEL_2 and reverse one also
     *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_EcdrFreq_u32          : the frequency timer.
+    *	@param[in]  f_InterruptLine_e       : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  EcdrCfg_s               : Encoder Configuration.
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
@@ -320,7 +390,7 @@
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
     t_eReturnCode FMKCPU_Set_EcdrChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
-                                            t_uint32 f_EcdrFreq_u32);
+                                            t_sFMKCPU_EcdrCfg EcdrCfg_s);
     /**
     *
     *	@brief    Set the DutyCycle to a timer channel

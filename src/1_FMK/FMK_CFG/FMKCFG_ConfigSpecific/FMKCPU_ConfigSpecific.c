@@ -440,7 +440,12 @@ t_eReturnCode FMKCPU_GetECDRTimerInitParam(t_uint8  f_idxTimRccClock_u8,
                                                 t_uint32 * f_bspARR_pu32,
                                                 t_uint32 * f_bspTimPrescaler_pu32)
 {
-    return RC_ERROR_INSTANCE_NOT_INITIALIZED;
+    return FMKCPU_GetPwmTimerInitParam( f_idxTimRccClock_u8,
+                                        f_timOscSrc_e,
+                                        f_SysClockValues_ua8,
+                                        f_RqstTimerFreq_f32,
+                                        f_bspARR_pu32,
+                                        f_bspTimPrescaler_pu32);
 }
 
 /*********************************
@@ -1025,7 +1030,65 @@ HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim,
 /*********************************
  * FMKCPU_HAL_TIM_Base_Stop_DMA
  *********************************/
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_DMA(htim);}
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel)
+{
+    UNUSED(Channel); return HAL_TIM_Base_Stop_DMA(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_PWM_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_PWM_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OC_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_OC_Init(htim);
+}
+
+/*********************************
+ * FMKCPUHAL_TIM_Base_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_Base_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_IC_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_IC_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OnePulse_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    t_uint32 onePUlse_u32 = (t_uint32)(&f_TimerCfg_pv);
+    return HAL_TIM_OnePulse_Init(htim, (t_uint32)onePUlse_u32);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OnePulse_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    
+    TIM_Encoder_InitTypeDef * bspEcdrCdg_ps = (TIM_Encoder_InitTypeDef *)(f_TimerCfg_pv);
+    return HAL_TIM_Encoder_Init(htim, (TIM_Encoder_InitTypeDef *)bspEcdrCdg_ps);
+}
 
 
 /* CAUTION : Automatic generated code section for Enable Clk Implementation: Start */
