@@ -433,19 +433,80 @@ t_eReturnCode FMKCPU_GetEvntTimerInitParam(t_uint8  f_idxTimRccClock_u8,
 /*********************************
  * FMKCPU_GetECDRTimerInitParam
  *********************************/
-t_eReturnCode FMKCPU_GetECDRTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32   f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32)
+t_eReturnCode FMKCPU_GetECDRTimerInitParam( t_uint8  f_idxTimRccClock_u8,
+                                            t_eFMKCPU_SysClkOsc f_timOscSrc_e,
+                                            t_uint8 * f_SysClockValues_ua8,
+                                            t_float32  f_rqstARRValue_u32,
+                                            t_uint32 * f_bspARR_pu32,
+                                            t_uint32 * f_bspTimPrescaler_pu32)
 {
-    return FMKCPU_GetPwmTimerInitParam( f_idxTimRccClock_u8,
-                                        f_timOscSrc_e,
-                                        f_SysClockValues_ua8,
-                                        f_RqstTimerFreq_f32,
-                                        f_bspARR_pu32,
-                                        f_bspTimPrescaler_pu32);
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint32 maxARRValue_u32    = (t_uint32)0;
+    t_uint32 minARRValue_u32    = (t_uint32)0;
+    t_uint32 maxNumberBit_u32   = (t_uint32)0;
+
+    if((f_bspTimPrescaler_pu32 == (t_uint32 *)NULL)
+    || (f_SysClockValues_ua8   == (t_uint8 *)NULL)
+    || (f_bspARR_pu32          == (t_uint32 *)NULL))
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if((f_idxTimRccClock_u8 >= FMKCPU_RCC_CLK_NB)
+    || (f_timOscSrc_e >= FMKCPU_SYS_CLOCK_NB))
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        switch(f_idxTimRccClock_u8)
+        {
+            case FMKCPU_RCC_CLK_TIM1:
+            case FMKCPU_RCC_CLK_TIM3:
+            case FMKCPU_RCC_CLK_TIM4:
+            case FMKCPU_RCC_CLK_TIM6:
+            case FMKCPU_RCC_CLK_TIM7:
+            case FMKCPU_RCC_CLK_TIM8:
+            case FMKCPU_RCC_CLK_TIM15:
+            case FMKCPU_RCC_CLK_TIM16:
+            case FMKCPU_RCC_CLK_TIM17:
+            case FMKCPU_RCC_CLK_TIM20:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_16BIT);
+                minARRValue_u32  = (t_uint32)0;
+                maxARRValue_u32  = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_16BIT;
+                break;
+            }
+            case FMKCPU_RCC_CLK_TIM2:
+            case FMKCPU_RCC_CLK_TIM5:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_32BIT);
+                minARRValue_u32 = (t_uint32)0;
+                maxARRValue_u32 = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_32BIT;
+                break;
+            }
+            default:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_16BIT);
+                minARRValue_u32 = (t_uint32)FMKCPU_ARR_LOW_LIMIT_16BIT;
+                maxARRValue_u32 = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_16BIT;
+                break;
+            }
+        }
+        if(Ret_e == RC_OK)
+        {
+            if(f_rqstARRValue_u32 > (t_uint32)maxARRValue_u32)
+            {
+                Ret_e = RC_ERROR_LIMIT_REACHED;
+            }
+            else 
+            {
+                *f_bspARR_pu32 = (t_uint32)(f_rqstARRValue_u32 - 1);
+                *f_bspTimPrescaler_pu32 = (t_uint32)(0);
+            }
+        }
+    }
+
+    return Ret_e;
 }
 
 /*********************************

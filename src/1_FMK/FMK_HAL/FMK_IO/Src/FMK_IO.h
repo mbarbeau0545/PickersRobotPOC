@@ -75,6 +75,13 @@
         FMKIO_FREQ_MEAS_NB,             /**< Number of frequency value available */
     } t_eFMKIO_FreqMeas;
 
+    typedef enum 
+    {
+        FMKIO_ECDR_MEAS_LAST,       /**< Get the last Raw Value from Position or Direction Buffer*/
+        FMKIO_ECDR_MEAS_MEAN,       /**< Get the Mean Value from Position or Direction Buffer */
+        FMKIO_ECDR_MEAS_NB,
+    } t_eFMKIO_EcdrMeas;
+
     /**< Enum for signal type manage in this module */
     typedef enum 
     {
@@ -106,6 +113,14 @@
 
         FMKIO_ENCODER_START_NB,
     } t_eFMKIO_EcdrStartOpe;
+
+    typedef enum 
+    {
+        FMKIO_ENCODER_DIR_FORWARD = 0x00,
+        FMKIO_ENCODER_DIR_BACKWARD,
+
+        FMKIO_ENCODER_DIR_NB,
+    } t_eFMKIO_EcdrDir;
 
     enum 
     {
@@ -304,10 +319,11 @@
     *
     */
     t_eReturnCode FMKIO_Set_InEncoderSigCfg(t_eFMKIO_InEcdrSignals f_InEncdr_e,
-                                            t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
-                                            t_eFMKIO_PullMode f_pull_e,
-                                            t_eFMKIO_SpdMode f_spd_e,
-                                            t_eFMKIO_EcdrStartOpe f_startOpe);
+                                        t_uint32 f_PulsePerRevolution_u32,
+                                        t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
+                                        t_eFMKIO_PullMode f_pull_e,
+                                        t_eFMKIO_SpdMode f_spd_e,
+                                        t_eFMKIO_EcdrStartOpe f_startOpe);
     /**
     *
     *	@brief      Set an output in PWM configuration.\n
@@ -412,6 +428,40 @@
     *
     */
     t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    /**
+    *
+    *	@brief      Get the digital input.\n
+    *	@note       Once the configuration is done, this function call hal library to
+                    know the state of the signal on store it into f_value_pe.\n
+    *
+    *
+    *	@param[in]      f_signal_e       : the input frequency signal, a value from @ref t_eFMKIO_InDigSig
+    *	@param[in]      f_value_pe       : storage for value value, value from @ref t_eFMKIO_DigValue
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_InEcdrPositionValue(t_eFMKIO_InEcdrSignals f_signal_e, t_uint32 *f_value_pu32);
+    /**
+    *
+    *	@brief      Get the digital input.\n
+    *	@note       Once the configuration is done, this function call hal library to
+                    know the state of the signal on store it into f_value_pe.\n
+    *
+    *
+    *	@param[in]      f_signal_e       : the input frequency signal, a value from @ref t_eFMKIO_InDigSig
+    *	@param[in]      f_value_pe       : storage for value value, value from @ref t_eFMKIO_DigValue
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_InEcdrDirectionValue(t_eFMKIO_InEcdrSignals f_signal_e, t_eFMKIO_EcdrDir *f_Dirvalue_pe);
     /**
     *
     *	@brief      Get the analog input.\n

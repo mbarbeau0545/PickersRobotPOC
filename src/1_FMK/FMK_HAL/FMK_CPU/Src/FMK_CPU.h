@@ -225,7 +225,7 @@
         t_uint32 * bufferTI1_pu32;        /**< Buffer Address to store TI1 information */
         t_uint32 * bufferTI2_pu32;        /**< Buffer Address to store TI2 information */
         t_uint16   bufferSize_u16;          /**< Buffer TI1 & TI2 Sized */
-    } t_sFMKCPU_EcdrDmaInfo;
+    } t_sFMKCPU_DmaInfo;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -409,10 +409,9 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKCPU_Set_EcdrChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine1_e,
+    t_eReturnCode FMKCPU_Set_EcdrChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                             t_sFMKCPU_EcdrCfg f_EcdrCfg_s,
-                                            t_sFMKCPU_EcdrDmaInfo f_DmaInfo_s,
-                                            t_cbFMKCPU_InterruptLine * f_EcdrCallback_cb);
+                                            t_uint32 f_ARRValue_u32);
     /**
     *
     *	@brief    Configure a timer channel in Input Compare configuration.\n
@@ -514,6 +513,23 @@
     */
     t_eReturnCode FMKCPU_Get_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
                                             t_uint16 *f_dutyCycle_u16);
+    /**
+    *
+    *	@brief    Get the DutyCycle from a timer channel
+    *   @note     Get the value from CCRx register and convert it in dutycycle
+    *
+    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
+    *	@param[in]  f_dutyCycle_u16        : the dutycyle, value from [0, 1000]
+    *
+    *  @retval RC_OK                             @ref RC_OK
+    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
+    *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
+    */
+    t_eReturnCode FMKCPU_Get_EncoderValues( t_eFMKCPU_InterruptLineIO f_EcdrLine_e, 
+                                            t_uint32 *f_position_pu32,
+                                            t_uint8 *f_direction_pu8);
 
     /**
     *
