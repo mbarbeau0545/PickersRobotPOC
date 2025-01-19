@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
     #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
@@ -96,11 +97,22 @@
         FMKIO_DIG_VALUE_NB              /**< Number of digital state */
     } t_eFMKIO_DigValue;
     
+    /**< Enum for Encoder Mode  */
+    typedef enum 
+    {
+        FMKIO_ENCODER_START_POS = 0x00, /**< Start the Encoder Position to reveice Information */
+        FMKIO_ENCODER_START_DIR,        /**< Start the Encoder Direction  to reveice Information */
+        FMKIO_ENCODER_START_BOTH,       /**< Start the Encoder Position/Direction to receive Information */
+
+        FMKIO_ENCODER_START_NB,
+    } t_eFMKIO_EcdrStartOpe;
+
     enum 
     {
         FMKIO_ANALOG_SC_DETECTED = 0x0U,
         FMKIO_ANALOG_OL_DETECTED = 0x1U,
     };
+
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -269,6 +281,33 @@
                                           t_uint32 f_debouncDelay_u32,
                                           t_cbFMKIO_EventFunc * f_Evnt_cb,
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
+        /**
+    *
+    *	@brief      Set an intput in event configuration.\n
+    *	@note       Allow the user to choose among event inputs.\n 
+    *               This function configure bspInit, call HAL_function, 
+    *               configure a external Interrupt which from hal_library will call 
+    *               f_Evnt_cb on f_trigger_e detection.\n
+    *
+    *
+    *	@param[in]      f_signal_e          : the input frequency signal, a value from @ref t_eFMKIO_InEvntSig
+    *	@param[in]      f_pull_e            : the input pull mode, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_debouncDelay_u32  : time in which interrupt will be ignore due to indertemine state
+    *	@param[in]      f_trigger_e         : time in ms to ignore fluctuation from signal after a interruption happened
+    *	@param[in]      f_Evnt_cb           : Function to call when the edge is detected by hardware
+    *	@param[in]      f_sigErr_cb         : callbback function that will be called if an error occured, NULL_FONCTION if not used
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
+    *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    *
+    */
+    t_eReturnCode FMKIO_Set_InEncoderSigCfg(t_eFMKIO_InEcdrSignals f_InEncdr_e,
+                                            t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
+                                            t_eFMKIO_PullMode f_pull_e,
+                                            t_eFMKIO_SpdMode f_spd_e,
+                                            t_eFMKIO_EcdrStartOpe f_startOpe);
     /**
     *
     *	@brief      Set an output in PWM configuration.\n

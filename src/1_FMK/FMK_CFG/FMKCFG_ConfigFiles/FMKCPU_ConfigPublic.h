@@ -103,7 +103,7 @@
         FMKCPU_INTERRUPT_LINE_TYPE_IO = 0x00,       /**< Timer/Channel use for PWM, IC, OC, OP Purpose */
         FMKCPU_INTERRUPT_LINE_TYPE_EVNT,            /**< Timer/Channel use for Event purpose */
         FMKCPU_INTERRUPT_LINE_TYPE_DAC,             /**< Timmer/Channel use for DAC purpose */
-
+        FMKCPU_INTERRUPT_LINE_TYPE_ECDR,
         FMKCPU_INTERRUPT_LINE_TYPE_NB,
     } t_eFMKCPU_InterruptLineType;
     /* CAUTION : Automatic generated code section for Enum: Start */

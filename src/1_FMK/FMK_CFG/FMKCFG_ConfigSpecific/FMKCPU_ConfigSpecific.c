@@ -74,7 +74,7 @@ static inline t_uint32 s_FMKCPU_Timer_GetArrRegister(t_uint32 osc_valMhz, t_uint
 /*********************************
  * s_FMKCPU_Timer_GeFreqPwm
  *********************************/
-static inline t_float32 s_FMKCPU_Timer_GetFreqPwm(t_uint32 osc_valMhz, t_uint32 f_Prescaler_u32, t_uint32 f_ARRVal) {
+static inline t_float32  s_FMKCPU_Timer_GetFreqPwm(t_uint32 osc_valMhz, t_uint32 f_Prescaler_u32, t_uint32 f_ARRVal) {
     return (t_float32)(((t_float32)osc_valMhz * CST_MHZ_TO_HZ) / (((t_float32)f_Prescaler_u32 + 1) * ((t_float32)(f_ARRVal + 1))));
 }
 /*********************************
@@ -1023,7 +1023,6 @@ HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim,
                                                     uint32_t *pdata2_pu32,
                                                     uint16_t lenght_u16)
 {
-    UNUSED(pdata2_pu32);
     return HAL_TIM_Encoder_Start_DMA(htim, Channel, pdata1_pu32, pdata2_pu32, lenght_u16);
 }
 

@@ -87,6 +87,7 @@
         FMKCPU_CHANNEL_6,                        /**< Reference to HAL channel 5 */
     
         FMKCPU_CHANNEL_NB,
+        FMKCPU_CHANNEL_ALL,
     } t_eFMKCPU_InterruptChnl;
 
     /* CAUTION : Automatic generated code section for Enum: End */

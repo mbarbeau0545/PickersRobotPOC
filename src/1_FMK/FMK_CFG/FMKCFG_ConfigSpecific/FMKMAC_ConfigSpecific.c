@@ -93,6 +93,9 @@ t_eReturnCode FMKMAC_SetRequestType(t_eFMKMAC_DmaRqst f_RqstType_e,
             case FMKMAC_DMA_RQSTYPE_USART2_TX:
                 f_bspDma_ps->Init.Request = DMA_REQUEST_USART2_TX;
                 break;
+            case FMKMAC_DMA_RQSTYPE_TIM8_CH1:
+                f_bspDma_ps->Init.Request = DMA_REQUEST_TIM8_CH1;
+                break;
             /* CAUTION : Automatic generated code section for Request Dma: End */
 
             case FMKMAC_DMA_RQSTYPE_NB:
