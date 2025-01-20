@@ -235,7 +235,7 @@
     *
     *
     *	@param[in]      f_signal_e     : the input analog signal, value from @ref t_eFMKIO_InAnaSig
-    *	@param[in]     f_pull_e        : the input pull mode, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_pull_e        : the input pull mode, value from @ref t_eFMKIO_PullMode
     *	@param[in]      f_sigErr_cb     : callbback function that will be called if an error occured,NULL_FONCTION if not used
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -256,7 +256,7 @@
     *
     *
     *	@param[in]      f_signal_e     : the input frequency signal, a value from @ref t_eFMKIO_InFreqSig
-    *	@param[in]     f_measType_e    : the input pull mode, value from @ref t_eFMKIO_FreqMeas
+    *	@param[in]      f_freqMeas_e    : the input pull mode, value from @ref t_eFMKIO_FreqMeas
     *	@param[in]      f_sigErr_cb     : callbback function that will be called if an error occured
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -298,32 +298,40 @@
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
         /**
     *
-    *	@brief      Set an intput in event configuration.\n
-    *	@note       Allow the user to choose among event inputs.\n 
-    *               This function configure bspInit, call HAL_function, 
-    *               configure a external Interrupt which from hal_library will call 
-    *               f_Evnt_cb on f_trigger_e detection.\n
+    *	@brief      Set an intput in Encoder configuration.\n
+    *	@note       Allow User to set Two Pin in Input Mode, Synchronize to 
+    *               perform encoder Configuration.\n 
+    *               This function initialize both pin and called FMKCPU for
+    *               timers configuration.\n
+    *               f_startOpe is used to know wether user wants to enable both 
+    *               channel (know Position & Direction) or only one of them.\n
+    *               
     *
+    *   @warning    The encoder mode impose two use timer x CHANNEL 1 and 2 in order to perform
+    *               configuration.\n
+    *               Default RunMode configuration is polling 'cause it doesn't affect CPU speed : In
+    *               encoder configuration, CPU is charged to put encoder position and direction directly in
+    *               the right register. IT & DMA are used to get sample of position & direction which is not useful in 
+    *               embeded system (I suppose).\n
     *
-    *	@param[in]      f_signal_e          : the input frequency signal, a value from @ref t_eFMKIO_InEvntSig
-    *	@param[in]      f_pull_e            : the input pull mode, value from @ref t_eFMKIO_PullMode
-    *	@param[in]      f_debouncDelay_u32  : time in which interrupt will be ignore due to indertemine state
-    *	@param[in]      f_trigger_e         : time in ms to ignore fluctuation from signal after a interruption happened
-    *	@param[in]      f_Evnt_cb           : Function to call when the edge is detected by hardware
-    *	@param[in]      f_sigErr_cb         : callbback function that will be called if an error occured, NULL_FONCTION if not used
+    *	@param[in]      f_InEncdr_e                 : the encoder input, value from @ref t_eFMKIO_InEcdrSignals
+    *	@param[in]      f_PulsePerRevolution_u32    : Motor pulse per revolution (see datasheet of your motor)
+    *	@param[in]      f_HwEcdrCfg_s               : Structure for encoder timer configuration
+    *	@param[in]      f_pull_e                    : the input pull mode for both pins, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_spd_e                     : the input pull mode for both pins, value from @ref t_eFMKIO_SpdMode
+    *	@param[in]      f_startOpe                  : Start operation mode, enum value from @ref t_eFMKIO_EcdrStartOpe
     *	 
     *   @retval RC_OK                             @ref RC_OK
     *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
-    *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *
     */
     t_eReturnCode FMKIO_Set_InEncoderSigCfg(t_eFMKIO_InEcdrSignals f_InEncdr_e,
-                                        t_uint32 f_PulsePerRevolution_u32,
-                                        t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
-                                        t_eFMKIO_PullMode f_pull_e,
-                                        t_eFMKIO_SpdMode f_spd_e,
-                                        t_eFMKIO_EcdrStartOpe f_startOpe);
+                                            t_uint32 f_PulsePerRevolution_u32,
+                                            t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
+                                            t_eFMKIO_PullMode f_pull_e,
+                                            t_eFMKIO_SpdMode f_spd_e,
+                                            t_eFMKIO_EcdrStartOpe f_startOpe);
     /**
     *
     *	@brief      Set an output in PWM configuration.\n

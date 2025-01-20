@@ -114,17 +114,17 @@
      */
     typedef enum 
     {
-        FMKCPU_ECDR_MODE_TI1 = 0x00,
-        FMKCPU_ECDR_MODE_TI2,
-        FMKCPU_ECDR_MODE_TI12,
-        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X2,
-        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X1,
-        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X2,
-        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X1_TI12,
-        FMKCPU_ECDR_MODE_X1_TI1,
-        FMKCPU_ECDR_MODE_X1_TI12,
+        FMKCPU_ECDR_MODE_TI2,                       /*!< Quadrature encoder mode 2, x2 mode, counts up/down on TI2FP2 edge depending on TI1FP1 level. */
+        FMKCPU_ECDR_MODE_TI1 = 0x00,                /**< Quadrature encoder mode 1, x2 mode, counts up/down on TI1FP1 edge depending on TI2FP2 level  */    
+        FMKCPU_ECDR_MODE_TI12,                      /**< Quadrature encoder mode 3, x4 mode, counts up/down on both TI1FP1 and TI2FP2 edges depending on the level of the other input */
+        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X2,    /**< Encoder mode: Clock plus direction, x2 mode */
+        FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X1,    /**< Encoder mode: Clock plus direction, x1 mode, TI2FP2 edge sensitivity is set by CC2P */
+        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X2,        /**< Encoder mode: Directional Clock, x2 mode */
+        FMKCPU_ECDR_MODE_DIRECTIONAL_CLK_X1_TI12,   /**< Encoder mode: Directional Clock, x1 mode, TI1FP1 and TI2FP2 edge sensitivity is set by CC1P and CC2P */
+        FMKCPU_ECDR_MODE_X1_TI1,                    /**< Quadrature encoder mode: x1 mode, counting on TI1FP1 edges only, edge sensitivity is set by CC1P */
+        FMKCPU_ECDR_MODE_X1_TI12,                   /**< Quadrature encoder mode: x1 mode, counting on TI2FP2 edges only, edge sensitivity is set by CC1P */
 
-        FMKCPU_ECDR_MODE_NB,
+        FMKCPU_ECDR_MODE_NB,                        /**< Number of encoder mode */
     } t_eFMKCPU_EcdrMode;
 
     /**
@@ -396,9 +396,12 @@
     *	@brief      Configure an interrupt line in Ecdr configuration.\n
     *   @note       First, this configuration set the bsp timer cfg in Ecdr mode.\n
     *               .\n
-    *  @warning     Channel use in this mode are always CHANNEL_1 & CHANNEL_2 and reverse one also
-    *               By Default DMA Mode is taken, to overwritten this mode, use 
-    *               AddTimerCallback to make RunMode in Interrutption
+    *   @warning    The encoder mode impose two use timer x CHANNEL 1 and 2 in order to perform
+    *               configuration.\n
+    *               Default RunMode configuration is polling 'cause it doesn't affect CPU speed : In
+    *               encoder configuration, CPU is charged to put encoder position and direction directly in
+    *               the right register. IT & DMA are used to get sample of position & direction which is not useful in 
+    *               embeded system (I suppose).\n
     *
     *	@param[in]  f_InterruptLine1_e       : enum value for Interrupt Line 1, value from @ref t_eFMKCPU_InterruptLineIO
     *	@param[in]  f_InterruptLine2_e       : enum value for Interrupt Line 2, value from @ref t_eFMKCPU_InterruptLineIO

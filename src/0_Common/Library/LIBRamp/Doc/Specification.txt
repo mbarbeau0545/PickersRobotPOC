@@ -1,0 +1,5 @@
+Le but de cette librairie est de ramper un signal quelconque 
+en fonction de parramètre préalablement rentré par l'utilisateur
+parmi lesquelles 
+    - valeurs finales à atteindre 
+    - mode de ramps (linéaire, exponentiel)
