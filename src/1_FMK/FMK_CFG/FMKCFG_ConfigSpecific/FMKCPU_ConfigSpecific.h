@@ -215,38 +215,90 @@
                                                 t_uint32 * f_bspTimPrescaler_pu32);
 
     /**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, 
-                                                uint32_t Channel, 
-                                                uint32_t *pdata1_pu32,
-                                                uint32_t *pdata2_pu32,
-                                                uint16_t lenght_u16);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Start_DMA(  TIM_HandleTypeDef *htim, 
-                                                uint32_t Channel, 
-                                                uint32_t *pdata1_pu32,
-                                                uint32_t *pdata2_pu32,
-                                                uint16_t lenght_u16);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Start_DMA( TIM_HandleTypeDef *htim, 
-                                                uint32_t Channel, 
-                                                uint32_t *pdata1_pu32,
-                                                uint32_t *pdata2_pu32,
-                                                uint16_t lenght_u16);
-HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Start_DMA(  TIM_HandleTypeDef *htim, 
-                                                uint32_t Channel, 
-                                                uint32_t *pdata1_pu32,
-                                                uint32_t *pdata2_pu32,
-                                                uint16_t lenght_u16);
-
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim, 
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Start
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Start_IT
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop_IT
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Start_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, 
                                                     uint32_t Channel, 
                                                     uint32_t *pdata1_pu32,
                                                     uint32_t *pdata2_pu32,
                                                     uint16_t lenght_u16);
-
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+    /*********************************
+     * FMKCPU_HAL_TIM_OC_Start_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                    uint32_t Channel, 
+                                                    uint32_t *pdata1_pu32,
+                                                    uint32_t *pdata2_pu32,
+                                                    uint16_t lenght_u16);
+    /*********************************
+     * FMKCPU_HAL_TIM_PWM_Start_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                    uint32_t Channel, 
+                                                    uint32_t *pdata1_pu32,
+                                                    uint32_t *pdata2_pu32,
+                                                    uint16_t lenght_u16);
+    /*********************************
+     * FMKCPU_HAL_TIM_IC_Start_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Start_DMA(  TIM_HandleTypeDef *htim, 
+                                                    uint32_t Channel, 
+                                                    uint32_t *pdata1_pu32,
+                                                    uint32_t *pdata2_pu32,
+                                                    uint16_t lenght_u16);
+    /*********************************
+     * FMKCPU_HAL_TIM_Encoder_Start_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim, 
+                                                        uint32_t Channel, 
+                                                        uint32_t *pdata1_pu32,
+                                                        uint32_t *pdata2_pu32,
+                                                        uint16_t lenght_u16);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop_DMA
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Start
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Start_IT
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop_IT
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
+    /*********************************
+     * FMKCPU_HAL_TIM_Base_Stop_IT
+     *********************************/
+    HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
 
     /* CAUTION : Automatic generated code section for Enable Clk Declaration: Start */
     /**< Function to enable  DMA1 rcc clock*/

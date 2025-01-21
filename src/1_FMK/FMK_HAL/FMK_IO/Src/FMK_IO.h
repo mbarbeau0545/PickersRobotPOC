@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
     #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
@@ -74,6 +75,13 @@
         FMKIO_FREQ_MEAS_NB,             /**< Number of frequency value available */
     } t_eFMKIO_FreqMeas;
 
+    typedef enum 
+    {
+        FMKIO_ECDR_MEAS_LAST,       /**< Get the last Raw Value from Position or Direction Buffer*/
+        FMKIO_ECDR_MEAS_MEAN,       /**< Get the Mean Value from Position or Direction Buffer */
+        FMKIO_ECDR_MEAS_NB,
+    } t_eFMKIO_EcdrMeas;
+
     /**< Enum for signal type manage in this module */
     typedef enum 
     {
@@ -96,11 +104,30 @@
         FMKIO_DIG_VALUE_NB              /**< Number of digital state */
     } t_eFMKIO_DigValue;
     
+    /**< Enum for Encoder Mode  */
+    typedef enum 
+    {
+        FMKIO_ENCODER_START_POS = 0x00, /**< Start the Encoder Position to reveice Information */
+        FMKIO_ENCODER_START_DIR,        /**< Start the Encoder Direction  to reveice Information */
+        FMKIO_ENCODER_START_BOTH,       /**< Start the Encoder Position/Direction to receive Information */
+
+        FMKIO_ENCODER_START_NB,
+    } t_eFMKIO_EcdrStartOpe;
+
+    typedef enum 
+    {
+        FMKIO_ENCODER_DIR_FORWARD = 0x00,
+        FMKIO_ENCODER_DIR_BACKWARD,
+
+        FMKIO_ENCODER_DIR_NB,
+    } t_eFMKIO_EcdrDir;
+
     enum 
     {
         FMKIO_ANALOG_SC_DETECTED = 0x0U,
         FMKIO_ANALOG_OL_DETECTED = 0x1U,
     };
+
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -208,7 +235,7 @@
     *
     *
     *	@param[in]      f_signal_e     : the input analog signal, value from @ref t_eFMKIO_InAnaSig
-    *	@param[in]     f_pull_e        : the input pull mode, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_pull_e        : the input pull mode, value from @ref t_eFMKIO_PullMode
     *	@param[in]      f_sigErr_cb     : callbback function that will be called if an error occured,NULL_FONCTION if not used
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -229,7 +256,7 @@
     *
     *
     *	@param[in]      f_signal_e     : the input frequency signal, a value from @ref t_eFMKIO_InFreqSig
-    *	@param[in]     f_measType_e    : the input pull mode, value from @ref t_eFMKIO_FreqMeas
+    *	@param[in]      f_freqMeas_e    : the input pull mode, value from @ref t_eFMKIO_FreqMeas
     *	@param[in]      f_sigErr_cb     : callbback function that will be called if an error occured
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -269,6 +296,42 @@
                                           t_uint32 f_debouncDelay_u32,
                                           t_cbFMKIO_EventFunc * f_Evnt_cb,
                                           t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
+        /**
+    *
+    *	@brief      Set an intput in Encoder configuration.\n
+    *	@note       Allow User to set Two Pin in Input Mode, Synchronize to 
+    *               perform encoder Configuration.\n 
+    *               This function initialize both pin and called FMKCPU for
+    *               timers configuration.\n
+    *               f_startOpe is used to know wether user wants to enable both 
+    *               channel (know Position & Direction) or only one of them.\n
+    *               
+    *
+    *   @warning    The encoder mode impose two use timer x CHANNEL 1 and 2 in order to perform
+    *               configuration.\n
+    *               Default RunMode configuration is polling 'cause it doesn't affect CPU speed : In
+    *               encoder configuration, CPU is charged to put encoder position and direction directly in
+    *               the right register. IT & DMA are used to get sample of position & direction which is not useful in 
+    *               embeded system (I suppose).\n
+    *
+    *	@param[in]      f_InEncdr_e                 : the encoder input, value from @ref t_eFMKIO_InEcdrSignals
+    *	@param[in]      f_PulsePerRevolution_u32    : Motor pulse per revolution (see datasheet of your motor)
+    *	@param[in]      f_HwEcdrCfg_s               : Structure for encoder timer configuration
+    *	@param[in]      f_pull_e                    : the input pull mode for both pins, value from @ref t_eFMKIO_PullMode
+    *	@param[in]      f_spd_e                     : the input pull mode for both pins, value from @ref t_eFMKIO_SpdMode
+    *	@param[in]      f_startOpe                  : Start operation mode, enum value from @ref t_eFMKIO_EcdrStartOpe
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
+    *
+    */
+    t_eReturnCode FMKIO_Set_InEncoderSigCfg(t_eFMKIO_InEcdrSignals f_InEncdr_e,
+                                            t_uint32 f_PulsePerRevolution_u32,
+                                            t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
+                                            t_eFMKIO_PullMode f_pull_e,
+                                            t_eFMKIO_SpdMode f_spd_e,
+                                            t_eFMKIO_EcdrStartOpe f_startOpe);
     /**
     *
     *	@brief      Set an output in PWM configuration.\n
@@ -373,6 +436,40 @@
     *
     */
     t_eReturnCode FMKIO_Get_InDigSigValue(t_eFMKIO_InDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
+    /**
+    *
+    *	@brief      Get the digital input.\n
+    *	@note       Once the configuration is done, this function call hal library to
+                    know the state of the signal on store it into f_value_pe.\n
+    *
+    *
+    *	@param[in]      f_signal_e       : the input frequency signal, a value from @ref t_eFMKIO_InDigSig
+    *	@param[in]      f_value_pe       : storage for value value, value from @ref t_eFMKIO_DigValue
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_InEcdrPositionValue(t_eFMKIO_InEcdrSignals f_signal_e, t_uint32 *f_value_pu32);
+    /**
+    *
+    *	@brief      Get the digital input.\n
+    *	@note       Once the configuration is done, this function call hal library to
+                    know the state of the signal on store it into f_value_pe.\n
+    *
+    *
+    *	@param[in]      f_signal_e       : the input frequency signal, a value from @ref t_eFMKIO_InDigSig
+    *	@param[in]      f_value_pe       : storage for value value, value from @ref t_eFMKIO_DigValue
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_InEcdrDirectionValue(t_eFMKIO_InEcdrSignals f_signal_e, t_eFMKIO_EcdrDir *f_Dirvalue_pe);
     /**
     *
     *	@brief      Get the analog input.\n

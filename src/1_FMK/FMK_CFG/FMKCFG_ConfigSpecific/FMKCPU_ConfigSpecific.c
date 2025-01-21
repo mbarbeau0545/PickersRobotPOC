@@ -74,7 +74,7 @@ static inline t_uint32 s_FMKCPU_Timer_GetArrRegister(t_uint32 osc_valMhz, t_uint
 /*********************************
  * s_FMKCPU_Timer_GeFreqPwm
  *********************************/
-static inline t_float32 s_FMKCPU_Timer_GetFreqPwm(t_uint32 osc_valMhz, t_uint32 f_Prescaler_u32, t_uint32 f_ARRVal) {
+static inline t_float32  s_FMKCPU_Timer_GetFreqPwm(t_uint32 osc_valMhz, t_uint32 f_Prescaler_u32, t_uint32 f_ARRVal) {
     return (t_float32)(((t_float32)osc_valMhz * CST_MHZ_TO_HZ) / (((t_float32)f_Prescaler_u32 + 1) * ((t_float32)(f_ARRVal + 1))));
 }
 /*********************************
@@ -433,14 +433,80 @@ t_eReturnCode FMKCPU_GetEvntTimerInitParam(t_uint8  f_idxTimRccClock_u8,
 /*********************************
  * FMKCPU_GetECDRTimerInitParam
  *********************************/
-t_eReturnCode FMKCPU_GetECDRTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32   f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32)
+t_eReturnCode FMKCPU_GetECDRTimerInitParam( t_uint8  f_idxTimRccClock_u8,
+                                            t_eFMKCPU_SysClkOsc f_timOscSrc_e,
+                                            t_uint8 * f_SysClockValues_ua8,
+                                            t_float32  f_rqstARRValue_u32,
+                                            t_uint32 * f_bspARR_pu32,
+                                            t_uint32 * f_bspTimPrescaler_pu32)
 {
-    return RC_ERROR_INSTANCE_NOT_INITIALIZED;
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint32 maxARRValue_u32    = (t_uint32)0;
+    t_uint32 minARRValue_u32    = (t_uint32)0;
+    t_uint32 maxNumberBit_u32   = (t_uint32)0;
+
+    if((f_bspTimPrescaler_pu32 == (t_uint32 *)NULL)
+    || (f_SysClockValues_ua8   == (t_uint8 *)NULL)
+    || (f_bspARR_pu32          == (t_uint32 *)NULL))
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if((f_idxTimRccClock_u8 >= FMKCPU_RCC_CLK_NB)
+    || (f_timOscSrc_e >= FMKCPU_SYS_CLOCK_NB))
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        switch(f_idxTimRccClock_u8)
+        {
+            case FMKCPU_RCC_CLK_TIM1:
+            case FMKCPU_RCC_CLK_TIM3:
+            case FMKCPU_RCC_CLK_TIM4:
+            case FMKCPU_RCC_CLK_TIM6:
+            case FMKCPU_RCC_CLK_TIM7:
+            case FMKCPU_RCC_CLK_TIM8:
+            case FMKCPU_RCC_CLK_TIM15:
+            case FMKCPU_RCC_CLK_TIM16:
+            case FMKCPU_RCC_CLK_TIM17:
+            case FMKCPU_RCC_CLK_TIM20:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_16BIT);
+                minARRValue_u32  = (t_uint32)0;
+                maxARRValue_u32  = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_16BIT;
+                break;
+            }
+            case FMKCPU_RCC_CLK_TIM2:
+            case FMKCPU_RCC_CLK_TIM5:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_32BIT);
+                minARRValue_u32 = (t_uint32)0;
+                maxARRValue_u32 = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_32BIT;
+                break;
+            }
+            default:
+            {
+                maxNumberBit_u32 = (t_uint32)(CST_MAX_UINT_16BIT);
+                minARRValue_u32 = (t_uint32)FMKCPU_ARR_LOW_LIMIT_16BIT;
+                maxARRValue_u32 = (t_uint32)FMKCPU_ARR_HIGH_LIMIT_16BIT;
+                break;
+            }
+        }
+        if(Ret_e == RC_OK)
+        {
+            if(f_rqstARRValue_u32 > (t_uint32)maxARRValue_u32)
+            {
+                Ret_e = RC_ERROR_LIMIT_REACHED;
+            }
+            else 
+            {
+                *f_bspARR_pu32 = (t_uint32)(f_rqstARRValue_u32 - 1);
+                *f_bspTimPrescaler_pu32 = (t_uint32)(0);
+            }
+        }
+    }
+
+    return Ret_e;
 }
 
 /*********************************
@@ -1018,14 +1084,71 @@ HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim,
                                                     uint32_t *pdata2_pu32,
                                                     uint16_t lenght_u16)
 {
-    UNUSED(pdata2_pu32);
     return HAL_TIM_Encoder_Start_DMA(htim, Channel, pdata1_pu32, pdata2_pu32, lenght_u16);
 }
 
 /*********************************
  * FMKCPU_HAL_TIM_Base_Stop_DMA
  *********************************/
-HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel){UNUSED(Channel); return HAL_TIM_Base_Stop_DMA(htim);}
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel)
+{
+    UNUSED(Channel); return HAL_TIM_Base_Stop_DMA(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_PWM_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_PWM_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OC_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_OC_Init(htim);
+}
+
+/*********************************
+ * FMKCPUHAL_TIM_Base_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_Base_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_IC_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    UNUSED(f_TimerCfg_pv); 
+    return HAL_TIM_IC_Init(htim);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OnePulse_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    t_uint32 onePUlse_u32 = (t_uint32)(&f_TimerCfg_pv);
+    return HAL_TIM_OnePulse_Init(htim, (t_uint32)onePUlse_u32);
+}
+
+/*********************************
+ * FMKCPU_HAL_TIM_OnePulse_Init
+ *********************************/
+HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv)
+{
+    
+    TIM_Encoder_InitTypeDef * bspEcdrCdg_ps = (TIM_Encoder_InitTypeDef *)(f_TimerCfg_pv);
+    return HAL_TIM_Encoder_Init(htim, (TIM_Encoder_InitTypeDef *)bspEcdrCdg_ps);
+}
 
 
 /* CAUTION : Automatic generated code section for Enable Clk Implementation: Start */

@@ -23,11 +23,13 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define FMKMAC_ADC_DMA_MODE         (DMA_CIRCULAR)      /**< DMA Mode for adc's */
-    #define FMKMAC_UART_RX_DMA_MODE     (DMA_CIRCULAR)        /**< DMA Mode Uart for Rx */
-    #define FMKMAC_UART_TX_DMA_MODE     (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
-    #define FMKMAC_USART_RX_DMA_MODE    (DMA_CIRCULAR)      /**< DMA Mode Uart for Rx */
-    #define FMKMAC_USART_TX_DMA_MODE    (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
+    #define FMKMAC_ADC_DMA_MODE             (DMA_CIRCULAR)      /**< DMA Mode for adc's */
+    #define FMKMAC_UART_RX_DMA_MODE         (DMA_CIRCULAR)        /**< DMA Mode Uart for Rx */
+    #define FMKMAC_UART_TX_DMA_MODE         (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
+    #define FMKMAC_USART_RX_DMA_MODE        (DMA_CIRCULAR)      /**< DMA Mode Uart for Rx */
+    #define FMKMAC_USART_TX_DMA_MODE        (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
+    #define FMKMAC_TIM_CHNL_ECDR_CC1_MODE   (DMA_CIRCULAR)
+    #define FMKMAC_TIM_CHNL_ECDR_CC2_MODE   (DMA_CIRCULAR)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -47,6 +49,7 @@
         FMKMAC_DMA_RQSTYPE_USART1_TX,                /**< Reference to Bsp Dma Request for USART1_TX */
         FMKMAC_DMA_RQSTYPE_USART2_RX,                /**< Reference to Bsp Dma Request for USART2_RX */
         FMKMAC_DMA_RQSTYPE_USART2_TX,                /**< Reference to Bsp Dma Request for USART2_TX */
+        FMKMAC_DMA_RQSTYPE_TIM8_CH1,                     /**< Reference to Bsp Dma Request for TIM1 */
     
         FMKMAC_DMA_RQSTYPE_NB,
     } t_eFMKMAC_DmaRqst;
@@ -99,6 +102,8 @@
         FMKMAC_DMA_TYPE_USART_RX,
         FMKMAC_DMA_TYPE_USART_TX,
         FMKMAC_DMA_TYPE_SPI,
+        FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC1,
+        FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC2,
 
         FMKMAC_DMA_TYPE_NB,
 
@@ -133,6 +138,7 @@
         USART_HandleTypeDef usartHandle_s;
         UART_HandleTypeDef  uartHandle_s;
         SPI_HandleTypeDef   spiHandle_s;
+        TIM_HandleTypeDef   timHandle_s;
     } t_uFMKMAC_DmaHandleType;
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */

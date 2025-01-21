@@ -560,6 +560,25 @@ static t_eReturnCode s_FMKMAC_Set_DmaBspCfg(t_eFMKMAC_DmaRqst f_RqstType_e,
                     Ret_e = RC_ERROR_MISSING_CONFIG;
                     break;
                 }
+                case FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC1:
+                {
+                    f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
+                    f_bspDma_ps->Init.Mode      = FMKMAC_TIM_CHNL_ECDR_CC1_MODE;
+                    f_bspDma_ps->Init.PeriphInc = DMA_PINC_DISABLE;
+                    f_bspDma_ps->Init.MemInc    = DMA_MINC_ENABLE;
+                    f_bspDma_ps->Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+                    f_bspDma_ps->Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+                    break;
+                }
+                case FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC2:
+                {
+                    f_bspDma_ps->Init.Direction = DMA_PERIPH_TO_MEMORY;
+                    f_bspDma_ps->Init.Mode      = FMKMAC_TIM_CHNL_ECDR_CC2_MODE;
+                    f_bspDma_ps->Init.PeriphInc = DMA_PINC_DISABLE;
+                    f_bspDma_ps->Init.MemInc    = DMA_MINC_ENABLE;
+                    f_bspDma_ps->Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+                    f_bspDma_ps->Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+                }
                 case FMKMAC_DMA_TYPE_SPI:
                 {
                     Ret_e = RC_ERROR_MISSING_CONFIG;
@@ -659,7 +678,12 @@ static t_eReturnCode s_FMKMAC_LinkDma(  t_eFMKMAC_DmaType f_DmaType_e,
             case FMKMAC_DMA_TYPE_USART_TX:
                 __HAL_LINKDMA((&f_modHandle_pu->usartHandle_s), hdmatx, *f_bspDma_ps);
                 break;
-
+            case FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC1:
+                __HAL_LINKDMA((&f_modHandle_pu->timHandle_s), hdma[TIM_DMA_ID_CC1], *f_bspDma_ps);
+                break;
+            case FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC2:
+                __HAL_LINKDMA((&f_modHandle_pu->timHandle_s), hdma[TIM_DMA_ID_CC2], *f_bspDma_ps);
+                break;
             case FMKMAC_DMA_TYPE_SPI:
             case FMKMAC_DMA_TYPE_NB:
             default:
@@ -778,6 +802,18 @@ void DMA1_Channel4_IRQHandler(void)
     if(g_DmaInfo_as[FMKMAC_DMA_CTRL_1].channel_as[FMKMAC_DMA_CHANNEL_4].isChnlConfigured_b == (t_bool)True)
     {
        HAL_DMA_IRQHandler(&(g_DmaInfo_as[FMKMAC_DMA_CTRL_1].channel_as[FMKMAC_DMA_CHANNEL_4].bspDma_ps));
+    }
+    return;
+}
+
+/**
+* @brief This function handles DMA Channel5 interrupt.
+*/
+void DMA1_Channel5_IRQHandler(void)
+{
+    if(g_DmaInfo_as[FMKMAC_DMA_CTRL_1].channel_as[FMKMAC_DMA_CHANNEL_5].isChnlConfigured_b == (t_bool)True)
+    {
+       HAL_DMA_IRQHandler(&(g_DmaInfo_as[FMKMAC_DMA_CTRL_1].channel_as[FMKMAC_DMA_CHANNEL_5].bspDma_ps));
     }
     return;
 }

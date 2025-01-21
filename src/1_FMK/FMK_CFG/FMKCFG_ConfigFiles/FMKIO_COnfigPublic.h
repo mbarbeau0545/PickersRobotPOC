@@ -28,10 +28,19 @@
     #else
         #error('ecu family is currently not available')
     #endif
+
+    #define FMKIO_ENCODER_BUFFER ((t_uint8)10)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
     //-----------------------------ENUM TYPES-----------------------------//
+    typedef enum
+    {
+        FMKIO_INPUT_ENCODER_1,
+        FMKIO_INPUT_ENCODER_2,
+        FMKIO_INPUT_ENCODER_NB,
+    } t_eFMKIO_InEcdrSignals;
+
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
     * @brief List of gpio port available on this board.

@@ -72,6 +72,14 @@
         t_sFMKIO_BspSigCfg TxPin_s;                /**< GPIO configuration for TxCAN pin*/
         t_uint8            BspAlternateFunc_u8;    /**< Alterante function/FDCAN relate to the pin */
     } t_sFMKIO_RxTxComCfg;
+
+    typedef struct 
+    {
+        t_sFMKIO_BspSigCfg SigPos_s;
+        t_sFMKIO_BspSigCfg SigDir_s;
+        t_eFMKCPU_InterruptLineIO ITLine_e;
+        t_uint8            BspAlternateFunc_u8;
+    } t_sFMKIO_BspEcdrCfg;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -130,7 +138,6 @@
     };
 
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
-    #warning('Change IO for Freq in Order to test it')
     const t_sFMKIO_BspTimerSigCfg c_InFreqSigBspMap_as[FMKIO_INPUT_SIGFREQ_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
         {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_2},              GPIO_AF9_TIM15,                FMKCPU_INTERRUPT_LINE_IO_61},    // FMKIO_INPUT_SIGFREQ_1,
@@ -189,6 +196,11 @@
         {{FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_9},              {FMKIO_GPIO_PORT_G,             FMKIO_GPIO_PIN_10},            GPIO_AF8_UART5}, // FMKIO_COM_SIGNAL_SERIAL_5
     };
     /* CAUTION : Automatic generated code section for Variable: End */
+
+    const t_sFMKIO_BspEcdrCfg c_FmkIo_InEcdrSigBspCfg_as[FMKIO_INPUT_ENCODER_NB] = 
+    {
+
+    };
 
     //********************************************************************************
     //                      Public functions - Prototyupes
