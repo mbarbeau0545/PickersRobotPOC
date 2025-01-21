@@ -1952,7 +1952,7 @@
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="IsTimerRunning_b"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a2c088aca3251aca5476b5812078b9e86"><param name="ImageNumber" value="11"></OBJECT>
                   </UL>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCP_Set_EvntTimerCfg"><param name="Local" value="_f_m_k___c_p_u_8c.html#a61a43673fea859f4068b00e35906034e"><param name="ImageNumber" value="11"></OBJECT>
-                <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_AddTimerChnlCallback"><param name="Local" value="_f_m_k___c_p_u_8c.html#a77d2828a4ed98fac19cb3cdfbfc9be96"><param name="ImageNumber" value="11"></OBJECT>
+                <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_AddInterruptCallback"><param name="Local" value="_f_m_k___c_p_u_8c.html#a77d2828a4ed98fac19cb3cdfbfc9be96"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Cyclic"><param name="Local" value="_f_m_k___c_p_u_8c.html#a900765482574172da40bce580c91e169"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Get_ChannelErrorStatus"><param name="Local" value="_f_m_k___c_p_u_8c.html#a8bac4a0f24cc18cad33c271227576d64"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Get_PWMChannelDuty"><param name="Local" value="_f_m_k___c_p_u_8c.html#ac6c0207199b882a3f6be463a39b3fa3e"><param name="ImageNumber" value="11"></OBJECT>
@@ -2070,7 +2070,7 @@
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_NVIC_OPE_NB"><param name="Local" value="_f_m_k___c_p_u_8h.html#ad864f2490ecd7dc3b94314bf65f1d9efa92dea36abd5accf1ae5848088d976ff8"><param name="ImageNumber" value="11"></OBJECT>
                   </UL>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCP_Set_EvntTimerCfg"><param name="Local" value="_f_m_k___c_p_u_8h.html#a61a43673fea859f4068b00e35906034e"><param name="ImageNumber" value="11"></OBJECT>
-                <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_AddTimerChnlCallback"><param name="Local" value="_f_m_k___c_p_u_8h.html#a77d2828a4ed98fac19cb3cdfbfc9be96"><param name="ImageNumber" value="11"></OBJECT>
+                <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_AddInterruptCallback"><param name="Local" value="_f_m_k___c_p_u_8h.html#a77d2828a4ed98fac19cb3cdfbfc9be96"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Cyclic"><param name="Local" value="_f_m_k___c_p_u_8h.html#a900765482574172da40bce580c91e169"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Get_ChannelErrorStatus"><param name="Local" value="_f_m_k___c_p_u_8h.html#a8bac4a0f24cc18cad33c271227576d64"><param name="ImageNumber" value="11"></OBJECT>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKCPU_Get_PWMChannelDuty"><param name="Local" value="_f_m_k___c_p_u_8h.html#ac6c0207199b882a3f6be463a39b3fa3e"><param name="ImageNumber" value="11"></OBJECT>

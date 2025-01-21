@@ -550,7 +550,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_AddTimerChnlCallback(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+    t_eReturnCode FMKCPU_AddInterruptCallback(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                                 t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
     /**
     *

@@ -44,6 +44,8 @@ For the doxygen documentation search the file "index.html"
 - Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
 
 - Dans les callback Error rajouter de quelle Timer/SerialLine/Pin l'errreur provient
+- Dans le APPSYS rajouter whatdogs + savoir combien de temps dure une cyclic 
+- Dans APPSYS gérer la configuration des SNS + ACT
 
 - Utiliser la LED builtin pour informer le Développer de l'état du µC
     - LED clignote lentement   -> Phase d'initialisation 

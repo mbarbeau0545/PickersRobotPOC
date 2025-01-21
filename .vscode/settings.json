@@ -62,7 +62,8 @@
     "appact_spec_cmd_irrigvalve_courgette.h": "c",
     "fmksrl_configspecific.c.h": "c",
     "fmkio_configspecific.h": "c",
-    "arm_math.h": "c"
+    "arm_math.h": "c",
+    "cl42t_configpublic.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",

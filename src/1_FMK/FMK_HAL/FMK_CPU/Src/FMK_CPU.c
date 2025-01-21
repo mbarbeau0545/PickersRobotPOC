@@ -1333,9 +1333,9 @@ t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
 }
 
 /*********************************
- * FMKCPU_AddTimerChnlCallback
+ * FMKCPU_AddInterruptCallback
  *********************************/
-    t_eReturnCode FMKCPU_AddTimerChnlCallback(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+    t_eReturnCode FMKCPU_AddInterruptCallback(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                              t_cbFMKCPU_InterruptLine *f_ITChannel_cb)
 {
     t_eReturnCode Ret_e = RC_OK;

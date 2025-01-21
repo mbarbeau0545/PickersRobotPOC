@@ -1,0 +1,17 @@
+Ce driver est utilisé pour communiquer avec des variateurs CL42T
+les variateurs CL42T sont des variiateurs pour motor pas à pas muni d'encoder 
+les connexions avec le µC sont dux entrées digitals l'une pour la direction 
+et l'autre pour le status ON/OFF. Ils possède également 1 entrée PWM Pulse, c'est-à-dire qu'on 
+set va set la PWM à une fréquence donnée et un dutyCycle de 50% (config voir datasheet) et 
+c'est le nombre de pulse qui va déterminer le nombre de pas effectué par le motor. 
+Et enfin un signal d'entrée pour le diagnostic default fréquentiel mode Count pour compter les front montant 
+ou en Evnt et c'est le Driver qui fera la logique. A voir
+Le variateur grâce à un encoder du motor va effectué la rototation en boucle fermé.
+
+L'utilisateur devra alors fournir 2 signaux digital, 1 signal PWM et un signal Frequentiel/Event.
+Le driver se chargera de set les Init de chacun de ses Signal en fonction des demandes du variateurs. 
+
+
+Pensez à implémenter la callback de PwmElapsed for pulse 
+et pender a envoyer la consigne des values dans la cyclic.
+il reste à implémenter MngSigError et d'autre trucs 
