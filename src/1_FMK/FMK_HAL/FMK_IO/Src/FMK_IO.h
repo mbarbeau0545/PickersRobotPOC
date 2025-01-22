@@ -89,6 +89,7 @@
         FMKIO_SIGTYPE_INPUT_FREQ,           /**< Signal are frequency input */
         FMKIO_SIGTYPE_INPUT_ANA,            /**< Signal are analog input */
         FMKIO_SIGTYPE_INPUT_EVNT,           /**< Signal are event input */
+        FMKIO_SIGTYPE_INPUT_ECDR,           /**< Signal are event input */
         FMKIO_SIGTYPE_OUTPUT_DIG,           /**< Signal are digital output */
         FMKIO_SIGTYPE_OUTPUT_PWM,           /**< Signal are pwm ouptut */
 
@@ -156,7 +157,10 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_uint16 f_debugInfo1_u16, t_uint16 f_debugInfo2_u16);
+    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_eFMKIO_SigType f_sigType_e,
+                                                    t_uint8 f_sigId_u8,
+                                                    t_uint16 f_debugInfo1_u16, 
+                                                    t_uint16 f_debugInfo2_u16);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
