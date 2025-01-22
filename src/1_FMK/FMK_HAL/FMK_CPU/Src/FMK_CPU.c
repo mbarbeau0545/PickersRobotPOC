@@ -1253,7 +1253,7 @@ t_eReturnCode FMKCPU_Get_EncoderValues( t_eFMKCPU_InterruptLineIO f_EcdrLine_e,
         if(Ret_e == RC_OK)
         {
             *f_position_pu32 = (t_uint32)(timerInfo_ps->bspTimer_s.Instance->CNT);
-            *f_direction_pu8 = (t_sint16)(timerInfo_ps->bspTimer_s.Instance->CR1);
+            *f_direction_pu8 = (t_uint8)(timerInfo_ps->bspTimer_s.Instance->CR1);
         }
     }
     return Ret_e;
@@ -1295,9 +1295,9 @@ t_eReturnCode FMKCPU_Set_ICChannelCfg(t_eFMKCPU_InterruptLineIO f_InterruptLine_
 /*********************************
  * FMKCPU_Set_EvntTimerCfg
  *********************************/
-t_eReturnCode FMKCP_Set_EvntTimerCfg(t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
-                                         t_uint32 f_periodms_u32,
-                                         t_cbFMKCPU_InterruptLine f_ITChannel_cb)
+t_eReturnCode FMKCP_Set_EvntTimerCfg(   t_eFMKCPU_InterruptLineEvnt f_EvntITLine_e,
+                                        t_uint32 f_periodms_u32,
+                                        t_cbFMKCPU_InterruptLine f_ITChannel_cb)
 {
     /********************************
      *   Some useful information for Evnt generation
@@ -2956,7 +2956,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRq
 void HAL_TIM_IC_CaptureHalfCpltCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim); }
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim); }
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim); }
-void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim); }
+//void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim); }
 //void HAL_TIM_TriggerCallback(TIM_HandleTypeDef *htim) { return s_FMKCPU_BspRqst_InterruptMngmt(htim, FMKCPU_HWTIM_CFG_TRGR); }
 void SysTick_Handler(void) { return HAL_IncTick(); }
 

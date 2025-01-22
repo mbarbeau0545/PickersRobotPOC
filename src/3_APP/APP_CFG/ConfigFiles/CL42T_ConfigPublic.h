@@ -33,6 +33,7 @@
 
         CL42T_MOTOR_SIGTYPE_NB
     } t_eCL42T_MotorSigType;
+    
     typedef enum 
     {
         CL42T_MOTOR_1 = 0x00,
