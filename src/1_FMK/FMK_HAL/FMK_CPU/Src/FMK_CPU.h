@@ -114,8 +114,8 @@
      */
     typedef enum 
     {
-        FMKCPU_ECDR_MODE_TI2,                       /*!< Quadrature encoder mode 2, x2 mode, counts up/down on TI2FP2 edge depending on TI1FP1 level. */
         FMKCPU_ECDR_MODE_TI1 = 0x00,                /**< Quadrature encoder mode 1, x2 mode, counts up/down on TI1FP1 edge depending on TI2FP2 level  */    
+        FMKCPU_ECDR_MODE_TI2,                       /*!< Quadrature encoder mode 2, x2 mode, counts up/down on TI2FP2 edge depending on TI1FP1 level. */
         FMKCPU_ECDR_MODE_TI12,                      /**< Quadrature encoder mode 3, x4 mode, counts up/down on both TI1FP1 and TI2FP2 edges depending on the level of the other input */
         FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X2,    /**< Encoder mode: Clock plus direction, x2 mode */
         FMKCPU_ECDR_MODE_CLOCKPLUS_DIRECTION_X1,    /**< Encoder mode: Clock plus direction, x1 mode, TI2FP2 edge sensitivity is set by CC2P */
@@ -550,7 +550,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_AddTimerChnlCallback(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
+    t_eReturnCode FMKCPU_AddInterruptCallback(  t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                                 t_cbFMKCPU_InterruptLine *f_ITChannel_cb);
     /**
     *
