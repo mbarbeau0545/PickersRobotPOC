@@ -97,6 +97,17 @@
     } t_eFMKCPU_ChnlErrorState;
 
     /**
+     * @brief Enum to set bit for changing PWM Signal
+     */
+    enum 
+    {
+        FMKCPU_PWM_FREQUENCY = 0x00,
+        FMKCPU_PWM_DUTYCYCLE,
+        FMKCPU_PWM_NB_PULSES,
+
+        FMKCPU_UPDATE_PWM_NB
+    };
+    /**
      * @brief Input Capture Selection
      */
     typedef enum 
@@ -168,8 +179,28 @@
         FMKCPU_EVNT_OPE_NB,
     } t_eFMKCPU_EvntOpe;
 
+    typedef struct __t_sFMKCPU_PwmOpe
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint16 dutyCycle_u16;         /**< update duty cycle value */
+        t_uint16 nbPulses_u16;              /**< update nbPulses_u16 value */
+        t_uint8 updateMask_u8;          /**< mask update, which value need to be update */
+    } t_sFMKCPU_PwmOpe;
+
+    typedef struct 
+    {
+        t_uint32 position_u32;      /**< Encoder Position Value */
+        t_uint8 direction_u8;       /**< Encoder Direction Value */
+    } t_sFMKCPU_EncoderValue;
+
+    typedef struct 
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint16 dutyCycle_u16;         /**< update duty cycle value */
+        t_uint8 updateMask_u8;          /**< mask update, which value need to be update */
+    } t_sFMKCPU_PwmValue;
     /**< union for Centralize Certain Function */
-    typedef union
+    typedef union __t_uFMKCPU_InterruptLine
     {
         t_eFMKCPU_InterruptLineIO ITLine_IO_e;
         t_eFMKCPU_InterruptLineEvnt ITLine_Evnt_e;
@@ -180,9 +211,17 @@
     {
         t_eFMKCPU_EcdrOpe EncoderOpe_e;
         t_eFMKCPU_ICOpe ICOpe_e;
-        t_eFMKCPU_EvntOpe EvntOpe;
+        t_eFMKCPU_EvntOpe EvntOpe_e;
+        t_sFMKCPU_PwmOpe PwmOpe_s;
 
     } t_uFMKCPU_ITLineOpe;
+
+    typedef union 
+    {
+        t_sFMKCPU_EncoderValue EncoderValue_s;
+        t_sFMKCPU_PwmValue PwmValue_s;
+
+    } t_uFMKCPU_ITLineValue;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
     *
@@ -389,7 +428,7 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelCfg( t_eFMKCPU_InterruptLineIO f_InterruptLine_e, 
+    t_eReturnCode FMKCPU_Set_PWMChannelCfg( t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
                                             t_uint32 f_pwmFreq_u32);
     /**
     *
@@ -447,7 +486,7 @@
     *   @note     This function initialize the timer in event configuration if the
     *             timer is not configured yet.\n
     *             Once the timer configure is done, update the channel state using function 
-    *             "FMKCPU_Set_InterruptLineState" and every f_periodms_u32 callback function is called.\n
+    *             "FMKCPU_Set_InterruptLineOpe" and every f_periodms_u32 callback function is called.\n
     *             IMPORTANT, In hardware this is the Timer which manage the interruption with ARR register,
     *             which means, it is best that the timer is a basic timer with only one channel, 'cause the others will
     *             be unused.\n
@@ -479,27 +518,26 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+    t_eReturnCode FMKCPU_Set_InterruptLineOpe(t_eFMKCPU_InterruptLineType f_ITLineType_e,
                                                 t_uint8 f_IT_line_u8,
                                                 t_uFMKCPU_ITLineOpe f_ITLineOpe);
     /**
     *
-    *	@brief    Set the DutyCycle to a timer channel
-    *   @note     Modify the CCRx register to change the dutyCycle.\n
-    *             If the timer channel is disable, and the value is diferrent from 0,
-    *             this function will enable the channel and set dutycycle give by f_dutyCycle_u16.\n
-    *             If the value equals 0 this function will stop the PWM pulse (channel).\n 
+    *	@brief      Set a InterruptLine  state ON/OFF.\n
+    *   @note       Using HAL_TIM function 
+    *           
     *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_dutyCycle_u16        : the dutycyle, value from [0, 1000]
+    *	@param[in]  f_timer_e              : enum value for the timer, value from @ref t_eFMKCPU_Timer
+    *	@param[in]  f_channel_e            : enum value for the channel, value from @ref t_eFMKCPU_InterruptChnl
+    *	@param[in]  f_channelState_e       : enum value for the state operation, value from @ref t_eFMKCPU_ChnlState
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
-    *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
+    *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_PWMChannelDuty(t_eFMKCPU_InterruptLineIO f_InterruptLine_e,
-                                            t_uint16 f_dutyCycle_u16);
+    t_eReturnCode FMKCPU_Get_InterruptLineValue(  t_eFMKCPU_InterruptLineType f_ITLineType_e,
+                                                t_uint8 f_IT_line_u8,
+                                                t_uFMKCPU_ITLineValue * f_ITLineValue);
     /**
     *
     *	@brief    Get the DutyCycle from a timer channel
@@ -567,7 +605,7 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     */
-    t_eReturnCode FMKCPU_Set_InterruptLineState(t_eFMKCPU_InterruptLineType f_ITLineType_e,
+    t_eReturnCode FMKCPU_Set_InterruptLineOpe(t_eFMKCPU_InterruptLineType f_ITLineType_e,
                                                 t_uint8 f_IT_line_u8,
                                                 t_uFMKCPU_ITLineOpe f_ITLineOpe_u);
     /**

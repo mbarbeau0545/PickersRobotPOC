@@ -40,6 +40,10 @@ For the doxygen documentation search the file "index.html"
 - Comprendre pourquoi HAL_Delay -> Infinite Loop
 - Comprendre pourquoi FDCAN marche po lo
 
+## To test 
+    - retester les PWM en mode normal 
+    - tester les PWM en mode pulse 
+    - tester les Input Frequentiel
 ## Left to do
 - Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
 
