@@ -40,11 +40,17 @@ For the doxygen documentation search the file "index.html"
 - Comprendre pourquoi HAL_Delay -> Infinite Loop
 - Comprendre pourquoi FDCAN marche po lo
 
-## Left to do
-- Dans les fichiers .c passer les arguments en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
+## To test 
+    - retester les PWM en mode normal 
+    - tester les PWM en mode pulse 
+    - tester les Input Frequentiel
 
-- Dans les callback Error rajouter de quelle Timer/SerialLine/Pin l'errreur provient
-- Dans le APPSYS rajouter whatdogs + savoir combien de temps dure une cyclic 
+
+## Left to do
+- Pour les GetTimerInitInfo des modes, donnée directement la valeur numérique de la source du timer 
+- Dans les fichiers .c passer les arguments des structures  en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
+
+- Dans le APPSYS rajouter whatdogs 
 - Dans APPSYS gérer la configuration des SNS + ACT
 
 - Utiliser la LED builtin pour informer le Développer de l'état du µC
@@ -69,6 +75,4 @@ For the doxygen documentation search the file "index.html"
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
 - Dans FMKCPU, dans les fonctions de ChannelCfg
-    Ne pas mettre GetInfoInit dans la structure de fonction mais 
-    chaque fonction de config appelle sa propre fonction dans 
-    ConfigPsecific
+    Ne pas mettre GetInfoInit dans la structure de fonction mais chaque fonction de config appelle sa propre fonction dans et la file à SetBspTimerInit

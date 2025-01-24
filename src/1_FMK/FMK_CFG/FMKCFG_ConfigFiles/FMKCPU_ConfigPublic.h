@@ -40,6 +40,13 @@
     #define FMKCPU_ARR_HIGH_LIMIT_32BIT ((t_uint32)0xFFFFFFFE) // 4_294_967_295
     #define FMKCPU_WWDG_RESET_CFG  FMKCPU_WWDG_RESET_100MS /**< default watchdogs configuration */
 
+    /**
+    * @brief This define return True if the timer is a 32 Bits timers
+    */
+    #warning('Make Code generation on that')
+    #define FMKCPU_IS_32B_TIMER(f_timClock_e) \
+        ((f_timClock_e) == FMKCPU_RCC_CLK_TIM2 ||\
+         (f_timClock_e) == FMKCPU_RCC_CLK_TIM5)
     // ********************************************************************
     // *                      Types
     // ********************************************************************

@@ -168,18 +168,10 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKIO_Set_InFreqSigCfg( FMKIO_INPUT_SIGFREQ_1,
-                                    FMKIO_STC_RISING_EDGE,
-                                    FMKIO_FREQ_MEAS_FREQ,
+    Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_1,
+                                    FMKIO_PULL_MODE_DISABLE,
+                                    (t_uint32)26000,
                                     NULL_FONCTION);
-    if(Ret_e == RC_OK)
-    {
-        Ret_e = FMKIO_Set_OutDigSigCfg( FMKIO_OUTPUT_SIGDIG_1,
-                                        FMKIO_PULL_MODE_DISABLE,
-                                        FMKIO_SPD_MODE_MEDIUM);
-    }
-    
-
     return Ret_e;
 }
 
@@ -197,23 +189,13 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool isValueHigh_b = False;
-    t_uint32 freqMeas_u32 = 0;
+    static t_uint32 counter_u32 = 0;
 
-    Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &freqMeas_u32);
-    if(freqMeas_u32 >= 190 && Ret_e == RC_OK)
+    if(counter_u32 == (t_uint32)0)
     {
-        if(isValueHigh_b == (t_bool)False)
-        {
-            Ret_e = FMKIO_Set_OutDigSigValue(FMKIO_OUTPUT_SIGDIG_1, FMKIO_DIG_VALUE_HIGH);
-            isValueHigh_b = True;
-        }
-        else 
-        {
-            Ret_e = FMKIO_Set_OutDigSigValue(FMKIO_OUTPUT_SIGDIG_1, FMKIO_DIG_VALUE_LOW);
-            isValueHigh_b = False;
-        }
-    }
+        Ret_e = FMKIO_Set_OutPwmSigFrequency(FMKIO_OUTPUT_SIGPWM_1,
+                                            6000);
+    }  
 
     return Ret_e;
 }

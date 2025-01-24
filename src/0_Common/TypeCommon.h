@@ -75,6 +75,22 @@
      #ifndef BIT_IS_RESET_32B 
         #define BIT_IS_RESET_32B ((t_uint32)0)
     #endif
+
+    /**
+     * @brief Bit in a 16 bit flag is set
+     */
+    #ifndef BIT_IS_SET_8B 
+        #define BIT_IS_SET_8B ((t_uint8)1)
+    #endif
+    /**
+     * @brief Bit in a 16 bit flag is reset
+     */
+    #ifndef BIT_IS_RESET_8B 
+        #define BIT_IS_RESET_8B ((t_uint8)0)
+    #endif
+     #ifndef SETBIT_8B
+        #define SETBIT_8B(flag, bit) ((flag) |= (t_uint8)1 << (bit))
+    #endif
     /**
      * @brief Enum for return function
      */

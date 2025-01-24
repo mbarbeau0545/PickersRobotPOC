@@ -222,7 +222,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a77d2828a4ed98fac19cb3cdfbfc9be96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a callback function to a timer channel.<br  />
 .  <br /></td></tr>
 <tr class="separator:a77d2828a4ed98fac19cb3cdfbfc9be96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74ac77633ac5a436031bed318c534a0c" id="r_a74ac77633ac5a436031bed318c534a0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_common_8h.html#ab3f5e6efd9022415f4ec123116731f1c">t_eReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74ac77633ac5a436031bed318c534a0c">FMKCPU_Set_InterruptLineState</a> (<a class="el" href="_f_m_k_c_p_u___config_public_8h.html#a882a9f50d7fd80eb915574a8f9af663b">t_eFMKCPU_InterruptLineType</a> f_ITLineType_e, <a class="el" href="uniont__u_f_m_k_c_p_u___interrupt_line.html">t_uFMKCPU_InterruptLine</a> IT_line_u, <a class="el" href="#a363704238712a93d6366df129285ef28">t_eFMKCPU_ChnlState</a> f_channelState_e)</td></tr>
+<tr class="memitem:a74ac77633ac5a436031bed318c534a0c" id="r_a74ac77633ac5a436031bed318c534a0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_common_8h.html#ab3f5e6efd9022415f4ec123116731f1c">t_eReturnCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74ac77633ac5a436031bed318c534a0c">FMKCPU_Set_InterruptLineOpe</a> (<a class="el" href="_f_m_k_c_p_u___config_public_8h.html#a882a9f50d7fd80eb915574a8f9af663b">t_eFMKCPU_InterruptLineType</a> f_ITLineType_e, <a class="el" href="uniont__u_f_m_k_c_p_u___interrupt_line.html">t_uFMKCPU_InterruptLine</a> IT_line_u, <a class="el" href="#a363704238712a93d6366df129285ef28">t_eFMKCPU_ChnlState</a> f_channelState_e)</td></tr>
 <tr class="memdesc:a74ac77633ac5a436031bed318c534a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a InterruptLine state ON/OFF.<br  />
 .  <br /></td></tr>
 <tr class="separator:a74ac77633ac5a436031bed318c534a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -526,7 +526,7 @@ Functions</h2></td></tr>
 <p>Configure a timer channel on event configuration.<br  />
 . </p>
 <dl class="section note"><dt>Note</dt><dd>This function initialize the timer in event configuration if the timer is not configured yet.<br  />
- Once the timer configure is done, update the channel state using function "FMKCPU_Set_InterruptLineState" and every f_periodms_u32 callback function is called.<br  />
+ Once the timer configure is done, update the channel state using function "FMKCPU_Set_InterruptLineOpe" and every f_periodms_u32 callback function is called.<br  />
  IMPORTANT, In hardware this is the Timer which manage the interruption with ARR register, which means, it is best that the timer is a basic timer with only one channel, 'cause the others will be unused.<br  />
  </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1015,13 +1015,13 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a74ac77633ac5a436031bed318c534a0c" name="a74ac77633ac5a436031bed318c534a0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74ac77633ac5a436031bed318c534a0c">&#9670;&#160;</a></span>FMKCPU_Set_InterruptLineState()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a74ac77633ac5a436031bed318c534a0c">&#9670;&#160;</a></span>FMKCPU_Set_InterruptLineOpe()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="_type_common_8h.html#ab3f5e6efd9022415f4ec123116731f1c">t_eReturnCode</a> FMKCPU_Set_InterruptLineState </td>
+          <td class="memname"><a class="el" href="_type_common_8h.html#ab3f5e6efd9022415f4ec123116731f1c">t_eReturnCode</a> FMKCPU_Set_InterruptLineOpe </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="_f_m_k_c_p_u___config_public_8h.html#a882a9f50d7fd80eb915574a8f9af663b">t_eFMKCPU_InterruptLineType</a></td>          <td class="paramname"><span class="paramname"><em>f_ITLineType_e</em></span>, </td>
         </tr>

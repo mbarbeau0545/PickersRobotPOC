@@ -47,8 +47,7 @@
     #define FMKCPU_TIMER_EVNT_PSC_LOW           ((t_uint16)65534)
     #define FMKCPU_TIME_BTWN_DIAG_MS            ((t_uint16)2000)   /**< Time between diagnostic for timer and channel in cyclic ope mode*/
 
-    #define FMKCPU_MASK_CHNL_RUN  ((t_uint16)1) /**< Mask to indicate that the channel is running */
-    #define FMKCPU_MASK_CHNL_STOP ((t_uint16)0) /**< Mask to indicate that the channel is stopped */
+    
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -136,9 +135,8 @@
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    typedef t_eReturnCode (t_cbFMKCPU_GetTimerInfoInit)(t_uint8  f_idxTimRccClock_u8,
-                                                        t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                        t_uint8  * f_SysClockValues_ua8,
+    typedef t_eReturnCode (t_cbFMKCPU_GetTimerInfoInit)(t_eFMKCPU_ClockPort f_timClock_e,
+                                                        t_uint32    f_timerFreq_u32,
                                                         t_float32   f_RqstTimerFreq_f32,
                                                         t_uint32 * f_bspTimARR_pu32,
                                                         t_uint32 * f_bspTimPrescaler_pu32);

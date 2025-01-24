@@ -157,10 +157,10 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnCode (t_cbFMKIO_SigErrorMngmt)(t_eFMKIO_SigType f_sigType_e,
-                                                    t_uint8 f_sigId_u8,
-                                                    t_uint16 f_debugInfo1_u16, 
-                                                    t_uint16 f_debugInfo2_u16);
+    typedef void (t_cbFMKIO_SigErrorMngmt)( t_eFMKIO_SigType f_sigType_e,
+                                            t_uint8 f_sigId_u8,
+                                            t_uint16 f_debugInfo1_u16, 
+                                            t_uint16 f_debugInfo2_u16);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -530,7 +530,7 @@
     *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
     *
     *
-    *	@param[in]      f_signal_e        : the input frequency signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
     *	@param[in]      f_dutyCycle_u16   : the dutycyle, value between 0 (0%) - 1000 (100%)
     *	 
     *   @retval RC_OK                             @ref RC_OK
@@ -539,24 +539,79 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_dutyCycle_u16);
+    t_eReturnCode FMKIO_Set_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_dutyCycle_u16);
     /**
     *
-    *	@brief      Get the PWM output generation.\n
-    *	@note       Once the configuration is done, this function ask FMKCPU 
-    *               the value of the dedicate channel and store the dutycycle in f_value_pu16
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
     *
-    *	@param[in]      f_signal_e       : the input frequency signal, a value from @ref t_eFMKIO_OutPwmSig
-    *	@param[in]      f_value_pu16     : storage for value
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_frequency_u16   : the frequency, value between 0 (0%) - 1000 (100%)
     *	 
     *   @retval RC_OK                             @ref RC_OK
-    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
     *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *   @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnCode FMKIO_Get_OutPwmSigValue(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 *f_value_pu16);
+    t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint32 f_frequency_u32);
+            /**
+    *
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
+    *
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_frequency_u16   : the frequency, value between 0 (0%) - 1000 (100%)
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_pulses_u16);
+        /**
+    *
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
+    *
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_dutyCycle_u16   : the dutycyle, value between 0 (0%) - 1000 (100%)
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 * f_dutyCycle_pu16);
+    /**
+    *
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
+    *
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_frequency_u16   : the frequency, value between 0 (0%) - 1000 (100%)
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint32 * f_frequency_pu32);
     /**
     *
     *	@brief      Get the digital output.\n
@@ -574,53 +629,7 @@
     *
     */
     t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_DigValue *f_value_pe);
-    
-    #ifdef FMKCPU_STM32_ECU_FAMILY_F
-    /**
-    *	@brief       @brief This function handles EXTI line 0 to 1 interrupts.\n
-    */
-    void EXTI0_1_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 2 to 3 interrupts.\n
-    */
-    void EXTI2_3_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 4 to 15 interrupts.\n
-    */
-    void EXTI4_15_IRQHandler(void);
-    #elif defined FMKCPU_STM32_ECU_FAMILY_G
-    /**
-    *	@brief       @brief This function handles EXTI line 0  interrupts.\n
-    */
-    void EXTI0_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 1 interrupts.\n
-    */
-    void EXTI1_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 2 interrupts.\n
-    */
-    void EXTI2_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 3 interrupts.\n
-    */
-    void EXTI3_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 4 interrupts.\n
-    */
-    void EXTI4_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 5 to 9  interrupts.\n
-    */
-    void EXTI9_5_IRQHandler(void);
-    /**
-    *	@brief       @brief This function handles EXTI line 10 to 15 interrupts.\n
-    */
-    void EXTI15_10_IRQHandler(void);
 
-    #else 
-        #error('ecu family is currently not available')
-    #endif
 #endif // FMKIO_H_INCLUDED           
 //************************************************************************************
 // End of File

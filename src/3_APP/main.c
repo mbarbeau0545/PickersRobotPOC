@@ -40,7 +40,7 @@ int main(void)
     // code running once
     APPSYS_Init();
 
-    while (1)
+    while (True)
     {
         // code running every APPSYS_ELAPSED_TIME_CYCLIC ms
         APPSYS_Cyclic();
