@@ -76,15 +76,15 @@ typedef struct
 /**< Structure of information on a timer*/
 typedef struct
 {
-    TIM_HandleTypeDef bspTimer_s;                      /**< The Timer structure for HAL STM32*/
+    TIM_HandleTypeDef bspTimer_s;                       /**< The Timer structure for HAL STM32*/
     t_eFMKCPU_HwTimerCfg HwCfg_e;                       /**< The hardware configuration of the timer */
     t_sFMKCPU_ChnlInfo Channel_as[FMKCPU_CHANNEL_NB];   /**< Channels info structure */
     const t_eFMKCPU_IRQNType c_IRQNType_e;              /**< IRQN type related to the timer */
     const t_eFMKCPU_ClockPort c_clock_e;                /**< RCC clock related to the timer */
-    t_eFMKCPU_SysClkOsc oscSrc_e;               /**< Oscillator timer source */
-    //const t_eFMKMAC_DmaRqst c_RqstDma_e;                /**< RCC clock related to the timer */
+    t_uint16 timerFreqMHz_u32;                              /**< Timer frequency in Mhz */
+    //const t_eFMKMAC_DmaRqst c_RqstDma_e;               /**< RCC clock related to the timer */
     t_bool IsTimerRunning_b;                            /**< Flag for timer is runnning */
-    t_bool isConfigured_b;                         /**< flag timer is configured */  
+    t_bool isConfigured_b;                              /**< flag timer is configured */  
     t_bool IsNVICTimerEnable_b;                         /**< flag timer NVCIC enable or not */
 
 } t_sFMKCPU_TimerInfo;
@@ -101,6 +101,7 @@ static t_eCyclicModState g_FmkCpu_ModState_e = STATE_CYCLIC_CFG;
 WWDG_HandleTypeDef g_wwdgInfos_s = {0};
 
 t_uint8 g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_NB];
+
 /* CAUTION : Automatic generated code section for Timer Configuration: Start */
 /**< timer information variable */
 t_sFMKCPU_TimerInfo g_TimerInfo_as[FMKCPU_TIMER_NB] = {
@@ -556,6 +557,7 @@ t_eReturnCode FMKCPU_Init(void)
     t_uint8 timIndex_u8;
     t_uint8 chnlIndex_u8;
     t_uint8 ClockIndex_u8;
+    t_eFMKCPU_SysClkOsc oscTimerSrc_e;
     t_sFMKCPU_TimerInfo * timerInfo_ps;
     t_sFMKCPU_ChnlInfo * chnlInfo_ps;
 
@@ -567,7 +569,16 @@ t_eReturnCode FMKCPU_Init(void)
         timerInfo_ps->isConfigured_b = (t_bool)False;
         timerInfo_ps->IsTimerRunning_b    = (t_bool)False;
         timerInfo_ps->HwCfg_e = FMKCPU_HWTIM_CFG_NB;
-        timerInfo_ps->oscSrc_e = c_FmkCpu_RccClockOscSrc_ae[timerInfo_ps->c_clock_e];
+        oscTimerSrc_e = c_FmkCpu_RccClockOscSrc_ae[timerInfo_ps->c_clock_e];
+
+        if(g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_SYSTEM] > g_SysClockValue_ua8[oscTimerSrc_e])
+        {
+            timerInfo_ps->timerFreqMHz_u32 = (t_uint32)((t_uint32)2 * (t_uint32)g_SysClockValue_ua8[oscTimerSrc_e]);
+        }
+        else 
+        {
+            timerInfo_ps->timerFreqMHz_u32 = (t_uint32)(g_SysClockValue_ua8[oscTimerSrc_e]);
+        }
 
         for (chnlIndex_u8 = (t_uint8)0 ; chnlIndex_u8 < (t_eFMKCPU_InterruptChnl)FMKCPU_CHANNEL_NB ; chnlIndex_u8++)
         {
@@ -1489,16 +1500,9 @@ t_eReturnCode FMKCPU_Get_InterruptLineValue(t_eFMKCPU_InterruptLineType f_ITLine
                         // Timer depend on APB1 or APB2, if these clock were divided per 2 or more,
                         // Hardware multiply by 2 the core freqency of the timer
                         // In other word 
-                        if(g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_SYSTEM] > g_SysClockValue_ua8[timerInfo_ps->oscSrc_e])
-                        {
-                            oscTimerSrc_u32 = (t_uint32)2 * g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_SYSTEM];
-                        }
-                        else
-                        {
-                            oscTimerSrc_u32 = g_SysClockValue_ua8[FMKCPU_SYS_CLOCK_SYSTEM];
-                        }
+
                         //------ calculate frequency -----//
-                        f_ITLineValue_u->PwmValue_s.frequency_u32 = (t_uint32)((t_float32)oscTimerSrc_u32 * CST_MHZ_TO_HZ) /
+                        f_ITLineValue_u->PwmValue_s.frequency_u32 = (t_uint32)((t_float32)timerInfo_ps->timerFreqMHz_u32 * CST_MHZ_TO_HZ) /
                                                                         (t_float32)((timerInfo_ps->bspTimer_s.Instance->ARR + 1) *
                                                                         (timerInfo_ps->bspTimer_s.Instance->PSC + 1));
                     }
@@ -2210,12 +2214,11 @@ static t_eReturnCode s_FMKCPU_Set_PwmOpeState(  t_eFMKCPU_Timer   f_timer_e,
             if(GETBIT(f_PwmOpe_s.updateMask_u8, FMKCPU_PWM_FREQUENCY) == BIT_IS_SET_8B)
             {
                 Ret_e = c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_PWM].
-                            GetTimerInfoInit_pcb(timerInfo_ps->c_clock_e,
-                                                timerInfo_ps->oscSrc_e,
-                                                g_SysClockValue_ua8,
-                                                (t_float32)f_PwmOpe_s.frequency_u32,
-                                                &bspARRVal_u32,
-                                                &bspPSCVal_u32);
+                            GetTimerInfoInit_pcb(   timerInfo_ps->c_clock_e,
+                                                    timerInfo_ps->timerFreqMHz_u32,
+                                                    (t_float32)f_PwmOpe_s.frequency_u32,
+                                                    &bspARRVal_u32,
+                                                    &bspPSCVal_u32);
 
                 if(Ret_e == RC_OK)
                 {
@@ -2513,16 +2516,12 @@ static t_eReturnCode s_FMKCPU_Set_BspTimerInit( t_sFMKCPU_TimerInfo * f_timer_ps
     if(Ret_e == RC_OK)
     {
         //----------Get the prescaler/ ARR for the timer ------------------//
-        if(c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].GetTimerInfoInit_pcb != (t_cbFMKCPU_GetTimerInfoInit *)NULL_FONCTION)
-        {
-            Ret_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].
-                        GetTimerInfoInit_pcb(f_timer_ps->c_clock_e,
-                                            f_timer_ps->oscSrc_e,
-                                            g_SysClockValue_ua8,
-                                            (t_float32)f_InfoInit_u32,
-                                            &bspPeriod_u32,
-                                            &bspPrescaler_u32);
-        }
+        Ret_e = c_FMKCPU_TimerFunc_apf[f_hwTimCfg_e].
+                    GetTimerInfoInit_pcb(f_timer_ps->c_clock_e,
+                                         f_timer_ps->timerFreqMHz_u32,
+                                        (t_float32)f_InfoInit_u32,
+                                        &bspPeriod_u32,
+                                        &bspPrescaler_u32);
     }
     if (Ret_e == RC_OK)
     {

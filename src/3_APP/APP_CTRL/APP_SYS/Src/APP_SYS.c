@@ -46,8 +46,9 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-t_eCyclicModState g_ModuleState_ae[APPSYS_MODULE_NB];
+static t_eCyclicModState g_ModuleState_ae[APPSYS_MODULE_NB];
 static t_eCyclicModState g_AppSysModuleState_e = STATE_CYCLIC_PREOPE;
+static t_uint32 g_CyclicDuration_u32 = (t_uint32)0;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -232,6 +233,16 @@ static t_eReturnCode s_APPSYS_Operational(void)
             if(Ret_e < RC_OK)
             {
                 // deal with error
+            }
+            else 
+            {
+                FMKCPU_Get_Tick(&currentCnt_u32); 
+                g_CyclicDuration_u32 = (t_uint32)(currentCnt_u32 - s_previousCnt_u32);
+
+                if(g_CyclicDuration_u32 > APPSYS_ELAPSED_TIME_CYCLIC)
+                {
+                    // deal with error
+                }
             }
         }
     }

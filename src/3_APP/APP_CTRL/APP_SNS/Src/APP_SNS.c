@@ -372,6 +372,7 @@ static t_eReturnCode s_AppSns_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_LLDRV_u8 = 0;
     static t_uint8 s_LLSNS_u8 = 0;
+    
     // driver init
     for(; (s_LLDRV_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK) ; s_LLDRV_u8++)
     {
