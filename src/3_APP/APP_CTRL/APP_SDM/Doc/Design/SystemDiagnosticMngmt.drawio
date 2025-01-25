@@ -1,0 +1,237 @@
+<mxfile host="Electron" modified="2025-01-25T13:09:31.711Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="bUG20QSluVKhWs4cIVMy" version="24.6.1" type="device" pages="4">
+  <diagram name="Type" id="DFqD5EZury-ZA8Wi4VFX">
+    <mxGraphModel dx="2465" dy="2808" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-1" value="Enum : t_eAPPSDM_DiagnosticItem&lt;div&gt;in configPulic.h&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1640" y="-2280" width="280" height="190" as="geometry">
+            <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-2" value="APPSDM_DIAG_ITEM_CFG_ERR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-1">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-3" value="APPSDM_DIAG_ITEM_FMK_CDA_ERR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-1">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-6" value="APPSDM_DIAG_ITEM_FMK_IO_ERR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-1">
+          <mxGeometry y="100" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-5" value="APPSDM_DIAG_ITEM_FMK_CPU_ERR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-1">
+          <mxGeometry y="130" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-4" value="APPSDM_DIAG_ITEM_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-1">
+          <mxGeometry y="160" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3qtI_uxfsGbGD5cNWgba-7" target="3qtI_uxfsGbGD5cNWgba-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-7" value="Struct: t_eAPPSDM_DiagItemCfg" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;gradientColor=#7ea6e0;strokeColor=#6c8ebf;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1160" y="-2240" width="280" height="130" as="geometry">
+            <mxRectangle x="-560" y="-640" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-8" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_uint16 Debunc_u16&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-7">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-9" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_bool logItem_b&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-7">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-10" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_eAPPSDM_DiagStrategy diagstrat_e&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-7">
+          <mxGeometry y="100" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-11" value="Enum : t_eAPPSDM_DiagStrategy&lt;div&gt;in configPulic.h&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1640" y="-2040" width="280" height="190" as="geometry">
+            <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-12" value="APPSDM_DIAG_STRAT_1" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-11">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-13" value="APPSDM_DIAG_STRAT_2" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-11">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-14" value="APPSDM_DIAG_STRAT_3" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-11">
+          <mxGeometry y="100" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-15" value="APPSDM_DIAG_STRAT_4" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-11">
+          <mxGeometry y="130" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-16" value="APPSDM_DIAG_STRAT_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-11">
+          <mxGeometry y="160" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-18" value="&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;typedef void t_cbAPPSDM_DiagEvent(t_eAPPSDM_DiagnosticItem f_item_e, t_eAPPSDM_DiagEvent f_Evnt_e&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&amp;nbsp;t_uint16 f_debugInfo1_u16,&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;text-wrap: nowrap; color: rgb(0, 0, 0); background-color: initial;&quot;&gt;t_uint16 f_debugInfo2_u16&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-1640" y="-1400" width="960" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-19" value="" style="group;fontSize=12;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="-760" y="-2230" width="500" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-20" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-19">
+          <mxGeometry width="499.99999999999994" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-22" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;c_DiagItemCfg_as[APPSDM_DIAG_ITEM_NB]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-19">
+          <mxGeometry y="40" width="499.99999999999994" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-21" value="const t_eAPPSDM_DiagItemCfg&amp;nbsp;&lt;div&gt;in configPrivate&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-19">
+          <mxGeometry width="499.99999999999994" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-24" value="Struct: t_eAPPSDM_DiagItemInfo" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;gradientColor=#7ea6e0;strokeColor=#6c8ebf;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1160" y="-2040" width="280" height="100" as="geometry">
+            <mxRectangle x="-560" y="-640" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-25" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_uint16 currentTime_u16&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-24">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-26" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;t_eAPPSDM_DiagState_e&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-24">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jumpStyle=arc;" edge="1" parent="1" source="3qtI_uxfsGbGD5cNWgba-28" target="3qtI_uxfsGbGD5cNWgba-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-28" value="Enum : t_eAPPSDM_DiagState&lt;div&gt;in configPulic.h&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1640" y="-1800" width="280" height="160" as="geometry">
+            <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-29" value="APPSDM_DIAG_ITEM_STATUS_OFF" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-28">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-30" value="APPSDM_DIAG_ITEM_STATUS_DBC" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-28">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-31" value="APPSDM_DIAG_ITEM_STATUS_ON" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-28">
+          <mxGeometry y="100" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-33" value="APPSDM_DIAG_ITEM_STATUS_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-28">
+          <mxGeometry y="130" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-34" value="" style="group;fontSize=12;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="-760" y="-2040" width="500" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-35" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-34">
+          <mxGeometry width="499.99999999999994" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-36" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;g_DiagItemInfo_as[&lt;span style=&quot;text-align: left; text-wrap: nowrap; font-size: 11px;&quot;&gt;APPSDM_MAX_DIAG_ITEM_MONITORING&amp;nbsp;&lt;/span&gt;]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-34">
+          <mxGeometry y="40" width="499.99999999999994" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3qtI_uxfsGbGD5cNWgba-37" value="static t_eAPPSDM_DiagItemInfo&amp;nbsp;&lt;div&gt;in .c&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="3qtI_uxfsGbGD5cNWgba-34">
+          <mxGeometry width="499.99999999999994" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-1" value="" style="group;fontSize=12;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="-760" y="-1880" width="500" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="YLozB_WAzzoqjv6x40J7-1">
+          <mxGeometry width="499.99999999999994" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-3" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;g_DiagItemMapp_ae[&lt;span style=&quot;text-align: left; text-wrap: nowrap; font-size: 11px;&quot;&gt;APPSDM_MAX_DIAG_ITEM_MONITORING&amp;nbsp;&lt;/span&gt;]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="YLozB_WAzzoqjv6x40J7-1">
+          <mxGeometry y="40" width="499.99999999999994" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-4" value="static t_eAPPSDM_DiagnosticItem&lt;div&gt;in .c&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="YLozB_WAzzoqjv6x40J7-1">
+          <mxGeometry width="499.99999999999994" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jumpStyle=arc;" edge="1" parent="1" source="3qtI_uxfsGbGD5cNWgba-2" target="YLozB_WAzzoqjv6x40J7-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-1200" y="-2225" />
+              <mxPoint x="-1200" y="-1860" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YLozB_WAzzoqjv6x40J7-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jumpStyle=arc;" edge="1" parent="1" source="3qtI_uxfsGbGD5cNWgba-12" target="3qtI_uxfsGbGD5cNWgba-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A0W2TcOa-yBNbz-eV3j5-1" value="Enum : t_eAPPSDM_DiagEvent&lt;div&gt;in configPulic.h&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="-1640" y="-1600" width="280" height="130" as="geometry">
+            <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A0W2TcOa-yBNbz-eV3j5-2" value="APPSDM_DIAG_ITEM_EVNT_PASS" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="A0W2TcOa-yBNbz-eV3j5-1">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0W2TcOa-yBNbz-eV3j5-3" value="APPSDM_DIAG_ITEM_EVNT_FAIL" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="A0W2TcOa-yBNbz-eV3j5-1">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="A0W2TcOa-yBNbz-eV3j5-4" value="APPSDM_DIAG_ITEM_EVNT_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="A0W2TcOa-yBNbz-eV3j5-1">
+          <mxGeometry y="100" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="IEGaeypB6ANytf3MV0bL-1" value="&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;#define APPSDM_MAX_DIAG_ITEM_MONITORING ((t_uint8)10)&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#6a00ff;strokeColor=#3700CC;fontSize=16;align=left;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="80" y="-2321.43" width="490" height="41.43" as="geometry" />
+        </mxCell>
+        <mxCell id="2_oe0ECm6Y0I04NA3fmR-1" value="" style="group;fontSize=12;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="-760" y="-1720" width="500" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="2_oe0ECm6Y0I04NA3fmR-2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="2_oe0ECm6Y0I04NA3fmR-1">
+          <mxGeometry width="499.99999999999994" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="2_oe0ECm6Y0I04NA3fmR-3" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;t_eAPPSDM_DiagEvent *&lt;/span&gt;g_UserEvent_pcb&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="2_oe0ECm6Y0I04NA3fmR-1">
+          <mxGeometry y="40" width="499.99999999999994" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="2_oe0ECm6Y0I04NA3fmR-4" value="static t_eAPPSDM_DiagEvent&lt;div&gt;in .c&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" vertex="1" parent="2_oe0ECm6Y0I04NA3fmR-1">
+          <mxGeometry width="499.99999999999994" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="j3mywU9PD6eeBwwdHvYQ" name="staticAPI">
+    <mxGraphModel dx="2633" dy="2905" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_KQ4urMU0k6C11Il8QPo-1" value="" style="group;fontSize=12;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-1620" y="-2280" width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="_KQ4urMU0k6C11Il8QPo-2" value="&lt;div style=&quot;font-size: 12px;&quot;&gt;&lt;div style=&quot;font-size: 12px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;align=left;fontSize=12;" vertex="1" parent="_KQ4urMU0k6C11Il8QPo-1">
+          <mxGeometry width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="_KQ4urMU0k6C11Il8QPo-3" value="s_APPSDM_DiagnosticMngmt()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;fontSize=12;" vertex="1" parent="_KQ4urMU0k6C11Il8QPo-1">
+          <mxGeometry width="750" height="45" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="P1nu1u4QVDacGDgYQXxI" name="API">
+    <mxGraphModel dx="2465" dy="2808" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Cn_SdHr9LNVqkTgqT6xY-1" value="" style="group;fontSize=12;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-1640" y="-2280" width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Cn_SdHr9LNVqkTgqT6xY-2" value="&lt;div style=&quot;font-size: 12px;&quot;&gt;&lt;div style=&quot;font-size: 12px;&quot;&gt;report an error wit her status&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;align=left;fontSize=12;" vertex="1" parent="Cn_SdHr9LNVqkTgqT6xY-1">
+          <mxGeometry width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Cn_SdHr9LNVqkTgqT6xY-3" value="APPSDM_ReportDiagnosticEvnt(t_eAPPSDM_DiagnosticItem f_item_e, t_eAPPSDM_DiagEvent f_evnt_e)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;fontSize=12;" vertex="1" parent="Cn_SdHr9LNVqkTgqT6xY-1">
+          <mxGeometry width="750" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-1" value="" style="group;fontSize=12;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-1640" y="-2000" width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-2" value="&lt;div style=&quot;font-size: 12px;&quot;&gt;&lt;div style=&quot;font-size: 12px;&quot;&gt;get the status of an error&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;align=left;fontSize=12;" vertex="1" parent="Pp0FrRDrttyh9LcGFuov-1">
+          <mxGeometry width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-3" value="APPSDM_GetDiagItemStatus(t_eAPPSDM_DiagnosticItem f_item_e, t_eAPPSDM_DiagEvent * f_evnt_pe)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;fontSize=12;" vertex="1" parent="Pp0FrRDrttyh9LcGFuov-1">
+          <mxGeometry width="750" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-4" value="" style="group;fontSize=12;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-1640" y="-1760" width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-5" value="&lt;div style=&quot;font-size: 12px;&quot;&gt;&lt;div style=&quot;font-size: 12px;&quot;&gt;User Can add only one Callback to get aware whenever an diagnostic is made and will be called every x seconds with data&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;font-size: 12px;&quot;&gt;if the error has stop it will be called one last time&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;align=left;fontSize=12;" vertex="1" parent="Pp0FrRDrttyh9LcGFuov-4">
+          <mxGeometry width="750" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Pp0FrRDrttyh9LcGFuov-6" value="APPSDM_AddCallbackEvent(t_eAPPSDM_DiagnosticItem f_item_e, t_cbAPPSDM_DiagEvent * f_evntCallback_pcb)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;fontColor=#000000;fontSize=12;" vertex="1" parent="Pp0FrRDrttyh9LcGFuov-4">
+          <mxGeometry width="750" height="45" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="bAnVA6t-en7XRg4V7QS4" name="Page-4">
+    <mxGraphModel dx="1420" dy="822" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

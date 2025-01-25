@@ -1412,14 +1412,14 @@ t_eReturnCode FMKCPU_Set_InterruptLineOpe(t_eFMKCPU_InterruptLineType f_ITLineTy
                                                         (t_eFMKCPU_EvntOpe)f_ITLineOpe_u.EvntOpe_e);
                     break;
                 }
-                case FMKCPU_HWTIM_CFG_OC:
-                case FMKCPU_HWTIM_CFG_OP:
                 case FMKCPU_HWTIM_CFG_PWM:
                 {
                     Ret_e = s_FMKCPU_Set_PwmOpeState(   timer_e,
                                                         chnl_e,
                                                         (t_sFMKCPU_PwmOpe)f_ITLineOpe_u.PwmOpe_s);
                 }
+                case FMKCPU_HWTIM_CFG_OC:
+                case FMKCPU_HWTIM_CFG_OP:
                 case FMKCPU_HWTIM_CFG_DAC:
                 {
                     Ret_e = RC_WARNING_NO_OPERATION;
@@ -2203,11 +2203,6 @@ static t_eReturnCode s_FMKCPU_Set_PwmOpeState(  t_eFMKCPU_Timer   f_timer_e,
         {
             Ret_e = RC_ERROR_WRONG_STATE;
         }
-        //-------Activate channel-------------//
-        if (timerInfo_ps->Channel_as[f_chnl_e].State_e == FMKCPU_CHNLST_DISACTIVATED)
-        {
-            Ret_e = s_FMKCPU_Set_HwChannelState(f_timer_e, f_chnl_e, FMKCPU_CHNLST_ACTIVATED);
-        }
         if(Ret_e == RC_OK)
         {
             // See if bit change frequency is SET
@@ -2247,6 +2242,14 @@ static t_eReturnCode s_FMKCPU_Set_PwmOpeState(  t_eFMKCPU_Timer   f_timer_e,
             }
             //-------Forced actuation-------------//
             HAL_TIM_GenerateEvent(&timerInfo_ps->bspTimer_s, TIM_EVENTSOURCE_UPDATE);
+            if(Ret_e == RC_OK)
+            {
+                //-------Activate channel-------------//
+                if (timerInfo_ps->Channel_as[f_chnl_e].State_e == FMKCPU_CHNLST_DISACTIVATED)
+                {
+                    Ret_e = s_FMKCPU_Set_HwChannelState(f_timer_e, f_chnl_e, FMKCPU_CHNLST_ACTIVATED);
+                }
+            }
         }
     }
 

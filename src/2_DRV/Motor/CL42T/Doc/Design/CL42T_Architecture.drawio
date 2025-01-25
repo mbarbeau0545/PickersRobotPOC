@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2025-01-22T13:15:10.745Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="B2CCysay47LWx4U7B7uu" version="24.6.1" type="device" pages="21">
+<mxfile host="Electron" modified="2025-01-25T13:03:36.795Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="0G710eOjeULSGqqYLmCS" version="24.6.1" type="device" pages="21">
   <diagram name="Type" id="Vh-o-i0iVvA072OtEi_w">
-    <mxGraphModel dx="2690" dy="2945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3134" dy="3205" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -189,7 +189,7 @@
         <mxCell id="9aS8QewPEd9LvNOoHUM3-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="fkoo2TKvh2ZY_R15RrpD-2" target="1AkViAmnxxERKPmiA6sV-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="4dmD2tTbzXhdYYISqZpw-1" value="&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;#define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000) in Config Private&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
+        <mxCell id="4dmD2tTbzXhdYYISqZpw-1" value="&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;#define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000) in Config Private&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#6a00ff;strokeColor=#3700CC;fontSize=16;align=left;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry y="-2320" width="810" height="41.43" as="geometry" />
         </mxCell>
         <mxCell id="4dmD2tTbzXhdYYISqZpw-2" value="Enum : t_eCL42T_PulseFlag" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
@@ -224,7 +224,7 @@
         <mxCell id="4dmD2tTbzXhdYYISqZpw-10" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;g_IsRqstInit_ab[CL42T_MOTOR_NB]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" parent="4dmD2tTbzXhdYYISqZpw-7" vertex="1">
           <mxGeometry y="40" width="499.99999999999994" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="PWrdlQu4xkgiduoX0bGi-2" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;font style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;#define CL42T_PULSE_RUN_TIME_MAX&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;font style=&quot;background-color: initial;&quot; color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;((t_uint16)3000) in Config Private&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
+        <mxCell id="PWrdlQu4xkgiduoX0bGi-2" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;font style=&quot;background-color: initial;&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;#define CL42T_PULSE_RUN_TIME_MAX&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;font style=&quot;background-color: initial;&quot; color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;((t_uint16)3000) in Config Private&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#6a00ff;strokeColor=#3700CC;fontSize=16;align=left;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry y="-2260" width="810" height="41.43" as="geometry" />
         </mxCell>
       </root>
