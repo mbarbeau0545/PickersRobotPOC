@@ -19,7 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
-    #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+    #include "FMK_HAL/FMK_TIM/Src/FMK_TIM.h"
     #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
@@ -332,7 +332,7 @@
     */
     t_eReturnCode FMKIO_Set_InEncoderSigCfg(t_eFMKIO_InEcdrSignals f_InEncdr_e,
                                             t_uint32 f_PulsePerRevolution_u32,
-                                            t_sFMKCPU_EcdrCfg f_HwEcdrCfg_s,
+                                            t_sFMKTIM_EcdrCfg f_HwEcdrCfg_s,
                                             t_eFMKIO_PullMode f_pull_e,
                                             t_eFMKIO_SpdMode f_spd_e,
                                             t_eFMKIO_EcdrStartOpe f_startOpe);

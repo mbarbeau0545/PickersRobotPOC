@@ -78,5 +78,5 @@ For the doxygen documentation search the file "index.html"
     - dans les fonctions de ChannelCfg
         Ne pas mettre GetInfoInit dans la structure de fonction mais chaque fonction de config appelle sa propre fonction dans et la file à SetBspTimerInit
     - Rajouter les callback d'erreur et les gérer dans la cyclic 
-    - Rajouter un fichier FMKTIM avec la gestion des timers, et mettre FMKMAC dans FMKCPU. 
+    - Rajouter un fichier FMKTIM avec la gestion des timers, et mettre FMKCPU dans FMKCPU. 
     

@@ -8,8 +8,8 @@
  * @version     1.0
  */
   
-#ifndef FMKPU_CONFIGSPECIFIC_H_INCLUDED
-#define FMKPU_CONFIGSPECIFIC_H_INCLUDED
+#ifndef FMKCPU_CONFIGSPECIFIC_H_INCLUDED
+#define FMKCPU_CONFIGSPECIFIC_H_INCLUDED
 
 
 
@@ -81,225 +81,20 @@
     t_eReturnCode FMKCPU_SetPeriphClockCfg(t_eFMKCPU_ClockPort f_clockPort_e);
     /**
     *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in PWM.\n
+    *	@brief    Set the Periph Clock Configuration
     *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetPwmTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32 f_PwmFreq_f32,
-                                                t_uint32 * f_bspTimARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in Input Compar.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetICTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32   f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspTimARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in Output Compare.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetOCTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32   f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspTimARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
+    *	@param[in]  f_clockPort_e             : Rcc Clock Port, enum value from @ref t_eFMKCPU_ClockPort
 
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in OP.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
     *
     *  @retval RC_OK                             @ref RC_OK
     *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
     *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
+    *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
+    *  @retval RC_ERROR_NOT_ALLOWED              @ref RC_ERROR_NOT_ALLOWED
     */
-    t_eReturnCode FMKCPU_GetOPTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32   f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in Event.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetEvntTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32 f_RqstTimerFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in Encoder.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetECDRTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32 f_EcdrFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-    /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in Dac.\n
-    *
-    *	@param[in]  f_InterruptLine_e      : enum value for Interrupt Line, value from @ref t_eFMKCPU_InterruptLineIO
-    *	@param[in]  f_MeasTrigger_e        : trigger for interruption, value from @ref t_eFMKCPU_ChnlMeasTrigger
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT              @ref RC_ERROR_WRONG_RESULT
-    */
-    t_eReturnCode FMKCPU_GetDacTimerInitParam(t_uint8  f_idxTimRccClock_u8,
-                                                t_eFMKCPU_SysClkOsc f_timOscSrc_e,
-                                                t_uint8 * f_SysClockValues_ua8,
-                                                t_float32 f_DacFreq_f32,
-                                                t_uint32 * f_bspARR_pu32,
-                                                t_uint32 * f_bspTimPrescaler_pu32);
-
-    /**< This function has been made to filled in c_FMKCPU_TimerFunc_apf */
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Start
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Start_IT
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop_IT
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Start_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, 
-                                                    uint32_t Channel, 
-                                                    uint32_t *pdata1_pu32,
-                                                    uint32_t *pdata2_pu32,
-                                                    uint16_t lenght_u16);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
-    /*********************************
-     * FMKCPU_HAL_TIM_OC_Start_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Start_DMA(  TIM_HandleTypeDef *htim, 
-                                                    uint32_t Channel, 
-                                                    uint32_t *pdata1_pu32,
-                                                    uint32_t *pdata2_pu32,
-                                                    uint16_t lenght_u16);
-    /*********************************
-     * FMKCPU_HAL_TIM_PWM_Start_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Start_DMA( TIM_HandleTypeDef *htim, 
-                                                    uint32_t Channel, 
-                                                    uint32_t *pdata1_pu32,
-                                                    uint32_t *pdata2_pu32,
-                                                    uint16_t lenght_u16);
-    /*********************************
-     * FMKCPU_HAL_TIM_IC_Start_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Start_DMA(  TIM_HandleTypeDef *htim, 
-                                                    uint32_t Channel, 
-                                                    uint32_t *pdata1_pu32,
-                                                    uint32_t *pdata2_pu32,
-                                                    uint16_t lenght_u16);
-    /*********************************
-     * FMKCPU_HAL_TIM_Encoder_Start_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Start_DMA( TIM_HandleTypeDef *htim, 
-                                                        uint32_t Channel, 
-                                                        uint32_t *pdata1_pu32,
-                                                        uint32_t *pdata2_pu32,
-                                                        uint16_t lenght_u16);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop_DMA
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_PWM_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Start
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_OC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Start_IT
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_IC_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop_IT
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-    /*********************************
-     * FMKCPU_HAL_TIM_Base_Stop_IT
-     *********************************/
-    HAL_StatusTypeDef FMKCPU_HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim, void * f_TimerCfg_pv);
-
+    t_eReturnCode FMKCPU_SetRequestType(t_eFMKCPU_DmaRqst f_RqstType_e,
+                                        DMA_HandleTypeDef * f_bspDma_ps);
+    
     /* CAUTION : Automatic generated code section for Enable Clk Declaration: Start */
     /**< Function to enable  DMA1 rcc clock*/
     void FMKCPU_Enable_DMA1_Clock(void);

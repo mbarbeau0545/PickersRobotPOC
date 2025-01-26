@@ -19,7 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "../FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
-    #include "../FMKCFG_ConfigFiles/FMKCPU_ConfigPublic.h"
+    #include "../FMKCFG_ConfigFiles/FMKTIM_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************

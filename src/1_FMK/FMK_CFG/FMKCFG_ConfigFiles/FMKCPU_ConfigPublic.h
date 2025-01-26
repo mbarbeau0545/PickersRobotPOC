@@ -31,22 +31,15 @@
     #define FMKCPU_STM32_ECU_FAMILY_G ((t_uint8)1)
     //#define FMKCPU_STM32_ECU_FAMILY_F ((t_uint8)0)
     
-    #define FMKCPU_TIMER_PWM_ARR_TARGET_16_BIT   ((t_uint32)0xF80C) // 63500
-    #define FMKCPU_TIMER_PWM_ARR_TARGET_32_BIT   ((t_uint32)(CST_MAX_UINT_32BIT - (t_uint32)1)) 
-    #define FMKCPU_FREQ_COMPUTE_DELTA_ACCEPTANCE ((t_float32)0.5)
-    #define FMKCPU_ARR_LOW_LIMIT_16BIT  ((t_uint32)0xC350)     // 50000
-    #define FMKCPU_ARR_HIGH_LIMIT_16BIT ((t_uint32)0xFFFE)     // 65534
-    #define FMKCPU_ARR_LOW_LIMIT_32BIT  ((t_uint32)0xB2D05E00) // 3_000_000_000
-    #define FMKCPU_ARR_HIGH_LIMIT_32BIT ((t_uint32)0xFFFFFFFE) // 4_294_967_295
     #define FMKCPU_WWDG_RESET_CFG  FMKCPU_WWDG_RESET_100MS /**< default watchdogs configuration */
 
-    /**
-    * @brief This define return True if the timer is a 32 Bits timers
-    */
-    #warning('Make Code generation on that')
-    #define FMKCPU_IS_32B_TIMER(f_timClock_e) \
-        ((f_timClock_e) == FMKCPU_RCC_CLK_TIM2 ||\
-         (f_timClock_e) == FMKCPU_RCC_CLK_TIM5)
+    #define FMKCPU_ADC_DMA_MODE             (DMA_CIRCULAR)      /**< DMA Mode for adc's */
+    #define FMKCPU_UART_RX_DMA_MODE         (DMA_CIRCULAR)        /**< DMA Mode Uart for Rx */
+    #define FMKCPU_UART_TX_DMA_MODE         (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
+    #define FMKCPU_USART_RX_DMA_MODE        (DMA_CIRCULAR)      /**< DMA Mode Uart for Rx */
+    #define FMKCPU_USART_TX_DMA_MODE        (DMA_NORMAL)      /**< DMA Mode Uart for Tx */
+    #define FMKCPU_TIM_CHNL_ECDR_CC1_MODE   (DMA_CIRCULAR)
+    #define FMKCPU_TIM_CHNL_ECDR_CC2_MODE   (DMA_CIRCULAR)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -67,20 +60,6 @@
         FMKCPU_CORE_CLOCK_SPEED_NB,             /**< Core CLock Speed Run Number */
         FMKCPU_CORE_CLOCK_SPEED_UNKNOWN,             /**< Core CLock Speed Run Number */
     } t_eFMKCPU_CoreClockSpeed;
-
-    /**< typedef enum for channel mode */
-    typedef enum 
-    {
-        FMKCPU_HWTIM_CFG_PWM = 0x0U,        /**< Timer configuration in PWM mode */
-        FMKCPU_HWTIM_CFG_IC,                /**< Timer configuration in Input Capture mode */
-        FMKCPU_HWTIM_CFG_OC,                /**< Timer configuration in Ouput Compare mode */
-        FMKCPU_HWTIM_CFG_OP,                /**< Timer configuration in One Pulse mode */
-        FMKCPU_HWTIM_CFG_EVNT,              /**< Timer configuration in Event mode */
-        FMKCPU_HWTIM_CFG_ECDR,              /**< Timer configuration in encoder mode */
-        FMKCPU_HWTIM_CFG_DAC,               /**< Timer configuration in Dac mode */
-
-        FMKCPU_HWTIM_CFG_NB,                /**< Number of timer configuration mode*/
-    } t_eFMKCPU_HwTimerCfg;
 
     /**< Enum for NVIC priority */
     typedef enum 
@@ -103,16 +82,47 @@
 
         FMKCPU_WWDG_RESET_NB,           /**< Number of watchdogs reset parameter  */
     } t_eFMKCPu_WwdgResetPeriod;
-    //-----------------------------ENUM TYPES-----------------------------//
-    /**< Interrupt Line Type */
+
+
     typedef enum 
     {
-        FMKCPU_INTERRUPT_LINE_TYPE_IO = 0x00,       /**< Timer/Channel use for PWM, IC, OC, OP Purpose */
-        FMKCPU_INTERRUPT_LINE_TYPE_EVNT,            /**< Timer/Channel use for Event purpose */
-        FMKCPU_INTERRUPT_LINE_TYPE_DAC,             /**< Timmer/Channel use for DAC purpose */
-        FMKCPU_INTERRUPT_LINE_TYPE_ECDR,
-        FMKCPU_INTERRUPT_LINE_TYPE_NB,
-    } t_eFMKCPU_InterruptLineType;
+        FMKCPU_DMA_TYPE_ADC = 0x00,
+        FMKCPU_DMA_TYPE_UART_RX,
+        FMKCPU_DMA_TYPE_UART_TX,
+        FMKCPU_DMA_TYPE_USART_RX,
+        FMKCPU_DMA_TYPE_USART_TX,
+        FMKCPU_DMA_TYPE_SPI,
+        FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC1,
+        FMKCMAC_DMA_TYPE_TIM_CHNL_ECDR_CC2,
+
+        FMKCPU_DMA_TYPE_NB,
+
+    } t_eFMKCPU_DmaType;
+
+
+    /**< Reference to Dma Priority */
+    typedef enum
+    {
+        FMKCPU_DMA_TRANSPRIO_LOW = 0x0U,
+        FMKCPU_DMA_TRANSPRIO_MEDIUM,
+        FMKCPU_DMA_TRANSPRIO_HIGH,
+        FMKCPU_DMA_TRANSPRIO_VERY_HIGH,
+
+        FMKCPU_DMA_TRANSPRIO_NB,
+    } t_eFMKCPU_DmaTransferPriority;
+
+    /**< Reference for Dma Transfer Direction */
+    typedef enum
+    {
+        FMKCPU_DMA_TRANSDIR_MEM_TO_MEM = 0x0U,
+        FMKCPU_DMA_TRANSDIR_PERIPH_TO_MEM,
+        FMKCPU_DMA_TRANSDIR_MEM_TO_PERIPH,
+
+        FMKCPU_DMA_TRANSDIR_NB
+    } t_eFMKCPU_DmaTransferDir;
+
+
+    //-----------------------------ENUM TYPES-----------------------------//
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
     * @brief Enum for System Oscillator Clock.
@@ -132,69 +142,6 @@
     
         FMKCPU_SYS_CLOCK_NB,
     } t_eFMKCPU_SysClkOsc;
-
-    /**
-    * @brief Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse.
-    */
-    typedef enum
-    {
-        FMKCPU_INTERRUPT_LINE_IO_11 = 0x0,                 /**< General Purpose Timer, Reference to Timer 1 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_12,                       /**< General Purpose Timer, Reference to Timer 1 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_13,                       /**< General Purpose Timer, Reference to Timer 1 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_14,                       /**< General Purpose Timer, Reference to Timer 1 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_21,                       /**< General Purpose Timer, Reference to Timer 2 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_22,                       /**< General Purpose Timer, Reference to Timer 2 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_23,                       /**< General Purpose Timer, Reference to Timer 2 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_24,                       /**< General Purpose Timer, Reference to Timer 2 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_31,                       /**< General Purpose Timer, Reference to Timer 3 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_32,                       /**< General Purpose Timer, Reference to Timer 3 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_33,                       /**< General Purpose Timer, Reference to Timer 3 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_34,                       /**< General Purpose Timer, Reference to Timer 3 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_41,                       /**< General Purpose Timer, Reference to Timer 4 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_42,                       /**< General Purpose Timer, Reference to Timer 4 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_43,                       /**< General Purpose Timer, Reference to Timer 4 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_44,                       /**< General Purpose Timer, Reference to Timer 4 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_51,                       /**< General Purpose Timer, Reference to Timer 5 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_52,                       /**< General Purpose Timer, Reference to Timer 5 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_53,                       /**< General Purpose Timer, Reference to Timer 5 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_54,                       /**< General Purpose Timer, Reference to Timer 5 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_61,                       /**< General Purpose Timer, Reference to Timer 8 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_62,                       /**< General Purpose Timer, Reference to Timer 8 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_63,                       /**< General Purpose Timer, Reference to Timer 8 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_64,                       /**< General Purpose Timer, Reference to Timer 8 Channel 4 */
-        FMKCPU_INTERRUPT_LINE_IO_65,                       /**< General Purpose Timer, Reference to Timer 8 Channel 5 */
-        FMKCPU_INTERRUPT_LINE_IO_66,                       /**< General Purpose Timer, Reference to Timer 8 Channel 6 */
-        FMKCPU_INTERRUPT_LINE_IO_71,                       /**< General Purpose Timer, Reference to Timer 20 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_IO_72,                       /**< General Purpose Timer, Reference to Timer 20 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_IO_73,                       /**< General Purpose Timer, Reference to Timer 20 Channel 3 */
-        FMKCPU_INTERRUPT_LINE_IO_74,                       /**< General Purpose Timer, Reference to Timer 20 Channel 4 */
-    
-        FMKCPU_INTERRUPT_LINE_IO_NB,
-    } t_eFMKCPU_InterruptLineIO;
-
-    /**
-    * @brief Number of Event Purpose Interrupt Line.
-    */
-    typedef enum
-    {
-        FMKCPU_INTERRUPT_LINE_EVNT_1 = 0x0,                  /**< Event Purpose Timer, Reference to Timer 15 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_EVNT_2,                        /**< Event Purpose Timer, Reference to Timer 15 Channel 2 */
-        FMKCPU_INTERRUPT_LINE_EVNT_3,                        /**< Event Purpose Timer, Reference to Timer 16 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_EVNT_4,                        /**< Event Purpose Timer, Reference to Timer 17 Channel 1 */
-    
-        FMKCPU_INTERRUPT_LINE_EVNT_NB,
-    } t_eFMKCPU_InterruptLineEvnt;
-
-    /**
-    * @brief Number of DAC Purpose Interrupt Line.
-    */
-    typedef enum
-    {
-        FMKCPU_INTERRUPT_LINE_DAC_1 = 0x0,                  /**< Dac Purpose Timer, Reference to Timer 6 Channel 1 */
-        FMKCPU_INTERRUPT_LINE_DAC_2,                        /**< Dac Purpose Timer, Reference to Timer 7 Channel 1 */
-    
-        FMKCPU_INTERRUPT_LINE_DAC_NB,
-    } t_eFMKCPU_InterruptLineDAC;
 
     /**
     * @brief Enum for rcc clock state reference.
@@ -372,10 +319,76 @@
         FMKCPU_NVIC_NB,
     } t_eFMKCPU_IRQNType;
 
+    /**
+    * @brief Enum for the different request available for DMA service.
+    */
+    typedef enum
+    {
+        FMKCPU_DMA_RQSTYPE_ADC1 = 0x0,               /**< Reference to Bsp Dma Request for ADC1 */
+        FMKCPU_DMA_RQSTYPE_ADC2,                     /**< Reference to Bsp Dma Request for ADC2 */
+        FMKCPU_DMA_RQSTYPE_ADC3,                     /**< Reference to Bsp Dma Request for ADC3 */
+        FMKCPU_DMA_RQSTYPE_UART4_RX,                 /**< Reference to Bsp Dma Request for UART4_RX */
+        FMKCPU_DMA_RQSTYPE_UART4_TX,                 /**< Reference to Bsp Dma Request for UART4_TX */
+        FMKCPU_DMA_RQSTYPE_USART1_RX,                /**< Reference to Bsp Dma Request for USART1_RX */
+        FMKCPU_DMA_RQSTYPE_USART1_TX,                /**< Reference to Bsp Dma Request for USART1_TX */
+        FMKCPU_DMA_RQSTYPE_USART2_RX,                /**< Reference to Bsp Dma Request for USART2_RX */
+        FMKCPU_DMA_RQSTYPE_USART2_TX,                /**< Reference to Bsp Dma Request for USART2_TX */
+        FMKCPU_DMA_RQSTYPE_TIM8_CH1,                 /**< Reference to Bsp Dma Request for TIM8_CH1 */
+    
+        FMKCPU_DMA_RQSTYPE_NB,
+    } t_eFMKCPU_DmaRqst;
+
+    /**
+    * @brief Enum for Number of Dma.
+    */
+    typedef enum
+    {
+        FMKCPU_DMA_CTRL_1 = 0x0,                  /**< Reference to DMA 1 */
+        FMKCPU_DMA_CTRL_2,                        /**< Reference to DMA 2 */
+    
+        FMKCPU_DMA_CTRL_NB,
+    } t_eFMKCPU_DmaController;
+
+    /**
+    * @brief Enum for number of channel in DMA.
+    */
+    typedef enum
+    {
+        FMKCPU_DMA_CHANNEL_1 = 0x0,                  /**< Reference to Channel 1 */
+        FMKCPU_DMA_CHANNEL_2,                        /**< Reference to Channel 2 */
+        FMKCPU_DMA_CHANNEL_3,                        /**< Reference to Channel 3 */
+        FMKCPU_DMA_CHANNEL_4,                        /**< Reference to Channel 4 */
+        FMKCPU_DMA_CHANNEL_5,                        /**< Reference to Channel 5 */
+        FMKCPU_DMA_CHANNEL_6,                        /**< Reference to Channel 6 */
+        FMKCPU_DMA_CHANNEL_7,                        /**< Reference to Channel 7 */
+        FMKCPU_DMA_CHANNEL_8,                        /**< Reference to Channel 8 */
+    
+        FMKCPU_DMA_CHANNEL_NB,
+    } t_eFMKCPU_DmaChnl;
+
+    /**
+    * @brief Enum for Number of Dma Multiplexage Controler.
+    */
+    typedef enum
+    {
+        FMKCPU_DMA_MUX_1 = 0x0,                  /**< Reference to DMAMUX 1 */
+    
+        FMKCPU_DMA_MUX_NB,
+    } t_eFMKCPU_DmaMux;
+
     /* CAUTION : Automatic generated code section for Enum: End */
   
     
     //-----------------------------TYPEDEF TYPES---------------------------//
+    /**< Union to centralize Dma Handle TypeDef  */
+    typedef union 
+    {
+        ADC_HandleTypeDef   adcHandle_s;
+        USART_HandleTypeDef usartHandle_s;
+        UART_HandleTypeDef  uartHandle_s;
+        SPI_HandleTypeDef   spiHandle_s;
+        TIM_HandleTypeDef   timHandle_s;
+    } t_uFMKCPU_DmaHandleType;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************

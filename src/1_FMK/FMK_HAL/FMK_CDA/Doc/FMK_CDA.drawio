@@ -573,7 +573,7 @@
         <mxCell id="8gkW-DEa-xaDfQV_luFj-2" value="&lt;span style=&quot;text-align: left;&quot;&gt;FMK&lt;/span&gt;&lt;span style=&quot;text-align: left; text-wrap: nowrap;&quot;&gt;MAC_RqstDmaCfg&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;fontColor=#000000;strokeColor=#B20000;container=0;" vertex="1" parent="8gkW-DEa-xaDfQV_luFj-1">
           <mxGeometry width="450" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="8gkW-DEa-xaDfQV_luFj-3" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;text-align: center;&quot;&gt;FMKMAC_DMA_RQSTYPE_ADC&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e51400;fontColor=#000000;strokeColor=#B20000;container=0;" vertex="1" parent="8gkW-DEa-xaDfQV_luFj-1">
+        <mxCell id="8gkW-DEa-xaDfQV_luFj-3" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;text-align: center;&quot;&gt;FMKCPU_DMA_RQSTYPE_ADC&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e51400;fontColor=#000000;strokeColor=#B20000;container=0;" vertex="1" parent="8gkW-DEa-xaDfQV_luFj-1">
           <mxGeometry y="30" width="450" height="30" as="geometry" />
         </mxCell>
         <mxCell id="8gkW-DEa-xaDfQV_luFj-4" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;text-align: center;&quot;&gt;&amp;amp;g_AdcInfo_s.BspAdc_s&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e51400;fontColor=#000000;strokeColor=#B20000;container=0;" vertex="1" parent="8gkW-DEa-xaDfQV_luFj-6">
