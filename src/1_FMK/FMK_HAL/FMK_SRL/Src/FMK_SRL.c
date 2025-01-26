@@ -2505,7 +2505,10 @@ static t_eReturnCode s_FMKSRL_SetUartBspInit(   t_eFMKSRL_SerialLine      f_SrlL
                                                             bspWakeUpMethod_u32);
                 
                         //--------- Update ID Used ---------//
-                        g_MProcessIdUsed[f_SrlLine_e] = MProcessId_u8;
+                        if(bspRet_e == HAL_OK)
+                        {
+                            g_MProcessIdUsed[f_SrlLine_e] = MProcessId_u8;
+                        }
                     }
                     break;
                 }

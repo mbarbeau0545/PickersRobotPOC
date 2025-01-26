@@ -32,7 +32,7 @@
     Lorsque quelqu'un appelle le module pour repertorier une Erreur, deux cas possibles, 
     l'erreur n'est pas encore enregistré :
         -   On regarde la configuration lié à cette error,
-            si il n'y a pas de debouncer, on passe directement à la gestion de l'error 
+            si il n'y a pas de debouncer, on passe l'error à l'état ON
             s'il y un debouncer, on sauvegarde le temps actuel, on set un flag globale pour dire 
             qu'on demande un suivi d'error pour cette error dans la cyclic.
 

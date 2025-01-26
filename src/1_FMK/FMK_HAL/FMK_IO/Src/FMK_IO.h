@@ -575,7 +575,9 @@
     *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_pulses_u16);
+    t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, 
+                                            t_uint16 f_dutyCycle_u16,
+                                            t_uint16 f_pulses_u16);
         /**
     *
     *	@brief      Update the dutyCycle for a PWM.\n

@@ -87,10 +87,7 @@ typedef struct __t_sFMKIO_InEvntSigInfo
 typedef struct __t_sFMKIO_InEcdrSigInfo
 {
     t_bool isEcdrConfigured_b; 
-    t_bool isDmaRunning_b;
     t_eFMKIO_EcdrStartOpe EcdrOpe;
-    t_uint32 position_u32;
-    t_eFMKIO_EcdrDir direction_e;
 } t_sFMKIO_InEcdrSigInfo;
 // ********************************************************************
 // *                      Prototypes
@@ -100,13 +97,13 @@ typedef struct __t_sFMKIO_InEcdrSigInfo
 // *                      Variables
 // ********************************************************************
 //--------IO Managment--------//
-t_sFMKIO_InFreqSigInfo     g_InFreqSigInfo_as[FMKIO_INPUT_SIGFREQ_NB];        /**< Signal information for input frequency */
-t_sFMKIO_AnaSigInfo     g_InAnaSigInfo_as[FMKIO_INPUT_SIGANA_NB];          /**< Signal information for input Analog */
-t_sFMKIO_DigSigInfo        g_InDigSigInfo_as[FMKIO_INPUT_SIGDIG_NB];          /**< Signal information for input Digital */
-t_sFMKIO_InEvntSigInfo     g_InEvntSigInfo_as[FMKIO_INPUT_SIGEVNT_NB];        /**< Signal information for input Event */
-t_sFMKIO_InEcdrSigInfo     g_InEcdrSigInfo_as[FMKIO_INPUT_ENCODER_NB];        /**< Signal information for inout Digital */
-t_sFMKIO_PwmSigInfo     g_OutPwmSigInfo_as[FMKIO_OUTPUT_SIGPWM_NB];        /**< Signal information for output PWM */
-t_sFMKIO_DigSigInfo        g_OutDigSigInfo_as[FMKIO_OUTPUT_SIGDIG_NB];        /**< Signal information for output Digital */
+t_sFMKIO_InFreqSigInfo      g_InFreqSigInfo_as[FMKIO_INPUT_SIGFREQ_NB];        /**< Signal information for input frequency */
+t_sFMKIO_AnaSigInfo         g_InAnaSigInfo_as[FMKIO_INPUT_SIGANA_NB];          /**< Signal information for input Analog */
+t_sFMKIO_DigSigInfo         g_InDigSigInfo_as[FMKIO_INPUT_SIGDIG_NB];          /**< Signal information for input Digital */
+t_sFMKIO_InEvntSigInfo      g_InEvntSigInfo_as[FMKIO_INPUT_SIGEVNT_NB];        /**< Signal information for input Event */
+t_sFMKIO_InEcdrSigInfo      g_InEcdrSigInfo_as[FMKIO_INPUT_ENCODER_NB];        /**< Signal information for inout Digital */
+t_sFMKIO_PwmSigInfo         g_OutPwmSigInfo_as[FMKIO_OUTPUT_SIGPWM_NB];        /**< Signal information for output PWM */
+t_sFMKIO_DigSigInfo         g_OutDigSigInfo_as[FMKIO_OUTPUT_SIGDIG_NB];        /**< Signal information for output Digital */
 //--------Communication Managment--------//
 t_bool g_IsIOComCanConfigured_ab[FMKIO_COM_SIGNAL_CAN_NB];
 t_bool g_IsIOComSerialConConfigured_ab[FMKIO_COM_SIGNAL_SERIAL_NB];
@@ -218,6 +215,18 @@ static t_eReturnCode s_FMKIO_Set_BspSigCfg(t_eFMKIO_GpioPort f_gpioPort_e,
  *
  */
 static t_eReturnCode s_FMKIO_MngSigFrequency(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
+/**
+ *
+ *	@brief      FMKTIM callback function to determine signal frequency value
+ *
+ *	@param[in]  f_InterruptType_e        : Interrupt Type from  @ref t_eFMKTIM_InterruptLineType
+ *	@param[in]  f_InterruptLine_u8       : Interrupt Line
+ *
+ * @retval RC_OK                             @ref RC_OK
+ * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+ *
+ */
+static t_eReturnCode s_FMKIO_MngSigPwm(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 /**
  *
  *	@brief      Function to set HAL_RCC clock state : Enable/Disable
@@ -998,13 +1007,16 @@ t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
 /*********************************
  * FMKIO_Set_OutPwmSigPulses
  *********************************/
-t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 f_pulses_u16)
+t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, 
+                                        t_uint16 f_dutyCycle_u16,
+                                        t_uint16 f_pulses_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uFMKTIM_ITLineOpe pwmOpe_u;
     t_eFMKTIM_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
+    if ((f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
+    ||  (f_dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1023,9 +1035,21 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 
         pwmOpe_u.PwmOpe_s.nbPulses_u16 = f_pulses_u16;
         SETBIT_8B(pwmOpe_u.PwmOpe_s.updateMask_u8, FMKTIM_BIT_PWM_NB_PULSES);
 
+        if(g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16 != f_dutyCycle_u16)
+        {
+            pwmOpe_u.PwmOpe_s.dutyCycle_u16 = f_dutyCycle_u16;
+            SETBIT_8B(pwmOpe_u.PwmOpe_s.updateMask_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
+        }
+        
+
         Ret_e = FMKTIM_Set_InterruptLineOpe(FMKTIM_INTERRUPT_LINE_TYPE_IO,
                                             (t_uint8)ITLineIO_e,
                                             pwmOpe_u);
+
+        if(Ret_e == RC_OK)
+        {
+            g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16 = f_dutyCycle_u16;
+        }
     }
 
     return Ret_e;
@@ -1124,6 +1148,10 @@ t_eReturnCode FMKIO_Get_InEcdrPositionValue(t_eFMKIO_InEcdrSignals f_signal_e, t
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
+    if(g_InEcdrSigInfo_as[f_signal_e].EcdrOpe == FMKIO_ENCODER_START_DIR)
+    {
+        Ret_e = RC_ERROR_NOT_ALLOWED;
+    }
     if(g_InEcdrSigInfo_as[f_signal_e].isEcdrConfigured_b == (t_bool)False)
     {
         Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
@@ -1171,6 +1199,10 @@ t_eReturnCode FMKIO_Get_InEcdrDirectionValue(t_eFMKIO_InEcdrSignals f_signal_e, 
     if(f_signal_e >= FMKIO_INPUT_ENCODER_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(g_InEcdrSigInfo_as[f_signal_e].EcdrOpe == FMKIO_ENCODER_START_POS)
+    {
+        Ret_e = RC_ERROR_NOT_ALLOWED;
     }
     if(g_InEcdrSigInfo_as[f_signal_e].isEcdrConfigured_b == (t_bool)False)
     {
@@ -1451,10 +1483,6 @@ static t_eReturnCode s_FMKIO_PreOperational(void)
             Ret_e = FMKTIM_Set_InterruptLineOpe(  FMKTIM_INTERRUPT_LINE_TYPE_IO,
                                                     (t_uint8)IOLine_e,
                                                     LineOpe_u);
-            if(Ret_e == RC_OK)
-            {
-                g_InEcdrSigInfo_as[idxEcdr_u8].isDmaRunning_b = (t_bool)True;
-            }
         }
     }
 
@@ -1476,11 +1504,6 @@ static t_eReturnCode s_FMKIO_Operational(void)
         s_SavedTime_u32 = currentTime_u32;
         Ret_e = s_FMKIO_PerformDiagnostic();
     }
-    if(Ret_e == RC_OK)
-    {
-        Ret_e = s_FMKIO_UpdateEcdrValue();
-    }
-
     return Ret_e;
 }
 
@@ -1604,8 +1627,6 @@ static t_eReturnCode s_FMKIO_Get_EcdrTimerMode(t_eFMKIO_EcdrStartOpe f_StartOpeM
 
     return Ret_e;
 }
-
-
 /*********************************
  * s_FMKIO_MngSigFrequency
  *********************************/
