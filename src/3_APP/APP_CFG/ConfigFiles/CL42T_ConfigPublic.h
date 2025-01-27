@@ -26,22 +26,22 @@
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
-        CL42T_MOTOR_SIGTYPE_PULSE = 0x00,
-        CL42T_MOTOR_SIGTYPE_DIR,
-        CL42T_MOTOR_SIGTYPE_STATE,
-        CL42T_MOTOR_SIGTYPE_DEFAULT,
+        CL42T_MOTOR_AXE_X_1,
+        CL42T_MOTOR_AXE_X_2,
 
-        CL42T_MOTOR_SIGTYPE_NB
-    } t_eCL42T_MotorSigType;
+        CL42T_MOTOR_NB
+    } t_eCL42T_MotorId;
     
     typedef enum 
     {
-        CL42T_MOTOR_1 = 0x00,
-        CL42T_MOTOR_2,
-        CL42T_MOTOR_3,
+        CL42T_MOTOR_SIGTYPE_PULSE,
+        CL42T_MOTOR_SIGTYPE_SPEED,
+        CL42T_MOTOR_SIGTYPE_DIR,
+        CL42T_MOTOR_SIGTYPE_STATE,
+        CL42T_MOTOR_SIGTYPE_DIAG,
 
-        CL42T_MOTOR_NB,
-    } t_eCL42T_MotorId;
+        CL42T_MOTOR_SIGTYPE_NB
+    } t_eCL42T_MotorSignalType;
     /* CAUTION : Automatic generated code section for Enum: Start */
 
     /* CAUTION : Automatic generated code section for Enum: End */

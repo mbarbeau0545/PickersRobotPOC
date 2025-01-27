@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2025-01-22T13:15:10.745Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="B2CCysay47LWx4U7B7uu" version="24.6.1" type="device" pages="21">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="21">
   <diagram name="Type" id="Vh-o-i0iVvA072OtEi_w">
-    <mxGraphModel dx="2690" dy="2945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2873" dy="3051" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -18,7 +18,7 @@
         <mxCell id="GfyHRPOfNkN_5rqHJgt4-11" value="CL42T_MOTOR_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-8" vertex="1">
           <mxGeometry y="100" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-12" value="Enum : t_eCL42T_MotorDirection" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-12" value="Enum : t_eCL42T_MotorDirection .h" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry x="-1600" y="-2120" width="270" height="130" as="geometry">
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
@@ -32,7 +32,7 @@
         <mxCell id="GfyHRPOfNkN_5rqHJgt4-15" value="CL42T_MOTOR_DIRECTION_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">
           <mxGeometry y="100" width="270" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-16" value="Enum : t_eCL42T_MotorState" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-16" value="Enum : t_eCL42T_MotorState .h" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry x="-1600" y="-1920" width="270" height="130" as="geometry">
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
@@ -83,7 +83,7 @@
         <mxCell id="GfyHRPOfNkN_5rqHJgt4-30" value="CL42T_MOTOR_SIGTYPE_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="190" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="_98Hny6dWOGSZHoOnHI_-1" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;typedef: void&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;t_cbCL42T_Diagnostic(t_eCL42T_MotorId, t_eCL32T_DefaultInfo)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
+        <mxCell id="_98Hny6dWOGSZHoOnHI_-1" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;typedef: void&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;t_cbCL42T_Diagnostic(t_eCL42T_MotorId, t_eCL32T_DefaultInfo) .h&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
           <mxGeometry x="-1600" y="-1240" width="810" height="41.43" as="geometry" />
         </mxCell>
         <mxCell id="_98Hny6dWOGSZHoOnHI_-2" value="Enum : t_eCL42T_DiagError in .h" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
@@ -192,7 +192,7 @@
         <mxCell id="4dmD2tTbzXhdYYISqZpw-1" value="&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;#define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000) in Config Private&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
           <mxGeometry y="-2320" width="810" height="41.43" as="geometry" />
         </mxCell>
-        <mxCell id="4dmD2tTbzXhdYYISqZpw-2" value="Enum : t_eCL42T_PulseFlag" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+        <mxCell id="4dmD2tTbzXhdYYISqZpw-2" value="Enum : t_eCL42T_PulseFlag .c" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry x="-1240" y="-2040" width="270" height="190" as="geometry">
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
