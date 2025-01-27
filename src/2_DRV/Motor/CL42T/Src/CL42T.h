@@ -17,7 +17,6 @@
     #include "TypeCommon.h"
     #include "APP_CFG/ConfigFiles/CL42T_ConfigPublic.h"
     #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
-    #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPublic.h"
     #include "1_FMK/FMK_HAL/FMK_IO/Src/FMK_IO.h"
     // ********************************************************************
     // *                      Defines
@@ -58,6 +57,7 @@
         CL42T_DIAGNOSTIC_PCB_BOARD,
         CL42T_DIAGNOSTIC_SIGNAL_PULSE,
         CL42T_DIAGNOSTIC_SIGNAL_DIG,
+        CL42T_DIAGNOSTIC_PULSE_INFINITE,
 
         CL42T_DIAGNOSTIC_NB
     }t_eCL42T_DiagError;

@@ -2214,7 +2214,7 @@
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKIO_SIGTYPE_INPUT_EVNT"><param name="Local" value="_f_m_k___i_o_8h.html#a24a9d02fe3d0c0d06b7573c3ab9553b5aabb2d104d512539d26380e691ab5840a"><param name="ImageNumber" value="11"></OBJECT>
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKIO_SIGTYPE_OUTPUT_DIG"><param name="Local" value="_f_m_k___i_o_8h.html#a24a9d02fe3d0c0d06b7573c3ab9553b5a19ae3e7327b9036b4743dd15024b64d3"><param name="ImageNumber" value="11"></OBJECT>
                   <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKIO_SIGTYPE_OUTPUT_PWM"><param name="Local" value="_f_m_k___i_o_8h.html#a24a9d02fe3d0c0d06b7573c3ab9553b5a155b2aa0ad169cb556930552911a2373"><param name="ImageNumber" value="11"></OBJECT>
-                  <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKIO_SIGTYPE_OUTPUT_NB"><param name="Local" value="_f_m_k___i_o_8h.html#a24a9d02fe3d0c0d06b7573c3ab9553b5ab3804f45001741e75943ddef499bb2c3"><param name="ImageNumber" value="11"></OBJECT>
+                  <LI><OBJECT type="text/sitemap"><param name="Name" value="FMKIO_SIGTYPE_NB"><param name="Local" value="_f_m_k___i_o_8h.html#a24a9d02fe3d0c0d06b7573c3ab9553b5ab3804f45001741e75943ddef499bb2c3"><param name="ImageNumber" value="11"></OBJECT>
                   </UL>
                 <LI><OBJECT type="text/sitemap"><param name="Name" value="t_eFMKIO_SpdMode"><param name="Local" value="_f_m_k___i_o_8h.html#a950c0b1b828b4b0f79f24eed0d4728e4"><param name="ImageNumber" value="1"></OBJECT>
                   <UL>

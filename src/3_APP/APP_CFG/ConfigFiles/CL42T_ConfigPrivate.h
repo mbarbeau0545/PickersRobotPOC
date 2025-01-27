@@ -18,9 +18,24 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000);
+    #define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000)
+    #define CL42T_PULSE_RUN_TIME_MAX ((t_uint16)3000)
 
-    #define CL42T_PULSE_RUN_TIME_MAX ((t_uint16)3000);
+    /**
+     * @brief Define for CL42T Diagnotic Pulse
+     */
+    #define CL42T_ONE_PULSE     ((t_uint16)1)
+    #define CL42T_TWO_PULSE     ((t_uint16)2)
+    #define CL42T_THREE_PULSE   ((t_uint16)3)
+    #define CL42T_FOUR_PULSE    ((t_uint16)4)
+    #define CL42T_FIVE_PULSE    ((t_uint16)5)
+    #define CL42T_SIX_PULSE     ((t_uint16)6)
+    #define CL42T_SEVEN_PULSE   ((t_uint16)7)
+
+    /**
+     * @brief Normal duty cycle
+     */
+    #define CL42T_NOMINATIVE_DUTYCYCLE ((t_uint16)500)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
