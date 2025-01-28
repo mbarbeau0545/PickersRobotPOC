@@ -1,6 +1,6 @@
 Ce driver est utilisé pour communiquer avec des variateurs CL42T
-les variateurs CL42T sont des variiateurs pour motor pas à pas muni d'encoder 
-les connexions avec le µC sont dux entrées digitals l'une pour la direction 
+les variateurs CL42T sont des variateurs pour motor pas à pas muni d'encoder 
+les connexions avec le µC sont deux entrées digitals l'une pour la direction 
 et l'autre pour le status ON/OFF. Ils possède également 1 entrée PWM Pulse, c'est-à-dire qu'on 
 set va set la PWM à une fréquence donnée et un dutyCycle de 50% (config voir datasheet) et 
 c'est le nombre de pulse qui va déterminer le nombre de pas effectué par le motor. 

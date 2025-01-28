@@ -93,7 +93,7 @@
         FMKIO_SIGTYPE_OUTPUT_DIG,           /**< Signal are digital output */
         FMKIO_SIGTYPE_OUTPUT_PWM,           /**< Signal are pwm ouptut */
 
-        FMKIO_SIGTYPE_OUTPUT_NB,            /**< Number of signal type available*/
+        FMKIO_SIGTYPE_NB,            /**< Number of signal type available*/
     } t_eFMKIO_SigType;
 
     /**< Enum for signal digital state */
