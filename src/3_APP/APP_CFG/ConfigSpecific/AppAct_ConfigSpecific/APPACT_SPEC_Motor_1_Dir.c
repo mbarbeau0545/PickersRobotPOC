@@ -19,6 +19,8 @@
 /* CAUTION : Automatic generated code section for Include: Start */
 #include "./APPACT_SPEC_Motor_1_Dir.h"
 /* CAUTION : Automatic generated code section for Include: End */
+#include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
+#include "Motor/CL42T/Src/CL42T.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -49,7 +51,8 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-
+static const t_eFMKIO_InDigSig c_InputDir_e = FMKIO_INPUT_SIGDIG_1;
+static const t_eCL42T_MotorId c_motorId_e = CL42T_MOTOR_AXE_X_1;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -66,7 +69,9 @@ t_eReturnCode APPACT_SPEC_Motor_1_Dir_SetCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Motor_1_Dir_SetActCfg here
-
+    Ret_e = CL42T_AddDirSignal( c_motorId_e,
+                                c_InputDir_e,
+                                FMKIO_PULL_MODE_DISABLE);
 
 
     return Ret_e;
@@ -80,9 +85,28 @@ t_eReturnCode APPACT_SPEC_Motor_1_Dir_SetCfg(void)
 t_eReturnCode APPACT_SPEC_Motor_1_Dir_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_eCL42T_MotorDirection motorDir_e;
     //    Your code for Motor_1_Dir_GetActValue here
+    if(f_value_ps == (t_sAPPACT_ValueInfo *)NULL)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = CL42T_GetDirSignal( c_motorId_e,
+                                    &motorDir_e);
 
-
+        if(Ret_e == RC_OK)
+        {
+            f_value_ps->IsValueOK_b = (t_bool)true;
+            f_value_ps->rawValue_f32 = (t_float32)motorDir_e;
+        }
+        else 
+        {
+            f_value_ps->IsValueOK_b = (t_bool)false;
+            f_value_ps->rawValue_f32 = (t_float32)0;
+        }
+    }
 
     return Ret_e;
 }

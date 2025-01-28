@@ -83,12 +83,10 @@ class FMKTIM_CodeGen():
 
         enum_channel = ""
         enum_timer = ""
-
         enum_evnt = ""
-
         var_evntcfg   = ""
-
         var_timinfo = ""
+        const_mapp_chnl_itline = ""
         const_mapp_evnt_tim = ""
         const_mapp_gp_tim = ""
         const_mapp_dac_tim = ""
@@ -117,6 +115,8 @@ class FMKTIM_CodeGen():
         description_dac_tim  = []
         description_evnt_tim = []
         suffix_pg_tim = []
+        const_mapp_chnl_itline +=  "    /**< Interrupt Line /  Channel Mapping */\n" \
+                                + "    const t_sFMKTIM_ChnlITLineMapping c_çFmkTim_ChnlItLineMapp[FMKTIM_TIMER_NB] = {\n"
         var_timinfo += "/**< timer information variable */\n" \
                     + "t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {\n"
         var_tim_max_chnl += "    /**< timer max channel variable */\n" \

@@ -113,7 +113,7 @@
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< Variable for System Actuators drivers functions*/
     const t_sAPPACT_SysDrvFunc c_AppAct_SysDrv_apf[APPACT_DRIVER_NB] = {
-        {(t_cbAppAct_DrvInit *)CL42T_Init,                        (t_cbAppAct_DrvInit *)CL42T_Cyclic},  // APPACT_DRIVER_CL42T
+        {CL42T_Init,                                           CL42T_Cyclic},  // APPACT_DRIVER_CL42T
     };
 
     /**< Variable for System Actuators functions*/

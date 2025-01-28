@@ -616,6 +616,24 @@
     t_eReturnCode FMKIO_Get_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint32 * f_frequency_pu32);
     /**
     *
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
+    *
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_frequency_u16   : the frequency, value between 0 (0%) - 1000 (100%)
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_OutPwmSigPulsesLeft(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 * f_pulsesLeft_pu16);
+    /**
+    *
     *	@brief      Get the digital output.\n
     *	@note       Once the configuration is done, this function ask HAL_library 
     *               the value of the dedicate signal and store it in f_value_pu16

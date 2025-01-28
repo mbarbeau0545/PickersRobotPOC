@@ -136,204 +136,204 @@
     t_eReturnCode CL42T_SetState(   t_eCyclicModState f_State_e);
 
     /**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_AddPulseSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_eFMKIO_OutPwmSig f_pulseSignal_e,
                                         t_eFMKIO_PullMode f_pullMode_e,
                                         t_uint32 f_frequency_u32);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_AddDirSignal(   t_eCL42T_MotorId f_motorId_e,
                                         t_eFMKIO_OutDigSig f_dirSignal_e,
                                         t_eFMKIO_PullMode f_pullMode_e);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_AddStateSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_eFMKIO_OutDigSig f_stateSignal_e,
                                         t_eFMKIO_PullMode f_pullMode_e);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_AddDiagSignal(   t_eCL42T_MotorId f_motorId_e,
                                         t_eFMKIO_InFreqSig f_diagSignal_e,
                                         t_eFMKIO_PullMode f_pullMode_e,
                                         t_cdCL42T_Diagnostic *f_diagnostic_pcb);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_SetPulseSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_uint32 f_frequency_u32,
                                         t_uint16 f_nbPulses_u16);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_SetDirSignal(   t_eCL42T_MotorId f_motorId_e,
                                         t_eCL42T_MotorDirection f_direction_e);    
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_SetStateSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_eCL42T_MotorState f_state_e);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_SetSpeedSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_uint32 f_speed_u32);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_GetPulseSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_uint16 *f_nbPulse_pu16);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_GetDirSignal(   t_eCL42T_MotorId f_motorId_e,
                                         t_eCL42T_MotorDirection *f_direction_pe);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_GetStateSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_eCL42T_MotorState *f_state_pe);   
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_GetDefaultSignal(   t_eCL42T_MotorId f_motorId_e,
-                                            t_eCL42T_DiagError f_infoErr_pe);
+                                            t_eCL42T_DiagError * f_infoErr_pe);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
     t_eReturnCode CL42T_GetSpeedSignal( t_eCL42T_MotorId f_motorId_e,
                                         t_uint32 *f_speed_pu32);
                                                                                                                                            
