@@ -13,9 +13,10 @@
 import sys,os
 
 from FMK_CodeGen.FMKCPU_CodeGen import FMKCPU_CodeGen as FMKCPU
+from FMK_CodeGen.FMKTIM_CodeGen import FMKTIM_CodeGen as FMKTIM
 from FMK_CodeGen.FMKIO_CodeGen  import FMKIO_CodeGen as FMKIO
 from FMK_CodeGen.FMKCDA_CodeGen  import FMKCDA_CodeGen as FMKCDA
-from FMK_CodeGen.FMKMAC_CodeGen  import FMKMAC_CodeGen as FMKMAC
+from FMK_CodeGen.FMKCPU_CodeGen  import FMKCPU_CodeGen as FMKCPU
 from FMK_CodeGen.FMKSRL_CodeGen  import FMKSRL_CodeGen as FMKSRL
 from App_CodeGen.AppSns_CodeGen import AppSns_CodeGen as APPSNS
 from App_CodeGen.AppAct_CodeGen import AppAct_CodeGen as APPACT
@@ -52,7 +53,7 @@ def main()-> None:
     print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     FMKCPU.code_generation(hardware_cfg_path)
-    FMKMAC.code_genration(hardware_cfg_path)
+    FMKTIM.code_generation(hardware_cfg_path)
     FMKCDA.code_genration(hardware_cfg_path)
     FMKSRL.code_genration(hardware_cfg_path)
     FMKIO.code_generation(hardware_cfg_path)

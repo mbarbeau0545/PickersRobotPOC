@@ -17,7 +17,7 @@ from PyCodeGene import LoadConfig_FromExcel as LCFE, TARGET_T_END_LINE,TARGET_T_
 
 from typing import List, Dict
 from .FMK_PATH import * 
-from .FMKCPU_CodeGen import TimerCfg_alreadyUsed, FMKCPU_CodeGen
+from .FMKTIM_CodeGen import TimerCfg_alreadyUsed, FMKTIM_CodeGen
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ class FMKIO_CodeGen():
         element_description_a:  List[str] = []
         # this pin are usually used by hardware
         stm_pin = ["PC14", "PC15"]
-        stm_tim_chnl:List = FMKCPU_CodeGen.get_tim_chnl_used()
+        stm_tim_chnl:List = FMKTIM_CodeGen.get_tim_chnl_used()
         max_pin_per_gpio: int = 0
         #---------------------------------------------------
         #-----------------make GPIO enum--------------------
@@ -250,7 +250,7 @@ class FMKIO_CodeGen():
             stm_tim_chnl.append(str(pin_freq_cfg[3]+pin_freq_cfg[4]))
             stm_pin.append(sig_name)
             # get IT Line                                     FMKCPU_TIMER_X                                         FMKCPU_CHANNEL_X
-            itline = FMKCPU_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKCPU_TIMER_ROOT}_{pin_freq_cfg[3][6:]}', f'{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_freq_cfg[4][8:]}')
+            itline = FMKTIM_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKTIM_TIMER_ROOT}_{pin_freq_cfg[3][6:]}', f'{ENUM_FMKTIM_CHANNEL_ROOT}_{pin_freq_cfg[4][8:]}')
             var_InFreq += "        {" + "{" \
                     + f"{ENUM_GPIO_PORT_ROOT}_{pin_freq_cfg[0][5:]}," \
                     + " " * (SPACE_VARIABLE - len(f"{ENUM_GPIO_PORT_ROOT}_{pin_freq_cfg[0][5:]}")) \
@@ -308,7 +308,7 @@ class FMKIO_CodeGen():
             if str(pin_pwm_cfg[3]+pin_pwm_cfg[4]) in stm_tim_chnl:
                 raise TimerCfg_alreadyUsed(f" the timer {pin_pwm_cfg[3]} and his channel {pin_pwm_cfg[4]} has already been configured")
 
-            itline = FMKCPU_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKCPU_TIMER_ROOT}_{pin_pwm_cfg[3][6:]}', f'{ENUM_FMKCPU_CHANNEL_ROOT}_{pin_pwm_cfg[4][8:]}')
+            itline = FMKTIM_CodeGen.get_itline_from_timcnl(f'{ENUM_FMKTIM_TIMER_ROOT}_{pin_pwm_cfg[3][6:]}', f'{ENUM_FMKTIM_CHANNEL_ROOT}_{pin_pwm_cfg[4][8:]}')
 
             sig_out_pwm.append(sig_name)
             stm_tim_chnl.append(str(pin_pwm_cfg[3]+pin_pwm_cfg[4]))

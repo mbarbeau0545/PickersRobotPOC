@@ -168,9 +168,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_1,
+    Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
                                     FMKIO_PULL_MODE_DISABLE,
-                                    (t_uint32)26000,
+                                    (t_uint32)2,
                                     NULL_FONCTION);
     return Ret_e;
 }
@@ -181,6 +181,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
+                                        (t_uint16)500,
+                                        12);
     return Ret_e;
 }
 /*********************************
@@ -189,13 +192,8 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_uint32 counter_u32 = 0;
 
-    if(counter_u32 == (t_uint32)0)
-    {
-        Ret_e = FMKIO_Set_OutPwmSigFrequency(FMKIO_OUTPUT_SIGPWM_1,
-                                            6000);
-    }  
+    
 
     return Ret_e;
 }

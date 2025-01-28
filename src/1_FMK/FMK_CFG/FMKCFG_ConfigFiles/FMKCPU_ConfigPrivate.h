@@ -23,71 +23,19 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    /* CAUTION : Automatic generated code section for Timer channels number: Start */
-    #define FMKCPU_MAX_CHNL_TIMER_1 ((t_uint8)4)
-    #define FMKCPU_MAX_CHNL_TIMER_2 ((t_uint8)4)
-    #define FMKCPU_MAX_CHNL_TIMER_3 ((t_uint8)4)
-    #define FMKCPU_MAX_CHNL_TIMER_4 ((t_uint8)4)
-    #define FMKCPU_MAX_CHNL_TIMER_5 ((t_uint8)4)
-    #define FMKCPU_MAX_CHNL_TIMER_6 ((t_uint8)1)
-    #define FMKCPU_MAX_CHNL_TIMER_7 ((t_uint8)1)
-    #define FMKCPU_MAX_CHNL_TIMER_8 ((t_uint8)6)
-    #define FMKCPU_MAX_CHNL_TIMER_15 ((t_uint8)2)
-    #define FMKCPU_MAX_CHNL_TIMER_16 ((t_uint8)1)
-    #define FMKCPU_MAX_CHNL_TIMER_17 ((t_uint8)1)
-    #define FMKCPU_MAX_CHNL_TIMER_20 ((t_uint8)4)
-    /* CAUTION : Automatic generated code section for Timer channels number: End */
 
-
-    #define FMKCPU_TIMER_IC_PSC          ((t_uint8)20)        /**<  for every InputCOmpare the Prescaler is a constant */
-    #define FMKCPU_TIMER_IC_ARR          ((t_uint16)0xFFFF)       /**<  for every InputCOmpare the Prescaler is a constant */
-
-    #define FMKCPU_TIMER_EVNT_MAX_LOW_PERIOD_MS ((t_uint16)60000)
-    #define FMKCPU_TIMER_EVNT_PSC_HIGH          ((t_uint16)(20 * 1000) - (t_uint16)1) /**<  The prescaler use for evnt timer, having 1000Hz (1ms) */
-    #define FMKCPU_TIMER_EVNT_PSC_LOW           ((t_uint16)65534)
-    #define FMKCPU_TIME_BTWN_DIAG_MS            ((t_uint16)2000)   /**< Time between diagnostic for timer and channel in cyclic ope mode*/
-
-    
     // ********************************************************************
     // *                      Types
     // ********************************************************************
-    /* CAUTION : Automatic generated code section for Enum: Start */
-    /**
-    * @brief Number of timer enable in smt32xxx board.
-    */
-    typedef enum
+    /**< Structure for Hardware Dma Configuration for a request type */
+    typedef struct 
     {
-        FMKCPU_TIMER_1 = 0x0,                  /**< Reference for HAL timer_1, this timer has 4 channel(s) */
-        FMKCPU_TIMER_2,                        /**< Reference for HAL timer_2, this timer has 4 channel(s) */
-        FMKCPU_TIMER_3,                        /**< Reference for HAL timer_3, this timer has 4 channel(s) */
-        FMKCPU_TIMER_4,                        /**< Reference for HAL timer_4, this timer has 4 channel(s) */
-        FMKCPU_TIMER_5,                        /**< Reference for HAL timer_5, this timer has 4 channel(s) */
-        FMKCPU_TIMER_6,                        /**< Reference for HAL timer_6, this timer has 1 channel(s) */
-        FMKCPU_TIMER_7,                        /**< Reference for HAL timer_7, this timer has 1 channel(s) */
-        FMKCPU_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 6 channel(s) */
-        FMKCPU_TIMER_15,                       /**< Reference for HAL timer_15, this timer has 2 channel(s) */
-        FMKCPU_TIMER_16,                       /**< Reference for HAL timer_16, this timer has 1 channel(s) */
-        FMKCPU_TIMER_17,                       /**< Reference for HAL timer_17, this timer has 1 channel(s) */
-        FMKCPU_TIMER_20,                       /**< Reference for HAL timer_20, this timer has 4 channel(s) */
-    
-        FMKCPU_TIMER_NB,
-    } t_eFMKCPU_Timer;
+        t_eFMKCPU_DmaController         Ctrl_e;
+        t_eFMKCPU_DmaChnl               Chnl_e;
+        t_eFMKCPU_DmaTransferPriority   transfPrio_e;
+    } t_sFMKCPU_DmaRqstCfg;
 
-    /**
-    * @brief Number max of channel enable by timer.
-    */
-    typedef enum
-    {
-        FMKCPU_CHANNEL_1 = 0x0,                  /**< Reference to HAL channel 0 */
-        FMKCPU_CHANNEL_2,                        /**< Reference to HAL channel 1 */
-        FMKCPU_CHANNEL_3,                        /**< Reference to HAL channel 2 */
-        FMKCPU_CHANNEL_4,                        /**< Reference to HAL channel 3 */
-        FMKCPU_CHANNEL_5,                        /**< Reference to HAL channel 4 */
-        FMKCPU_CHANNEL_6,                        /**< Reference to HAL channel 5 */
-    
-        FMKCPU_CHANNEL_NB,
-        FMKCPU_CHANNEL_ALL,
-    } t_eFMKCPU_InterruptChnl;
+    /* CAUTION : Automatic generated code section for Enum: Start */
 
     /* CAUTION : Automatic generated code section for Enum: End */
 
@@ -118,158 +66,14 @@
     *
     *
     */
-   /**
-    *
-    *	@brief    Get the Prescaler and ARR value For Timer Configured in PWM.\n
-    *
-    *	@param[in]  f_idxTimRccClock_u8     : enum value for Idx Rcc Clock Timer, value from @ref t_eFMKCPU_ClockPort
-    *	@param[in]  f_timOscSrc_e           : enum value to know which bsp clock support the frequence based to the timer
-    *	@param[in]  f_SysClockValues_ua8    : pointor to all sys clock value of the system
-    *	@param[in]  f_RqstTimerFreq_u32     : the timer frequency requested
-    *	@param[in]  f_RqstTimerFreq_u32     : Container for ARR register value 
-    *	@param[in]  f_RqstTimerFreq_u32     : Container for Prescaler Value
-    *	@param[in]  f_ITChannel_cb         : call back function to call
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
-    */
-    typedef t_eReturnCode (t_cbFMKCPU_GetTimerInfoInit)(t_eFMKCPU_ClockPort f_timClock_e,
-                                                        t_uint32    f_timerFreq_u32,
-                                                        t_float32   f_RqstTimerFreq_f32,
-                                                        t_uint32 * f_bspTimARR_pu32,
-                                                        t_uint32 * f_bspTimPrescaler_pu32);
     typedef void (t_cbFMKCPU_ClockDisable)(void);
-    /**
-    *
-    *	@brief      HAL Timer function for get the hardware timer state
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    * 
-    *   @param[in] f_handleTimer_s : the bsp init structure
-    *  
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_TIM_StateTypeDef (t_cbFMKCPU_GetTimerState)(TIM_HandleTypeDef *f_handleTimer_s);
-    /**
-    *
-    *	@brief      HAL Timer function for Init
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    * 
-    *   @param[in] f_handleTimer_s : the bsp init structure
-    *  
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimerInitFunc)(TIM_HandleTypeDef *f_handleTimer_s, void * f_TimerCfg_pv);
-    /**
-    *
-    *	@brief      HAL Timer function for Init
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    * 
-    *   @param[in] f_handleTimer_s : the bsp init structure
-    * 
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimerDeInitFunc)(TIM_HandleTypeDef *f_handleTimer_s);
-    /**
-    *
-    *	@brief      HAL Timer function in Polling xay
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    * 
-    *	@param[in]      f_handleTimer_s : the bsp config structure 
-    *	@param[out]     f_channel_u32   : the channel
-    *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR 
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStartFuncModePolling)(TIM_HandleTypeDef *f_handleTimer_s, uint32_t f_channel_u32);
-    /**
-    *
-    *	@brief      HAL Timer function in Interruption way  
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    *
-    *	@param[in]      f_handleTimer_s : the bsp config structure 
-    *	@param[out]     f_channel_u32   : the channel 
-    *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStartFuncModeInterrupt)(TIM_HandleTypeDef *f_handleTimer_s, uint32_t f_channel_u32);
-    /**
-    *
-    *	@brief      HAL Timer function in Polling xay
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    *
-    *	@param[in]      f_handleTimer_s : the bsp config structure 
-    *	@param[out]     f_channel_u32   : the channel
-    *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStopFuncModePolling)(TIM_HandleTypeDef *f_handleTimer_s, uint32_t f_channel_u32);
-    /**
-    *
-    *	@brief      HAL Timer function in Interruption way  
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in blocking mode 
-    *
-    *	@param[in]      f_handleTimer_s : the bsp config structure 
-    *	@param[out]     f_channel_u32   : the channel 
-    *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStopFuncModeInterrupt)(TIM_HandleTypeDef *f_handleTimer_s, uint32_t f_channel_u32);
 
-    /**
-    *
-    *	@brief      HAL Timer function in DMA Mode  
-    *	@note       This function repertory in stm32f00xx_hal_tim,
-    *               is used in Dma mode 
-    *
-    *	@param[in]      f_handleTimer_s : the bsp config structure 
-    *	@param[out]     f_channel_u32   : the channel 
-    *	@param[out]     f_data_pu32     : Pointor to data
-    *	@param[out]     f_channel_u32   : Lenght data  
-    *
-    *   @retval HAL_OK                     @ref HAL_OK
-    *   @retval HAL_ERROR                  @ref HAL_ERROR
-    */
-    typedef HAL_StatusTypeDef (t_cbFMKCPU_TimStartFuncModeDMA)( TIM_HandleTypeDef *f_handleTimer_s,
-                                                                uint32_t f_channel_u32, 
-                                                                t_uint32 * f_data1_pu32, 
-                                                                t_uint32 * f_data2_pu32, 
-                                                                t_uint16 f_lenght_u16);
-
-    typedef t_cbFMKCPU_TimStartFuncModeInterrupt t_cbFMKCPU_TimStopFuncModeDMA;
+    
 
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
-
-    /**< Structure for repertory all HAL_TIM function */
-    typedef struct
-    {
-        t_cbFMKCPU_GetTimerState             * GetTimerState_pcb;        /**< HAL_TIM function to get the timer state */
-        t_cbFMKCPU_TimerInitFunc             * TimerInit_pcb;           /**< HAL_TIM function to set a timer init */
-        t_cbFMKCPU_TimerDeInitFunc           * TimerDeInit_pcb;         /**< HAL_TIM function to set a timer deinit */
-        t_cbFMKCPU_TimStartFuncModePolling   * StartFuncPoll_pcb;       /**< HAL_TIM function to start a timer_channel in polling mode */
-        t_cbFMKCPU_TimStopFuncModePolling    * StopFuncPoll_pcb;        /**< HAL_TIM function to start a timer_channel in interruption mode */
-        t_cbFMKCPU_TimStartFuncModeInterrupt * StartFuncInterrupt_pcb;  /**< HAL_TIM function to stop a timer_channel in polling mode */
-        t_cbFMKCPU_TimStopFuncModeInterrupt  * StopFuncInterrupt_pcb;   /**< HAL_TIM function to stop a timer_channel in interruption mode */
-        t_cbFMKCPU_TimStartFuncModeDMA       * StartFuncDma_pcb;        /**< HAL_TIM function to start a timer un DMA Mode */
-        t_cbFMKCPU_TimStopFuncModeDMA        * StopFuncDma_pcb;         /**< HAL_TIM function to stop a timer un DMA Mode*/
-        t_cbFMKCPU_GetTimerInfoInit          * GetTimerInfoInit_pcb;    /**< Specific Function to found the best PSC & ARR value for Freq and OscFreq */
-    } t_sFMKCPU_TimChannelFunc;
 
     /**< Structure for repertory all clock enable/disable function */
     typedef struct
@@ -284,13 +88,6 @@
         t_uint16 psc_u16;           /**< variable for wacthdog timer prescaler value */
         t_uint16 reload_u16;        /**< variable for wacthdog timer ARR value */
     } t_sFMKCPU_BspWwdgCfg;
-
-    /**< Structure for timer channel configuration */
-    typedef struct
-    {
-        t_eFMKCPU_Timer               timer_e;      /**< timer configuration */
-        t_eFMKCPU_InterruptChnl       channel_e;    /**< channel configuration */
-    } t_sFMKCPU_BspTimerCfg;
 
     typedef struct 
     {
@@ -356,18 +153,6 @@
     };
 #endif
 
-    /**< Referencing all HAL_TIM function*/
-    const t_sFMKCPU_TimChannelFunc c_FMKCPU_TimerFunc_apf[FMKCPU_HWTIM_CFG_NB] = 
-    {//    Get Timer State                 Init Timer                       ²      DeInitTimer                   StartPolling Func                StopPolling Funnc            Start Interrupt Func             Stop Interrupt Func                Start Dma Func                         Stop Dma Func                     Get Init Timer Param
-        {HAL_TIM_PWM_GetState,             FMKCPU_HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,               FMKCPU_HAL_TIM_PWM_Start_DMA,          HAL_TIM_PWM_Stop_DMA,            FMKCPU_GetPwmTimerInitParam},         // FMKCPU_CHANNEL_CFG_PWM 
-        {HAL_TIM_IC_GetState,              FMKCPU_HAL_TIM_IC_Init,                 HAL_TIM_IC_DeInit,            HAL_TIM_IC_Start,                HAL_TIM_IC_Stop,              HAL_TIM_IC_Start_IT,            HAL_TIM_IC_Stop_IT,                FMKCPU_HAL_TIM_IC_Start_DMA,           HAL_TIM_IC_Stop_DMA,             FMKCPU_GetICTimerInitParam},          // FMKCPU_CHANNEL_CFG_IC
-        {HAL_TIM_OC_GetState,              FMKCPU_HAL_TIM_OC_Init,                 HAL_TIM_OC_DeInit,            HAL_TIM_OC_Start,                HAL_TIM_OC_Stop,              HAL_TIM_OC_Start_IT,            HAL_TIM_OC_Stop_IT,                FMKCPU_HAL_TIM_OC_Start_DMA,           HAL_TIM_OC_Stop_DMA,             FMKCPU_GetOCTimerInitParam},          // FMKCPU_CHANNEL_CFG_OC
-        {HAL_TIM_OnePulse_GetState,        FMKCPU_HAL_TIM_OnePulse_Init,           HAL_TIM_OnePulse_DeInit,      HAL_TIM_OnePulse_Start,          HAL_TIM_OnePulse_Stop,        HAL_TIM_OnePulse_Start_IT,      HAL_TIM_OnePulse_Stop_IT,          NULL_FONCTION,                         NULL_FONCTION,                   FMKCPU_GetOPTimerInitParam},          // FMKCPU_CHANNEL_CFG_OP
-        {HAL_TIM_Base_GetState,            FMKCPU_HAL_TIM_Base_Init,               HAL_TIM_Base_DeInit,          FMKCPU_HAL_TIM_Base_Start,       FMKCPU_HAL_TIM_Base_Stop,     FMKCPU_HAL_TIM_Base_Start_IT,   FMKCPU_HAL_TIM_Base_Stop_IT,       FMKCPU_HAL_TIM_Base_Start_DMA,         FMKCPU_HAL_TIM_Base_Stop_DMA,    FMKCPU_GetEvntTimerInitParam},        // FMKCPU_CHANNEL_CFG_EVNT
-        {HAL_TIM_Encoder_GetState,         FMKCPU_HAL_TIM_Encoder_Init,            HAL_TIM_Encoder_DeInit,       HAL_TIM_Encoder_Start,           HAL_TIM_Encoder_Stop,         HAL_TIM_Encoder_Start_IT,       HAL_TIM_Encoder_Stop_IT,           FMKCPU_HAL_TIM_Encoder_Start_DMA,      HAL_TIM_Encoder_Stop_DMA,        FMKCPU_GetECDRTimerInitParam},        // FMKCPU_CHANNEL_CFG_ECDR
-        {HAL_TIM_PWM_GetState,             FMKCPU_HAL_TIM_PWM_Init,                HAL_TIM_PWM_DeInit,           HAL_TIM_PWM_Start,               HAL_TIM_PWM_Stop,             HAL_TIM_PWM_Start_IT,           HAL_TIM_PWM_Stop_IT,               FMKCPU_HAL_TIM_PWM_Start_DMA,          HAL_TIM_PWM_Stop_DMA,            FMKCPU_GetDacTimerInitParam},         // FMKCPU_CHANNEL_CFG_DAC 
-    };
-
     /**< Hardware configuration watchdog Period Timer */
     const t_sFMKCPU_BspWwdgCfg c_FMKCPU_WwdgPeriodcfg_ua16[FMKCPU_WWDG_RESET_NB] = {
         // prescaler value         reload value
@@ -378,57 +163,8 @@
     };
 
     /* CAUTION : Automatic generated code section for Variable: Start */
-    /**< General Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineIOMapp_as[FMKCPU_INTERRUPT_LINE_IO_NB] = {
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_11
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_12
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_13
-        {FMKCPU_TIMER_1,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_14
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_21
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_22
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_23
-        {FMKCPU_TIMER_2,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_24
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_31
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_32
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_33
-        {FMKCPU_TIMER_3,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_34
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_41
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_42
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_43
-        {FMKCPU_TIMER_4,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_44
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_51
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_52
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_53
-        {FMKCPU_TIMER_5,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_54
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_61
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_62
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_63
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_64
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_5},    // FMKCPU_INTERRUPT_LINE_IO_65
-        {FMKCPU_TIMER_8,                        FMKCPU_CHANNEL_6},    // FMKCPU_INTERRUPT_LINE_IO_66
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_IO_71
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_IO_72
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_3},    // FMKCPU_INTERRUPT_LINE_IO_73
-        {FMKCPU_TIMER_20,                       FMKCPU_CHANNEL_4},    // FMKCPU_INTERRUPT_LINE_IO_74
-    };
-
-    /**< Event Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineEvntMapp_as[FMKCPU_INTERRUPT_LINE_EVNT_NB] = {
-        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_1
-        {FMKCPU_TIMER_15,                       FMKCPU_CHANNEL_2},    // FMKCPU_INTERRUPT_LINE_EVNT_1
-        {FMKCPU_TIMER_16,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_3
-        {FMKCPU_TIMER_17,                       FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_EVNT_4
-    };
-
-    /**< Dac Purpose Timer Channel Mapping */
-    t_sFMKCPU_BspTimerCfg c_FmkCpu_ITLineDacMapp_as[FMKCPU_INTERRUPT_LINE_DAC_NB] = {
-        {FMKCPU_TIMER_6,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_DAC_1
-        {FMKCPU_TIMER_7,                        FMKCPU_CHANNEL_1},    // FMKCPU_INTERRUPT_LINE_DAC_2
-    };
-
     /**< Set the NVIC Priority for all NVIC_IRqn Priority */
     const t_eFMKCPU_NVICPriority c_FMKCPU_IRQNPriority_ae[FMKCPU_NVIC_NB] = {
-      //Colonne1                      Colonne2                      
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  WWDG_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  PVD_PVM_IRQn
         FMKCPU_NVIC_PRIORITY_MEDIUM,                      //  RTC_TAMP_LSECSS_IRQn
@@ -534,7 +270,6 @@
 
     /**< Referencing all Enable/Disable Rcc clock function */
     const t_sFMKCPU_ClkFunc c_FMKCPU_ClkFunctions_apcb[FMKCPU_NVIC_NB] = {
-      //Colonne1                      Colonne2                      
         {FMKCPU_Enable_DMA1_Clock,      FMKCPU_Disable_DMA1_Clock},     // FMKCPU_RCC_CLK_DMA1
         {FMKCPU_Enable_DMA2_Clock,      FMKCPU_Disable_DMA2_Clock},     // FMKCPU_RCC_CLK_DMA2
         {FMKCPU_Enable_DMAMUX1_Clock,   FMKCPU_Disable_DMAMUX1_Clock},  // FMKCPU_RCC_CLK_DMAMUX1
@@ -592,22 +327,6 @@
         {FMKCPU_Enable_TIM20_Clock,     FMKCPU_Disable_TIM20_Clock},    // FMKCPU_RCC_CLK_TIM20
         {FMKCPU_Enable_SAI1_Clock,      FMKCPU_Disable_SAI1_Clock},     // FMKCPU_RCC_CLK_SAI1
         {FMKCPU_Enable_HRTIM1_Clock,    FMKCPU_Disable_HRTIM1_Clock},   // FMKCPU_RCC_CLK_HRTIM1
-    };
-
-    /**< timer max channel variable */
-    const t_uint8 c_FMKCPU_TimMaxChnl_ua8[FMKCPU_TIMER_NB] = {
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_1,      // FMKCPU_TIMER_1
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_2,      // FMKCPU_TIMER_2
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_3,      // FMKCPU_TIMER_3
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_4,      // FMKCPU_TIMER_4
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_5,      // FMKCPU_TIMER_5
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_6,      // FMKCPU_TIMER_6
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_7,      // FMKCPU_TIMER_7
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_8,      // FMKCPU_TIMER_8
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_15,     // FMKCPU_TIMER_15
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_16,     // FMKCPU_TIMER_16
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_17,     // FMKCPU_TIMER_17
-        (t_uint8)FMKCPU_MAX_CHNL_TIMER_20,     // FMKCPU_TIMER_20
     };
 
     const t_eFMKCPU_SysClkOsc c_FmkCpu_RccClockOscSrc_ae[FMKCPU_RCC_CLK_NB] = {
@@ -668,6 +387,25 @@
         FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_TIM20
         FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_SAI1
         FMKCPU_SYS_CLOCK_APB2,            // FMKCPU_RCC_CLK_HRTIM1
+    };
+
+    /**< Variable to mapp every Dma Mux to a Rcc Clock */
+    const t_eFMKCPU_ClockPort c_FMKCPU_DmaMuxRccMapp_ae[FMKCPU_DMA_MUX_NB] ={
+           FMKCPU_RCC_CLK_DMAMUX1
+    };
+
+    /**< Variable to mapp every Dma Request to a Dma Channel */
+    const t_sFMKCPU_DmaRqstCfg c_FMKCPU_DmaRqstCfg_as[FMKCPU_DMA_RQSTYPE_NB] ={
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_5,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_ADC1
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_4,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_ADC2
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_3,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_ADC3
+        {FMKCPU_DMA_CTRL_2,             FMKCPU_DMA_CHANNEL_1,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_UART4_RX
+        {FMKCPU_DMA_CTRL_2,             FMKCPU_DMA_CHANNEL_2,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_UART4_TX
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_6,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_USART1_RX
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_7,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_USART1_TX
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_2,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_USART2_RX
+        {FMKCPU_DMA_CTRL_1,             FMKCPU_DMA_CHANNEL_1,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_USART2_TX
+        {FMKCPU_DMA_CTRL_2,             FMKCPU_DMA_CHANNEL_3,          FMKCPU_DMA_TRANSPRIO_MEDIUM},   // FMKCPU_DMA_RQSTYPE_TIM8_CH1
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

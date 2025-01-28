@@ -74,5 +74,9 @@ For the doxygen documentation search the file "index.html"
     - Mettre la gestion du buffer dans t_sFMKFDCAN_CanInfo pour pouvoir géré pour chaque Node la Rx/Tx Software FiFo Size. en gros un pointeur vers une varaible qui est un tableau généré dynamiquemeent par la config EXcel
     - géré dynamiquement depuis la config Excel la software Fifo Rx/Tx.
 
-- Dans FMKCPU, dans les fonctions de ChannelCfg
-    Ne pas mettre GetInfoInit dans la structure de fonction mais chaque fonction de config appelle sa propre fonction dans et la file à SetBspTimerInit
+- Dans FMKCPU, 
+    - dans les fonctions de ChannelCfg
+        Ne pas mettre GetInfoInit dans la structure de fonction mais chaque fonction de config appelle sa propre fonction dans et la file à SetBspTimerInit
+    - Rajouter les callback d'erreur et les gérer dans la cyclic 
+    - Rajouter un fichier FMKTIM avec la gestion des timers, et mettre FMKCPU dans FMKCPU. 
+    

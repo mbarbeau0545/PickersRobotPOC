@@ -12,7 +12,6 @@
 // *                      Includes
 // ********************************************************************
 #include "./FMK_CDA.h"
-#include "FMK_HAL/FMK_MAC/Src/FMK_MAC.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKCDA_ConfigPrivate.h"
 #include "stm32g4xx_hal.h"
@@ -61,7 +60,7 @@ typedef struct
     t_sFMKCDA_ChnlInfo          Channel_as[FMKCDA_ADC_CHANNEL_NB];      /**< Structure channel information for each channel */
     const t_eFMKCPU_ClockPort   c_clock_e;                              /**< constant to store the clock for each ADC */
     const t_eFMKCPU_IRQNType    c_IRQNType_e;                           /**< constant to store the IRQN for each ADC */
-    const t_eFMKMAC_DmaRqst     c_DmaAdc_e;
+    const t_eFMKCPU_DmaRqst     c_DmaAdc_e;
     t_bool                      IsConfigured_b;                      /**< Flag to know if the ADC is configured */
     t_bool                      IsAdcRunning_b;                         /**< Flag to know if the Adc is running a conversion */
     t_bool                      flagErrDetected_b;                      /**< Flag in DMA/Interrupt mode Error Callback has been call */                 
@@ -799,7 +798,7 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
 #endif
 
         // Gestion du mode DMA
-        if (FMKMAC_ADC_DMA_MODE == DMA_CIRCULAR) {
+        if (FMKCPU_ADC_DMA_MODE == DMA_CIRCULAR) {
             bspAdcInit_s->DMAContinuousRequests = ENABLE;
         } 
         else 
@@ -853,8 +852,8 @@ static t_eReturnCode s_FMKCDA_Set_BspAdcCfg(t_eFMKCDA_Adc f_Adc_e,
         //----- Rqst Dma Init -----//
         if(Ret_e == RC_OK)
         {// set NVIC state and Dma Request if DMA is in hardware config
-            Ret_e = FMKMAC_RqstDmaInit( adcInfo_ps->c_DmaAdc_e,
-                                        FMKMAC_DMA_TYPE_ADC,
+            Ret_e = FMKCPU_RqstDmaInit( adcInfo_ps->c_DmaAdc_e,
+                                        FMKCPU_DMA_TYPE_ADC,
                                         (void *)(&adcInfo_ps->BspInit_s));
         }
         //----- Init hardware ADC -----//

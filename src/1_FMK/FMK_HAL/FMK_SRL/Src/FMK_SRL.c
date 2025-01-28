@@ -19,7 +19,6 @@
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 #include "./FMK_SRL.h"
-#include "FMK_HAL/FMK_MAC/Src/FMK_MAC.h"
 
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKSRL_ConfigPrivate.h"
 
@@ -154,8 +153,8 @@ typedef struct __t_sFMKSRL_SerialInfo
     const t_eFMKCPU_ClockPort           c_clockPort_e;          /**< Clock Port of the UART/USART */
     const t_eFMKCPU_IRQNType            c_IRQNType_e;           /**< IRQN Type for the UART/USART */
     const t_eFMKSRL_HwProtocolType      c_HwType_e;             /**< know if the HandleTypeDef is an UART or USART */
-    const t_eFMKMAC_DmaRqst             c_DmaRqstRx;            /**< DMA Rx Channel */
-    const t_eFMKMAC_DmaRqst             c_DmaRqstTx;            /**< DMA Tx Channel */
+    const t_eFMKCPU_DmaRqst             c_DmaRqstRx;            /**< DMA Rx Channel */
+    const t_eFMKCPU_DmaRqst             c_DmaRqstTx;            /**< DMA Tx Channel */
     t_eFMKSRL_HwProtocolType            SoftType_e;             /**< Store the software protocol set by user */
     t_eFMKSRL_LineBaudrate              baudrate_e;             /**< Store the baudrate for timeout Operation */
     t_eFMKSRL_LineRunMode               runMode_e;              /**< Store the run mode to use Transmit/Receive Operation */
@@ -211,40 +210,40 @@ static t_sFMKSRL_SerialInfo g_SerialInfo_as[FMKSRL_SERIAL_LINE_NB] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_USART1,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART1_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstRx   = (t_eFMKCPU_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKCPU_DmaRqst)0xFF,
     },
 
     [FMKSRL_SERIAL_LINE_2] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_USART2,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART2_IRQN,
-        .c_DmaRqstRx   = FMKMAC_DMA_RQSTYPE_USART2_RX,
-        .c_DmaRqstTx   = FMKMAC_DMA_RQSTYPE_USART2_TX,
+        .c_DmaRqstRx   = FMKCPU_DMA_RQSTYPE_USART2_RX,
+        .c_DmaRqstTx   = FMKCPU_DMA_RQSTYPE_USART2_TX,
     },
 
     [FMKSRL_SERIAL_LINE_3] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_USART3,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_USART,
         .c_IRQNType_e  = FMKCPU_NVIC_USART3_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstRx   = (t_eFMKCPU_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKCPU_DmaRqst)0xFF,
     },
 
     [FMKSRL_SERIAL_LINE_4] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_UART4,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_UART,
         .c_IRQNType_e  = FMKCPU_NVIC_UART4_IRQN,
-        .c_DmaRqstRx   = FMKMAC_DMA_RQSTYPE_UART4_RX,
-        .c_DmaRqstTx   = FMKMAC_DMA_RQSTYPE_UART4_TX,
+        .c_DmaRqstRx   = FMKCPU_DMA_RQSTYPE_UART4_RX,
+        .c_DmaRqstTx   = FMKCPU_DMA_RQSTYPE_UART4_TX,
     },
 
     [FMKSRL_SERIAL_LINE_5] = {
         .c_clockPort_e = FMKCPU_RCC_CLK_UART5,
         .c_HwType_e    = FMKSRL_HW_PROTOCOL_UART,
         .c_IRQNType_e  = FMKCPU_NVIC_UART5_IRQN,
-        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,
-        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,
+        .c_DmaRqstRx   = (t_eFMKCPU_DmaRqst)0xFF,
+        .c_DmaRqstTx   = (t_eFMKCPU_DmaRqst)0xFF,
     },
 
 };
@@ -2325,15 +2324,15 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                 if(f_DrvSrlCfg_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
                 {
                     //------ Rx Line DMA ------//
-                    Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
-                                                FMKMAC_DMA_TYPE_UART_RX,
+                    Ret_e = FMKCPU_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                FMKCPU_DMA_TYPE_UART_RX,
                                                 (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
 
                     //------ Tx Line DMA ------//
                     if(Ret_e == RC_OK)
                     {
-                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx,
-                                                    FMKMAC_DMA_TYPE_UART_TX, 
+                        Ret_e = FMKCPU_RqstDmaInit( srlInfo_ps->c_DmaRqstTx,
+                                                    FMKCPU_DMA_TYPE_UART_TX, 
                                                     (void *)(&srlInfo_ps->bspHandle_u.uartH_s));
                     }                                                
 
@@ -2369,15 +2368,15 @@ static t_eReturnCode s_FMKSRL_SetBspSerialInit(t_eFMKSRL_SerialLine f_SrlLine_e,
                 if(f_DrvSrlCfg_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
                 {
                     //------ Rx Line DMA ------//
-                    Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
-                                                FMKMAC_DMA_TYPE_USART_RX,
+                    Ret_e = FMKCPU_RqstDmaInit( srlInfo_ps->c_DmaRqstRx, 
+                                                FMKCPU_DMA_TYPE_USART_RX,
                                                 (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
 
                     //------ Tx Line DMA ------//
                     if(Ret_e == RC_OK)
                     {
-                        Ret_e = FMKMAC_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
-                                                    FMKMAC_DMA_TYPE_USART_TX,
+                        Ret_e = FMKCPU_RqstDmaInit( srlInfo_ps->c_DmaRqstTx, 
+                                                    FMKCPU_DMA_TYPE_USART_TX,
                                                     (void *)(&srlInfo_ps->bspHandle_u.usartH_s));
                     }                                                
 
@@ -2506,7 +2505,10 @@ static t_eReturnCode s_FMKSRL_SetUartBspInit(   t_eFMKSRL_SerialLine      f_SrlL
                                                             bspWakeUpMethod_u32);
                 
                         //--------- Update ID Used ---------//
-                        g_MProcessIdUsed[f_SrlLine_e] = MProcessId_u8;
+                        if(bspRet_e == HAL_OK)
+                        {
+                            g_MProcessIdUsed[f_SrlLine_e] = MProcessId_u8;
+                        }
                     }
                     break;
                 }

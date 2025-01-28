@@ -168,7 +168,7 @@
     {
         FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< Reference to PC7 */
         FMKIO_OUTPUT_SIGPWM_2,                        /**< Reference to PC6 */
-        FMKIO_OUTPUT_SIGPWM_3,                        /**< Reference to PF12 */
+        FMKIO_OUTPUT_SIGPWM_3,                        /**< Reference to PA10 */
         FMKIO_OUTPUT_SIGPWM_4,                        /**< Reference to PF13 */
         FMKIO_OUTPUT_SIGPWM_5,                        /**< Reference to PF14 */
         FMKIO_OUTPUT_SIGPWM_6,                        /**< Reference to PF15 */

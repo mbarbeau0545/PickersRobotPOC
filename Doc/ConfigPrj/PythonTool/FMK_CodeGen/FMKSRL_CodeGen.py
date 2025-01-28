@@ -15,7 +15,7 @@ from PyCodeGene import LoadConfig_FromExcel as LCFE, TARGET_T_END_LINE,TARGET_T_
                                                     TARGET_T_VARIABLE_END_LINE,TARGET_T_STRUCT_START_LINE,\
                                                     TARGET_T_STRUCT_END_LINE, TARGET_VARIABLE_END_LINE, TARGET_VARIABLE_START_LINE
 
-from .FMKMAC_CodeGen import ENUM_FMKMAC_DMARQST
+from .FMKCPU_CodeGen import ENUM_FMKCPU_DMARQST
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ FMKSRL_CFILE       = 'src\\1_FMK\FMK_HAL\FMK_SRL\Src\FMK_SRL.c'
 
 class FMKSRL_CodeGen():
     """
-        Make code generation for FMKMAC module which include 
+        Make code generation for FMKCPU module which include 
         file FMKSRL_ConfigPublic.h : 
             - Enum pour toutes les serial Lines UART/USART                               
             
@@ -128,11 +128,11 @@ class FMKSRL_CodeGen():
                             + f'        .c_IRQNType_e  = {ENUM_FMKCPU_NVIC_ROOT}_{line_info[0]}_IRQN,\n'
             
             if is_istce_used:
-                var_srl_info +=  f'        .c_DmaRqstRx   = {ENUM_FMKMAC_DMARQST}_{line_info[0]}_RX,\n' \
-                                + f'        .c_DmaRqstTx   = {ENUM_FMKMAC_DMARQST}_{line_info[0]}_TX,\n' 
+                var_srl_info +=  f'        .c_DmaRqstRx   = {ENUM_FMKCPU_DMARQST}_{line_info[0]}_RX,\n' \
+                                + f'        .c_DmaRqstTx   = {ENUM_FMKCPU_DMARQST}_{line_info[0]}_TX,\n' 
             else: 
-                var_srl_info +=  f'        .c_DmaRqstRx   = (t_eFMKMAC_DmaRqst)0xFF,\n' \
-                             + f'        .c_DmaRqstTx   = (t_eFMKMAC_DmaRqst)0xFF,\n' 
+                var_srl_info +=  f'        .c_DmaRqstRx   = (t_eFMKCPU_DmaRqst)0xFF,\n' \
+                             + f'        .c_DmaRqstTx   = (t_eFMKCPU_DmaRqst)0xFF,\n' 
                 
             var_srl_info   +=  '    },\n\n'
             
@@ -180,7 +180,7 @@ class FMKSRL_CodeGen():
         print('\t\t- For constant mapping instance')
         cls.code_gen._write_into_file(cst_mapp_istnc, FMKSRL_CFGPRIVATE)
 
-        print('\t- For FMKMAC.c File ')
+        print('\t- For FMKCPU.c File ')
 
         print('\t\t- For Srl Info variable')
         cls.code_gen.change_target_balise(TARGET_VARIABLE_START_LINE, TARGET_VARIABLE_END_LINE)
