@@ -196,7 +196,7 @@
 *
 *
 */
-    t_eReturnCode CL42_AddDiagSignal(   t_eCL42T_MotorId f_motorId_e,
+    t_eReturnCode CL42T_AddDiagSignal(   t_eCL42T_MotorId f_motorId_e,
                                         t_eFMKIO_InFreqSig f_diagSignal_e,
                                         t_eFMKIO_PullMode f_pullMode_e,
                                         t_cdCL42T_Diagnostic *f_diagnostic_pcb);

@@ -32,9 +32,9 @@
     */
     typedef enum
     {
-        APPACT_ACTUATOR_CMD_IRRIGVALVE_TOMATE = 0x0,/**< Commande du relais pour irriger les tomates  */
-        APPACT_ACTUATOR_CMD_IRRIGVALVE_COURGETTE, /**< Commande du relais pour irriger les courgettes */
-        APPACT_ACTUATOR_CMD_IRRIGVALVE_CAROTTE,   /**< Commande du relais pour irriger les carottes */
+        APPACT_ACTUATOR_MOTOR_1_PULSE = 0x0,      /**< None */
+        APPACT_ACTUATOR_MOTOR_1_DIR,              /**< None */
+        APPACT_ACTUATOR_MOTOR_1_STATE,            /**< None */
     
         APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;
@@ -44,6 +44,7 @@
     */
     typedef enum
     {
+        APPACT_DRIVER_CL42T = 0x0,              /**< None */
     
         APPACT_DRIVER_NB,
     } t_eAPPACT_Drivers;

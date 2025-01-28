@@ -8,8 +8,8 @@
  * @version     1.0
  */
 /* CAUTION : Automatic generated code section for ifndef: Start */
-#ifndef APPSNS_SPEC_AIRTEMPERATURE
-#define APPSNS_SPEC_AIRTEMPERATURE
+#ifndef APPACT_SPEC_MOTOR_1_STATE
+#define APPACT_SPEC_MOTOR_1_STATE
 /* CAUTION : Automatic generated code section for ifndef: End */
 
 
@@ -21,7 +21,7 @@
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Include: Start */
     #include "TypeCommon.h"
-    #include "APP_CFG/ConfigFiles/APPSNS_ConfigPublic.h"
+    #include "APP_CFG/ConfigFiles/APPACT_ConfigPublic.h"
     /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
@@ -59,24 +59,24 @@
     /* CAUTION : Automatic generated code section for Specific Function Declaration: Start */
     /**
     *
-    * @brief     @ref t_cbAppSns_SetSnsCfg
+    * @brief     @ref t_cbAppAct_SetActCfg
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirTemperature_SetCfg(void);
+    t_eReturnCode APPACT_SPEC_Motor_1_State_SetCfg(void);
 
     /**
     *
-    * @brief     @ref t_cbAppSns_GetSigValue
+    * @brief     @ref t_cbAppAct_GetActValue
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+    t_eReturnCode APPACT_SPEC_Motor_1_State_GetValue(t_sAPPACT_ValueInfo *f_value_ps);
 
     /**
     *
-    * @brief     @ref t_cbAppSns_FormatValSI
+    * @brief     @ref t_cbAppAct_SetActValue
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
+    t_eReturnCode APPACT_SPEC_Motor_1_State_SetValue(t_sint16 f_value_s16);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            

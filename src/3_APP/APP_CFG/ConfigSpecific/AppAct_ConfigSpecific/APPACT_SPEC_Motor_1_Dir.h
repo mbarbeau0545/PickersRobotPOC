@@ -8,8 +8,8 @@
  * @version     1.0
  */
 /* CAUTION : Automatic generated code section for ifndef: Start */
-#ifndef APPACT_SPEC_CMD_IRRIGVALVE_COURGETTE
-#define APPACT_SPEC_CMD_IRRIGVALVE_COURGETTE
+#ifndef APPACT_SPEC_MOTOR_1_DIR
+#define APPACT_SPEC_MOTOR_1_DIR
 /* CAUTION : Automatic generated code section for ifndef: End */
 
 
@@ -62,21 +62,21 @@
     * @brief     @ref t_cbAppAct_SetActCfg
     *
     */
-    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void);
+    t_eReturnCode APPACT_SPEC_Motor_1_Dir_SetCfg(void);
 
     /**
     *
     * @brief     @ref t_cbAppAct_GetActValue
     *
     */
-    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo *f_value_ps);
+    t_eReturnCode APPACT_SPEC_Motor_1_Dir_GetValue(t_sAPPACT_ValueInfo *f_value_ps);
 
     /**
     *
     * @brief     @ref t_cbAppAct_SetActValue
     *
     */
-    t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue(t_sint16 f_value_s16);
+    t_eReturnCode APPACT_SPEC_Motor_1_Dir_SetValue(t_sint16 f_value_s16);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            

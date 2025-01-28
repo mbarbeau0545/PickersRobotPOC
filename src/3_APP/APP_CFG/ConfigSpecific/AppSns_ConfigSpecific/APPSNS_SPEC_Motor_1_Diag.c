@@ -17,7 +17,7 @@
 // *                      Includes
 // ********************************************************************
 /* CAUTION : Automatic generated code section for Include: Start */
-#include "./APPSNS_SPEC_AirHumidity.h"
+#include "./APPSNS_SPEC_Motor_1_Diag.h"
 /* CAUTION : Automatic generated code section for Include: End */
 // ********************************************************************
 // *                      Defines
@@ -60,12 +60,12 @@
 
 
 /******************************************
-* APPSNS_SPEC_AirHumidity_SetCfg
+* APPSNS_SPEC_Motor_1_Diag_SetCfg
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirHumidity_SetCfg(void)
+t_eReturnCode APPSNS_SPEC_Motor_1_Diag_SetCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirHumidity_SetSnsCfg here
+    //    Your code for Motor_1_Diag_SetSnsCfg here
 
 
 
@@ -75,12 +75,12 @@ t_eReturnCode APPSNS_SPEC_AirHumidity_SetCfg(void)
 
 
 /******************************************
-* APPSNS_SPEC_AirHumidity_GetSigValue
+* APPSNS_SPEC_Motor_1_Diag_GetSigValue
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
+t_eReturnCode APPSNS_SPEC_Motor_1_Diag_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirHumidity_GetSigValue here
+    //    Your code for Motor_1_Diag_GetSigValue here
 
 
 
@@ -90,12 +90,12 @@ t_eReturnCode APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32,
 
 
 /******************************************
-* APPSNS_SPEC_AirHumidity_FormatValue
+* APPSNS_SPEC_Motor_1_Diag_FormatValue
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirHumidity_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
+t_eReturnCode APPSNS_SPEC_Motor_1_Diag_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirHumidity_FormatValSI here
+    //    Your code for Motor_1_Diag_FormatValSI here
 
 
 

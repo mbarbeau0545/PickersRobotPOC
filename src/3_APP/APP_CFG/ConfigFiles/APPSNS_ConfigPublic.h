@@ -32,7 +32,7 @@
     */
     typedef enum
     {
-        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Température local de l'air */
+        APPSNS_SENSOR_MOTOR_1_DIAG = 0x0,       /**< Température local de l'air */
     
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;

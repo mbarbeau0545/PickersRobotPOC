@@ -17,9 +17,8 @@
 // *                      Includes
 // ********************************************************************
 /* CAUTION : Automatic generated code section for Include: Start */
-#include "./APPACT_SPEC_Cmd_IrrigValve_Courgette.h"
+#include "./APPACT_SPEC_Motor_1_Pulse.h"
 /* CAUTION : Automatic generated code section for Include: End */
-#include "./FMK_HAL/FMK_IO/Src/FMK_IO.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -50,7 +49,7 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static const t_eFMKIO_OutDigSig c_InputSig_e = FMKIO_INPUT_SIGDIG_2;
+
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -61,13 +60,13 @@ static const t_eFMKIO_OutDigSig c_InputSig_e = FMKIO_INPUT_SIGDIG_2;
 
 
 /******************************************
-* APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg
+* APPACT_SPEC_Motor_1_Pulse_SetCfg
 ******************************************/
-t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void)
+t_eReturnCode APPACT_SPEC_Motor_1_Pulse_SetCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for Cmd_IrrigValve_Carotte_SetActCfg here
-    //Ret_e = FMKIO_Set_OutDigSigCfg(c_InputSig_e, FMKIO_PULL_MODE_DISABLE, FMKIO_SPD_MODE_LOW);
+    //    Your code for Motor_1_Pulse_SetActCfg here
+
 
 
     return Ret_e;
@@ -76,24 +75,14 @@ t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg(void)
 
 
 /******************************************
-* APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue
+* APPACT_SPEC_Motor_1_Pulse_GetValue
 ******************************************/
-t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
+t_eReturnCode APPACT_SPEC_Motor_1_Pulse_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_eFMKIO_DigValue value_e;
-    //    Your code for Cmd_IrrigValve_Carotte_GetActValue here
-    Ret_e = FMKIO_Get_OutDigSigValue(c_InputSig_e, &value_e);
-    if(Ret_e == RC_OK)
-    {
-        f_value_ps->IsValueOK_b = True;
-        f_value_ps->rawValue_f32 = value_e;
-    }
-    else
-    {
-        f_value_ps->IsValueOK_b = False;
-        f_value_ps->rawValue_f32 = value_e;
-    }
+    //    Your code for Motor_1_Pulse_GetActValue here
+
+
 
     return Ret_e;
 }
@@ -101,23 +90,14 @@ t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue(t_sAPPACT_ValueInfo 
 
 
 /******************************************
-* APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue
+* APPACT_SPEC_Motor_1_Pulse_SetValue
 ******************************************/
-t_eReturnCode APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue(t_sint16 f_value_s16)
+t_eReturnCode APPACT_SPEC_Motor_1_Pulse_SetValue(t_sint16 f_value_s16)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_eFMKIO_DigValue value_e;
-    //    Your code for Cmd_IrrigValve_Carotte_GetActValue here
-    value_e = (t_eFMKIO_DigValue)f_value_s16;
-    Ret_e = FMKIO_Set_OutDigSigValue(c_InputSig_e, value_e);
-    if(Ret_e == RC_OK)
-    {
-       f_value_s16 = value_e;
-    }
-    else
-    {
-        f_value_s16 = value_e;
-    }
+    //    Your code for Motor_1_Pulse_SetActValue here
+
+
 
     return Ret_e;
 }

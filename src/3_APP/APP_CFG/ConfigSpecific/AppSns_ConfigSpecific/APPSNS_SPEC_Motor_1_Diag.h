@@ -8,8 +8,8 @@
  * @version     1.0
  */
 /* CAUTION : Automatic generated code section for ifndef: Start */
-#ifndef APPSNS_SPEC_AIRHUMIDITY
-#define APPSNS_SPEC_AIRHUMIDITY
+#ifndef APPSNS_SPEC_MOTOR_1_DIAG
+#define APPSNS_SPEC_MOTOR_1_DIAG
 /* CAUTION : Automatic generated code section for ifndef: End */
 
 
@@ -62,21 +62,21 @@
     * @brief     @ref t_cbAppSns_SetSnsCfg
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirHumidity_SetCfg(void);
+    t_eReturnCode APPSNS_SPEC_Motor_1_Diag_SetCfg(void);
 
     /**
     *
     * @brief     @ref t_cbAppSns_GetSigValue
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+    t_eReturnCode APPSNS_SPEC_Motor_1_Diag_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
 
     /**
     *
     * @brief     @ref t_cbAppSns_FormatValSI
     *
     */
-    t_eReturnCode APPSNS_SPEC_AirHumidity_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
+    t_eReturnCode APPSNS_SPEC_Motor_1_Diag_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            

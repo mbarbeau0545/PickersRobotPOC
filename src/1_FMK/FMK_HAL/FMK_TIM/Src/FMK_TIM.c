@@ -105,7 +105,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_1
         .bspTimer_s.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_CC_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
     },
     {
         // Timer_2

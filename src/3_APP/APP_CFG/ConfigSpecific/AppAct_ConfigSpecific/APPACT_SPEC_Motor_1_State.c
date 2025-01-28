@@ -17,7 +17,7 @@
 // *                      Includes
 // ********************************************************************
 /* CAUTION : Automatic generated code section for Include: Start */
-#include "./APPSNS_SPEC_AirTemperature.h"
+#include "./APPACT_SPEC_Motor_1_State.h"
 /* CAUTION : Automatic generated code section for Include: End */
 // ********************************************************************
 // *                      Defines
@@ -60,12 +60,12 @@
 
 
 /******************************************
-* APPSNS_SPEC_AirTemperature_SetCfg
+* APPACT_SPEC_Motor_1_State_SetCfg
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirTemperature_SetCfg(void)
+t_eReturnCode APPACT_SPEC_Motor_1_State_SetCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirTemperature_SetSnsCfg here
+    //    Your code for Motor_1_State_SetActCfg here
 
 
 
@@ -75,12 +75,12 @@ t_eReturnCode APPSNS_SPEC_AirTemperature_SetCfg(void)
 
 
 /******************************************
-* APPSNS_SPEC_AirTemperature_GetSigValue
+* APPACT_SPEC_Motor_1_State_GetValue
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b)
+t_eReturnCode APPACT_SPEC_Motor_1_State_GetValue(t_sAPPACT_ValueInfo *f_value_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirTemperature_GetSigValue here
+    //    Your code for Motor_1_State_GetActValue here
 
 
 
@@ -90,12 +90,12 @@ t_eReturnCode APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf
 
 
 /******************************************
-* APPSNS_SPEC_AirTemperature_FormatValue
+* APPACT_SPEC_Motor_1_State_SetValue
 ******************************************/
-t_eReturnCode APPSNS_SPEC_AirTemperature_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
+t_eReturnCode APPACT_SPEC_Motor_1_State_SetValue(t_sint16 f_value_s16)
 {
     t_eReturnCode Ret_e = RC_OK;
-    //    Your code for AirTemperature_FormatValSI here
+    //    Your code for Motor_1_State_SetActValue here
 
 
 
