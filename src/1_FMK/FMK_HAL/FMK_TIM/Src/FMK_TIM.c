@@ -2287,7 +2287,7 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
             case HAL_TIM_ACTIVE_CHANNEL_4:
                 ITChnl_e = FMKTIM_CHANNEL_4;
                 break;
-#ifdef FMKTIM_STM32_ECU_FAMILY_G
+#ifdef FMKCPU_STM32_ECU_FAMILY_G
             case HAL_TIM_ACTIVE_CHANNEL_5:
                 ITChnl_e = FMKTIM_CHANNEL_5;
                 break;
