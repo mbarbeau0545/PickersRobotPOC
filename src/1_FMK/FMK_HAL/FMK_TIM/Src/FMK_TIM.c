@@ -2255,9 +2255,6 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
     t_eFMKTIM_Timer Calltimer_e = FMKTIM_TIMER_NB;
     HAL_TIM_ActiveChannel BspITChnl_e = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
     t_eFMKTIM_InterruptChnl ITChnl_e = FMKTIM_CHANNEL_NB;
-    const t_sFMKTIM_BspTimerCfg * c_ITLineCfg_ps;
-    t_eFMKTIM_InterruptLineType ITType_e;
-    t_uint8 maxITLine_u8;
     t_uint8 LLI_u8 = 0;
 
     // loop to know  which timer it is
@@ -2322,53 +2319,15 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
         }
         if(Ret_e == RC_OK)
         {
-            //------------Find Max Interrupt line depending on------------//
-            switch (g_TimerInfo_as[Calltimer_e].HwCfg_e)
+            //------------Call Callback user function------------//
+            if(g_TimerInfo_as[Calltimer_e].Channel_as[ITChnl_e].chnl_cb != NULL_FONCTION)
             {
-                case FMKTIM_HWTIM_CFG_PWM:
-                case FMKTIM_HWTIM_CFG_IC:
-                case FMKTIM_HWTIM_CFG_OC:
-                case FMKTIM_HWTIM_CFG_OP:
-                case FMKTIM_HWTIM_CFG_ECDR:
-                    c_ITLineCfg_ps = (t_sFMKTIM_BspTimerCfg *)&c_FmkTim_ITLineIOMapp_as;
-                    ITType_e = FMKTIM_INTERRUPT_LINE_TYPE_IO;
-                    maxITLine_u8 = FMKTIM_INTERRUPT_LINE_IO_NB;
-                    break;
-                case FMKTIM_HWTIM_CFG_EVNT:
-                    c_ITLineCfg_ps = (t_sFMKTIM_BspTimerCfg *)&c_FmkTim_ITLineEvntMapp_as;
-                    ITType_e = FMKTIM_INTERRUPT_LINE_TYPE_EVNT;
-                    maxITLine_u8 = FMKTIM_INTERRUPT_LINE_EVNT_NB;
-                    break;
-                case FMKTIM_HWTIM_CFG_DAC:
-                    c_ITLineCfg_ps = (t_sFMKTIM_BspTimerCfg *)&c_FmkTim_ITLineDacMapp_as;
-                    ITType_e = FMKTIM_INTERRUPT_LINE_TYPE_DAC;
-                    maxITLine_u8 = FMKTIM_INTERRUPT_LINE_DAC_NB;
-                    break;
-                default:
-                    Ret_e = RC_ERROR_NOT_SUPPORTED;
-                    break;
-            }
-            if (Ret_e == RC_OK)
-            {   
-                //------------Call Callback user function------------//
-                if(g_TimerInfo_as[Calltimer_e].Channel_as[ITChnl_e].chnl_cb != NULL_FONCTION)
-                {
-                    //------------Find Interrupt Line------------//
-                    for (LLI_u8 = (t_uint8)0 ; LLI_u8 < maxITLine_u8 ; LLI_u8++)
-                    {
-                        if((c_ITLineCfg_ps[LLI_u8].timer_e == Calltimer_e)
-                        && (c_ITLineCfg_ps[LLI_u8].channel_e == ITChnl_e))
-                        {
-                            break;
-                        }
-                    }
-                    if(LLI_u8 < maxITLine_u8)
-                    {  
-                        g_TimerInfo_as[Calltimer_e].Channel_as[ITChnl_e].chnl_cb(ITType_e, LLI_u8);
-                    } 
-                }
+                g_TimerInfo_as[Calltimer_e].
+                    Channel_as[ITChnl_e].chnl_cb(   c_FmkTim_ChnlItLineMapp[Calltimer_e][ITChnl_e].type_e,
+                                                    c_FmkTim_ChnlItLineMapp[Calltimer_e][ITChnl_e].ITLine_u8);
             }
         }
+        
     }
 
     return;

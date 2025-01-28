@@ -268,7 +268,11 @@
     // **********²**********************************************************
     // *                      Prototypes
     // ********************************************************************
-        
+    t_sFMKTIM_ChnlITLineMapping c_aifds[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB] = {
+        [FMKTIM_TIMER_1] = {
+
+        }
+    };
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
@@ -331,6 +335,70 @@
     t_sFMKTIM_BspTimerCfg c_FmkTim_ITLineDacMapp_as[FMKTIM_INTERRUPT_LINE_DAC_NB] = {
         {FMKTIM_TIMER_6,                        FMKTIM_CHANNEL_1},    // FMKTIM_INTERRUPT_LINE_DAC_1
         {FMKTIM_TIMER_7,                        FMKTIM_CHANNEL_1},    // FMKTIM_INTERRUPT_LINE_DAC_2
+    };
+
+    /**< Interrupt Line/Channel Mapping for IO IT Line */
+    const t_sFMKTIM_ChnlITLineMapping c_FmkTim_ChnlItLineMapp[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB] = {
+        [FMKTIM_TIMER_1] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_11},    // FMKTIM_INTERRUPT_LINE_IO_11
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_12},    // FMKTIM_INTERRUPT_LINE_IO_12
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_13},    // FMKTIM_INTERRUPT_LINE_IO_13
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_14},    // FMKTIM_INTERRUPT_LINE_IO_14
+        },
+        [FMKTIM_TIMER_2] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_21},    // FMKTIM_INTERRUPT_LINE_IO_21
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_22},    // FMKTIM_INTERRUPT_LINE_IO_22
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_23},    // FMKTIM_INTERRUPT_LINE_IO_23
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_24},    // FMKTIM_INTERRUPT_LINE_IO_24
+        },
+        [FMKTIM_TIMER_3] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_31},    // FMKTIM_INTERRUPT_LINE_IO_31
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_32},    // FMKTIM_INTERRUPT_LINE_IO_32
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_33},    // FMKTIM_INTERRUPT_LINE_IO_33
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_34},    // FMKTIM_INTERRUPT_LINE_IO_34
+        },
+        [FMKTIM_TIMER_4] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_41},    // FMKTIM_INTERRUPT_LINE_IO_41
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_42},    // FMKTIM_INTERRUPT_LINE_IO_42
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_43},    // FMKTIM_INTERRUPT_LINE_IO_43
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_44},    // FMKTIM_INTERRUPT_LINE_IO_44
+        },
+        [FMKTIM_TIMER_5] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_51},    // FMKTIM_INTERRUPT_LINE_IO_51
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_52},    // FMKTIM_INTERRUPT_LINE_IO_52
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_53},    // FMKTIM_INTERRUPT_LINE_IO_53
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_54},    // FMKTIM_INTERRUPT_LINE_IO_54
+        },
+        [FMKTIM_TIMER_6] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_DAC,                FMKTIM_INTERRUPT_LINE_DAC_1},    // FMKTIM_INTERRUPT_LINE_DAC_1
+        },
+        [FMKTIM_TIMER_7] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_DAC,                FMKTIM_INTERRUPT_LINE_DAC_2},    // FMKTIM_INTERRUPT_LINE_DAC_2
+        },
+        [FMKTIM_TIMER_8] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_61},    // FMKTIM_INTERRUPT_LINE_IO_61
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_62},    // FMKTIM_INTERRUPT_LINE_IO_62
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_63},    // FMKTIM_INTERRUPT_LINE_IO_63
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_64},    // FMKTIM_INTERRUPT_LINE_IO_64
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_65},    // FMKTIM_INTERRUPT_LINE_IO_65
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                FMKTIM_INTERRUPT_LINE_IO_66},    // FMKTIM_INTERRUPT_LINE_IO_66
+        },
+        [FMKTIM_TIMER_15] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,               FMKTIM_INTERRUPT_LINE_EVNT_1},    // FMKTIM_INTERRUPT_LINE_EVNT_1
+            {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,               FMKTIM_INTERRUPT_LINE_EVNT_1},    // FMKTIM_INTERRUPT_LINE_EVNT_1
+        },
+        [FMKTIM_TIMER_16] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,               FMKTIM_INTERRUPT_LINE_EVNT_3},    // FMKTIM_INTERRUPT_LINE_EVNT_3
+        },
+        [FMKTIM_TIMER_17] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,               FMKTIM_INTERRUPT_LINE_EVNT_4},    // FMKTIM_INTERRUPT_LINE_EVNT_4
+        },
+        [FMKTIM_TIMER_20] = {
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,               FMKTIM_INTERRUPT_LINE_IO_71},    // FMKTIM_INTERRUPT_LINE_IO_71
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,               FMKTIM_INTERRUPT_LINE_IO_72},    // FMKTIM_INTERRUPT_LINE_IO_72
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,               FMKTIM_INTERRUPT_LINE_IO_73},    // FMKTIM_INTERRUPT_LINE_IO_73
+            {FMKTIM_INTERRUPT_LINE_TYPE_IO,               FMKTIM_INTERRUPT_LINE_IO_74},    // FMKTIM_INTERRUPT_LINE_IO_74
+        },
     };
 
     /**< timer max channel variable */

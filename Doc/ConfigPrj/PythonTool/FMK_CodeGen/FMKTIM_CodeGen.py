@@ -87,6 +87,7 @@ class FMKTIM_CodeGen():
         var_evntcfg   = ""
         var_timinfo = ""
         const_mapp_chnl_itline = ""
+
         const_mapp_evnt_tim = ""
         const_mapp_gp_tim = ""
         const_mapp_dac_tim = ""
@@ -115,8 +116,8 @@ class FMKTIM_CodeGen():
         description_dac_tim  = []
         description_evnt_tim = []
         suffix_pg_tim = []
-        const_mapp_chnl_itline +=  "    /**< Interrupt Line /  Channel Mapping */\n" \
-                                + "    const t_sFMKTIM_ChnlITLineMapping c_çFmkTim_ChnlItLineMapp[FMKTIM_TIMER_NB] = {\n"
+        const_mapp_chnl_itline +=  "    /**< Interrupt Line/Channel Mapping for IO IT Line */\n" \
+                                + "    const t_sFMKTIM_ChnlITLineMapping c_FmkTim_ChnlItLineMapp[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB] = {\n"
         var_timinfo += "/**< timer information variable */\n" \
                     + "t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {\n"
         var_tim_max_chnl += "    /**< timer max channel variable */\n" \
@@ -160,6 +161,7 @@ class FMKTIM_CodeGen():
             const_tim_clk_src += f'        {ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]},' \
                             + " " * (SPACE_VARIABLE - len(f"{ENUM_FKCPU_SYS_CLK}_{timer_cfg[4]}")) \
                             + f' // {ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}\n'
+            const_mapp_chnl_itline += f'        [{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}] = ' + '{\n'
             # make timer public enum 
             match  timer_cfg[3]:
                 case 'PWM/IC/OC/OP':
@@ -171,7 +173,12 @@ class FMKTIM_CodeGen():
                         const_mapp_gp_tim += "        {" + f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer},"  \
                                         + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}")) \
                                         + f"        {ENUM_FMKTIM_CHANNEL_ROOT}_{channel}" \
-                                            + "}," + f"    // {ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_pg}{channel}\n"
+                                        + "}," + f"    // {ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_pg}{channel}\n"
+                        
+                        const_mapp_chnl_itline += '            {'  + f'{ENUM_FMKTIM_IT_TYPE_ROOT}_IO,'\
+                                                + ' ' * (SPACE_VARIABLE - len(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}")) \
+                                                + f'{ENUM_FMKTIM_IT_GP_ROOT}_{idx_tim_pg}{channel}' + '},'  + f"    // {ENUM_FMKTIM_IT_GP_ROOT}_{idx_tim_pg}{channel}\n"
+
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}{ENUM_FMKTIM_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKTIM_IT_GP_ROOT}_{idx_tim_pg}{channel}"
                     # update idx   
@@ -188,6 +195,10 @@ class FMKTIM_CodeGen():
                                             + "}," + f"    // {ENUM_FMKTIM_IT_DAC_ROOT}_{idx_dac_tim}\n"
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}{ENUM_FMKTIM_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKTIM_IT_DAC_ROOT}_{idx_dac_tim}"
+
+                        const_mapp_chnl_itline += '            {'  + f'{ENUM_FMKTIM_IT_TYPE_ROOT}_DAC,'\
+                                                + ' ' * (SPACE_VARIABLE - len(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}")) \
+                                                + f'{ENUM_FMKTIM_IT_DAC_ROOT}_{idx_dac_tim}' + '},' + f"    // {ENUM_FMKTIM_IT_DAC_ROOT}_{idx_dac_tim}\n"
                     idx_dac_tim = idx_dac_tim + timer_cfg[1]
 
                 case 'EVENT':
@@ -198,9 +209,17 @@ class FMKTIM_CodeGen():
                                             + " " * (SPACE_VARIABLE - len(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}")) \
                                             + f"        {ENUM_FMKTIM_CHANNEL_ROOT}_{channel}"\
                                             + "}," + f"    // {ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_evnt}\n"
+
+                        const_mapp_chnl_itline +=  '            {'  + f'{ENUM_FMKTIM_IT_TYPE_ROOT}_EVNT,'\
+                                                + ' ' * (SPACE_VARIABLE - len(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}")) \
+                                                + f'{ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_evnt}' + '},' + f"    // {ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_evnt}\n"
+                        
                         # for fmkio
                         cls.itline_timchnl_mapping[str(f"{ENUM_FMKTIM_TIMER_ROOT}_{idx_timer}{ENUM_FMKTIM_CHANNEL_ROOT}_{channel}")] =  f"{ENUM_FMKTIM_IT_EVNT_ROOT}_{idx_tim_evnt}"
+
                     idx_tim_evnt = idx_tim_evnt + timer_cfg[1]
+                    
+            const_mapp_chnl_itline += '        },\n'
             
         const_tim_clk_src += '    };\n\n'
         var_tim_max_chnl += "    };\n\n"
@@ -208,6 +227,7 @@ class FMKTIM_CodeGen():
         const_mapp_gp_tim += "    };\n\n"
         const_mapp_evnt_tim += "    };\n\n"
         const_mapp_dac_tim += "    };\n\n"
+        const_mapp_chnl_itline += '    };\n\n'
 
         enum_it_lines_gp = cls.code_gen.make_enum_from_variable(ENUM_FMKTIM_IT_GP_ROOT, suffix_pg_tim,
                                                                 't_eFMKTIM_InterruptLineIO', 0, "Number of General Purpose Interrupt Line, for PWM, Input-Compare, Output Compare, One sPulse",
@@ -316,6 +336,9 @@ class FMKTIM_CodeGen():
       
         print("\t\t- Variable for max channel per timer")
         cls.code_gen._write_into_file(var_tim_max_chnl, FMKTIM_CFGPRIVATE)
+
+        print("\t\t- Channel Interrupt Line Mapping")
+        cls.code_gen._write_into_file(const_mapp_chnl_itline, FMKTIM_CFGPRIVATE)
 
         print("\t\t- DAC Purpose Timer_Channel Mapping")
         cls.code_gen._write_into_file(const_mapp_dac_tim, FMKTIM_CFGPRIVATE)
