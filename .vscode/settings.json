@@ -69,7 +69,8 @@
     "fmktim_configpublic.h": "c",
     "fmk_tim.h": "c",
     "appact_spec_motor_1_dir.h": "c",
-    "motion_sensor.h": "c"
+    "motion_sensor.h": "c",
+    "cl42t_configprivate.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",
