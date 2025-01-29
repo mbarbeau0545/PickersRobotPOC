@@ -14,7 +14,7 @@
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
-
+    #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_COnfigPublic.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -47,7 +47,33 @@
     /* CAUTION : Automatic generated code section for Enum: End */
    
     //-----------------------------STRUCT TYPES---------------------------//
-   
+    typedef struct 
+    {
+        t_eFMKIO_OutPwmSig PulseSignal_e;
+        t_eFMKIO_PullMode PullMode_e;
+        t_uint32 f_PulseInitFreq_u32;
+    } t_sCL42T_PwmSignalCfg;
+
+    typedef struct 
+    {
+        t_eFMKIO_OutDigSig  DigitalSignal_e;
+        t_eFMKIO_PullMode   PullMode_e;
+    } t_sCL42T_DigitalSignalCfg;
+
+    typedef struct 
+    {
+        t_eFMKIO_InFreqSig  FreqSignal_e;
+        t_eFMKIO_PullMode   PullMode_e;
+    } t_sCL42T_FreqSignalCfg;
+
+    typedef struct 
+    {
+        t_sCL42T_PwmSignalCfg       PulseSigCfg_s;
+        t_sCL42T_DigitalSignalCfg   StateSigCfg;
+        t_sCL42T_DigitalSignalCfg   DirSigCfg_s;
+        t_sCL42T_FreqSignalCfg      DiagSigCfg_s;
+
+    } t_sCL42T_MotorSigCfg;
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
@@ -59,7 +85,47 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
+    const t_sCL42T_MotorSigCfg c_CL42T_MotorConfig_as[CL42T_MOTOR_NB] = {
+        [CL42T_MOTOR_AXE_X_1] = {
+            .PulseSigCfg_s = {
+                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_8,
+                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+                .f_PulseInitFreq_u32 = 0
+            },
+            .StateSigCfg = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_2,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DirSigCfg_s = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_1,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DiagSigCfg_s = {
+                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_1,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+        },
 
+        [CL42T_MOTOR_AXE_X_2] = {
+            .PulseSigCfg_s = {
+                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_4,
+                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+                .f_PulseInitFreq_u32 = 0
+            },
+            .StateSigCfg = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_4,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DirSigCfg_s = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_5,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DiagSigCfg_s = {
+                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_2,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+        },
+    }
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

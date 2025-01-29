@@ -257,7 +257,7 @@ static t_eReturnCode s_CL42T_AddPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
 *
 */
 static t_eReturnCode s_CL42T_AddDirSignal(  t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                            t_sCL42T_DigitalSignalCfg * f_DirSigCfg_ps);
+                                            t_sCL42T_DigitalSignalCfg * f_DirSigCfg_s_ps);
 
 /**
  *
@@ -494,7 +494,7 @@ t_eReturnCode CL42T_AddMotorConfiguration(  t_eCL42T_MotorId f_motorId_e,
 
         if(Ret_e == RC_OK)
         {
-            Ret_e = s_CL42T_AddDirSignal(motorInfo_ps, &f_MotorCfg_s.DirSigCfg);
+            Ret_e = s_CL42T_AddDirSignal(motorInfo_ps, &f_MotorCfg_s.DirSigCfg_s);
         }
         if(Ret_e == RC_OK)
         {
@@ -1096,20 +1096,20 @@ t_eReturnCode s_CL42T_AddPulseSignal( t_sCL42T_MotorInfo * f_motorInfo_ps,
  * CL42T_AddDirPulseSignal
  *********************************/
 t_eReturnCode s_CL42T_AddDirSignal(   t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                    t_sCL42T_DigitalSignalCfg * f_DirSigCfg_ps)
+                                    t_sCL42T_DigitalSignalCfg * f_DirSigCfg_s_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_sCL42T_MotorSignalInfo * SignalInfo_ps;
 
     if(f_motorInfo_ps == (t_sCL42T_MotorInfo *)NULL
-    || f_DirSigCfg_ps == (t_sCL42T_DigitalSignalCfg *)NULL)
+    || f_DirSigCfg_s_ps == (t_sCL42T_DigitalSignalCfg *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
-        if((f_DirSigCfg_ps->DigitalSignal_e >= FMKIO_OUTPUT_SIGPWM_NB) 
-        || (f_DirSigCfg_ps->PullMode_e >=FMKIO_PULL_MODE_NB))
+        if((f_DirSigCfg_s_ps->DigitalSignal_e >= FMKIO_OUTPUT_SIGPWM_NB) 
+        || (f_DirSigCfg_s_ps->PullMode_e >=FMKIO_PULL_MODE_NB))
         {
             Ret_e = RC_ERROR_PARAM_INVALID;
         }
@@ -1125,13 +1125,13 @@ t_eReturnCode s_CL42T_AddDirSignal(   t_sCL42T_MotorInfo * f_motorInfo_ps,
         }
         if(Ret_e == RC_OK)
         {
-            Ret_e = FMKIO_Set_OutDigSigCfg( f_DirSigCfg_ps->DigitalSignal_e, 
-                                            f_DirSigCfg_ps->PullMode_e,
+            Ret_e = FMKIO_Set_OutDigSigCfg( f_DirSigCfg_s_ps->DigitalSignal_e, 
+                                            f_DirSigCfg_s_ps->PullMode_e,
                                             FMKIO_SPD_MODE_MEDIUM);
 
             if(Ret_e == RC_OK)
             {
-                SignalInfo_ps->signal_u8 = f_DirSigCfg_ps->DigitalSignal_e;
+                SignalInfo_ps->signal_u8 = f_DirSigCfg_s_ps->DigitalSignal_e;
                 SignalInfo_ps->isConfigured_b = True;
             }
         }

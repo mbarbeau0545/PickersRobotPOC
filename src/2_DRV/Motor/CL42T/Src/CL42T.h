@@ -70,33 +70,6 @@
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
-    typedef struct 
-    {
-        t_eFMKIO_OutPwmSig PulseSignal_e;
-        t_eFMKIO_PullMode PullMode_e;
-        t_uint32 f_PulseInitFreq_u32;
-    } t_sCL42T_PwmSignalCfg;
-
-    typedef struct 
-    {
-        t_eFMKIO_OutDigSig  DigitalSignal_e;
-        t_eFMKIO_PullMode   PullMode_e;
-    } t_sCL42T_DigitalSignalCfg;
-
-    typedef struct 
-    {
-        t_eFMKIO_InFreqSig  FreqSignal_e;
-        t_eFMKIO_PullMode   PullMode_e;
-    } t_sCL42T_FreqSignalCfg;
-
-    typedef struct 
-    {
-        t_sCL42T_PwmSignalCfg       PulseSigCfg_s;
-        t_sCL42T_DigitalSignalCfg   StateSigCfg;
-        t_sCL42T_DigitalSignalCfg   DirSigCfg;
-        t_sCL42T_FreqSignalCfg      DiagSigCfg_s;
-
-    } t_sCL42T_MotorSigCfg;
 
     typedef union 
     {
