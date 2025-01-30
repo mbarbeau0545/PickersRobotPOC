@@ -55,6 +55,7 @@ typedef struct __t_sFMKIO_AnaPwmSigInfo
     t_bool IsSigConfigured_b;                   /**< Flag which indicate wether or not the signal has been configured */
     t_bool IsInterruptEnable_b;                 /**< Flag which indicate if the interruption is enable or not for tthe signal */
     t_uint16 dutyCycleApplied_u16;
+    t_cbFMKIO_PulseEvent    * pulseEvnt_pcb;      /**< callback function when a pulse is finihed if pwm pulse is set  */
     t_cbFMKIO_SigErrorMngmt * sigError_cb;      /**< callback function if an error occured  */
 
 } t_sFMKIO_PwmSigInfo;
@@ -226,7 +227,7 @@ static t_eReturnCode s_FMKIO_MngSigFrequency(t_eFMKTIM_InterruptLineType f_Inter
  * @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
  *
  */
-static t_eReturnCode s_FMKIO_MngSigPwm(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
+static void s_FMKIO_MngSigPwm(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 /**
  *
  *	@brief      Function to set HAL_RCC clock state : Enable/Disable
@@ -340,6 +341,7 @@ t_eReturnCode FMKIO_Init(void)
         g_OutPwmSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
         g_OutPwmSigInfo_as[LLI_u8].dutyCycleApplied_u16   = (t_uint16)0;
         g_OutPwmSigInfo_as[LLI_u8].sigError_cb = (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION;
+        g_OutPwmSigInfo_as[LLI_u8].pulseEvnt_pcb = (t_cbFMKIO_EventFunc *)NULL_FONCTION;
     }
 
     //---------Set Digital Output Default Value---------//
@@ -711,7 +713,8 @@ t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e,
 t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
                                      t_eFMKIO_PullMode        f_pull_e,
                                      t_uint32                 f_frequency_u32,
-                                     t_cbFMKIO_SigErrorMngmt *f_sigErr_cb)
+                                     t_cbFMKIO_PulseEvent     * f_pulseEvnt_pcb,
+                                     t_cbFMKIO_SigErrorMngmt * f_sigErr_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_GpioPort gpioPort_e = FMKIO_GPIO_PORT_NB;
@@ -727,8 +730,15 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
     }
     if (Ret_e == RC_OK)
     {
-        ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;        
+        ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;    
         Ret_e = FMKTIM_Set_PWMLineCfg(ITLineIO_e, f_frequency_u32);
+
+        if(f_pulseEvnt_pcb != (t_cbFMKIO_PulseEvent *)NULL_FONCTION)
+        {
+            Ret_e = FMKTIM_AddInterruptCallback(ITLineIO_e,
+                                                s_FMKIO_MngSigPwm);
+
+        }
         
         if (Ret_e == RC_OK)
         {
@@ -744,6 +754,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
             { // update info
                 g_OutPwmSigInfo_as[f_signal_e].IsSigConfigured_b = (t_bool)True;
                 g_OutPwmSigInfo_as[f_signal_e].sigError_cb = f_sigErr_cb;
+                g_OutPwmSigInfo_as[f_signal_e].pulseEvnt_pcb = f_pulseEvnt_pcb;
             }
         }
     }
@@ -1670,6 +1681,7 @@ static t_eReturnCode s_FMKIO_Get_EcdrTimerMode(t_eFMKIO_EcdrStartOpe f_StartOpeM
 
     return Ret_e;
 }
+
 /*********************************
  * s_FMKIO_MngSigFrequency
  *********************************/
@@ -1748,6 +1760,43 @@ static t_eReturnCode s_FMKIO_MngSigFrequency(t_eFMKTIM_InterruptLineType f_Inter
     }
     
     return Ret_e;
+}
+
+/*********************************
+ * s_FMKIO_MngSigPwm
+ *********************************/
+static void s_FMKIO_MngSigPwm(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 LLI_u8= 0;
+    t_eFMKIO_OutPwmSig PwmSig_e = FMKIO_OUTPUT_SIGPWM_NB;
+    t_uint8 ItLine_u8;
+
+    if (f_InterruptType_e != FMKTIM_INTERRUPT_LINE_TYPE_IO)
+    { 
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        //-------------Know wich signal made the interruption -------------//
+        for(LLI_u8 = (t_uint8)0 ; LLI_u8 < FMKIO_OUTPUT_SIGPWM_NB ; LLI_u8++)
+        {
+            if(f_InterruptLine_u8 == (t_uint8)c_OutPwmSigBspMap_as[LLI_u8].ITLine_e)
+            {
+                PwmSig_e = (t_eFMKIO_OutPwmSig)LLI_u8;
+                break;
+            }
+        }
+        if(PwmSig_e != FMKIO_OUTPUT_SIGPWM_NB)
+        {
+            if(g_OutPwmSigInfo_as[PwmSig_e].pulseEvnt_pcb != NULL_FONCTION)
+            {
+                g_OutPwmSigInfo_as[PwmSig_e].pulseEvnt_pcb(PwmSig_e);
+            }
+        }
+    }
+
+    return;
 }
 /*********************************
  * s_FMKIO_Get_BspPullMode

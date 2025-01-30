@@ -138,7 +138,16 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnCode (t_cbFMKIO_EventFunc)(void);
+    typedef void (t_cbFMKIO_EventFunc)(void);
+    /**
+    *
+    *	@brief      This function is a callback function for event signal.\n
+    *	@note       Once the trigger is detected this function callback should be
+    *               called.\n
+    *                store information for each signals.\n
+    *
+    */
+    typedef void (t_cbFMKIO_PulseEvent)(t_eFMKIO_OutPwmSig f_signal_e);
     /**
     *
     *	@brief      This function is a callback function for dignostic/ error
@@ -359,10 +368,11 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig        f_signal_e, 
-                                          t_eFMKIO_PullMode        f_pull_e,
-                                          t_uint32                 f_frequency_u32,
-                                          t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
+    t_eReturnCode FMKIO_Set_OutPwmSigCfg(   t_eFMKIO_OutPwmSig       f_signal_e, 
+                                            t_eFMKIO_PullMode        f_pull_e,
+                                            t_uint32                 f_frequency_u32,
+                                            t_cbFMKIO_PulseEvent    * f_pulseEvnt_pcb,
+                                            t_cbFMKIO_SigErrorMngmt * f_sigErr_cb);
     /**
     *
     *	@brief      Set an output in digital configuration.\n

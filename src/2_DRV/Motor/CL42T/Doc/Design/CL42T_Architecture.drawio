@@ -65,22 +65,22 @@
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-26" value="CL42T_MOTOR_SIGTYPE_PULSE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-26" value="CL42T_SIGTYPE_PULSE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="40" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="QMVsY3oyIqxa2rkxlDXN-1" value="CL42T_MOTOR_SIGTYPE_SPEED" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="QMVsY3oyIqxa2rkxlDXN-1" value="CL42T_SIGTYPE_SPEED" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="70" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-27" value="CL42T_MOTOR_SIGTYPE_DIR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-27" value="CL42T_SIGTYPE_DIR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="100" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-28" value="CL42T_MOTOR_SIGTYPE_STATE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-28" value="CL42T_SIGTYPE_STATE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="130" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-29" value="CL42T_MOTOR_SIGTYPE_DIAG" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-29" value="CL42T_SIGTYPE_DIAG" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="160" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-30" value="CL42T_MOTOR_SIGTYPE_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-30" value="CL42T_SIGTYPE_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-25" vertex="1">
           <mxGeometry y="190" width="240" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_98Hny6dWOGSZHoOnHI_-1" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;typedef: void&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-wrap: nowrap;&quot;&gt;t_cbCL42T_Diagnostic(t_eCL42T_MotorId, t_eCL32T_DefaultInfo) .h&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffcd28;gradientColor=#ffa500;strokeColor=#d79b00;fontSize=16;align=left;" parent="1" vertex="1">
@@ -135,7 +135,7 @@
             <mxRectangle x="-560" y="-640" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="fkoo2TKvh2ZY_R15RrpD-2" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_sCL42T_MotorSignalInfo&lt;/span&gt;&lt;span style=&quot;text-align: center;&quot;&gt;&amp;nbsp;SigInfo_as[&lt;/span&gt;CL42T_MOTOR_SIGTYPE_NB&lt;span style=&quot;text-align: center;&quot;&gt;]&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" parent="fkoo2TKvh2ZY_R15RrpD-1" vertex="1">
+        <mxCell id="fkoo2TKvh2ZY_R15RrpD-2" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_sCL42T_MotorSignalInfo&lt;/span&gt;&lt;span style=&quot;text-align: center;&quot;&gt;&amp;nbsp;SigInfo_as[&lt;/span&gt;CL42T_SIGTYPE_NB&lt;span style=&quot;text-align: center;&quot;&gt;]&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" parent="fkoo2TKvh2ZY_R15RrpD-1" vertex="1">
           <mxGeometry y="40" width="400" height="30" as="geometry" />
         </mxCell>
         <mxCell id="fkoo2TKvh2ZY_R15RrpD-7" value="t_cbCL42T_Diagnostic *diagCallback_pcb" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" parent="fkoo2TKvh2ZY_R15RrpD-1" vertex="1">
@@ -574,7 +574,7 @@
         <mxCell id="Cq_6kGNVz0qdmuQ3htTU-8" value="motorInfo_ps-&amp;gt;sigInfo_as[CL42T_SIGTYPE_PULSE].isConfigured_b = True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.38" y="-480" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="ctljG_ERnvEHt1-qWCBc-1" value="g_RqstInit_as[&lt;font color=&quot;#000000&quot;&gt;CL42T_MOTOR_SIGTYPE_PULSE&lt;/font&gt;]= True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="ctljG_ERnvEHt1-qWCBc-1" value="g_RqstInit_as[&lt;font color=&quot;#000000&quot;&gt;CL42T_SIGTYPE_PULSE&lt;/font&gt;]= True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174" y="-400" width="478.5" height="40" as="geometry" />
         </mxCell>
         <mxCell id="NGrVTEZyCz6ooYVPsNND-1" value="motorInfo_ps-&amp;gt;PulseITLine_e = c_Fmkio_OutSigPwmBspCfg[f_pulseSignale_e].ITline_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
@@ -583,10 +583,10 @@
         <mxCell id="u-D7EIr3peMJ6B8OjoPE-1" value="motorInfo_ps-&amp;gt;isConfigured_b = True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="174" y="-280" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="u-D7EIr3peMJ6B8OjoPE-2" value="motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_MOTOR_SIGTYPE_SPEED] =&amp;nbsp;&lt;br&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_pulseSignal_e&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+        <mxCell id="u-D7EIr3peMJ6B8OjoPE-2" value="motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_SIGTYPE_SPEED] =&amp;nbsp;&lt;br&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_pulseSignal_e&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="174" y="-360" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="u-D7EIr3peMJ6B8OjoPE-4" value="motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_MOTOR_SIGTYPE_SPEED].isConfigured_b = True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+        <mxCell id="u-D7EIr3peMJ6B8OjoPE-4" value="motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_SIGTYPE_SPEED].isConfigured_b = True" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="174" y="-320" width="478.5" height="40" as="geometry" />
         </mxCell>
       </root>
@@ -1024,7 +1024,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="no3IaD30DrdjINV9f5-L-2" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_MOTOR_SIGTYPE_PULSE].&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;value_u32&lt;/span&gt;= f_nbPulses_u16" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="no3IaD30DrdjINV9f5-L-2" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_PULSE].&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;value_u32&lt;/span&gt;= f_nbPulses_u16" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-560" width="478.5" height="70" as="geometry" />
         </mxCell>
         <mxCell id="rjYnAsjlMGhq16KGJERL-1" value="SETBIT_8B(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
@@ -1185,7 +1185,7 @@
         <mxCell id="9ND7PNJ3uG4U6lUjv44z-3" value="Ret_e = s_CL42T_GetDigValueFromDir(f_direction_e, &amp;amp;digValue_e)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174" y="-584" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="9ND7PNJ3uG4U6lUjv44z-4" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_MOTOR_SIGTYPE_PULSE].&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;value_u32&lt;/span&gt;= digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="9ND7PNJ3uG4U6lUjv44z-4" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_PULSE].&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;value_u32&lt;/span&gt;= digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174" y="-310" width="478.5" height="50" as="geometry" />
         </mxCell>
         <mxCell id="OIW5784TLvTIdbg1OfpR-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="OIW5784TLvTIdbg1OfpR-2" target="9ND7PNJ3uG4U6lUjv44z-4" edge="1">
@@ -1201,7 +1201,7 @@
             <mxPoint y="2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OIW5784TLvTIdbg1OfpR-2" value="if digValue_e != motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_MOTOR_SIGTYPE_PULSE].value_u32&lt;div&gt;&amp;amp;&amp;amp;&lt;/div&gt;&lt;div&gt;(currentTime_u32 - motorInfo_ps-&amp;gt;InhibTime_u32)&amp;lt; CL42T_PULSE_DEAD_TIME&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="OIW5784TLvTIdbg1OfpR-2" value="if digValue_e != motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_PULSE].value_u32&lt;div&gt;&amp;amp;&amp;amp;&lt;/div&gt;&lt;div&gt;(currentTime_u32 - motorInfo_ps-&amp;gt;InhibTime_u32)&amp;lt; CL42T_PULSE_DEAD_TIME&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="221.5" y="-500" width="383.5" height="80" as="geometry" />
         </mxCell>
         <mxCell id="7mMEWHTbtq_sZiMpjhX4-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="OIW5784TLvTIdbg1OfpR-3" target="9ND7PNJ3uG4U6lUjv44z-4" edge="1">
@@ -1324,7 +1324,7 @@
         <mxCell id="ogfvgda0R52J0E5OE7iQ-25" value="Ret_e = s_CL42T_GetDigValueFromState(f_state_e, &amp;amp;digValue_e)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174" y="-584" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="cd95Y-4VQuE2yyXZgn-J-1" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_MOTOR_SIGTYPE_PULSE].value_u32 = digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="cd95Y-4VQuE2yyXZgn-J-1" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_PULSE].value_u32 = digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174" y="-470" width="478.5" height="50" as="geometry" />
         </mxCell>
       </root>
@@ -1444,10 +1444,10 @@
         <mxCell id="npTkk9dQEeD7Pi_3Y7_f-26" value="Ret_e = s_CL42T_GetDigValueFromState(f_state_e, &amp;amp;digValue_e)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="npTkk9dQEeD7Pi_3Y7_f-1" vertex="1">
           <mxGeometry x="174" y="-584" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="npTkk9dQEeD7Pi_3Y7_f-27" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTOR_SIGTYPE_DIR].signal_u8,&lt;/div&gt;&lt;div&gt;digValue_e)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="npTkk9dQEeD7Pi_3Y7_f-1" vertex="1">
+        <mxCell id="npTkk9dQEeD7Pi_3Y7_f-27" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_SIGTYPE_DIR].signal_u8,&lt;/div&gt;&lt;div&gt;digValue_e)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="npTkk9dQEeD7Pi_3Y7_f-1" vertex="1">
           <mxGeometry x="190" y="-330" width="478.5" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="npTkk9dQEeD7Pi_3Y7_f-28" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_MOTOR_SIGTYPE_P].value_u32 = digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="npTkk9dQEeD7Pi_3Y7_f-1" vertex="1">
+        <mxCell id="npTkk9dQEeD7Pi_3Y7_f-28" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_P].value_u32 = digValue_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="npTkk9dQEeD7Pi_3Y7_f-1" vertex="1">
           <mxGeometry x="174" y="-470" width="478.5" height="50" as="geometry" />
         </mxCell>
       </root>
@@ -1547,7 +1547,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="iFphlpeHzKIwHfbgFfzG-3" value="Ret_e = FMKIO_GetInFreqValue(motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_MOTOR_SIGTYPE_DIAG, &amp;amp;counter_u16)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="iFphlpeHzKIwHfbgFfzG-3" value="Ret_e = FMKIO_GetInFreqValue(motorInfo_ps-&amp;gt;signalInfo_ps[CL42T_SIGTYPE_DIAG, &amp;amp;counter_u16)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="160.75" y="-720" width="478.5" height="40" as="geometry" />
         </mxCell>
       </root>
@@ -1575,7 +1575,7 @@
             <mxPoint x="210" y="-420" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kY7mx0ba2pFn-GejSMwc-2" value="loop idxSignal_u8 &amp;lt; CL42T_MOTOR_SIGTYPE_NB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="kY7mx0ba2pFn-GejSMwc-2" value="loop idxSignal_u8 &amp;lt; CL42T_SIGTYPE_NB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="210" y="-730" width="478.5" height="40" as="geometry" />
         </mxCell>
         <mxCell id="JWqZxHDTqV957fKOgWOZ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="fdiznRtKnd6wafAOOfjE-1" target="JWqZxHDTqV957fKOgWOZ-1" edge="1">
@@ -1824,10 +1824,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="ud3b_JjnnYYjh60eOIfC-1" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTOR_SIGTYPE_STATE].signal_u8,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTOR_SIGTYPE_STATE].values_u32&lt;/span&gt;)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="ud3b_JjnnYYjh60eOIfC-1" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_SIGTYPE_STATE].signal_u8,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_SIGTYPE_STATE].values_u32&lt;/span&gt;)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-850" width="478.5" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="T-yR1mLRbKWfmeobC62e-4" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTOR_SIGTYPE_DIR].signal_u8,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTOR_SIGTYPE_DIR].values_u32&lt;/span&gt;)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="T-yR1mLRbKWfmeobC62e-4" value="Ret_e = FMKIO_SetOutDigValue(&lt;div&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_SIGTYPE_DIR].signal_u8,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;motorInfo_ps-&amp;gt;signalInfo_as[CL42T_SIGTYPE_DIR].values_u32&lt;/span&gt;)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="180" y="-400" width="478.5" height="70" as="geometry" />
         </mxCell>
       </root>

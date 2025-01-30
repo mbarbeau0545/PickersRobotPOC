@@ -32,10 +32,6 @@
     */
     typedef enum
     {
-        APPACT_ACTUATOR_MOTOR_1_PULSE = 0x0,      /**< None */
-        APPACT_ACTUATOR_MOTOR_1_DIR,              /**< None */
-        APPACT_ACTUATOR_MOTOR_1_STATE,            /**< None */
-    
         APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;
 

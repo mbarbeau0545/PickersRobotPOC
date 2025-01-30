@@ -50,9 +50,6 @@
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**< Variable for Actuators Drivers State*/
 t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACTUATOR_NB] = {
-    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MOTOR_1_PULSE
-    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MOTOR_1_DIR
-    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MOTOR_1_STATE
 };
 
 /**< Variable for Actuators Drivers State*/
@@ -289,7 +286,6 @@ static t_eReturnCode s_APPACT_ConfigurationState(void)
         if(g_ActDrvState_ae[s_LLDRV_u8] == APPACT_DRIVER_STATE_ENABLE
         && c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb != (t_cbAppAct_DrvInit *)NULL_FONCTION)
         {
-
             Ret_e = (c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb)();
             
         }

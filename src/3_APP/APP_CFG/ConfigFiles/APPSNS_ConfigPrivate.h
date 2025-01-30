@@ -21,7 +21,7 @@
     #include "./APPSNS_ConfigPublic.h"
     #include "../ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Motor_1_Diag.h"
+
     /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
@@ -117,7 +117,6 @@
 
     /**< Variable for System Sensors functions*/
     const t_sAPPSNS_SysSnsFunc c_AppSns_SysSns_apf[APPSNS_SENSOR_NB] = {
-        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Motor_1_Diag_SetCfg,                            APPSNS_SPEC_Motor_1_Diag_GetSigValue,                          APPSNS_SPEC_Motor_1_Diag_FormatValue}, //APPSNS_SENSOR_MOTOR_1_DIAG
     };
 
     /**< Variable for Sensors Unity Management */

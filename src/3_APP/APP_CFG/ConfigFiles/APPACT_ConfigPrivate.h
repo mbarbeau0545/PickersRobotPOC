@@ -20,9 +20,7 @@
     // ********************************************************************
     #include "./APPACT_ConfigPublic.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_1_Pulse.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_1_Dir.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_1_State.h"
+
     /* CAUTION : Automatic generated code section for Include: End */
     #include "Motor/CL42T/Src/CL42T.h"
 
@@ -118,9 +116,7 @@
 
     /**< Variable for System Actuators functions*/
     const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {
-        {APPACT_SPEC_Motor_1_Pulse_SetCfg,                           APPACT_SPEC_Motor_1_Pulse_SetValue,                         APPACT_SPEC_Motor_1_Pulse_GetValue}, //APPACT_ACTUATOR_MOTOR_1_PULSE
-        {APPACT_SPEC_Motor_1_Dir_SetCfg,                             APPACT_SPEC_Motor_1_Dir_SetValue,                           APPACT_SPEC_Motor_1_Dir_GetValue}, //APPACT_ACTUATOR_MOTOR_1_DIR
-        {APPACT_SPEC_Motor_1_State_SetCfg,                           APPACT_SPEC_Motor_1_State_SetValue,                         APPACT_SPEC_Motor_1_State_GetValue}, //APPACT_ACTUATOR_MOTOR_1_STATE
+    
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

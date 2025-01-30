@@ -25,7 +25,7 @@
     // ********************************************************************
     // *                      Types
     // ********************************************************************
-    typedef void (t_cbCL42T_Diagnostic)(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
+
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
@@ -70,11 +70,24 @@
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+    typedef void (t_cbCL42T_Diagnostic)(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
 
     typedef union 
     {
         t_uint16 nbPulses_u16;
-        t_uint16 frequency_u32;
+        t_uint32 frequency_u32;
         t_eCL42T_MotorDirection dir_e;
         t_eCL42T_MotorState state_e;
         t_eCL42T_DiagError diagError_e;
