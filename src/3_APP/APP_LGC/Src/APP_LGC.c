@@ -24,6 +24,8 @@
 #include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 #include "FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
 #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
+#include "Motor/CL42T/Src/CL42T.h"
+#include "APP_CFG/ConfigFiles/CL42T_ConfigPublic.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -59,7 +61,7 @@ static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
 static t_eReturnCode s_APPLGC_PreOperational(void);
 static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_ConfigurationState(void);
-
+static void s_MotorCallback(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -168,10 +170,6 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
-                                    FMKIO_PULL_MODE_DISABLE,
-                                    (t_uint32)2,
-                                    NULL_FONCTION);
     return Ret_e;
 }
 
@@ -181,11 +179,10 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
-                                        (t_uint16)500,
-                                        12);
+    
     return Ret_e;
 }
+
 /*********************************
  * s_APPLGC_Operational
  *********************************/
@@ -193,9 +190,16 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    
 
     return Ret_e;
+}
+
+/*********************************
+ * s_MotorCallback
+ *********************************/
+static void s_MotorCallback(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e)
+{
+    return;
 }
 //************************************************************************************
 // End of File

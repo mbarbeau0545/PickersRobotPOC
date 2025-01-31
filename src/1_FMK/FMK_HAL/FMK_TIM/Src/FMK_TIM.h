@@ -176,22 +176,15 @@
         t_uint32 frequency_u32;         /**< update frequency value */
         t_uint16 dutyCycle_u16;         /**< update duty cycle value */
         t_uint16 nbPulses_u16;              /**< update nbPulses_u16 value */
-        t_uint8 updateMask_u8;          /**< mask update, which value need to be update */
     } t_sFMKTIM_PwmOpe;
 
     typedef struct 
     {
         t_uint32 position_u32;      /**< Encoder Position Value */
         t_uint8 direction_u8;       /**< Encoder Direction Value */
-        t_uint8 getMask_u8;          /**< mask update, which value need to be update */
     } t_sFMKTIM_EncoderValue;
 
-    typedef struct 
-    {
-        t_uint32 frequency_u32;         /**< update frequency value */
-        t_uint16 dutyCycle_u16;         /**< update duty cycle value */
-        t_uint8 getMask_u8;          /**< mask update, which value need to be update */
-    } t_sFMKTIM_PwmValue;
+    typedef t_sFMKTIM_PwmOpe t_sFMKTIM_PwmValue;
     /**< union for Centralize Certain Function */
     typedef union __t_uFMKTIM_InterruptLine
     {
@@ -206,6 +199,7 @@
         t_eFMKTIM_ICOpe ICOpe_e;
         t_eFMKTIM_EvntOpe EvntOpe_e;
         t_sFMKTIM_PwmOpe PwmOpe_s;
+        t_uint8 maskEvnt_u8;
 
     } t_uFMKTIM_ITLineOpe;
 
@@ -213,6 +207,7 @@
     {
         t_sFMKTIM_EncoderValue EncoderValue_s;
         t_sFMKTIM_PwmValue PwmValue_s;
+        t_uint8 maskEvnt_u8;
 
     } t_uFMKTIM_ITLineValue;
     //-----------------------------TYPEDEF TYPES---------------------------//
@@ -225,7 +220,7 @@
     *	 
     *
     */
-   typedef t_eReturnCode (t_cbFMKTIM_InterruptLine)(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
+   typedef void (t_cbFMKTIM_InterruptLine)(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
     //-----------------------------STRUCT TYPES---------------------------//
     /* CAUTION : Automatic generated code section for Structure: Start */
 
