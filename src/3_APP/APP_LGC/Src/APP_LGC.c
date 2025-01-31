@@ -170,6 +170,10 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
+    Ret_e = FMKIO_Set_InFreqSigCfg( FMKIO_INPUT_SIGFREQ_1,
+                                    FMKIO_STC_RISING_EDGE,
+                                    FMKIO_FREQ_MEAS_FREQ,
+                                    NULL_FONCTION);
     return Ret_e;
 }
 
@@ -179,7 +183,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    
+
     return Ret_e;
 }
 
@@ -189,7 +193,13 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_uint32 measCount_u32 = 0;
+    Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &measCount_u32);
 
+    if(measCount_u32 > (t_uint32)40)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
 
     return Ret_e;
 }

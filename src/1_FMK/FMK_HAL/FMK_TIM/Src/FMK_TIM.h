@@ -86,8 +86,7 @@
         FMKTIM_BIT_PWM_FREQUENCY = 0x00,
         FMKTIM_BIT_PWM_DUTYCYCLE,
         FMKTIM_BIT_PWM_NB_PULSES,
-
-        FMKTIM_UPDATE_PWM_NB
+        FMKTIM_BIT_PWM_CCRX_REGISTER,
     };
     /**
      * @brief Enum to set bit for changing Ecdr Signal
@@ -96,9 +95,17 @@
     {
         FMKTIM_BIT_ECDR_DIRECTION = 0x00,
         FMKTIM_BIT_ECDR_POSTION,
-
-        FMKTIM_BIT_ECDR_NB
     };
+    /**
+     * @brief Enum to set bit for updating Input Compare Line
+     */
+    enum 
+    {
+        FMKTIM_BIT_IC_FREQUENCY = 0x00,
+        FMKTIM_BIT_IC_ARR_REGISTER,
+        FMKTIM_BIT_IC_CCRX_REGISTER,
+    };
+
     /**
      * @brief Input Capture Selection
      */
@@ -175,7 +182,7 @@
     {
         t_uint32 frequency_u32;         /**< update frequency value */
         t_uint16 dutyCycle_u16;         /**< update duty cycle value */
-        t_uint16 nbPulses_u16;              /**< update nbPulses_u16 value */
+        t_uint16 nbPulses_u16;          /**< update nbPulses_u16 value */
     } t_sFMKTIM_PwmOpe;
 
     typedef struct 
@@ -183,8 +190,21 @@
         t_uint32 position_u32;      /**< Encoder Position Value */
         t_uint8 direction_u8;       /**< Encoder Direction Value */
     } t_sFMKTIM_EncoderValue;
-
-    typedef t_sFMKTIM_PwmOpe t_sFMKTIM_PwmValue;
+    
+    typedef struct
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint16 dutyCycle_u16;         /**< update duty cycle value */
+        t_uint16 nbPulses_u16;          /**< update nbPulses_u16 value */
+        t_uint16 CCrxRegister_u16;
+    } t_sFMKTIM_PwmValue;
+    
+    typedef struct 
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint32 ARR_Register_u32;
+        t_uint16 CCRxRegister_u32;
+    } t_sFMKTIM_ICValue;
     /**< union for Centralize Certain Function */
     typedef union __t_uFMKTIM_InterruptLine
     {
@@ -206,6 +226,7 @@
     typedef union 
     {
         t_sFMKTIM_EncoderValue EncoderValue_s;
+        t_sFMKTIM_ICValue ICValue_s;
         t_sFMKTIM_PwmValue PwmValue_s;
         t_uint8 maskEvnt_u8;
 
@@ -465,22 +486,8 @@
     t_eReturnCode FMKTIM_Get_LineErrorStatus(t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                 t_uint32 f_IT_line_u8,
                                                 t_uint16 *f_chnlErrInfo_pu16);
-    /**
-    *
-    *	@brief      Function to get CCRx register value
-    *
-    *	@param[in]  f_timer_e                : enum value for the timer, value from @ref t_eFMKTIM_Timer
-    *	@param[in]  f_channel_e              : enum value for the channel, value from @ref t_eFMKTIM_InterruptChnl
-    *	@param[in]  f_CCRxValue_pu32         : storage for CCRx Value.\n
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *
-    */
-    t_eReturnCode FMKTIM_Get_RegisterCRRx(  t_eFMKTIM_InterruptLineType f_ITLineType_e,
-                                            t_uint32 f_IT_line_u8,
-                                            t_uint32 * f_CCRxValue_pu32);
+    
+
 #endif // FMKTIM_H_INCLUDED           
 //************************************************************************************
 // End of File

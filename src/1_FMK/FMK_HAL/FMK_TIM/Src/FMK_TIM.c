@@ -443,9 +443,9 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
 *  @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
 *  @retval RC_WARNING_NO_OPERATION           @ref RC_WARNING_NO_OPERATION
 */
-static t_eReturnCode s_FMKTIM_Get_PWMChannelDuty(   t_eFMKTIM_Timer f_timer_e, 
-                                                    t_eFMKTIM_InterruptChnl f_channel_e,
-                                                    t_uint16 *f_dutyCycle_pu16);
+static t_eReturnCode s_FMKTIM_Get_CCRxValue(t_eFMKTIM_Timer f_timer_e, 
+                                            t_eFMKTIM_InterruptChnl f_channel_e,
+                                            t_uint32 * f_comparedValue_pu32);
 
 /**
  *
@@ -1038,6 +1038,7 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
     t_eFMKTIM_Timer timer_e = FMKTIM_TIMER_NB;
     t_eFMKTIM_InterruptChnl chnl_e = FMKTIM_CHANNEL_NB;
     t_sFMKTIM_TimerInfo * timerInfo_ps;
+    t_uint32 comparedValue_u32;
 
     if((f_ITLineType_e >= FMKTIM_INTERRUPT_LINE_TYPE_NB))
     {
@@ -1054,7 +1055,9 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
                                                f_IT_line_u8,
                                                &timer_e,
                                                &chnl_e);
-
+    }
+    if(Ret_e == RC_OK)
+    {
         timerInfo_ps = (t_sFMKTIM_TimerInfo *)(&g_TimerInfo_as[timer_e]);
 
         if((timerInfo_ps->isConfigured_b == (t_bool)False)
@@ -1095,10 +1098,6 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
                     }
                     if(GETBIT(f_ITLineValue_u->maskEvnt_u8, FMKTIM_BIT_PWM_FREQUENCY) == BIT_IS_SET_8B)
                     {
-                        // Timer depend on APB1 or APB2, if these clock were divided per 2 or more,
-                        // Hardware multiply by 2 the core freqency of the timer
-                        // In other word 
-
                         //------ calculate frequency -----//
                         f_ITLineValue_u->PwmValue_s.frequency_u32 = (t_uint32)((t_float32)timerInfo_ps->timerFreqMHz_u32 * CST_MHZ_TO_HZ) /
                                                                         (t_float32)((timerInfo_ps->bspTimer_s.Instance->ARR + 1) *
@@ -1108,6 +1107,36 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
                     {
                         f_ITLineValue_u->PwmValue_s.nbPulses_u16 = (t_uint16)(timerInfo_ps->bspTimer_s.Instance->RCR - (t_uint16)1);
                     }
+                    if((f_ITLineValue_u->maskEvnt_u8, FMKTIM_BIT_PWM_CCRX_REGISTER) == BIT_IS_SET_8B)
+                    {
+                        Ret_e = s_FMKTIM_Get_CCRxValue(timer_e, chnl_e, &comparedValue_u32);
+
+                        if(Ret_e == RC_OK)
+                        {
+                            f_ITLineValue_u->PwmValue_s.CCrxRegister_u16 = (t_uint16)(((t_float32)comparedValue_u32 * 1000) /
+                                                                                (t_float32)(timerInfo_ps->bspTimer_s.Instance->ARR + 1));
+                        }
+                    }
+                    break;
+                }
+                case FMKTIM_HWTIM_CFG_IC:
+                {
+                    if(GETBIT(f_ITLineValue_u->maskEvnt_u8, FMKTIM_BIT_IC_FREQUENCY) == BIT_IS_SET_8B)
+                    {
+                        //------ calculate frequency -----//
+                        f_ITLineValue_u->ICValue_s.frequency_u32 = (t_uint32)((t_float32)timerInfo_ps->timerFreqMHz_u32 * CST_MHZ_TO_HZ) /
+                                                                        (t_float32)((timerInfo_ps->bspTimer_s.Instance->ARR + 1) *
+                                                                        (timerInfo_ps->bspTimer_s.Instance->PSC + 1));
+                    }
+                    if(GETBIT(f_ITLineValue_u->maskEvnt_u8, FMKTIM_BIT_IC_ARR_REGISTER) == BIT_IS_SET_8B)
+                    {
+                        f_ITLineValue_u->ICValue_s.ARR_Register_u32 = (t_uint32)(timerInfo_ps->bspTimer_s.Instance->ARR);
+                    }
+                    if(GETBIT(f_ITLineValue_u->maskEvnt_u8, FMKTIM_BIT_IC_CCRX_REGISTER) == BIT_IS_SET_8B)
+                    {   
+                        Ret_e = s_FMKTIM_Get_CCRxValue(timer_e, chnl_e, &f_ITLineValue_u->ICValue_s.CCRxRegister_u32);
+                    }
+                    break;
                 }
                 case FMKTIM_HWTIM_CFG_OC:
                 case FMKTIM_HWTIM_CFG_OP:
@@ -1215,6 +1244,58 @@ t_eReturnCode FMKTIM_Get_RegisterCRRx(  t_eFMKTIM_InterruptLineType f_ITLineType
                 *f_CCRxValue_pu32 = (t_uint32)0;
             }  
         }
+    }
+
+    return Ret_e;
+}
+
+
+/*********************************
+ * FMKTIM_Get_RegisterCRRx
+ *********************************/
+t_eReturnCode FMKTIM_Get_RegisterCRRx(  t_eFMKTIM_InterruptLineType f_ITLineType_e,
+                                            t_uint32 f_IT_line_u8,
+                                            t_uint32 * f_FreqValue_pu32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_eFMKTIM_Timer timer_e = FMKTIM_TIMER_NB;
+    t_eFMKTIM_InterruptChnl chnl_e = FMKTIM_CHANNEL_NB;
+    t_uint32 bspChannel_u32 = 0;
+    t_sFMKTIM_TimerInfo * timerInfo_ps;
+
+    if(f_ITLineType_e >= FMKTIM_INTERRUPT_LINE_TYPE_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(g_FmkTim_ModState_e != STATE_CYCLIC_OPE)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
+    if(Ret_e == RC_OK)
+    {
+        
+        Ret_e = s_FMKTIM_Get_TimChnlFromITLine(f_ITLineType_e,
+                                               f_IT_line_u8,
+                                               &timer_e,
+                                               &chnl_e);
+    }
+    if(Ret_e == RC_OK)
+    {
+        timerInfo_ps = (t_sFMKTIM_TimerInfo *)(&g_TimerInfo_as[timer_e]);
+
+        if(timerInfo_ps->Channel_as[chnl_e].State_e == FMKTIM_CHNLST_ACTIVATED)
+        {
+
+            *f_FreqValue_pu32 = (t_uint32)((t_float32)timerInfo_ps->timerFreqMHz_u32 * CST_MHZ_TO_HZ) /
+                                            (t_float32)((timerInfo_ps->bspTimer_s.Instance->ARR + 1) *
+                                            (timerInfo_ps->bspTimer_s.Instance->PSC + 1));
+        }
+        else 
+        {
+            Ret_e = RC_WARNING_NO_OPERATION;
+            *f_FreqValue_pu32 = (t_uint32)0;
+        }
+
     }
 
     return Ret_e;
@@ -1498,7 +1579,7 @@ static t_eReturnCode s_FMKTIM_Set_ICChannelCfg( t_eFMKTIM_Timer f_timer_e,
         #warning('Found the right frequency for Ic Cfg')
         Ret_e = s_FMKTIM_Set_BspTimerInit(  timerInfo_ps,
                                             FMKTIM_HWTIM_CFG_IC,
-                                            (t_uint32)1000,
+                                            (t_uint32)20000,
                                             (void *)NULL);
     }
     //-------this timer has already been configured and cannot be used for another Type of Configuration------//
@@ -2077,58 +2158,39 @@ static t_eReturnCode s_FMKTIM_Set_HwChannelState(   t_eFMKTIM_Timer f_timer_e,
 /*********************************
  * FMKCPU_Get_PWMChannelDuty
  *********************************/
-static t_eReturnCode s_FMKTIM_Get_PWMChannelDuty(   t_eFMKTIM_Timer f_timer_e, 
-                                                    t_eFMKTIM_InterruptChnl f_channel_e,
-                                                    t_uint16 *f_dutyCycle_pu16)
+static t_eReturnCode s_FMKTIM_Get_CCRxValue(t_eFMKTIM_Timer f_timer_e, 
+                                            t_eFMKTIM_InterruptChnl f_channel_e,
+                                            t_uint32 * f_comparedValue_pu32)
 {
-    /********************************
-     *   Some useful information for PWM generation
-     *   1 - ARR = Period in Init =  (((freq_timer)/ (freq_pwm * (PSC+1))) -1)
-     *   For a dutycyle E [0 - 1000]
-     *   2 - CCR1_2_3_4 depending on channel, set the Duty Cycle -> CCR = (DutyCyle/ 1000) * (ARR +1)
-     ********************************/
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 BspChannel_u32 = 0;
-    t_uint32 comparedValue_u32 = 0;
     t_sFMKTIM_TimerInfo * timerInfo_ps;
-    t_uint16 dutyCycle_u16;
 
    if((f_timer_e >= FMKTIM_TIMER_NB)
    || (f_channel_e >= FMKTIM_CHANNEL_NB))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if (f_dutyCycle_pu16 == (t_uint16 *)NULL)
+    if (f_comparedValue_pu32 == (t_uint16 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
     if(Ret_e == RC_OK)
     {
 
-        //---------Get timer/channel information---------//
+        //--------- Get timer/channel information---------//
         timerInfo_ps = (t_sFMKTIM_TimerInfo *)(&g_TimerInfo_as[f_timer_e]);
         
-        //---------get dutycycle only if channel is active---------//
-        
+        //--------- get dutycycle only if channel is active---------//
+
         if (Ret_e == RC_OK)
         {  
             Ret_e = s_FMKTIM_Get_BspChannel(f_channel_e, &BspChannel_u32);
+
             if (Ret_e == RC_OK)
             {
-                //---------use BSP function to know dutycyle---------//
-                comparedValue_u32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s, BspChannel_u32);
-
-                //--------- use formule in description---------//
-                dutyCycle_u16 = (t_uint16)(((t_float32)comparedValue_u32 * 1000) /
-                                                (t_float32)(timerInfo_ps->bspTimer_s.Instance->ARR + 1));
-
-                //--------- Check validity of operation ---------//
-                if(dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE)
-                {
-                    dutyCycle_u16 = FMKTIM_PWM_MAX_DUTY_CYLCE;
-                }
-                //--------- Copy data ---------//
-                *f_dutyCycle_pu16 = dutyCycle_u16;
+                //--------- use BSP function to know dutycyle---------//
+                *f_comparedValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s, BspChannel_u32);
             }
         }
     }
@@ -2684,7 +2746,7 @@ void TIM20_CC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInf
  *	@brief      Every callback function is now centralized in one function
  *
  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { return s_FMKTIM_BspRqst_InterruptMngmt(htim, FMKTIM_BSP_CB_PERIOD_ELAPSED); }
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { return s_FMKTIM_BspRqst_InterruptMngmt(htim, FMKTIM_BSP_CB_PERIOD_ELAPSED); }
 //void HAL_TIM_PeriodElapsedHalfCpltCallback(TIM_HandleTypeDef *htim) { return s_FMKTIM_BspRqst_InterruptMngmt(htim); }
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) { return s_FMKTIM_BspRqst_InterruptMngmt(htim, FMKTIM_BSP_CB_IC_CAPTURE); }
 //void HAL_TIM_IC_CaptureHalfCpltCallback(TIM_HandleTypeDef *htim) { return s_FMKTIM_BspRqst_InterruptMngmt(htim); }

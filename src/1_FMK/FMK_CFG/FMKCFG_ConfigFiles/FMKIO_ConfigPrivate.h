@@ -141,9 +141,9 @@
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
     const t_sFMKIO_BspTimerSigCfg c_InFreqSigBspMap_as[FMKIO_INPUT_SIGFREQ_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_2},              GPIO_AF9_TIM15,                FMKTIM_INTERRUPT_LINE_IO_61},    // FMKIO_INPUT_SIGFREQ_1,
+        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_8},              GPIO_AF2_TIM3,                 FMKTIM_INTERRUPT_LINE_IO_33},    // FMKIO_INPUT_SIGFREQ_1,
         {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_3},              GPIO_AF1_TIM16,                FMKTIM_INTERRUPT_LINE_IO_34},    // FMKIO_INPUT_SIGFREQ_2,
-        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_4},              GPIO_AF1_TIM17,                FMKTIM_INTERRUPT_LINE_IO_33},    // FMKIO_INPUT_SIGFREQ_3,
+        {{FMKIO_GPIO_PORT_E,             FMKIO_GPIO_PIN_4},              GPIO_AF1_TIM17,                FMKTIM_INTERRUPT_LINE_IO_31},    // FMKIO_INPUT_SIGFREQ_3,
     };
 
     /**< Variable for bsp_Gpio_Pin frequency input signal mapping */
