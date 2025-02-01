@@ -25,7 +25,7 @@
     // ********************************************************************
     // *                      Types
     // ********************************************************************
-    typedef void (t_cdCL42T_Diagnostic)(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
+
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
@@ -70,7 +70,29 @@
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+    typedef void (t_cbCL42T_Diagnostic)(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
 
+    typedef union 
+    {
+        t_uint16 nbPulses_u16;
+        t_uint32 frequency_u32;
+        t_eCL42T_MotorDirection dir_e;
+        t_eCL42T_MotorState state_e;
+        t_eCL42T_DiagError diagError_e;
+
+    } t_uCL42T_MotorValue;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -136,206 +158,53 @@
     t_eReturnCode CL42T_SetState(   t_eCyclicModState f_State_e);
 
     /**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_AddPulseSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_eFMKIO_OutPwmSig f_pulseSignal_e,
-                                        t_eFMKIO_PullMode f_pullMode_e,
-                                        t_uint32 f_frequency_u32);
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+    t_eReturnCode CL42T_AddMotorConfiguration(  t_eCL42T_MotorId f_motorId_e,
+                                                t_sCL42T_MotorSigCfg f_MotorCfg_s,
+                                                t_cbCL42T_Diagnostic *f_diagEvnt_pcb);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_AddDirSignal(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eFMKIO_OutDigSig f_dirSignal_e,
-                                        t_eFMKIO_PullMode f_pullMode_e);
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+    t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
+                                            t_eCL42T_MotorSignalType f_sigType_e,
+                                            t_uCL42T_MotorValue f_MotorValue_u);
+    
+    /**
+     *
+     *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+    t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
+                                            t_eCL42T_MotorSignalType f_sigType_e,
+                                            t_uCL42T_MotorValue * f_MotorValue_pu);
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_AddStateSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_eFMKIO_OutDigSig f_stateSignal_e,
-                                        t_eFMKIO_PullMode f_pullMode_e);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42_AddDiagSignal(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eFMKIO_InFreqSig f_diagSignal_e,
-                                        t_eFMKIO_PullMode f_pullMode_e,
-                                        t_cdCL42T_Diagnostic *f_diagnostic_pcb);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_SetPulseSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_uint32 f_frequency_u32,
-                                        t_uint16 f_nbPulses_u16);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_SetDirSignal(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorDirection f_direction_e);    
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_SetStateSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorState f_state_e);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_SetSpeedSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_uint32 f_speed_u32);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_GetPulseSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_uint16 *f_nbPulse_pu16);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_GetDirSignal(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorDirection *f_direction_pe);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_GetStateSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorState *f_state_pe);   
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_GetDefaultSignal(   t_eCL42T_MotorId f_motorId_e,
-                                            t_eCL42T_DiagError f_infoErr_pe);
-
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-    t_eReturnCode CL42T_GetSpeedSignal( t_eCL42T_MotorId f_motorId_e,
-                                        t_uint32 *f_speed_pu32);
                                                                                                                                            
     //********************************************************************************
     //                      Public functions - Prototyupes

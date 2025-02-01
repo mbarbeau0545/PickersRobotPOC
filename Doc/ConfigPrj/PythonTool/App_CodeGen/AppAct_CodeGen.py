@@ -130,15 +130,15 @@ class AppAct_CodeGen():
         for drv_cfg in drivers_cfg_a:
             if(str(drv_cfg[0]) != EMPTY_CELL):
                 var_drv += "        {" 
-                if str(drv_cfg[1]) == "Yes":
-                    var_drv += f"{VAR_DRV_ACT_FUNC_RT}_{drv_cfg[0]}_Init,"
+                if "Yes" in str(drv_cfg[1]):
+                    var_drv += f"{drv_cfg[0]}_Init,"
                     var_drv += " " * ((SPACE_VARIABLE * 2) - len(f"{VAR_DRV_ACT_FUNC_RT}_{drv_cfg[0]}_Init"))
                 else: 
                     var_drv += f"(t_cbAppAct_DrvInit *)NULL_FONCTION,"
                     var_drv += " " * ((SPACE_VARIABLE * 2) - len(f"(t_cbAppAct_DrvInit *)NULL_FONCTION,")) \
                 
-                if str(drv_cfg[2]) == "Yes":
-                    var_drv += f"{VAR_DRV_ACT_FUNC_RT}_{drv_cfg[0]}_Cyclic" + "},"
+                if "Yes" in str(drv_cfg[2]):
+                    var_drv += f"{drv_cfg[0]}_Cyclic" + "},"
                     
                 else: 
                     var_drv += f"(t_cbAppAct_DrvInit *)NULL_FONCTION" + "},"

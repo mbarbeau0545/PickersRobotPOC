@@ -20,10 +20,9 @@
     // ********************************************************************
     #include "./APPACT_ConfigPublic.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Cmd_IrrigValve_Tomate.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Cmd_IrrigValve_Courgette.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Cmd_IrrigValve_Carotte.h"
+
     /* CAUTION : Automatic generated code section for Include: End */
+    #include "Motor/CL42T/Src/CL42T.h"
 
     // ********************************************************************
     // *                      Defines
@@ -112,13 +111,12 @@
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< Variable for System Actuators drivers functions*/
     const t_sAPPACT_SysDrvFunc c_AppAct_SysDrv_apf[APPACT_DRIVER_NB] = {
+        {CL42T_Init,                                           CL42T_Cyclic},  // APPACT_DRIVER_CL42T
     };
 
     /**< Variable for System Actuators functions*/
     const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {
-        {APPACT_SPEC_Cmd_IrrigValve_Tomate_SetCfg,                   APPACT_SPEC_Cmd_IrrigValve_Tomate_SetValue,                 APPACT_SPEC_Cmd_IrrigValve_Tomate_GetValue}, //APPACT_ACTUATOR_CMD_IRRIGVALVE_TOMATE
-        {APPACT_SPEC_Cmd_IrrigValve_Courgette_SetCfg,                APPACT_SPEC_Cmd_IrrigValve_Courgette_SetValue,              APPACT_SPEC_Cmd_IrrigValve_Courgette_GetValue}, //APPACT_ACTUATOR_CMD_IRRIGVALVE_COURGETTE
-        {APPACT_SPEC_Cmd_IrrigValve_Carotte_SetCfg,                  APPACT_SPEC_Cmd_IrrigValve_Carotte_SetValue,                APPACT_SPEC_Cmd_IrrigValve_Carotte_GetValue}, //APPACT_ACTUATOR_CMD_IRRIGVALVE_CAROTTE
+    
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

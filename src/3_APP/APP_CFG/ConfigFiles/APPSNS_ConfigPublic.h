@@ -31,9 +31,7 @@
     * @brief Enum for Sensors list.
     */
     typedef enum
-    {
-        APPSNS_SENSOR_AIRTEMPERATURE = 0x0,     /**< Température local de l'air */
-    
+    {    
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
 

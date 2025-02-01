@@ -138,7 +138,16 @@
     *                store information for each signals.\n
     *
     */
-    typedef t_eReturnCode (t_cbFMKIO_EventFunc)(void);
+    typedef void (t_cbFMKIO_EventFunc)(void);
+    /**
+    *
+    *	@brief      This function is a callback function for event signal.\n
+    *	@note       Once the trigger is detected this function callback should be
+    *               called.\n
+    *                store information for each signals.\n
+    *
+    */
+    typedef void (t_cbFMKIO_PulseEvent)(t_eFMKIO_OutPwmSig f_signal_e);
     /**
     *
     *	@brief      This function is a callback function for dignostic/ error
@@ -359,10 +368,11 @@
     *   @retval RC_ERROR_ALREADY_CONFIGURED       @ref RC_ERROR_ALREADY_CONFIGURED
     *
     */
-    t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig        f_signal_e, 
-                                          t_eFMKIO_PullMode        f_pull_e,
-                                          t_uint32                 f_frequency_u32,
-                                          t_cbFMKIO_SigErrorMngmt *f_sigErr_cb);
+    t_eReturnCode FMKIO_Set_OutPwmSigCfg(   t_eFMKIO_OutPwmSig       f_signal_e, 
+                                            t_eFMKIO_PullMode        f_pull_e,
+                                            t_uint32                 f_frequency_u32,
+                                            t_cbFMKIO_PulseEvent    * f_pulseEvnt_pcb,
+                                            t_cbFMKIO_SigErrorMngmt * f_sigErr_cb);
     /**
     *
     *	@brief      Set an output in digital configuration.\n
@@ -614,6 +624,24 @@
     *
     */
     t_eReturnCode FMKIO_Get_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint32 * f_frequency_pu32);
+    /**
+    *
+    *	@brief      Update the dutyCycle for a PWM.\n
+    *	@note       Once the configuration is done, this function update the dutycyle of 
+    *               the pwm. if the PWM is not started yet the framework automatically set ON the channel
+    *               if the dutyCycle is set to 0 that will shut down the pulse generation.\n 
+    *
+    *
+    *	@param[in]      f_signal_e        : the input pwm signal, a value from @ref t_eFMKIO_OutPwmSig
+    *	@param[in]      f_frequency_u16   : the frequency, value between 0 (0%) - 1000 (100%)
+    *	 
+    *   @retval RC_OK                             @ref RC_OK
+    *   @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
+    *   @retval RC_ERROR_MISSING_CONFIG           @ref RC_ERROR_MISSING_CONFIG
+    *   @retval RC_ERROR_BUSY                     @ref RC_ERROR_BUSY
+    *
+    */
+    t_eReturnCode FMKIO_Get_OutPwmSigPulsesLeft(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 * f_pulsesLeft_pu16);
     /**
     *
     *	@brief      Get the digital output.\n
