@@ -20,6 +20,7 @@ from FMK_CodeGen.FMKCPU_CodeGen  import FMKCPU_CodeGen as FMKCPU
 from FMK_CodeGen.FMKSRL_CodeGen  import FMKSRL_CodeGen as FMKSRL
 from App_CodeGen.AppSns_CodeGen import AppSns_CodeGen as APPSNS
 from App_CodeGen.AppAct_CodeGen import AppAct_CodeGen as APPACT
+from App_CodeGen.AppSdm_CodeGen import AppSdm_CodeGen as APPSDM
 #------------------------------------------------------------------------------
 #                                       CONSTANT
 #------------------------------------------------------------------------------
@@ -59,6 +60,7 @@ def main()-> None:
     FMKIO.code_generation(hardware_cfg_path)
     APPSNS.code_generation(software_cfg_path)
     APPACT.code_generation(software_cfg_path)
+    APPSDM.code_generation(software_cfg_path)
 
     print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     print("<<<<<<<<<<<<<<<<<Successfuly made code generation for project>>>>>>>>>>>>>>>>>")

@@ -43,6 +43,8 @@
 
     L'utilisateur devra donc fournir une callback s'il veut transmettre un message, l'idx de l'enum et les debug Info lui seront partagé. 
 
+    On peut gérer le
+
 # inhibition des agents 
     - La logic sera certainement architecturé en agent (voir Info APP_LGC) pour plus d'info, 
     donc après chaque debouncer si une startégy safety doit être appliqué, on set les agents dans un état d'inhibition totale (court-circuité totalement) ou dans un état de safety (a le droit de set actuators si un évènement compromettant la santé du robot survient) selon la configuration utilisateur.
