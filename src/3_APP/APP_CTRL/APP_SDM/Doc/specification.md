@@ -43,7 +43,17 @@
 
     L'utilisateur devra donc fournir une callback s'il veut transmettre un message, l'idx de l'enum et les debug Info lui seront partagé. 
 
+    On peut gérer le
+
 # inhibition des agents 
     - La logic sera certainement architecturé en agent (voir Info APP_LGC) pour plus d'info, 
     donc après chaque debouncer si une startégy safety doit être appliqué, on set les agents dans un état d'inhibition totale (court-circuité totalement) ou dans un état de safety (a le droit de set actuators si un évènement compromettant la santé du robot survient) selon la configuration utilisateur.
 
+# ReportDiagnosticEvnt
+    Cette fonction est utilisé par l'utilisé pour report un diagnostic 
+    Si il n'y a pas de diagnostic en cours de mngmt et l'evnt est PASS alors on sort de
+    la fonction avec un retcode NO_OPERATION 
+    l'exécution du reste de la fonction a donc deux buts 
+        - soit le diagnostic existe et on met à jours l'evnt
+        - soit il n'existe pas et on doit lui trouver une place grâce à 
+            une variable d'index.
