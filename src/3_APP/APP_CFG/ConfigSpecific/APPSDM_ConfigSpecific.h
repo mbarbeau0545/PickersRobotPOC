@@ -8,8 +8,8 @@
  * @version     1.0
  */
   
-#ifndef APPSYS_CONFIGPUBLIC_H_INCLUDED
-#define APPSYS_CONFIGPUBLIC_H_INCLUDED
+#ifndef APPSDM_CONFIGSPECIFIC_H_INCLUDED
+#define APPSDM_CONFIGSPECIFIC_H_INCLUDED
 
 
 
@@ -23,38 +23,21 @@
     // *                      Defines
     // ********************************************************************
 
-    //#define APPSYS_MODULE_FMKCAN_ENABLE
-    #define APPSYS_MODULE_FMKSRL_ENABLE
-    #define APPSYS_MODULE_APPLGC_ENABLE
     // ********************************************************************
     // *                      Types
     // ********************************************************************
+    typedef enum 
+    {
+        APPSDM_DIAG_STRAT_INHIBIT_OFF = 0x00,
+        APPSDM_DIAG_STRAT_INHIBIT_ON,
+
+        APPSDM_DIAG_STRAT_INHIBIT_NB
+    } t_eAPPSDM_DiagStratOpe;
 	/* CAUTION : Automatic generated code section for Enum: Start */
 
 	/* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    // Flag automatic generate code
     /**< enum for module list */
-    typedef enum
-    {
-        APPSYS_MODULE_FMK_CPU = 0,
-        APPSYS_MODULE_FMK_TIM,
-        APPSYS_MODULE_FMK_CDA,
-        APPSYS_MODULE_FMK_IO,
-#ifdef APPSYS_MODULE_FMKCAN_ENABLE
-        APPSYS_MODULE_FMK_CAN,
-#endif // APPSYS_MODULE_FMKCAN_ENABLE
-
-#ifdef APPSYS_MODULE_FMKSRL_ENABLE
-        APPSYS_MODULE_FMK_SERIAL,
-#endif // APPSYS_MODULE_FMKSRL_ENABLE
-        APPSYS_MODULE_APP_SDM,
-        APPSYS_MODULE_APP_SNS,
-        APPSYS_MODULE_APP_ACT,
-        APPSYS_MODULE_APP_LGC,
-
-        APPSYS_MODULE_NB
-    } t_eAppSys_ModuleList;
 
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -78,7 +61,9 @@
     //                      Public functions - Prototyupes
     //********************************************************************************
 
-#endif // APPSYS_CONFIGPUBLIC_H_INCLUDED           
+   
+
+#endif // APPSDM_CONFIGSPECIFIC_H_INCLUDED           
 //************************************************************************************
 // End of File
 //************************************************************************************

@@ -19,7 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "./APPSDM_ConfigPublic.h"
-    #include "APP_CFG/ConfigSpecific/APPACT_ConfigSpecific.h"
+    #include "APP_CFG/ConfigSpecific/APPSDM_ConfigSpecific.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -68,10 +68,10 @@
     */
     t_sAPPSM_DiagItemCfg c_AppSdm_DiagItemCfg_as[APPSDM_DIAG_ITEM_NB] ={
         // DebuncerValueMs                        NotifyUser                     Log Error                      Applied Startegy
-        {(t_uint16)1000,                          True,                          False,                         APPSDM_DIAG_STRAT_1},  // APPSDM_DIAG_ITEM_AAAAA
-        {(t_uint16)2000,                          True,                          False,                         APPSDM_DIAG_STRAT_2},  // APPSDM_DIAG_ITEM_BBBBB
-        {(t_uint16)3000,                          True,                          False,                         APPSDM_DIAG_STRAT_3},  // APPSDM_DIAG_ITEM_CCCCC
-        {(t_uint16)4000,                          True,                          False,                         APPSDM_DIAG_STRAT_4},  // APPSDM_DIAG_ITEM_DDDD
+        {(t_uint16)1000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_AAAAA
+        {(t_uint16)2000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_BBBBB
+        {(t_uint16)3000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_CCCCC
+        {(t_uint16)4000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_DDDD
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */
