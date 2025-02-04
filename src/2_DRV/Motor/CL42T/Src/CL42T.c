@@ -1110,12 +1110,13 @@ static t_eReturnCode s_CL42T_AddPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
             Ret_e = FMKIO_Set_OutPwmSigCfg( f_pulseCfg_ps->PulseSignal_e, 
                                             f_pulseCfg_ps->PullMode_e, 
                                             f_pulseCfg_ps->f_PulseInitFreq_u32,
+                                            FMKTIM_PWM_MODE_FINITE_PULSE,
                                             s_CL42T_PulseEventMngmt,
                                             s_CL42T_SigErrorMngmt);
            
 
             if(Ret_e == RC_OK)
-            {   
+            {
                 SignalInfo_ps->signal_u8 = f_pulseCfg_ps->PulseSignal_e;
                 SignalInfo_ps->isConfigured_b = True;
                 

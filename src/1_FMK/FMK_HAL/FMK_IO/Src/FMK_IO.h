@@ -371,6 +371,7 @@
     t_eReturnCode FMKIO_Set_OutPwmSigCfg(   t_eFMKIO_OutPwmSig       f_signal_e, 
                                             t_eFMKIO_PullMode        f_pull_e,
                                             t_uint32                 f_frequency_u32,
+                                            t_eFMKTIM_PwmMode         f_PwmMode_e,
                                             t_cbFMKIO_PulseEvent    * f_pulseEvnt_pcb,
                                             t_cbFMKIO_SigErrorMngmt * f_sigErr_cb);
     /**

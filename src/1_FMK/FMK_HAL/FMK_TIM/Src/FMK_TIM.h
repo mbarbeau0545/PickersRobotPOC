@@ -86,9 +86,20 @@
         FMKTIM_BIT_PWM_FREQUENCY = 0x00,
         FMKTIM_BIT_PWM_DUTYCYCLE,
         FMKTIM_BIT_PWM_NB_PULSES,
-
-        FMKTIM_UPDATE_PWM_NB
+        FMKTIM_BIT_PWM_CCRX_REGISTER,
     };
+
+    /**
+     * @brief Enum Pwm Mode
+     */
+    typedef enum
+    {
+        FMKTIM_PWM_MODE_FINITE_PULSE = 0x00, /**< Interrupt Line will generate pulses  */
+        FMKTIM_PWM_MODE_INFINITE_PULSE,
+
+        FMKTIM_PWM_MODE_NB,
+    } t_eFMKTIM_PwmMode;
+
     /**
      * @brief Enum to set bit for changing Ecdr Signal
      */
@@ -96,9 +107,18 @@
     {
         FMKTIM_BIT_ECDR_DIRECTION = 0x00,
         FMKTIM_BIT_ECDR_POSTION,
-
-        FMKTIM_BIT_ECDR_NB
     };
+    /**
+     * @brief Enum to set bit for updating Input Compare Line
+     */
+    enum 
+    {
+        FMKTIM_BIT_IC_STATE = 0x00,
+        FMKTIM_BIT_IC_FREQUENCY,
+        FMKTIM_BIT_IC_ARR_REGISTER,
+        FMKTIM_BIT_IC_CCRX_REGISTER,
+    };
+
     /**
      * @brief Input Capture Selection
      */
@@ -157,11 +177,11 @@
 
     typedef enum 
     {
-        FMKTIM_IC_OPE_ENABLE = 0x00,
-        FMKTIM_IC_OPE_DISABLE,
+        FMKTIM_IC_STATE_ENABLE = 0x00,
+        FMKTIM_IC_STATE_DISABLE,
 
-        FMKTIM_IC_OPE_NB,
-    } t_eFMKTIM_ICOpe;
+        FMKTIM_IC_STATE_NB,
+    } t_eFMKTIM_ICState;
 
     typedef enum 
     {
@@ -175,16 +195,35 @@
     {
         t_uint32 frequency_u32;         /**< update frequency value */
         t_uint16 dutyCycle_u16;         /**< update duty cycle value */
-        t_uint16 nbPulses_u16;              /**< update nbPulses_u16 value */
+        t_uint16 nbPulses_u16;          /**< update nbPulses_u16 value */
     } t_sFMKTIM_PwmOpe;
+
+    typedef struct _t_sFMKTIM_ICOpe
+    {
+        t_uint32 frequency_u32;
+        t_eFMKTIM_ICState IcState_e;
+    } t_sFMKTIM_ICOpe;
 
     typedef struct 
     {
         t_uint32 position_u32;      /**< Encoder Position Value */
         t_uint8 direction_u8;       /**< Encoder Direction Value */
     } t_sFMKTIM_EncoderValue;
-
-    typedef t_sFMKTIM_PwmOpe t_sFMKTIM_PwmValue;
+    
+    typedef struct
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint16 dutyCycle_u16;         /**< update duty cycle value */
+        t_uint16 nbPulses_u16;          /**< update nbPulses_u16 value */
+        t_uint16 CCrxRegister_u16;
+    } t_sFMKTIM_PwmValue;
+    
+    typedef struct 
+    {
+        t_uint32 frequency_u32;         /**< update frequency value */
+        t_uint32 ARR_Register_u32;
+        t_uint16 CCRxRegister_u16;
+    } t_sFMKTIM_ICValue;
     /**< union for Centralize Certain Function */
     typedef union __t_uFMKTIM_InterruptLine
     {
@@ -196,19 +235,16 @@
     typedef union 
     {
         t_eFMKTIM_EcdrOpe EncoderOpe_e;
-        t_eFMKTIM_ICOpe ICOpe_e;
+        t_sFMKTIM_ICOpe ICOpe_s;
         t_eFMKTIM_EvntOpe EvntOpe_e;
         t_sFMKTIM_PwmOpe PwmOpe_s;
-        t_uint8 maskEvnt_u8;
-
     } t_uFMKTIM_ITLineOpe;
 
     typedef union 
     {
         t_sFMKTIM_EncoderValue EncoderValue_s;
+        t_sFMKTIM_ICValue ICValue_s;
         t_sFMKTIM_PwmValue PwmValue_s;
-        t_uint8 maskEvnt_u8;
-
     } t_uFMKTIM_ITLineValue;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
@@ -320,8 +356,10 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKTIM_Set_PWMLineCfg( t_eFMKTIM_InterruptLineIO f_InterruptLine_e,
-                                            t_uint32 f_pwmFreq_u32);
+    t_eReturnCode FMKTIM_Set_PWMLineCfg(t_eFMKTIM_InterruptLineIO f_InterruptLine_e,
+                                        t_uint32 f_pwmFreq_u32,
+                                        t_eFMKTIM_PwmMode f_PwmMode_e,
+                                        t_cbFMKTIM_InterruptLine * f_PwmPulseFinished_pcb);
     /**
     *
     *	@brief      Configure an interrupt line in Ecdr configuration.\n
@@ -412,7 +450,8 @@
     */
     t_eReturnCode FMKTIM_Set_InterruptLineOpe(  t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                 t_uint8 f_IT_line_u8,
-                                                t_uFMKTIM_ITLineOpe f_ITLineOpe);
+                                                t_uFMKTIM_ITLineOpe f_ITLineOpe_u,
+                                                t_uint8 f_mask_u8);
     /**
     *
     *	@brief      Set a InterruptLine  state ON/OFF.\n
@@ -429,7 +468,8 @@
     */
     t_eReturnCode FMKTIM_Get_InterruptLineValue(    t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                     t_uint8 f_IT_line_u8,
-                                                    t_uFMKTIM_ITLineValue * f_ITLineValue);
+                                                    t_uFMKTIM_ITLineValue * f_ITLineValue_pu,
+                                                    t_uint8 f_mask_u8);
 
     /**
     *
@@ -465,22 +505,8 @@
     t_eReturnCode FMKTIM_Get_LineErrorStatus(t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                 t_uint32 f_IT_line_u8,
                                                 t_uint16 *f_chnlErrInfo_pu16);
-    /**
-    *
-    *	@brief      Function to get CCRx register value
-    *
-    *	@param[in]  f_timer_e                : enum value for the timer, value from @ref t_eFMKTIM_Timer
-    *	@param[in]  f_channel_e              : enum value for the channel, value from @ref t_eFMKTIM_InterruptChnl
-    *	@param[in]  f_CCRxValue_pu32         : storage for CCRx Value.\n
-    *
-    *  @retval RC_OK                             @ref RC_OK
-    *  @retval RC_ERROR_PARAM_INVALID            @ref RC_ERROR_PARAM_INVALID
-    *  @retval RC_ERROR_PTR_NULL                 @ref RC_ERROR_PTR_NULL
-    *
-    */
-    t_eReturnCode FMKTIM_Get_RegisterCRRx(  t_eFMKTIM_InterruptLineType f_ITLineType_e,
-                                            t_uint32 f_IT_line_u8,
-                                            t_uint32 * f_CCRxValue_pu32);
+    
+
 #endif // FMKTIM_H_INCLUDED           
 //************************************************************************************
 // End of File

@@ -228,6 +228,9 @@ t_eReturnCode FMKTIM_GetICTimerInitParam(   t_eFMKCPU_ClockPort f_timClock_e,
                                         f_PwmFreq_f32,
                                         f_bspTimARR_pu32,
                                         f_bspTimPrescaler_pu32);
+
+
+    return RC_OK;
 }
 
 /*********************************
