@@ -26,6 +26,7 @@
     #include "1_FMK/FMK_HAL/FMK_CAN/Src/FMK_FDCAN.h"
     #include "1_FMK/FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
     #include "3_APP/APP_CTRL/APP_ACT/Src/APP_ACT.h"
+    #include "3_APP/APP_CTRL/APP_SDM/Src/APP_SDM.h"
     #include "3_APP/APP_CTRL/APP_SNS/Src/APP_SNS.h"
     #include "3_APP/APP_LGC/Src/APP_LGC.h"
     // ********************************************************************
@@ -115,6 +116,7 @@
 #endif // APPSYS_MODULE_FMKSRL_ENABLE
 
         //----- Application module -----//
+        {APPSDM_Init,    APPSDM_Cyclic,     APPSDM_GetState,   APPSDM_SetState},
         {APPSNS_Init,    APPSNS_Cyclic,     APPSNS_GetState,   APPSNS_SetState},
         {APPACT_Init,    APPACT_Cyclic,     APPACT_GetState,   APPACT_SetState},
         {APPLGC_Init,    APPLGC_Cyclic,     APPLGC_GetState,   APPLGC_SetState},

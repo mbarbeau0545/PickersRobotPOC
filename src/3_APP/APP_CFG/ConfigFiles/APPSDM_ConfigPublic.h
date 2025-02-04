@@ -45,10 +45,6 @@
     typedef enum 
     {
         APPSDM_DIAG_STRAT_NONE = -1,
-        APPSDM_DIAG_STRAT_1 = 0x00,
-        APPSDM_DIAG_STRAT_2,
-        APPSDM_DIAG_STRAT_3,
-        APPSDM_DIAG_STRAT_4,
 
         APPSDM_DIAG_STRAT_NB,
     } t_eAPPSDM_DiagnosticStrat;

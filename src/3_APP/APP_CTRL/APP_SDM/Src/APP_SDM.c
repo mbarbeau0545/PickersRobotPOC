@@ -16,7 +16,7 @@
 // ********************************************************************
 // *                      Includes
 // ********************************************************************
-#include "./APPSDM.h"
+#include "./APP_SDM.h"
 #include "APP_CFG/ConfigFiles/APPSDM_ConfigPrivate.h"
 
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
@@ -445,8 +445,7 @@ static t_eReturnCode s_APPSDM_DiagnosticMngmt(  t_sAPPSDM_DiagItemInfo * f_itemI
                                                 t_sAPPSM_DiagItemCfg * f_itemCfg_ps )
 {
     t_eReturnCode Ret_e = RC_OK;
-    //t_uint32 currentTime_u32 = (t_uint32)0;
-    long int currentTime_u32 =  0;
+    t_uint32 currentTime_u32 = (t_uint32)0;
 
     if(f_itemCfg_ps == (t_sAPPSM_DiagItemCfg *)NULL
     || f_itemInfo_ps == (t_sAPPSDM_DiagItemInfo *)NULL)
@@ -455,8 +454,7 @@ static t_eReturnCode s_APPSDM_DiagnosticMngmt(  t_sAPPSDM_DiagItemInfo * f_itemI
     }
     if(Ret_e == RC_OK)
     {
-        currentTime_u32 = time(NULL);
-        //FMKCPU_Get_Tick(&currentTime_u32);
+        FMKCPU_Get_Tick(&currentTime_u32);
         //----- Diagnostic is still Repertory as ON -----//
         if(f_itemInfo_ps->reportstate_e == APPSDM_DIAG_ITEM_REPORT_FAIL)
         {
@@ -484,6 +482,9 @@ static t_eReturnCode s_APPSDM_DiagnosticMngmt(  t_sAPPSDM_DiagItemInfo * f_itemI
                                         APPSDM_DIAG_ITEM_REPORT_FAIL,
                                         f_itemInfo_ps->debugInfo1_u16,
                                         f_itemInfo_ps->debugInfo2_u16);
+                    
+                    //----- Update Report Time -----//
+                    f_itemInfo_ps->reportTime_u32 = currentTime_u32;
                 }
             }
             
