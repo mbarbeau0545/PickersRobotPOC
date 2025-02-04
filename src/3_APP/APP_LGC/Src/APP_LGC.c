@@ -67,6 +67,7 @@ static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8,
                                     t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
 
 static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
+static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -174,40 +175,42 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+     t_sFMKSRL_DrvSerialCfg SrlCfg_s;
 
-    //Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
-    //                                FMKIO_PULL_MODE_DISABLE,
-    //                                2,
-    //                                NULL_FONCTION,
-    //                                NULL_FONCTION);
-    if(Ret_e == RC_OK)
+   Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
+                                    FMKIO_PULL_MODE_DISABLE,
+                                    6000,
+                                    FMKTIM_PWM_MODE_FINITE_PULSE,
+                                    s_PulseCallback,
+                                    NULL_FONCTION);
+    /*if(Ret_e == RC_OK)
     {
         Ret_e = FMKIO_Set_InFreqSigCfg( FMKIO_INPUT_SIGFREQ_1,
                                         FMKIO_STC_RISING_EDGE,
                                         FMKIO_FREQ_MEAS_FREQ,
                                         NULL_FONCTION);
+    }
     if(Ret_e == RC_OK)
     {
-        t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
-    SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
-    SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,
-    SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
-    SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
-    SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
-    SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
+        SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_IT;
+        SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
 
-    SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
-    SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
+        SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_9600,
+        SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
+        SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
+        SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
+        SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
 
-    Ret_e = FMKSRL_InitDrv( FMKSRL_SERIAL_LINE_2, 
-                            SrlCfg_s,
-                            s_APPLGC_RcvSrlEvent,
-                            s_APPLGC_TranmistEvnt);
-    }    
-    }
-    
+        SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
+        SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
+
+        Ret_e = FMKSRL_InitDrv( FMKSRL_SERIAL_LINE_2, 
+                                SrlCfg_s,
+                                s_APPLGC_RcvSrlEvent,
+                                s_APPLGC_TranmistEvnt);
+    }  */  
+
     return Ret_e;
 }
 
@@ -218,9 +221,9 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-
-    //Ret_e = FMKIO_Set_OutPwmSigDutyCycle(   FMKIO_OUTPUT_SIGPWM_3,
-    //                                        (t_uint16)500);
+    Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
+                                        (t_uint16)500,
+                                        (t_uint16)12000);
 
 
     return Ret_e;
@@ -232,7 +235,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint32 measCount_u32 = 0;
+    /*t_uint32 measCount_u32 = 0;
     char msgbuffer[40];
     Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &measCount_u32);
 
@@ -245,7 +248,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
                                 (t_uint16)strlen(msgbuffer),
                                 0,
                                 False);
-    }
+    }*/
 
     return Ret_e;
 }
@@ -274,6 +277,14 @@ static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8,
 }
 
 static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e)
+{
+    return;
+}
+
+/*********************************
+ * s_MotorCallback
+ *********************************/
+static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e)
 {
     return;
 }

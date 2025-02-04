@@ -113,7 +113,8 @@
      */
     enum 
     {
-        FMKTIM_BIT_IC_FREQUENCY = 0x00,
+        FMKTIM_BIT_IC_STATE = 0x00,
+        FMKTIM_BIT_IC_FREQUENCY,
         FMKTIM_BIT_IC_ARR_REGISTER,
         FMKTIM_BIT_IC_CCRX_REGISTER,
     };
@@ -176,11 +177,11 @@
 
     typedef enum 
     {
-        FMKTIM_IC_OPE_ENABLE = 0x00,
-        FMKTIM_IC_OPE_DISABLE,
+        FMKTIM_IC_STATE_ENABLE = 0x00,
+        FMKTIM_IC_STATE_DISABLE,
 
-        FMKTIM_IC_OPE_NB,
-    } t_eFMKTIM_ICOpe;
+        FMKTIM_IC_STATE_NB,
+    } t_eFMKTIM_ICState;
 
     typedef enum 
     {
@@ -196,6 +197,12 @@
         t_uint16 dutyCycle_u16;         /**< update duty cycle value */
         t_uint16 nbPulses_u16;          /**< update nbPulses_u16 value */
     } t_sFMKTIM_PwmOpe;
+
+    typedef struct _t_sFMKTIM_ICOpe
+    {
+        t_uint32 frequency_u32;
+        t_eFMKTIM_ICState IcState_e;
+    } t_sFMKTIM_ICOpe;
 
     typedef struct 
     {
@@ -228,7 +235,7 @@
     typedef union 
     {
         t_eFMKTIM_EcdrOpe EncoderOpe_e;
-        t_eFMKTIM_ICOpe ICOpe_e;
+        t_sFMKTIM_ICOpe ICOpe_s;
         t_eFMKTIM_EvntOpe EvntOpe_e;
         t_sFMKTIM_PwmOpe PwmOpe_s;
     } t_uFMKTIM_ITLineOpe;
