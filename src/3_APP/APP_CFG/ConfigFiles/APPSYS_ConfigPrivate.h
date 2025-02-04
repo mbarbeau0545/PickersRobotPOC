@@ -33,7 +33,7 @@
     // ********************************************************************
 
     #define APPSYS_SYSTEM_CORE_SPEED FMKCPU_CORE_CLOCK_SPEED_128MHZ
-    #define APPSYS_ELAPSED_TIME_CYCLIC ((t_uint8)100) /**< Elapsed time (in ms) between cyclic function call*/
+    #define APPSYS_ELAPSED_TIME_CYCLIC ((t_uint8)500) /**< Elapsed time (in ms) between cyclic function call*/
     // ********************************************************************
     // *                      Types
     // ********************************************************************

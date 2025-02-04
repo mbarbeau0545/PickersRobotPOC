@@ -203,7 +203,7 @@
     {
         t_uint32 frequency_u32;         /**< update frequency value */
         t_uint32 ARR_Register_u32;
-        t_uint16 CCRxRegister_u32;
+        t_uint16 CCRxRegister_u16;
     } t_sFMKTIM_ICValue;
     /**< union for Centralize Certain Function */
     typedef union __t_uFMKTIM_InterruptLine
@@ -219,8 +219,6 @@
         t_eFMKTIM_ICOpe ICOpe_e;
         t_eFMKTIM_EvntOpe EvntOpe_e;
         t_sFMKTIM_PwmOpe PwmOpe_s;
-        t_uint8 maskEvnt_u8;
-
     } t_uFMKTIM_ITLineOpe;
 
     typedef union 
@@ -228,8 +226,6 @@
         t_sFMKTIM_EncoderValue EncoderValue_s;
         t_sFMKTIM_ICValue ICValue_s;
         t_sFMKTIM_PwmValue PwmValue_s;
-        t_uint8 maskEvnt_u8;
-
     } t_uFMKTIM_ITLineValue;
     //-----------------------------TYPEDEF TYPES---------------------------//
     /**
@@ -433,7 +429,8 @@
     */
     t_eReturnCode FMKTIM_Set_InterruptLineOpe(  t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                 t_uint8 f_IT_line_u8,
-                                                t_uFMKTIM_ITLineOpe f_ITLineOpe);
+                                                t_uFMKTIM_ITLineOpe f_ITLineOpe_u,
+                                                t_uint8 f_mask_u8);
     /**
     *
     *	@brief      Set a InterruptLine  state ON/OFF.\n
@@ -450,7 +447,8 @@
     */
     t_eReturnCode FMKTIM_Get_InterruptLineValue(    t_eFMKTIM_InterruptLineType f_ITLineType_e,
                                                     t_uint8 f_IT_line_u8,
-                                                    t_uFMKTIM_ITLineValue * f_ITLineValue);
+                                                    t_uFMKTIM_ITLineValue * f_ITLineValue_pu,
+                                                    t_uint8 f_mask_u8);
 
     /**
     *
