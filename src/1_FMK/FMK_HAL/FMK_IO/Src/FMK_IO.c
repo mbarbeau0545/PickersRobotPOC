@@ -1024,7 +1024,8 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e,
     t_uint8 maskUpdate_u8 = (t_uint8)0; 
 
     if ((f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
-    ||  (f_dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE))
+    ||  (f_dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE)
+    ||  (f_pulses_u16 > (t_uint16)0xFFFF))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }

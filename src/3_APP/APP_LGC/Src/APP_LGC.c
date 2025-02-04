@@ -179,7 +179,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 
    Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
                                     FMKIO_PULL_MODE_DISABLE,
-                                    6000,
+                                    26000,
                                     FMKTIM_PWM_MODE_FINITE_PULSE,
                                     s_PulseCallback,
                                     NULL_FONCTION);

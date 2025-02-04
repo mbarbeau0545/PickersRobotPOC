@@ -1899,7 +1899,7 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
    
                 timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT; 
                 
-                bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)1);  // Modifier le RCR
+                bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);  // Modifier le RCR
                 //__HAL_TIM_ENABLE_IT(&timerInfo_ps->bspTimer_s, TIM_IT_UPDATE);
                 chnlState_e = FMKTIM_CHNLST_ACTIVATED;
             }
