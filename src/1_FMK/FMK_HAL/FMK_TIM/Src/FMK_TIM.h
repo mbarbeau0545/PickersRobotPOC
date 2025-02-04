@@ -88,6 +88,18 @@
         FMKTIM_BIT_PWM_NB_PULSES,
         FMKTIM_BIT_PWM_CCRX_REGISTER,
     };
+
+    /**
+     * @brief Enum Pwm Mode
+     */
+    typedef enum
+    {
+        FMKTIM_PWM_MODE_FINITE_PULSE = 0x00, /**< Interrupt Line will generate pulses  */
+        FMKTIM_PWM_MODE_INFINITE_PULSE,
+
+        FMKTIM_PWM_MODE_NB,
+    } t_eFMKTIM_PwmMode;
+
     /**
      * @brief Enum to set bit for changing Ecdr Signal
      */
@@ -337,8 +349,10 @@
     *  @retval RC_ERROR_WRONG_STATE              @ref RC_ERROR_WRONG_STATE
     *  @retval RC_ERROR_WRONG_RESULT             @ref RC_ERROR_WRONG_RESULT
     */
-    t_eReturnCode FMKTIM_Set_PWMLineCfg( t_eFMKTIM_InterruptLineIO f_InterruptLine_e,
-                                            t_uint32 f_pwmFreq_u32);
+    t_eReturnCode FMKTIM_Set_PWMLineCfg(t_eFMKTIM_InterruptLineIO f_InterruptLine_e,
+                                        t_uint32 f_pwmFreq_u32,
+                                        t_eFMKTIM_PwmMode f_PwmMode_e,
+                                        t_cbFMKTIM_InterruptLine * f_PwmPulseFinished_pcb);
     /**
     *
     *	@brief      Configure an interrupt line in Ecdr configuration.\n

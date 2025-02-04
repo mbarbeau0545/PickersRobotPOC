@@ -715,14 +715,16 @@ t_eReturnCode FMKIO_Set_InEvntSigCfg(t_eFMKIO_InEvntSig f_signal_e,
 t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e, 
                                      t_eFMKIO_PullMode        f_pull_e,
                                      t_uint32                 f_frequency_u32,
+                                     t_eFMKTIM_PwmMode        f_PwmMode_e,
                                      t_cbFMKIO_PulseEvent     * f_pulseEvnt_pcb,
-                                     t_cbFMKIO_SigErrorMngmt * f_sigErr_cb)
+                                     t_cbFMKIO_SigErrorMngmt  * f_sigErr_cb)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_GpioPort gpioPort_e = FMKIO_GPIO_PORT_NB;
     t_eFMKTIM_InterruptLineIO ITLineIO_e;
 
-    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB || f_pull_e >= FMKIO_PULL_MODE_NB)
+    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB 
+    || f_pull_e >= FMKIO_PULL_MODE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -733,14 +735,11 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
     if (Ret_e == RC_OK)
     {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;    
-        Ret_e = FMKTIM_Set_PWMLineCfg(ITLineIO_e, f_frequency_u32);
 
-        if(f_pulseEvnt_pcb != (t_cbFMKIO_PulseEvent *)NULL_FONCTION)
-        {
-            Ret_e = FMKTIM_AddInterruptCallback(ITLineIO_e,
-                                                s_FMKIO_MngSigPwm);
-
-        }
+        Ret_e = FMKTIM_Set_PWMLineCfg(  ITLineIO_e, 
+                                        f_frequency_u32,
+                                        f_PwmMode_e,
+                                        s_FMKIO_MngSigPwm);
         
         if (Ret_e == RC_OK)
         {
@@ -753,7 +752,8 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
                                       c_OutPwmSigBspMap_as[f_signal_e].BspAlternateFunc_u8);
             
             if (Ret_e == RC_OK)
-            { // update info
+            { 
+                // update info
                 g_OutPwmSigInfo_as[f_signal_e].IsSigConfigured_b = (t_bool)True;
                 g_OutPwmSigInfo_as[f_signal_e].sigError_cb = f_sigErr_cb;
                 g_OutPwmSigInfo_as[f_signal_e].pulseEvnt_pcb = f_pulseEvnt_pcb;
