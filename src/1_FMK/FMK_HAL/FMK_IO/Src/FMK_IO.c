@@ -1631,7 +1631,8 @@ static t_eReturnCode s_FMKIO_Operational(void)
                     case FMKIO_FREQ_MEAS_FREQ:
                     case FMKIO_FREQ_MEAS_PERIOD:
                     {
-                        if(g_InFreqSigInfo_as[idxFreq_u8].value_u32 < (t_uint32)FMKIO_FREQ_MIN_CC_VALUE)
+                        if((g_InFreqSigInfo_as[idxFreq_u8].value_u32 < (t_uint32)FMKIO_FREQ_MIN_CC_VALUE)
+                        && (g_InFreqSigInfo_as[idxFreq_u8].value_u32 > (t_uint32)0))
                         {
                             multiplierFreq_u32 = (t_uint32)((t_float32)(FMKIO_FREQ_MIN_CC_VALUE / 
                                                                 (t_float32)g_InFreqSigInfo_as[idxFreq_u8].value_u32));

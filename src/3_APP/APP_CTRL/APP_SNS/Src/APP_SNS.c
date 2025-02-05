@@ -421,14 +421,11 @@ static t_eReturnCode s_APPSNS_Operational(void)
         for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK); LLI_u8++)
         {
 
+            DrvCyclicCnt_u8 += (t_uint8)1;
+
             if(c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppSns_DrvCyclic *)NULL_FONCTION)
             {
                 Ret_e = (c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb)();
-            }
-            
-            else
-            {
-                DrvCyclicCnt_u8 += (t_uint8)1;
             }
         }
         if(DrvCyclicCnt_u8 == (t_uint8)0)
