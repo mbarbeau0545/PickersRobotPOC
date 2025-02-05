@@ -45,6 +45,14 @@
 
     typedef enum 
     {
+        CL42T_MOTOR_PULSE_OFF = 0x00,
+        CL42T_MOTOR_PULSE_ON,
+
+        CL42T_MOTOR_PULSE_NB
+    } t_eCL42T_MotorPulseState;
+
+    typedef enum 
+    {
         CL42T_DIAGNOSTIC_OK,
         CL42T_DIAGNOSTIC_PRESENTS,
         CL42T_DIAGNOSTIC_OVER_CURRENT,
@@ -92,7 +100,17 @@
         t_eCL42T_MotorState state_e;
         t_eCL42T_DiagError diagError_e;
 
-    } t_uCL42T_MotorValue;
+    } t_uCL42T_SetMotorValue;
+
+    typedef union 
+    {
+        t_uint16 pulseState_e;
+        t_uint32 frequency_u32;
+        t_eCL42T_MotorDirection dir_e;
+        t_eCL42T_MotorState state_e;
+        t_eCL42T_DiagError diagError_e;
+
+    } t_uCL42T_GetMotorValue;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -187,7 +205,7 @@
     */
     t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
                                             t_eCL42T_MotorSignalType f_sigType_e,
-                                            t_uCL42T_MotorValue f_MotorValue_u);
+                                            t_uCL42T_SetMotorValue f_MotorValue_u);
     
     /**
      *
@@ -203,7 +221,7 @@
     */
     t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
                                             t_eCL42T_MotorSignalType f_sigType_e,
-                                            t_uCL42T_MotorValue * f_MotorValue_pu);
+                                            t_uCL42T_GetMotorValue * f_MotorValue_pu);
 
                                                                                                                                            
     //********************************************************************************

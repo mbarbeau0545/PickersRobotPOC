@@ -326,14 +326,12 @@ static t_eReturnCode s_APPACT_Operational(void)
         {
             if(g_ActDrvState_ae[LLI_u8] == APPACT_DRIVER_STATE_ENABLE)
             {
+                DrvCyclicCnt_u8 += (t_uint8)1;
+
                 if(c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppAct_DrvCyclic *)NULL_FONCTION)
                 {
                     Ret_e = (c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb)();
                 }
-            }
-            else
-            {
-                DrvCyclicCnt_u8 += (t_uint8)1;
             }
         }
         if(DrvCyclicCnt_u8 == (t_uint8)0)
