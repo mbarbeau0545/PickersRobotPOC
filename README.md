@@ -47,6 +47,10 @@ For the doxygen documentation search the file "index.html"
 
 
 ## Left to do
+- Urgent 
+    - APPACT mieux gerer les cyclic des drivers, 
+    - vérification des fréquences si 0 ne pas allumer le timer 
+    - dans le driver CL42T ne pas changer la fréquence si elle n'est pas modifié
 - Pour les GetTimerInitInfo des modes, donnée directement la valeur numérique de la source du timer 
 - Dans les fichiers .c passer les arguments des structures  en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
 

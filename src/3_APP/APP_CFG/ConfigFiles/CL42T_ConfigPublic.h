@@ -34,7 +34,7 @@
     
     typedef enum 
     {
-        CL42T_SIGTYPE_PULSE,
+        CL42T_SIGTYPE_PULSE = 0x00,
         CL42T_SIGTYPE_SPEED,
         CL42T_SIGTYPE_DIR,
         CL42T_SIGTYPE_STATE,

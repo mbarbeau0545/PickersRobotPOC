@@ -18,8 +18,8 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define CL42T_DEAD_TIME_TRANSITION ((t_uint16)1000)
-    #define CL42T_PULSE_RUN_TIME_MAX ((t_uint16)3000)
+    #define CL42T_DEAD_TIME_TRANSITION ((t_uint16)5000)
+    #define CL42T_PULSE_RUN_TIME_MAX ((t_uint16)1000)
 
     /**
      * @brief Define for CL42T Diagnotic Pulse

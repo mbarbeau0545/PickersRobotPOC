@@ -1514,7 +1514,7 @@ static t_eReturnCode s_FMKTIM_Set_ICChannelCfg( t_eFMKTIM_Timer f_timer_e,
         #warning('Found the right frequency for Ic Cfg')
         Ret_e = s_FMKTIM_Set_BspTimerInit(  timerInfo_ps,
                                             FMKTIM_HWTIM_CFG_IC,
-                                            (t_uint32)2,
+                                            (t_uint32)1,
                                             (void *)NULL);
     }
     //-------this timer has already been configured and cannot be used for another Type of Configuration------//
