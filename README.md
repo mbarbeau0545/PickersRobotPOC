@@ -44,9 +44,12 @@ For the doxygen documentation search the file "index.html"
     - retester les PWM en mode normal 
     - tester les PWM en mode pulse 
     - tester les Input Frequentiel
+## Urgent to do 
+    - [APPSDM] faire en sorte de dire qu'une erreur est considéré OFF si on a plus de nouveau FAIL à partir de x secondes 
 
 
 ## Left to do
+
 - Pour les GetTimerInitInfo des modes, donnée directement la valeur numérique de la source du timer 
 - Dans les fichiers .c passer les arguments des structures  en pointeur pour réduire la pile et le temps pour le cpu de copié les datas dans la pile.
 
