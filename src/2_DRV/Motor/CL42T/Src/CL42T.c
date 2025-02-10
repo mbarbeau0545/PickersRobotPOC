@@ -833,6 +833,10 @@ static t_eReturnCode s_CL42T_SetSignalsValue(t_sCL42T_MotorInfo * f_motorInfo_ps
                                                     CL42T_NOMINATIVE_DUTYCYCLE,
                                                     sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32);
             }
+            if(Ret_e != RC_OK)
+            {
+                Ret_e = RC_OK;
+            }
             if(Ret_e == RC_OK)
             {
                 //---- Reset Value for Security Purpose ----//
@@ -960,17 +964,6 @@ static void s_CL42T_PulseEventMngmt(t_eFMKIO_OutPwmSig f_signal_e)
         
         RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON);
         FMKCPU_Get_Tick(&motorInfo_ps->InhibTime_u32);
-
-        //---- Set motor Actuators if user needed ----//
-        if((GETBIT(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD) == BIT_IS_SET_8B))
-        {
-            Ret_e = s_CL42T_SetSignalsValue(motorInfo_ps);
-
-            if(Ret_e != RC_OK)
-            {
-                // do something ??
-            }
-        }
     }
 
     return;
