@@ -278,6 +278,12 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
     
     t_uCL42T_SetMotorValue u_SetMotorValue;
 
+    u_SetMotorValue.state_e = CL42T_MOTOR_STATE_ON;
+
+    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_STATE,
+                                u_SetMotorValue);
+    
     u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_CLOCKWISE;
 
     Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
@@ -285,15 +291,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
                                 u_SetMotorValue);
 
 
-
-
-    u_SetMotorValue.state_e = CL42T_MOTOR_STATE_ON;
-
-    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
-                                CL42T_SIGTYPE_STATE,
-                                u_SetMotorValue);
-
-    u_SetMotorValue.nbPulses_u16 = 10;
+    u_SetMotorValue.nbPulses_u16 = 200;
 
     Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
                                 CL42T_SIGTYPE_PULSE,
@@ -310,7 +308,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_bool s_logicdone_b = (t_bool)False;
-    t_uCL42T_SetMotorValue u_SetMotorValue;
+    /*t_uCL42T_SetMotorValue u_SetMotorValue;
     u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
     if(s_logicdone_b == False)
     {
@@ -326,7 +324,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
                                 u_SetMotorValue);
 
         s_logicdone_b = true;
-    }
+    }*/
     /*t_uint32 measCount_u32 = 0;
     char msgbuffer[40];
     Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &measCount_u32);
