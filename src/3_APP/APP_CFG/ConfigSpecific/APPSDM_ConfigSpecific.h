@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -58,9 +59,15 @@
     // ********************************************************************
 
     //********************************************************************************
-    //                      Public functions - Prototyupes
+    //                      Public functions - Prototyupe
     //********************************************************************************
+    /* CAUTION : Automatic generated code section for Diag Strategy Function Declaration: Start */
 
+    /* CAUTION : Automatic generated code section for Diag Strategy Function Declaration: End */
+    void APPSDM_SPEC_Applied_1(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+    void APPSDM_SPEC_Applied_2(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+    void APPSDM_SPEC_Applied_3(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+    void APPSDM_SPEC_Applied_4(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
    
 
 #endif // APPSDM_CONFIGSPECIFIC_H_INCLUDED           

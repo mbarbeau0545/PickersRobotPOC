@@ -31,7 +31,20 @@
     * @brief Enum for Sensors list.
     */
     typedef enum
-    {    
+    {
+        APPSNS_SENSOR_DIAG_MOTOR_X_LEFT = 0x0,  /**< Diagnostic From Motor Axe X, left Side */
+        APPSNS_SENSOR_DIAG_MOTOR_X_RIGHT,       /**< Diagnostic From Motor Axe X, Right Side */
+        APPSNS_SENSOR_DIAG_MOTOR_Y,             /**< Diagnostic From Motor Axe Y */
+        APPSNS_SENSOR_DIAG_MOTOR_Z,             /**< Diagnostic From Motor Axe Z */
+        APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MIN,  /**< Limit Switch for motor X left, min */
+        APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MAX,  /**< Limit Switch for motor X left, max */
+        APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MIN, /**< Limit Switch for motor X right, min */
+        APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MAX, /**< Limit Switch for motor X right, max */
+        APPSNS_SENSOR_LIMIT_SWITCH_Y_MIN,       /**< Limit Switch for motor Y, min */
+        APPSNS_SENSOR_LIMIT_SWITCH_Y_MAX,       /**< Limit Switch for motor Y, max */
+        APPSNS_SENSOR_LIMIT_SWITCH_Z_MIN,       /**< Limit Switch for motor Z, min */
+        APPSNS_SENSOR_LIMIT_SWITCH_Z_MAX,       /**< Limit Switch for motor Z, max */
+    
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
 
@@ -40,6 +53,7 @@
     */
     typedef enum
     {
+        //APPSNS_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPSNS_DRIVER_NB,
     } t_eAPPSNS_Drivers;

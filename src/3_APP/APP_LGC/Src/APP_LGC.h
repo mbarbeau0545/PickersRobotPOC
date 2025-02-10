@@ -19,12 +19,12 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
-    //#include "stm32g4xx_hal.h"
+    #include "APP_CFG/ConfigFiles/APPLGC_ConfigPublic.h"
 
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-
+    
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -101,6 +101,33 @@
     *
     */
     t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e);
+    /**
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+   t_eReturnCode APPLGC_SetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_SrvHealth f_srvHealth_e);
+   /**
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+   t_eReturnCode APPLGC_GetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_SrvHealth * f_srvHealth_pe);
+
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

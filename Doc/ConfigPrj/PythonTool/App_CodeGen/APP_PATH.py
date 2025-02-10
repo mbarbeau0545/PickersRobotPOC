@@ -30,6 +30,14 @@ APPACT_CONFIGPUBLIC_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPACT_ConfigPublic.h
 APPACT_CONFIGPRIVATE_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPACT_ConfigPrivate.h"
 APPACT_C_PATH = "src\\3_APP\APP_CTRL\APP_ACT\Src\APP_ACT.c"
 
+APPSDM_CONFIGPUBLIC_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPSDM_ConfigPublic.h"
+APPSDM_CONFIGPRIVATE_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPSDM_ConfigPrivate.h"
+APPSDM_CONGSPECIFIC_C = "src\\3_APP\APP_CFG\ConfigSpecific\APPSDM_ConfigSpecific.c"
+APPSDM_CONGSPECIFIC_H = "src\\3_APP\APP_CFG\ConfigSpecific\APPSDM_ConfigSpecific.h"
+
+APPLGC_CONFIGPUBLIC_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPLGC_ConfigPublic.h"
+APPLGC_CONFIGPRIVATE_PATH = "src\\3_APP\APP_CFG\ConfigFiles\APPLGC_ConfigPrivate.h"
+APPLGC_C = "src\\3_APP\APP_LGC\Src\APP_LGC.c"
 
 TPL_APP_SPC_PATH_H = "Doc\ConfigPrj\PythonTool\App_CodeGen\\template_files\APPSPEC_tpl.h"
 TPL_APP_SPC_PATH_C = "Doc\ConfigPrj\PythonTool\App_CodeGen\\template_files\APPSPEC_tpl.c"

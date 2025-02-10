@@ -32,6 +32,19 @@
     */
     typedef enum
     {
+        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_STATE = 0x0,/**< Left Motor Axe X Commande for Motor State */
+        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_DIR,     /**< Left Motor Axe X Commande for Motor Direction */
+        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_PULSE,   /**< Left Motor Axe X Commande for Motor Pulses */
+        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_STATE,  /**< Right Motor Axe X Commande for Motor State */
+        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_DIR,    /**< Right Motor Axe X Commande for Motor Direction */
+        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_PULSE,  /**< Right Motor Axe X Commande for Motor Pulses */
+        APPACT_ACTUATOR_MOTOR_AXE_Y_STATE,        /**< Motor Axe Y Commande for Motor State */
+        APPACT_ACTUATOR_MOTOR_AXE_Y_DIR,          /**< Motor Axe Y Commande for Motor Direction */
+        APPACT_ACTUATOR_MOTOR_AXE_Y_PULSE,        /**< Motor Axe Y Commande for Motor Pulses */
+        APPACT_ACTUATOR_MOTOR_AXE_Z_STATE,        /**< Motor Axe Z Commande for Motor State */
+        APPACT_ACTUATOR_MOTOR_AXE_Z_DIR,          /**< Motor Axe Z Commande for Motor Direction */
+        APPACT_ACTUATOR_MOTOR_AXE_Z_PULSE,        /**< Motor Axe Z Commande for Motor Pulses */
+    
         APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;
 
@@ -40,7 +53,7 @@
     */
     typedef enum
     {
-        APPACT_DRIVER_CL42T = 0x0,              /**< None */
+        APPACT_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPACT_DRIVER_NB,
     } t_eAPPACT_Drivers;

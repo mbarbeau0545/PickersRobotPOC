@@ -66,19 +66,28 @@
     /**
     * @brief Diagnostic Item Configuration
     */
+    t_cbAPPSDM_AppliedDiagStrategy * c_AppSdm_DiagStragies_apf[APPSDM_DIAG_STRAT_NB]= {
+        APPSDM_SPEC_Applied_1,
+        APPSDM_SPEC_Applied_2,
+        APPSDM_SPEC_Applied_3,
+        APPSDM_SPEC_Applied_4,
+    };
+
+    /**
+    * @brief Diagnostic Item Configuration
+    */
     t_sAPPSM_DiagItemCfg c_AppSdm_DiagItemCfg_as[APPSDM_DIAG_ITEM_NB] ={
         // DebuncerValueMs                        NotifyUser                     Log Error                      Applied Startegy
-        {(t_uint16)1000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_AAAAA
-        {(t_uint16)2000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_BBBBB
-        {(t_uint16)3000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_CCCCC
-        {(t_uint16)4000,                          True,                          False,                         APPSDM_DIAG_STRAT_NONE},  // APPSDM_DIAG_ITEM_DDDD
+    /**
+    * @brief Variable for Diagnostic Item Information
+    */
+        {(t_uint16)2000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_NONE},        // ITEM_DIAG_1
+        {(t_uint16)2000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_1},           // ITEM_DIAG_2
+        {(t_uint16)2000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_2},           // ITEM_DIAG_3
+        {(t_uint16)2000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_3},           // ITEM_DIAG_4
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */
-
-    t_cbAPPSDM_AppliedDiagStrategy * c_AppSdm_DiagStragies_pf[APPSDM_DIAG_STRAT_NB] = {
-
-    };
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

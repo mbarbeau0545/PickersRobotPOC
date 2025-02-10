@@ -12,6 +12,7 @@
 // *                      Includes
 // ********************************************************************
 #include "./APPSDM_ConfigSpecific.h"
+#include "APP_LGC/Src/APP_LGC.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -46,15 +47,89 @@
 //****************************************************************************
 //                      Local functions - Prototypes
 //****************************************************************************
+/**
+*
+*	@brief
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
+t_eReturnCode s_APPSDM_SPEC_GetHealthFromStratOpe(t_eAPPSDM_DiagStratOpe f_stratOpe_e, t_eAPPLGC_SrvHealth * f_health_pe);
 
 //****************************************************************************
 //                      Public functions - Implementation
 //****************************************************************************
+/* CAUTION : Automatic generated code section for Diag Strategy Function Implementation: Start */
 
+/* CAUTION : Automatic generated code section for Diag Strategy Function Implementation: End */
+
+void APPSDM_SPEC_Applied_1(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+{
+    t_eAPPLGC_SrvHealth srvHealth_e;
+    t_eReturnCode Ret_e = RC_OK;
+
+    Ret_e = s_APPSDM_SPEC_GetHealthFromStratOpe(f_stratOpe_e, &srvHealth_e);
+
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_X, srvHealth_e);
+    }
+    
+
+    return;
+}
+void APPSDM_SPEC_Applied_2(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+{
+
+}
+void APPSDM_SPEC_Applied_3(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+{
+
+}
+void APPSDM_SPEC_Applied_4(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+{
+
+}
 //*****************************************************************************
 //                      Local functions - Implementation
 //*****************************************************************************
-         
+t_eReturnCode s_APPSDM_SPEC_GetHealthFromStratOpe(t_eAPPSDM_DiagStratOpe f_stratOpe_e, t_eAPPLGC_SrvHealth * f_health_pe)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_stratOpe_e >= APPSDM_DIAG_STRAT_INHIBIT_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        switch (f_stratOpe_e)
+        {
+            case  APPSDM_DIAG_STRAT_INHIBIT_OFF:
+            {
+                *f_health_pe = APPLGC_SRV_HEALTH_OK;
+                break;
+            }
+            case  APPSDM_DIAG_STRAT_INHIBIT_ON:
+            {
+                *f_health_pe = APPLGC_SRV_HEALTH_ERROR;
+                break;
+            }
+            break;
+        case APPSDM_DIAG_STRAT_INHIBIT_NB:
+        default:
+            *f_health_pe = APPLGC_SRV_HEALTH_ERROR;
+            break;
+        }
+    }
+
+    return Ret_e;
+}
 //************************************************************************************
 // End of File
 //************************************************************************************

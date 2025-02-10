@@ -105,7 +105,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_1
         .bspTimer_s.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
     },
     {
         // Timer_2
@@ -2754,7 +2754,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)      {return HAL_TIM_IRQHandler(&g_TimerInf
 /*********************************
  * TIM1_UP_TIM16_IRQHandler
 *********************************/
-void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_1].bspTimer_s);}
+void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_16].bspTimer_s);}
 /*********************************
  * TIM1_TRG_COM_TIM17_IRQHandler
 *********************************/

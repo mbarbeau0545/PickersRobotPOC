@@ -21,7 +21,18 @@
     #include "./APPSNS_ConfigPublic.h"
     #include "../ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Diag_Motor_X_Left.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Diag_Motor_X_Right.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Diag_Motor_Y.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Diag_Motor_Z.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_X_Left_Min.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_X_Left_Max.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_X_Right_Min.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_X_Right_Max.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_Y_Min.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_Y_Max.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_Z_Min.h"
+    #include "APP_CFG/ConfigSpecific/AppSns_ConfigSpecific/APPSNS_SPEC_Limit_Switch_Z_Max.h"
     /* CAUTION : Automatic generated code section for Include: End */
     // ********************************************************************
     // *                      Defines
@@ -113,15 +124,39 @@
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< Variable for System Sensors drivers functions*/
     const t_sAPPSNS_SysDrvFunc c_AppSns_SysDrv_apf[APPSNS_DRIVER_NB] = {
+        
     };
 
     /**< Variable for System Sensors functions*/
     const t_sAPPSNS_SysSnsFunc c_AppSns_SysSns_apf[APPSNS_SENSOR_NB] = {
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Diag_Motor_X_Left_SetCfg,                       APPSNS_SPEC_Diag_Motor_X_Left_GetSigValue,                     APPSNS_SPEC_Diag_Motor_X_Left_FormatValue}, //APPSNS_SENSOR_DIAG_MOTOR_X_LEFT
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Diag_Motor_X_Right_SetCfg,                      APPSNS_SPEC_Diag_Motor_X_Right_GetSigValue,                    APPSNS_SPEC_Diag_Motor_X_Right_FormatValue}, //APPSNS_SENSOR_DIAG_MOTOR_X_RIGHT
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Diag_Motor_Y_SetCfg,                            APPSNS_SPEC_Diag_Motor_Y_GetSigValue,                          APPSNS_SPEC_Diag_Motor_Y_FormatValue}, //APPSNS_SENSOR_DIAG_MOTOR_Y
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Diag_Motor_Z_SetCfg,                            APPSNS_SPEC_Diag_Motor_Z_GetSigValue,                          APPSNS_SPEC_Diag_Motor_Z_FormatValue}, //APPSNS_SENSOR_DIAG_MOTOR_Z
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_X_Left_Min_SetCfg,                 APPSNS_SPEC_Limit_Switch_X_Left_Min_GetSigValue,               APPSNS_SPEC_Limit_Switch_X_Left_Min_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MIN
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_X_Left_Max_SetCfg,                 APPSNS_SPEC_Limit_Switch_X_Left_Max_GetSigValue,               APPSNS_SPEC_Limit_Switch_X_Left_Max_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MAX
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_X_Right_Min_SetCfg,                APPSNS_SPEC_Limit_Switch_X_Right_Min_GetSigValue,              APPSNS_SPEC_Limit_Switch_X_Right_Min_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MIN
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_X_Right_Max_SetCfg,                APPSNS_SPEC_Limit_Switch_X_Right_Max_GetSigValue,              APPSNS_SPEC_Limit_Switch_X_Right_Max_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MAX
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_Y_Min_SetCfg,                      APPSNS_SPEC_Limit_Switch_Y_Min_GetSigValue,                    APPSNS_SPEC_Limit_Switch_Y_Min_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_Y_MIN
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_Y_Max_SetCfg,                      APPSNS_SPEC_Limit_Switch_Y_Max_GetSigValue,                    APPSNS_SPEC_Limit_Switch_Y_Max_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_Y_MAX
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_Z_Min_SetCfg,                      APPSNS_SPEC_Limit_Switch_Z_Min_GetSigValue,                    APPSNS_SPEC_Limit_Switch_Z_Min_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_Z_MIN
+        {APPSNS_MEASTYPE_RAW,                                         APPSNS_SPEC_Limit_Switch_Z_Max_SetCfg,                      APPSNS_SPEC_Limit_Switch_Z_Max_GetSigValue,                    APPSNS_SPEC_Limit_Switch_Z_Max_FormatValue}, //APPSNS_SENSOR_LIMIT_SWITCH_Z_MAX
     };
 
     /**< Variable for Sensors Unity Management */
     const t_eAPPSNS_SnsMeasType c_AppSns_SnsMeasType_ae[APPSNS_SENSOR_NB] = {
-        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_MOTOR_1_DIAG
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_DIAG_MOTOR_X_LEFT
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_DIAG_MOTOR_X_RIGHT
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_DIAG_MOTOR_Y
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_DIAG_MOTOR_Z
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MIN
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_X_LEFT_MAX
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MIN
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_X_RIGHT_MAX
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_Y_MIN
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_Y_MAX
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_Z_MIN
+        APPSNS_MEASTYPE_RAW,                                         // APPSNS_SENSOR_LIMIT_SWITCH_Z_MAX
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

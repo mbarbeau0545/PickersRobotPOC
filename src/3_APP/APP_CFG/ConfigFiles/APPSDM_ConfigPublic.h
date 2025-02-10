@@ -28,26 +28,34 @@
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
-    * @brief Enum for Diagnostic Item
+    * @brief Enum Diagnostic Item
     */
-    typedef enum __t_eAPPSDM_DiagnosticItem
+    typedef enum ____t_eAPPSDM_DiagnosticItem
     {
-        APPSDM_DIAG_ITEM_AAAAA = 0x00,
-        APPSDM_DIAG_ITEM_BBBBB,
-        APPSDM_DIAG_ITEM_CCCCC,
-        APPSDM_DIAG_ITEM_DDDD,
+        APPSDM_DIAG_ITEM_ITEM_DIAG_1 = 0x00,  // None
+        APPSDM_DIAG_ITEM_ITEM_DIAG_2,  // None
+        APPSDM_DIAG_ITEM_ITEM_DIAG_3,  // None
+        APPSDM_DIAG_ITEM_ITEM_DIAG_4,  // None
+
         APPSDM_DIAG_ITEM_NB,
     } t_eAPPSDM_DiagnosticItem;
+    /**
+    * @brief Enum Diagnostic Strategy
+    */
+    typedef enum ____t_eAPPSDM_DiagnosticStrat
+    {
+        APPSDM_DIAG_STRAT_1 = 0x00,            // None
+        APPSDM_DIAG_STRAT_2,            // None
+        APPSDM_DIAG_STRAT_3,            // None
+        APPSDM_DIAG_STRAT_4,            // None
+
+        APPSDM_DIAG_STRAT_NB,
+
+        APPSDM_DIAG_STRAT_NONE,
+    } t_eAPPSDM_DiagnosticStrat;
     /* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
 
-
-    typedef enum 
-    {
-        APPSDM_DIAG_STRAT_NONE = -1,
-
-        APPSDM_DIAG_STRAT_NB,
-    } t_eAPPSDM_DiagnosticStrat;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
 	/* CAUTION : Automatic generated code section for Structure: End */

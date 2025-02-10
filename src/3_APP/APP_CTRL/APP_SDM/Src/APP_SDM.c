@@ -542,7 +542,7 @@ static t_eReturnCode s_APPSDM_DiagStratMngmt(t_eAPPSDM_DiagnosticStrat f_diagStr
     {
         if(f_diagStrat_e != APPSDM_DIAG_STRAT_NONE)
         {
-            c_AppSdm_DiagStragies_pf[f_diagStrat_e](f_stratOpe_e);
+            c_AppSdm_DiagStragies_apf[f_diagStrat_e](f_stratOpe_e);
         }
     }
 
