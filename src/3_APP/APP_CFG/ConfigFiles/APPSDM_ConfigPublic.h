@@ -11,10 +11,6 @@
 #ifndef APPSDM_CONFIGPUBLIC_H_INCLUDED
 #define APPSDM_CONFIGPUBLIC_H_INCLUDED
 
-
-
-
-
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
@@ -32,10 +28,18 @@
     */
     typedef enum ____t_eAPPSDM_DiagnosticItem
     {
-        APPSDM_DIAG_ITEM_ITEM_DIAG_1 = 0x00,  // None
-        APPSDM_DIAG_ITEM_ITEM_DIAG_2,  // None
-        APPSDM_DIAG_ITEM_ITEM_DIAG_3,  // None
-        APPSDM_DIAG_ITEM_ITEM_DIAG_4,  // None
+        APPSDM_DIAG_ITEM_FMK_CFG_ERROR = 0x00,// None
+        APPSDM_DIAG_ITEM_FMK_OPE_ERROR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_X_ERR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_Y_ERR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_Z_ERR,// None
+        APPSDM_DIAG_ITEM_SUPPLY_VOLTAGE_ERROR,// None
+        APPSDM_DIAG_ITEM_APPSYS_CYCLIC_TIMEOUT,// None
+        APPSDM_DIAG_ITEM_APPUSER_BIT_ALIVE_TIMEOUT,// None
+        APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,// None
+        APPSDM_DIAG_ITEM_GANTRY_REF_AXE_FAILED,// None
+        APPSDM_DIAG_ITEM_GANTRY_MVMT_ERROR,// None
+        APPSDM_DIAG_ITEM_GANTRY_SWITCH_LIMIT,// None
 
         APPSDM_DIAG_ITEM_NB,
     } t_eAPPSDM_DiagnosticItem;
@@ -44,10 +48,10 @@
     */
     typedef enum ____t_eAPPSDM_DiagnosticStrat
     {
-        APPSDM_DIAG_STRAT_1 = 0x00,            // None
-        APPSDM_DIAG_STRAT_2,            // None
-        APPSDM_DIAG_STRAT_3,            // None
-        APPSDM_DIAG_STRAT_4,            // None
+        APPSDM_DIAG_STRAT_GANTRY_OFF = 0x00,   // Gantry_Z
+        APPSDM_DIAG_STRAT_GANTRY_AXE_X_OFF,// None
+        APPSDM_DIAG_STRAT_GANTRY_AXE_Y_OFF,// None
+        APPSDM_DIAG_STRAT_GANTRY_AXE_Z_OFF,// None
 
         APPSDM_DIAG_STRAT_NB,
 

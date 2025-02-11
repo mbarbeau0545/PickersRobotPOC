@@ -127,7 +127,7 @@ class AppSdm_CodeGen():
                 var_strat_cb += f'        APPSDM_SPEC_DiagStrat_{str(strat_info[0]).upper()},\n'
 
                 decl_strat_func +=  "    /**\n" + f"    * @brief Stratefy Function : {strat_info[1]}\n" + "    */\n"\
-                    + f'     APPSDM_SPEC_DiagStrat_{str(strat_info[0]).upper()}(t_eAPPSDM_DiagStratOpe f_stratOpe_e);\n\n'
+                    + f'     APPSDM_SPEC_DiagStrat_{str(strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e);\n\n'
                 
                 impl_strat_func += AppSdm_CodeGen.make_diag_strat_impl(strat_info)
         var_strat_cb += '    };\n\n'
@@ -170,12 +170,12 @@ class AppSdm_CodeGen():
         print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n")
         
     @classmethod
-    def make_diag_strat_impl(f_strat_info):
+    def make_diag_strat_impl(self, f_strat_info):
         retval = ''
         retval += '/*********************************\n'\
-                + f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0]).upper()}(t_eAPPSDM_DiagStratOpe f_stratOpe_e)\n'\
+                + f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0])}\n'\
                 + ' *********************************/\n'
-        retval +=  f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0]).upper()}(t_eAPPSDM_DiagStratOpe f_stratOpe_e)\n' + '{\n'\
+        retval +=  f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e)\n' + '{\n'\
                 + '    t_eAPPLGC_SrvHealth srvHealth_e;\n'\
                 + '    t_eReturnCode Ret_e = RC_OK;\n\n'\
                 + '    Ret_e = s_APPSDM_SPEC_GetHealthFromStratOpe(f_stratOpe_e, &srvHealth_e);\n\n'\
@@ -183,10 +183,10 @@ class AppSdm_CodeGen():
         for srv_implied in f_strat_info[2:]:
             if str(srv_implied) != 'None':
                 retval +='    if(Ret_e == RC_OK)\n'\
-                        + '{\n'\
+                        + '    {\n'\
                         + f'        Ret_e = APPLGC_SetServiceHealth({APPLGC_ENUM_SRV}_{str(srv_implied).upper()}, srvHealth_e);\n'\
-                        + '}\n'
-        retval += '\n' + '    return\n' + '}\n\n'
+                        + '    }\n'
+        retval += '\n' + '    return;\n' + '}\n\n'
         return retval
                 
 

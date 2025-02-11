@@ -23,9 +23,11 @@
 #include "APP_CFG/ConfigFiles/APPLGC_ConfigPrivate.h"
 #include "APP_CTRL/APP_ACT/Src/APP_ACT.h"
 #include "APP_CTRL/APP_SNS/Src/APP_SNS.h"
+#include "APP_CTRL/APP_SDM/Src/APP_SDM.h"
+#include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+
 #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
-#include "Motor/CL42T/Src/CL42T.h"
-#include "APP_CFG/ConfigFiles/CL42T_ConfigPublic.h"
+#include "Library/SafeMem/SafeMem.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -44,6 +46,19 @@ enum
     APPLGC_APP_CMD_BIT_NEW_DATA,
 };
 
+enum 
+{
+    APPLGC_CMD_BYTE_0 = 0x00,
+    APPLGC_CMD_BYTE_1,
+    APPLGC_CMD_BYTE_2,
+    APPLGC_CMD_BYTE_3,
+    APPLGC_CMD_BYTE_4,
+    APPLGC_CMD_BYTE_5,
+    APPLGC_CMD_BYTE_6,
+    APPLGC_CMD_BYTE_7,
+
+    APPLGC_CMD_BYTE_NB,
+};
 // Flag Automatic Generated Code 
 typedef enum 
 {
@@ -55,7 +70,7 @@ typedef enum
     APPLGC_RCV_CMD_ID_BIT_ALIVE,
 
     APPLGC_RCV_CMD_ID_NB,
-} t_eAPPGC_AppSendCmdId;
+} t_eAPPGC_AppRcvCmdId;
 
 typedef enum 
 {
@@ -64,12 +79,17 @@ typedef enum
     APPMGC_SND_CMD_ID_GTRY_ROBOT_INFO,
 
     APPLGC_SND_CMD_ID_NB
-};
+} t_eAPPLGC_AppSndCmdId;
 
 /* CAUTION : Automatic generated code section for Structure: Start */
 
 /* CAUTION : Automatic generated code section for Structure: End */
 //-----------------------------STRUCT TYPES---------------------------//
+typedef struct 
+{
+    t_uint8 appData_ua8[APPLGC_CMD_BYTE_NB];
+    t_uint8 maskEvnt_u8;
+} t_sAPPLGC_AppCmdInfo;
 /* CAUTION : Automatic generated code section : Start */
 
 /* CAUTION : Automatic generated code section : End */
@@ -88,21 +108,25 @@ static t_sAPPLGC_AgentFunc g_AgentInfo_as[APPLGC_AGENT_NB];
 static t_sAPPLGC_ServiceInfo g_srvFuncInfo_as[APPLGC_SRV_NB];
 
 static t_float32 g_snsValues_af32[APPSNS_SENSOR_NB];
+
+static t_sAPPLGC_AppCmdInfo g_CmdInfo_as[APPLGC_RCV_CMD_ID_NB];
+
+static t_uint32 g_lastBitAlive_u32 = (t_uint32)0;
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**
-* @brief Actuators Values Containers for Gantry_X
+* @brief Actuators Values Containers for Gtry_X
 */
-static t_float32 g_ActContainerGantry_X_af32[APPLGC_SRV_GANTRY_X_ACT_NB];
+static t_float32 g_ActContainerGtry_X_af32[APPLGC_SRV_GTRY_X_ACT_NB];
 
 /**
-* @brief Actuators Values Containers for Gantry_Y
+* @brief Actuators Values Containers for Gtry_Y
 */
-static t_float32 g_ActContainerGantry_Y_af32[APPLGC_SRV_GANTRY_Y_ACT_NB];
+static t_float32 g_ActContainerGtry_Y_af32[APPLGC_SRV_GTRY_Y_ACT_NB];
 
 /**
-* @brief Actuators Values Containers for Gantry_Z
+* @brief Actuators Values Containers for Gtry_Z
 */
-static t_float32 g_ActContainerGantry_Z_af32[APPLGC_SRV_GANTRY_Z_ACT_NB];
+static t_float32 g_ActContainerGtry_Z_af32[APPLGC_SRV_GTRY_Z_ACT_NB];
 
 /* CAUTION : Automatic generated code section for Variable: End */
 //********************************************************************************
@@ -173,15 +197,35 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void);
 *
 */
 static t_eReturnCode s_APPLGC_SetActValues(void);
-
-
-static void s_MotorCallback(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
-static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8, 
+/**
+*
+*	@brief
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
+static void s_APPLGC_AppEvntCallback(  t_uint8 * f_rxData_pu8, 
                                     t_uint16 f_dataSize_u16, 
                                     t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
-
+/**
+*
+*	@brief
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
 static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
-static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e);
+
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -192,13 +236,15 @@ t_eReturnCode APPLGC_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8 = (t_uint8)0; 
-    t_uint8 idxSrv_u8 = (t_uint8)0;;
-    t_uint8 idxAct_u8 = (t_uint8)0;;
+    t_uint8 idxSrv_u8 = (t_uint8)0;
+    t_uint8 idxAct_u8 = (t_uint8)0;
+    t_uint8 idxAppData_u8;
+    t_uint8 idxCmd_u8;
 
     /* CAUTION : Automatic generated code section for Actuators Containers/Service: Start */
-   g_srvFuncInfo_as[APPLGC_SRV_GANTRY_X].actValues_paf32 = (t_float32 *)(&g_ActContainerGantry_X_af32);
-   g_srvFuncInfo_as[APPLGC_SRV_GANTRY_Y].actValues_paf32 = (t_float32 *)(&g_ActContainerGantry_Y_af32);
-   g_srvFuncInfo_as[APPLGC_SRV_GANTRY_Z].actValues_paf32 = (t_float32 *)(&g_ActContainerGantry_Z_af32);
+   g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_X_af32);
+   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_Y_af32);
+   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_Z_af32);
     /* CAUTION : Automatic generated code section for Actuators Containers/Service: End */
 
     //----- Set Service Init -----//
@@ -219,11 +265,20 @@ t_eReturnCode APPLGC_Init(void)
     {
         Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].init_pcb();
     }
+
+    //---- Set Command Init -----//
+    for(idxCmd_u8 = (t_uint8)0 ; (idxCmd_u8 < APPLGC_RCV_CMD_ID_NB) && (Ret_e == RC_OK) ; idxCmd_u8++)
+    {
+        Ret_e = SafeMem_memclear((void *)g_CmdInfo_as[idxCmd_u8].appData_ua8, APPLGC_CMD_BYTE_NB);
+        g_CmdInfo_as[idxCmd_u8].maskEvnt_u8 = (t_uint8)0;
+    }
     return Ret_e;
+
+
 }
 
 /*********************************
- * APPLGC_Init
+ * APPLGC_Cyclic
  *********************************/
 t_eReturnCode APPLGC_Cyclic(void)
 {
@@ -365,6 +420,109 @@ t_eReturnCode APPLGC_GetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_S
 
     return Ret_e;
 }
+
+/*********************************
+ * APPLGC_GetAppCmd
+ *********************************/
+t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValues * f_cmdValues_pu)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_sAPPLGC_AppCmdInfo * appCmdInfo_ps;
+    if(f_cmdId_e >= APPLGC_RCV_CMD_ID_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(f_cmdValues_pu == (t_uAPPLGC_CmdValues *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(g_AppLgc_ModState_e != STATE_CYCLIC_OPE)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
+    if(Ret_e == RC_OK)
+    {
+        appCmdInfo_ps = (t_sAPPLGC_AppCmdInfo *)(&g_CmdInfo_as[f_cmdId_e]);
+        switch (f_cmdId_e)
+        {
+            
+            case APPLGC_RCV_CMD_ID_DATA_MODE:
+            {
+                if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
+                {
+                    f_cmdValues_pu->SFMModeInfo_s.mainMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1];
+                    f_cmdValues_pu->SFMModeInfo_s.prodMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2];
+
+                    RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
+                }
+                else
+                {
+                    f_cmdValues_pu->SFMModeInfo_s.mainMode_u8 = (t_uint8)0;
+                    f_cmdValues_pu->SFMModeInfo_s.prodMode_u8 = (t_uint8)0;
+                    Ret_e = RC_WARNING_NO_OPERATION;
+                } 
+                break;
+            }
+            case APPLGC_RCV_CMD_ID_DATA_SPEED_XYZ:
+            {
+                f_cmdValues_pu->speedInfo_s.speedX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
+                
+                f_cmdValues_pu->speedInfo_s.speedY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
+
+                f_cmdValues_pu->speedInfo_s.speedZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
+                break;
+            }
+            case APPLGC_RCV_CMD_ID_DATA_DIR_XYZ:
+            {
+                f_cmdValues_pu->dirInfo_s.DirX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
+                
+                f_cmdValues_pu->dirInfo_s.DirY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                                                                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
+
+                f_cmdValues_pu->dirInfo_s.DirZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                                                                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
+                break;
+            }
+            case APPLGC_RCV_CMD_ID_DATA_PULSE_XYZ:
+            {
+                if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
+                {
+                    f_cmdValues_pu->pulseInfo_s.nbPulseX_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
+
+                    f_cmdValues_pu->pulseInfo_s.nbPulseY_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
+
+                    f_cmdValues_pu->pulseInfo_s.nbPulseZ_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
+                    
+                    RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
+                }
+                else 
+                {
+                    f_cmdValues_pu->pulseInfo_s.nbPulseX_u16 = (t_uint16)0;
+                    f_cmdValues_pu->pulseInfo_s.nbPulseY_u16 = (t_uint16)0;
+                    f_cmdValues_pu->pulseInfo_s.nbPulseZ_u16 = (t_uint16)0;
+                }
+                break;
+            }
+            case APPLGC_RCV_CMD_ID_EMERGENCY_STOP:
+            case APPLGC_RCV_CMD_ID_BIT_ALIVE:
+            case APPLGC_RCV_CMD_ID_NB:
+            default:
+            {
+                Ret_e = RC_WARNING_NO_OPERATION;
+            }
+
+        }
+    }
+
+    return Ret_e;
+}
 //********************************************************************************
 //                      Local functions - Implementation
 //********************************************************************************
@@ -385,7 +543,7 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-
+    Ret_e = APPSDM_ResetDiagEvnt();
     return Ret_e;
 }
 
@@ -396,16 +554,45 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8 = (t_uint8)0;
+    t_uint32 currentTime_u32 = (t_uint32)0;
     
-    //------ Get Sensors Values for this cyclic -----//
-    Ret_e = s_APPLGC_GetSnsValues();
+    FMKCPU_Get_Tick(&currentTime_u32);
+
+    //------ Verify AppData Bit Alive  -----//
+    if(GETBIT(g_CmdInfo_as[APPLGC_RCV_CMD_ID_BIT_ALIVE].maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
+    {
+        FMKCPU_Get_Tick(&g_lastBitAlive_u32);
+    }
+    else 
+    {
+        if((currentTime_u32 - g_lastBitAlive_u32) > APPLGC_APPUSER_COM_TIMEOUT)
+        {
+            g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
+            Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                            APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                            APPLGC_APPUSER_ERR_RX,
+                                            (t_uint16)0);
+        }
+        else 
+        {
+            Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                            APPSDM_DIAG_ITEM_REPORT_PASS,
+                                            APPLGC_APPUSER_ERR_RX,
+                                            (t_uint16)0);
+        }
+    }
+    if(Ret_e == RC_OK)
+    {
+        //------ Get Sensors Values for this cyclic -----//
+        Ret_e = s_APPLGC_GetSnsValues();
+    }
 
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
         for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e == RC_OK) ; idxAgent_u8)
         {
-            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodiTask_pcb((t_float32 *)g_snsValues_af32,
+            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb((t_float32 *)g_snsValues_af32,
                                                                         (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
         }
     }
@@ -433,6 +620,7 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void)
         snsInfo_s.IsValueOK_b = (t_bool)False;
         snsInfo_s.rawValue_f32 = (t_float32)0.0;
         snsInfo_s.SnsValue_f32 = (t_float32)0.0;
+
         Ret_e = APPSNS_Get_SnsValue((t_eAPPSNS_Sensors)idxSns_u8, &snsInfo_s);
 
         if((Ret_e == RC_OK)
@@ -476,38 +664,111 @@ static t_eReturnCode s_APPLGC_SetActValues(void)
 /*********************************
  * s_MotorCallback
  *********************************/
-static void s_MotorCallback(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e)
-{
-    return;
-}
-
-static void s_APPLGC_RcvSrlEvent(   t_uint8 * f_rxData_pu8, 
-                                    t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e)
+static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8, 
+                                        t_uint16 f_dataSize_u16, 
+                                        t_eFMKSRL_RxCallbackInfo f_InfoCb_e)
 {
     t_eReturnCode Ret_e = RC_OK;
-    char msgbuffer[20];
-    sprintf(msgbuffer, "Got It\r\n");
+    t_bool receptionComplete_b = False;
+    t_uint8 idxCmd_u8;
+    static t_uint8 s_idxWrite_u8 = (t_uint8)0;
+    static s_appCmd_ua8[APPLGC_CMD_BYTE_NB];
 
-
-    if(f_InfoCb_e == FMKSRL_CB_INFO_RECEIVE_ENDING)
+    if(f_dataSize_u16 > APPLGC_CMD_BYTE_NB)
     {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(s_idxWrite_u8 >= APPLGC_CMD_BYTE_NB)
+    {
+        Ret_e = RC_WARNING_BUSY;
+    }
+    if(Ret_e == RC_OK)
+    {
+        switch (f_InfoCb_e)
+        {
+            case FMKSRL_CB_INFO_RECEIVE_PENDING:
+            {
+                Ret_e = SafeMem_memcpy( (void *)(&s_appCmd_ua8[s_idxWrite_u8]),
+                                        (const void *)f_rxData_pu8,
+                                        f_dataSize_u16);
+                break;
+            }
+            case FMKSRL_CB_INFO_RECEIVE_ENDING:
+            {
+                Ret_e = SafeMem_memcpy( (void *)(&s_appCmd_ua8[s_idxWrite_u8]),
+                                        (const void *)f_rxData_pu8,
+                                        f_dataSize_u16);
+                if(Ret_e == RC_OK)
+                {
+                    s_idxWrite_u8 = (t_uint8)0;
+                    receptionComplete_b = (t_bool)True;
+                }
+                break;
+            }
+            case FMKSRL_CB_INFO_RECEIVE_ERR:
+            case FMKSRL_CB_INFO_RECEIVE_OVERFLOW:
+            {
+                //----- Report Diagnostic Evnt -----//
+                Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                                APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                                APPLGC_APPUSER_ERR_RX,
+                                                f_InfoCb_e);
+                break;
+            }
+        }
+    }
+    if((receptionComplete_b == (t_bool)True)
+    && (Ret_e == RC_OK))
+    {
+        //----- Diagnostic Passed -----//
+        Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                        APPSDM_DIAG_ITEM_REPORT_PASS,
+                                        0,
+                                        0);
+        
+        //------ Retrieve idx command from appCmd -----//
+        idxCmd_u8 = s_appCmd_ua8[APPLGC_CMD_BYTE_0];
+
+        //----- Check now for Emergency Stop -----//
+        if(idxCmd_u8 == APPLGC_RCV_CMD_ID_EMERGENCY_STOP)
+        {
+            Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_GANTRY_MVMT_ERROR,
+                                            APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                            0,
+                                            0);
+        }
+        //----- see if someone is reading it -----//
+        if(GETBIT(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_READ) == BIT_IS_SET_8B)
+        {
+            //----- Send Message with WARNING BUSY -----//
+        }
+        else 
+        {
+            SETBIT_8B(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE);
+
+            //----- copy data -----//
+            Ret_e = SafeMem_memcpy( (void *)(g_CmdInfo_as[idxCmd_u8].appData_ua8),
+                                    (const void *)(s_appCmd_ua8),
+                                    f_dataSize_u16);
+            
+            RESETBIT_8B(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE);
+            SETBIT_8B(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
+            Ret_e = SafeMem_memclear((void *)s_appCmd_ua8, APPLGC_CMD_BYTE_NB);
+        }
     }
     return;
 }
 
+/*********************************
+ * s_APPLGC_TranmistEvnt
+ *********************************/
 static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e)
 {
     return;
 }
 
-/*********************************
- * s_MotorCallback
- *********************************/
-static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e)
-{
-    return;
-}
+
+
 //************************************************************************************
 // End of File
 //************************************************************************************

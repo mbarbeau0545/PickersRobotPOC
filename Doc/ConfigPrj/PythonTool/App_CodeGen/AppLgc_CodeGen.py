@@ -108,7 +108,7 @@ class AppLgc_CodeGen():
                     + "    typedef enum ____t_eAPPLGC_SrvList\n"\
                     + "    {\n"
         var_srv_dependencies  += "    /**\n" + "    * @brief Service Actuators Variable Mapping\n" + "    */\n"\
-                                + f'    const t_eAPPACT_Actuators c_AppLGc_SrvDepedencies_pae[{APPLGC_ENUM_SRV}_NB] =' + '{\n'
+                                + f'    const t_eAPPACT_Actuators * c_AppLGc_SrvDepedencies_pae[{APPLGC_ENUM_SRV}_NB] =' + '{\n'
         
         var_max_act_value  += "    /**\n" + "    * @brief Service Max Actuators values \n" + "    */\n"\
                                 + f'    const t_uint8 c_AppLGc_SrvActuatorsMax_ua8[{APPLGC_ENUM_SRV}_NB] =' + ' {\n'

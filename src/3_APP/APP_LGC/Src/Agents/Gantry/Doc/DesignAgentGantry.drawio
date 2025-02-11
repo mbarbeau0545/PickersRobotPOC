@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2025-02-09T15:47:35.079Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="ZExIzdf7nOdxkZz4UR7u" version="24.6.1" type="device" pages="5">
+<mxfile host="Electron" modified="2025-02-11T10:25:47.502Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="SXwp_3uQRNHgHy-zEoWk" version="24.6.1" type="device" pages="5">
   <diagram id="iLZs3jUUbc6s841LLNxe" name="WorkFlow">
     <mxGraphModel dx="1219" dy="714" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -26,21 +26,10 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Type" id="GnXUbsLAUt-_IhSWvtKM">
-    <mxGraphModel dx="3248" dy="3272" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2690" dy="2945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="-SuzEeylegbd52WuTmj7-1" value="Struct: AGTRY_FSMGantryfunc&lt;div&gt;in .c&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;gradientColor=#7ea6e0;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
-          <mxGeometry x="-1260" y="-2250" width="280" height="100" as="geometry">
-            <mxRectangle x="-560" y="-640" width="240" height="40" as="alternateBounds" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="-SuzEeylegbd52WuTmj7-2" value="&lt;span style=&quot;text-align: center;&quot;&gt;t_sAPPLGC_SFMFunc Sfmfunc_apf&lt;/span&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" parent="-SuzEeylegbd52WuTmj7-1" vertex="1">
-          <mxGeometry y="40" width="280" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="-SuzEeylegbd52WuTmj7-3" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;t_cbAGTRY_GetAppCmd * getAppCmd_pf&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#7ea6e0;fontColor=#000000;" parent="-SuzEeylegbd52WuTmj7-1" vertex="1">
-          <mxGeometry y="70" width="280" height="30" as="geometry" />
-        </mxCell>
         <mxCell id="UQEauc-5fOgNLauQ4SAD-1" value="Enum : t_eAGTRY_SFMGantry&lt;div&gt;in c&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry x="-1600" y="-2080" width="260" height="220" as="geometry">
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
@@ -176,41 +165,6 @@
         </mxCell>
         <mxCell id="QuPM5X7AX20fwGgLAD-e-12" value="&lt;div style=&quot;text-align: center; font-size: 12px;&quot;&gt;g_FSMProdRqstMode_e = APPLGC_STATE_MACHINE_PAUSE&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;fontColor=#000000;fontSize=12;" parent="QuPM5X7AX20fwGgLAD-e-9" vertex="1">
           <mxGeometry y="40" width="399.99999999999994" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-1" value="Enum : t_eAGTRY_AppCmdId&lt;div&gt;in h&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="-640" y="-1520" width="260" height="340" as="geometry">
-            <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-2" value="APP_CMDAPP_ID_GTRY_NEW_MODE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="40" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-3" value="APP_CMDAPP_ID_MODJOG_VALUES" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="70" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-4" value="APP_CMDAPP_ID_MODJOG_INCR" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="100" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-5" value="APP_CMDAPP_ID_MODPP_PICK_VALUE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="130" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-6" value="APP_CMDAPP_ID_MODPP_PLACE_VALUE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="160" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-7" value="APP_CMDAPP_ID_MODMANU_VALUE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="190" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-8" value="APP_CMDAPP_ID_SEND_SPEED" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="220" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-9" value="APP_CMDAPP_ID_EMERGENCCY_STOP" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="250" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-10" value="APP_CMDAPP_ID_SEND_BIT_ALIVE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="280" width="260" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fe9Or1RrJuJ38tltWrVD-11" value="APP_CMDAPP_ID_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" vertex="1" parent="Fe9Or1RrJuJ38tltWrVD-1">
-          <mxGeometry y="310" width="260" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

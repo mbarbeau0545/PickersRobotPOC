@@ -20,6 +20,9 @@
     // ********************************************************************
     #define APPLGC_APP_PROTOCOL_LEN_DATA ((t_uint8)8)
     #define APPLGC_IDX_APP_DATA_START ((t_uint8)1)
+    #define APPLGC_APPUSER_COM_TIMEOUT ((t_uint32)1000)
+    #define APPLGC_APPUSER_ERR_RX ((t_uint16)0)
+    #define APPLGC_APPUSER_ERR_TX ((t_uint16)1)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -48,49 +51,53 @@
     } t_eAPPLGC_SrvState;
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
-    * @brief Enum for Service Gantry_X
+    * @brief Enum for Service Gtry_X
     */
-    typedef enum ____t_eAPPLGC_SrvGantry_X
+    typedef enum ____t_eAPPLGC_SrvGtry_X
     {
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_LEFT_STATE = 0x00,
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_LEFT_DIR,
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_LEFT_PULSE,
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_RIGHT_STATE,
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_RIGHT_DIR,
-        APPLGC_SRV_GANTRY_X_ACT_MOTOR_AXE_X_RIGHT_PULSE,
-        APPLGC_SRV_GANTRY_X_ACT_NB,
-    } t_eAPPLGC_SrvGantry_X;
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_STATE = 0x00,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_DIR,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_PULSE,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_STATE,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_DIR,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_PULSE,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_SEED,
+        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_SPEED,
+        APPLGC_SRV_GTRY_X_ACT_NB,
+    } t_eAPPLGC_SrvGtry_X;
 
     /**
-    * @brief Enum for Service Gantry_Y
+    * @brief Enum for Service Gtry_Y
     */
-    typedef enum ____t_eAPPLGC_SrvGantry_Y
+    typedef enum ____t_eAPPLGC_SrvGtry_Y
     {
-        APPLGC_SRV_GANTRY_Y_ACT_MOTOR_AXE_Y_STATE = 0x00,
-        APPLGC_SRV_GANTRY_Y_ACT_MOTOR_AXE_Y_DIR,
-        APPLGC_SRV_GANTRY_Y_ACT_MOTOR_AXE_Y_PULSE,
-        APPLGC_SRV_GANTRY_Y_ACT_NB,
-    } t_eAPPLGC_SrvGantry_Y;
+        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_STATE = 0x00,
+        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_DIR,
+        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_PULSE,
+        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_SPEED,
+        APPLGC_SRV_GTRY_Y_ACT_NB,
+    } t_eAPPLGC_SrvGtry_Y;
 
     /**
-    * @brief Enum for Service Gantry_Z
+    * @brief Enum for Service Gtry_Z
     */
-    typedef enum ____t_eAPPLGC_SrvGantry_Z
+    typedef enum ____t_eAPPLGC_SrvGtry_Z
     {
-        APPLGC_SRV_GANTRY_Z_ACT_MOTOR_AXE_Z_STATE = 0x00,
-        APPLGC_SRV_GANTRY_Z_ACT_MOTOR_AXE_Z_DIR,
-        APPLGC_SRV_GANTRY_Z_ACT_MOTOR_AXE_Z_PULSE,
-        APPLGC_SRV_GANTRY_Z_ACT_NB,
-    } t_eAPPLGC_SrvGantry_Z;
+        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_STATE = 0x00,
+        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_DIR,
+        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_PULSE,
+        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_SPEED,
+        APPLGC_SRV_GTRY_Z_ACT_NB,
+    } t_eAPPLGC_SrvGtry_Z;
 
     /**
     * @brief Enum for Service Function Listy
     */
     typedef enum ____t_eAPPLGC_SrvList
     {
-        APPLGC_SRV_GANTRY_X = 0x00,
-        APPLGC_SRV_GANTRY_Y,
-        APPLGC_SRV_GANTRY_Z,
+        APPLGC_SRV_GTRY_X = 0x00,
+        APPLGC_SRV_GTRY_Y,
+        APPLGC_SRV_GTRY_Z,
 
         APPLGC_SRV_NB,
     } t_eAPPLGC_SrvList;
@@ -104,7 +111,29 @@
         APPLGC_AGENT_NB,
     } t_eAPPLGC_AgentList;
     /* CAUTION : Automatic generated code section for Enum: End */
-   
+    
+    /**
+    * @brief Enum for requested Mode for Gantry Agent 
+    */
+    enum 
+    {
+        APPLGC_APP_RQST_GTR_PRODUCTION = 0x00,
+        APPLGC_APP_RQST_GTR_PAUSE,
+        APPLGC_APP_RQST_GTR_FAILURE,
+
+        APPLGC_APP_RQST_GTR_NB
+    };
+
+    /**
+    * @brief Enum for requested Mode for Agent Gantry in Production Mode 
+    */
+    enum
+    {
+        APPLGC_APP_RQST_GTRY_PROD_SEO = 0x00,
+        APPLGC_APP_RQST_GTRY_PROD_MVMT,
+
+        APPLGC_APP_RQST_GTRY_PROD_NB
+    };
     /* CAUTION : Automatic generated code section for Structure: Start */
 
     /* CAUTION : Automatic generated code section for Structure: End */
@@ -136,39 +165,39 @@
     *	@brief      Set the Service Init Function
     *
     */
-    typedef t_eReturnCode (t_cbAPPLGC_FSMSrvInit)(void);
+    typedef t_eReturnCode (t_cbAPPLGC_FSMInit)(void);
     /**
     *
     *	@brief      Set the Service Cyclic Function
     *
     */
-   typedef t_eReturnCode (t_cbAPPLGC_FSMSrvCyclic)(t_float32 f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
+   typedef t_eReturnCode (t_cbAPPLGC_FSMCyclic)(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
     /**
     *
     *	@brief      Set the Service Enter Mode Function
     *
     */
-    typedef t_eReturnCode (t_cbAPPLGC_FSMSrvEnterMode)(void);
+    typedef t_eReturnCode (t_cbAPPLGC_FSMEnterMode)(void);
     /**
     *
     *	@brief      Set the Service Exit Mode Function
     *
     */
-    typedef t_eReturnCode (t_cbAPPLGC_FSMSrvExitMode)(void);
+    typedef t_eReturnCode (t_cbAPPLGC_FSMExitMode)(void);
 
     //-----------------------------STRUCT TYPES---------------------------//
     typedef struct 
     {
         t_cbAPPLGC_AgentInit * init_pcb;
-        t_cbAPPLGC_AgentPeriodicTask * PeriodiTask_pcb;
+        t_cbAPPLGC_AgentPeriodicTask * PeriodTask_pcb;
     } t_sAPPLGC_AgentFunc;
 
     typedef struct 
     {
-        t_cbAPPLGC_FSMSrvInit * srvInit_pcb;
-        t_cbAPPLGC_FSMSrvCyclic * srvCyclic_pcb;
-        t_cbAPPLGC_FSMSrvEnterMode * srvEnter_pcb;
-        t_cbAPPLGC_FSMSrvExitMode * srvExit_pcb;
+        t_cbAPPLGC_FSMInit * Init_pcb;
+        t_cbAPPLGC_FSMCyclic * Cyclic_pcb;
+        t_cbAPPLGC_FSMEnterMode * Enter_pcb;
+        t_cbAPPLGC_FSMExitMode * Exit_pcb;
     } t_sAPPLGC_FSM_Func;
     // ********************************************************************
     // *                      Prototypes

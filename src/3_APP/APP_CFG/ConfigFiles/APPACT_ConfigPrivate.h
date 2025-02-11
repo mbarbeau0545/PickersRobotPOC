@@ -20,18 +20,22 @@
     // ********************************************************************
     #include "./APPACT_ConfigPublic.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Left_State.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Left_Dir.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Left_Pulse.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Right_State.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Right_Dir.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_X_Right_Pulse.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Y_State.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Y_Dir.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Y_Pulse.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Z_State.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Z_Dir.h"
-    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Motor_Axe_Z_Pulse.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_L_State.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_L_Dir.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_L_Pulse.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_MTr_X_L_Seed.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_R_State.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_R_Dir.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_R_Pulse.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_R_Speed.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Y_State.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Y_Dir.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Y_Pulse.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Y_Speed.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Z_State.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Z_Dir.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Z_Pulse.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Z_Speed.h"
     /* CAUTION : Automatic generated code section for Include: End */
     #include "Motor/CL42T/Src/CL42T.h"
 
@@ -127,18 +131,22 @@
 
     /**< Variable for System Actuators functions*/
     const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {
-        {APPACT_SPEC_Motor_Axe_X_Left_State_SetCfg,                  APPACT_SPEC_Motor_Axe_X_Left_State_SetValue,                APPACT_SPEC_Motor_Axe_X_Left_State_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_STATE
-        {APPACT_SPEC_Motor_Axe_X_Left_Dir_SetCfg,                    APPACT_SPEC_Motor_Axe_X_Left_Dir_SetValue,                  APPACT_SPEC_Motor_Axe_X_Left_Dir_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_DIR
-        {APPACT_SPEC_Motor_Axe_X_Left_Pulse_SetCfg,                  APPACT_SPEC_Motor_Axe_X_Left_Pulse_SetValue,                APPACT_SPEC_Motor_Axe_X_Left_Pulse_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_PULSE
-        {APPACT_SPEC_Motor_Axe_X_Right_State_SetCfg,                 APPACT_SPEC_Motor_Axe_X_Right_State_SetValue,               APPACT_SPEC_Motor_Axe_X_Right_State_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_STATE
-        {APPACT_SPEC_Motor_Axe_X_Right_Dir_SetCfg,                   APPACT_SPEC_Motor_Axe_X_Right_Dir_SetValue,                 APPACT_SPEC_Motor_Axe_X_Right_Dir_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_DIR
-        {APPACT_SPEC_Motor_Axe_X_Right_Pulse_SetCfg,                 APPACT_SPEC_Motor_Axe_X_Right_Pulse_SetValue,               APPACT_SPEC_Motor_Axe_X_Right_Pulse_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_PULSE
-        {APPACT_SPEC_Motor_Axe_Y_State_SetCfg,                       APPACT_SPEC_Motor_Axe_Y_State_SetValue,                     APPACT_SPEC_Motor_Axe_Y_State_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Y_STATE
-        {APPACT_SPEC_Motor_Axe_Y_Dir_SetCfg,                         APPACT_SPEC_Motor_Axe_Y_Dir_SetValue,                       APPACT_SPEC_Motor_Axe_Y_Dir_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Y_DIR
-        {APPACT_SPEC_Motor_Axe_Y_Pulse_SetCfg,                       APPACT_SPEC_Motor_Axe_Y_Pulse_SetValue,                     APPACT_SPEC_Motor_Axe_Y_Pulse_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Y_PULSE
-        {APPACT_SPEC_Motor_Axe_Z_State_SetCfg,                       APPACT_SPEC_Motor_Axe_Z_State_SetValue,                     APPACT_SPEC_Motor_Axe_Z_State_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Z_STATE
-        {APPACT_SPEC_Motor_Axe_Z_Dir_SetCfg,                         APPACT_SPEC_Motor_Axe_Z_Dir_SetValue,                       APPACT_SPEC_Motor_Axe_Z_Dir_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Z_DIR
-        {APPACT_SPEC_Motor_Axe_Z_Pulse_SetCfg,                       APPACT_SPEC_Motor_Axe_Z_Pulse_SetValue,                     APPACT_SPEC_Motor_Axe_Z_Pulse_GetValue}, //APPACT_ACTUATOR_MOTOR_AXE_Z_PULSE
+        {APPACT_SPEC_Mtr_X_L_State_SetCfg,                           APPACT_SPEC_Mtr_X_L_State_SetValue,                         APPACT_SPEC_Mtr_X_L_State_GetValue}, //APPACT_ACTUATOR_MTR_X_L_STATE
+        {APPACT_SPEC_Mtr_X_L_Dir_SetCfg,                             APPACT_SPEC_Mtr_X_L_Dir_SetValue,                           APPACT_SPEC_Mtr_X_L_Dir_GetValue}, //APPACT_ACTUATOR_MTR_X_L_DIR
+        {APPACT_SPEC_Mtr_X_L_Pulse_SetCfg,                           APPACT_SPEC_Mtr_X_L_Pulse_SetValue,                         APPACT_SPEC_Mtr_X_L_Pulse_GetValue}, //APPACT_ACTUATOR_MTR_X_L_PULSE
+        {APPACT_SPEC_MTr_X_L_Seed_SetCfg,                            APPACT_SPEC_MTr_X_L_Seed_SetValue,                          APPACT_SPEC_MTr_X_L_Seed_GetValue}, //APPACT_ACTUATOR_MTR_X_L_SEED
+        {APPACT_SPEC_Mtr_X_R_State_SetCfg,                           APPACT_SPEC_Mtr_X_R_State_SetValue,                         APPACT_SPEC_Mtr_X_R_State_GetValue}, //APPACT_ACTUATOR_MTR_X_R_STATE
+        {APPACT_SPEC_Mtr_X_R_Dir_SetCfg,                             APPACT_SPEC_Mtr_X_R_Dir_SetValue,                           APPACT_SPEC_Mtr_X_R_Dir_GetValue}, //APPACT_ACTUATOR_MTR_X_R_DIR
+        {APPACT_SPEC_Mtr_X_R_Pulse_SetCfg,                           APPACT_SPEC_Mtr_X_R_Pulse_SetValue,                         APPACT_SPEC_Mtr_X_R_Pulse_GetValue}, //APPACT_ACTUATOR_MTR_X_R_PULSE
+        {APPACT_SPEC_Mtr_X_R_Speed_SetCfg,                           APPACT_SPEC_Mtr_X_R_Speed_SetValue,                         APPACT_SPEC_Mtr_X_R_Speed_GetValue}, //APPACT_ACTUATOR_MTR_X_R_SPEED
+        {APPACT_SPEC_Mtr_Y_State_SetCfg,                             APPACT_SPEC_Mtr_Y_State_SetValue,                           APPACT_SPEC_Mtr_Y_State_GetValue}, //APPACT_ACTUATOR_MTR_Y_STATE
+        {APPACT_SPEC_Mtr_Y_Dir_SetCfg,                               APPACT_SPEC_Mtr_Y_Dir_SetValue,                             APPACT_SPEC_Mtr_Y_Dir_GetValue}, //APPACT_ACTUATOR_MTR_Y_DIR
+        {APPACT_SPEC_Mtr_Y_Pulse_SetCfg,                             APPACT_SPEC_Mtr_Y_Pulse_SetValue,                           APPACT_SPEC_Mtr_Y_Pulse_GetValue}, //APPACT_ACTUATOR_MTR_Y_PULSE
+        {APPACT_SPEC_Mtr_Y_Speed_SetCfg,                             APPACT_SPEC_Mtr_Y_Speed_SetValue,                           APPACT_SPEC_Mtr_Y_Speed_GetValue}, //APPACT_ACTUATOR_MTR_Y_SPEED
+        {APPACT_SPEC_Mtr_Z_State_SetCfg,                             APPACT_SPEC_Mtr_Z_State_SetValue,                           APPACT_SPEC_Mtr_Z_State_GetValue}, //APPACT_ACTUATOR_MTR_Z_STATE
+        {APPACT_SPEC_Mtr_Z_Dir_SetCfg,                               APPACT_SPEC_Mtr_Z_Dir_SetValue,                             APPACT_SPEC_Mtr_Z_Dir_GetValue}, //APPACT_ACTUATOR_MTR_Z_DIR
+        {APPACT_SPEC_Mtr_Z_Pulse_SetCfg,                             APPACT_SPEC_Mtr_Z_Pulse_SetValue,                           APPACT_SPEC_Mtr_Z_Pulse_GetValue}, //APPACT_ACTUATOR_MTR_Z_PULSE
+        {APPACT_SPEC_Mtr_Z_Speed_SetCfg,                             APPACT_SPEC_Mtr_Z_Speed_SetValue,                           APPACT_SPEC_Mtr_Z_Speed_GetValue}, //APPACT_ACTUATOR_MTR_Z_SPEED
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

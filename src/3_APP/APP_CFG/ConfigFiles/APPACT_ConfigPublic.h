@@ -32,18 +32,22 @@
     */
     typedef enum
     {
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_STATE = 0x0,/**< Left Motor Axe X Commande for Motor State */
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_DIR,     /**< Left Motor Axe X Commande for Motor Direction */
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_PULSE,   /**< Left Motor Axe X Commande for Motor Pulses */
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_STATE,  /**< Right Motor Axe X Commande for Motor State */
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_DIR,    /**< Right Motor Axe X Commande for Motor Direction */
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_PULSE,  /**< Right Motor Axe X Commande for Motor Pulses */
-        APPACT_ACTUATOR_MOTOR_AXE_Y_STATE,        /**< Motor Axe Y Commande for Motor State */
-        APPACT_ACTUATOR_MOTOR_AXE_Y_DIR,          /**< Motor Axe Y Commande for Motor Direction */
-        APPACT_ACTUATOR_MOTOR_AXE_Y_PULSE,        /**< Motor Axe Y Commande for Motor Pulses */
-        APPACT_ACTUATOR_MOTOR_AXE_Z_STATE,        /**< Motor Axe Z Commande for Motor State */
-        APPACT_ACTUATOR_MOTOR_AXE_Z_DIR,          /**< Motor Axe Z Commande for Motor Direction */
-        APPACT_ACTUATOR_MOTOR_AXE_Z_PULSE,        /**< Motor Axe Z Commande for Motor Pulses */
+        APPACT_ACTUATOR_MTR_X_L_STATE = 0x0,      /**< Left Motor Axe X Commande for Motor State */
+        APPACT_ACTUATOR_MTR_X_L_DIR,              /**< Left Motor Axe X Commande for Motor Direction */
+        APPACT_ACTUATOR_MTR_X_L_PULSE,            /**< Left Motor Axe X Commande for Motor Pulses */
+        APPACT_ACTUATOR_MTR_X_L_SEED,             /**< Left Motor Axe X Commande for Motor Speed */
+        APPACT_ACTUATOR_MTR_X_R_STATE,            /**< Right Motor Axe X Commande for Motor State */
+        APPACT_ACTUATOR_MTR_X_R_DIR,              /**< Right Motor Axe X Commande for Motor Direction */
+        APPACT_ACTUATOR_MTR_X_R_PULSE,            /**< Right Motor Axe X Commande for Motor Pulses */
+        APPACT_ACTUATOR_MTR_X_R_SPEED,            /**< Left Motor Axe X_Right Commande for Motor Speed */
+        APPACT_ACTUATOR_MTR_Y_STATE,              /**< Motor Axe Y Commande for Motor State */
+        APPACT_ACTUATOR_MTR_Y_DIR,                /**< Motor Axe Y Commande for Motor Direction */
+        APPACT_ACTUATOR_MTR_Y_PULSE,              /**< Motor Axe Y Commande for Motor Pulses */
+        APPACT_ACTUATOR_MTR_Y_SPEED,              /**< Left Motor Axe Y Commande for Motor Speed */
+        APPACT_ACTUATOR_MTR_Z_STATE,              /**< Motor Axe Z Commande for Motor State */
+        APPACT_ACTUATOR_MTR_Z_DIR,                /**< Motor Axe Z Commande for Motor Direction */
+        APPACT_ACTUATOR_MTR_Z_PULSE,              /**< Motor Axe Z Commande for Motor Pulses */
+        APPACT_ACTUATOR_MTR_Z_SPEED,              /**< Left Motor Axe Z Commande for Motor Speed */
     
         APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;

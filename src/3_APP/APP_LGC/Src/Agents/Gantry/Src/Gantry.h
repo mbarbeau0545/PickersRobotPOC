@@ -20,6 +20,8 @@
     // ********************************************************************
     #include "TypeCommon.h"
     #include "APP_LGC/Src/APP_LGC.h"
+    #include "APP_CFG/ConfigFiles/Gantry_ConfigPublic.h"
+
 
 
     // ********************************************************************
@@ -75,7 +77,7 @@
     *
     *
     */
-    t_eReturnCode Gantry_Cyclic(t_float32 f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
+    t_eReturnCode Gantry_Cyclic(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
 
     //********************************************************************************
     //                      Public functions - Prototyupes

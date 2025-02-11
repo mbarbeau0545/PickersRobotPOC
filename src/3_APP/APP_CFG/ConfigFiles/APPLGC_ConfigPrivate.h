@@ -57,48 +57,52 @@
     * @brief Service Max Actuators values 
     */
     const t_uint8 c_AppLGc_SrvActuatorsMax_ua8[APPLGC_SRV_NB] = {
-        (t_uint8)APPLGC_SRV_GANTRY_X_ACT_NB,
-        (t_uint8)APPLGC_SRV_GANTRY_Y_ACT_NB,
-        (t_uint8)APPLGC_SRV_GANTRY_Z_ACT_NB,
+        (t_uint8)APPLGC_SRV_GTRY_X_ACT_NB,
+        (t_uint8)APPLGC_SRV_GTRY_Y_ACT_NB,
+        (t_uint8)APPLGC_SRV_GTRY_Z_ACT_NB,
     };
 
     /**
     * @brief Variable for Actuators/Service Mapping
     */
-        const t_eAPPACT_Actuators c_AppLgc_ActServiceGantry_XMapp_ae[APPLGC_SRV_GANTRY_X_ACT_NB]= {
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_STATE,
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_DIR,
-        APPACT_ACTUATOR_MOTOR_AXE_X_LEFT_PULSE,
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_STATE,
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_DIR,
-        APPACT_ACTUATOR_MOTOR_AXE_X_RIGHT_PULSE,
+        const t_eAPPACT_Actuators c_AppLgc_ActServiceGtry_XMapp_ae[APPLGC_SRV_GTRY_X_ACT_NB]= {
+        APPACT_ACTUATOR_MTR_X_L_STATE,
+        APPACT_ACTUATOR_MTR_X_L_DIR,
+        APPACT_ACTUATOR_MTR_X_L_PULSE,
+        APPACT_ACTUATOR_MTR_X_R_STATE,
+        APPACT_ACTUATOR_MTR_X_R_DIR,
+        APPACT_ACTUATOR_MTR_X_R_PULSE,
+        APPACT_ACTUATOR_MTR_X_L_SEED,
+        APPACT_ACTUATOR_MTR_X_R_SPEED,
     };
 
     /**
     * @brief Variable for Actuators/Service Mapping
     */
-        const t_eAPPACT_Actuators c_AppLgc_ActServiceGantry_YMapp_ae[APPLGC_SRV_GANTRY_Y_ACT_NB]= {
-        APPACT_ACTUATOR_MOTOR_AXE_Y_STATE,
-        APPACT_ACTUATOR_MOTOR_AXE_Y_DIR,
-        APPACT_ACTUATOR_MOTOR_AXE_Y_PULSE,
+        const t_eAPPACT_Actuators c_AppLgc_ActServiceGtry_YMapp_ae[APPLGC_SRV_GTRY_Y_ACT_NB]= {
+        APPACT_ACTUATOR_MTR_Y_STATE,
+        APPACT_ACTUATOR_MTR_Y_DIR,
+        APPACT_ACTUATOR_MTR_Y_PULSE,
+        APPACT_ACTUATOR_MTR_Y_SPEED,
     };
 
     /**
     * @brief Variable for Actuators/Service Mapping
     */
-        const t_eAPPACT_Actuators c_AppLgc_ActServiceGantry_ZMapp_ae[APPLGC_SRV_GANTRY_Z_ACT_NB]= {
-        APPACT_ACTUATOR_MOTOR_AXE_Z_STATE,
-        APPACT_ACTUATOR_MOTOR_AXE_Z_DIR,
-        APPACT_ACTUATOR_MOTOR_AXE_Z_PULSE,
+        const t_eAPPACT_Actuators c_AppLgc_ActServiceGtry_ZMapp_ae[APPLGC_SRV_GTRY_Z_ACT_NB]= {
+        APPACT_ACTUATOR_MTR_Z_STATE,
+        APPACT_ACTUATOR_MTR_Z_DIR,
+        APPACT_ACTUATOR_MTR_Z_PULSE,
+        APPACT_ACTUATOR_MTR_Z_SPEED,
     };
 
     /**
     * @brief Service Actuators Variable Mapping
     */
-    const t_eAPPACT_Actuators  * c_AppLGc_SrvDepedencies_pae[APPLGC_SRV_NB] ={
-        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGantry_XMapp_ae),
-        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGantry_YMapp_ae),
-        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGantry_ZMapp_ae),
+    const t_eAPPACT_Actuators * c_AppLGc_SrvDepedencies_pae[APPLGC_SRV_NB] ={
+        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGtry_XMapp_ae),
+        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGtry_YMapp_ae),
+        (t_eAPPACT_Actuators *)(&c_AppLgc_ActServiceGtry_ZMapp_ae),
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */
