@@ -61,7 +61,7 @@ static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
             .PulseSigCfg_s = {
                 .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_3, //PA10 GREEN WIRE
                 .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
-                .f_PulseInitFreq_u32 = 100
+                .f_PulseInitFreq_u32 = 22000
             },
             .StateSigCfg = {
                 .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_2, //PB13 BROWN WIRE

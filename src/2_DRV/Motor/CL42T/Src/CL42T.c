@@ -829,9 +829,12 @@ static t_eReturnCode s_CL42T_SetSignalsValue(t_sCL42T_MotorInfo * f_motorInfo_ps
             }
             if(Ret_e == RC_OK)
             {
-                Ret_e = FMKIO_Set_OutPwmSigPulses(  sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
+                #warning('Use the right function')
+                /*Ret_e = FMKIO_Set_OutPwmSigPulses(  sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
                                                     CL42T_NOMINATIVE_DUTYCYCLE,
-                                                    sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32);
+                                                    sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32);*/
+                Ret_e = FMKIO_Set_OutPwmSigDutyCycle(sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
+                                                        CL42T_NOMINATIVE_DUTYCYCLE) ;     
             }
             if(Ret_e != RC_OK)
             {
@@ -1116,10 +1119,11 @@ static t_eReturnCode s_CL42T_AddPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
         }
         if(Ret_e == RC_OK)
         {
+            #warning('pulse in infinite mode')
             Ret_e = FMKIO_Set_OutPwmSigCfg( f_pulseCfg_ps->PulseSignal_e, 
                                             f_pulseCfg_ps->PullMode_e, 
                                             f_pulseCfg_ps->f_PulseInitFreq_u32,
-                                            FMKTIM_PWM_MODE_FINITE_PULSE,
+                                            FMKTIM_PWM_MODE_INFINITE_PULSE,
                                             s_CL42T_PulseEventMngmt,
                                             s_CL42T_SigErrorMngmt);
            
@@ -1353,10 +1357,10 @@ static t_eReturnCode s_CL42T_SetStateSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
         switch (f_state_e)
         {
             case CL42T_MOTOR_STATE_ON:
-                digValue_e = FMKIO_DIG_VALUE_HIGH;
+                digValue_e = FMKIO_DIG_VALUE_LOW;
                 break;
             case CL42T_MOTOR_STATE_OFF:
-                digValue_e = FMKIO_DIG_VALUE_LOW;
+                digValue_e = FMKIO_DIG_VALUE_HIGH;
                 break;
             case CL42T_MOTOR_STATE_NB:
             default:
@@ -1499,14 +1503,14 @@ static t_eReturnCode s_CL42T_GetStateSignal(   t_sCL42T_MotorInfo * f_motorInfo_
             switch(digValue_e)
             {
                 case FMKIO_DIG_VALUE_LOW:
-                    *f_state_pe = CL42T_MOTOR_STATE_OFF;
+                    *f_state_pe = CL42T_MOTOR_STATE_ON;
                     break;
                 case FMKIO_DIG_VALUE_HIGH:
-                    *f_state_pe = CL42T_MOTOR_STATE_ON;
+                    *f_state_pe = CL42T_MOTOR_STATE_OFF;
                     break;
                 case FMKIO_DIG_VALUE_NB:
                 default:
-                    *f_state_pe = CL42T_MOTOR_STATE_OFF;
+                    *f_state_pe = CL42T_MOTOR_STATE_ON;
                     Ret_e = RC_ERROR_PARAM_NOT_SUPPORTED;
                     break;
 
