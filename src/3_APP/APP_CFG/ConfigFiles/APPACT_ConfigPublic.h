@@ -35,7 +35,7 @@
         APPACT_ACTUATOR_MTR_X_L_STATE = 0x0,      /**< Left Motor Axe X Commande for Motor State */
         APPACT_ACTUATOR_MTR_X_L_DIR,              /**< Left Motor Axe X Commande for Motor Direction */
         APPACT_ACTUATOR_MTR_X_L_PULSE,            /**< Left Motor Axe X Commande for Motor Pulses */
-        APPACT_ACTUATOR_MTR_X_L_SEED,             /**< Left Motor Axe X Commande for Motor Speed */
+        APPACT_ACTUATOR_MTR_X_L_SPEED,             /**< Left Motor Axe X Commande for Motor Speed */
         APPACT_ACTUATOR_MTR_X_R_STATE,            /**< Right Motor Axe X Commande for Motor State */
         APPACT_ACTUATOR_MTR_X_R_DIR,              /**< Right Motor Axe X Commande for Motor Direction */
         APPACT_ACTUATOR_MTR_X_R_PULSE,            /**< Right Motor Axe X Commande for Motor Pulses */

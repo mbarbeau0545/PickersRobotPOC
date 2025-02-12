@@ -25,6 +25,7 @@
 #include "APP_CTRL/APP_SNS/Src/APP_SNS.h"
 #include "APP_CTRL/APP_SDM/Src/APP_SDM.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+#include "Motor/CL42T/Src/CL42T.h"
 
 #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
 #include "Library/SafeMem/SafeMem.h"
@@ -107,6 +108,8 @@ static t_sAPPLGC_AgentFunc g_AgentInfo_as[APPLGC_AGENT_NB];
 
 static t_sAPPLGC_ServiceInfo g_srvFuncInfo_as[APPLGC_SRV_NB];
 
+static t_sAPPLGC_ActInfo g_actInfo_as[APPACT_ACTUATOR_NB];
+
 static t_float32 g_snsValues_af32[APPSNS_SENSOR_NB];
 
 static t_sAPPLGC_AppCmdInfo g_CmdInfo_as[APPLGC_RCV_CMD_ID_NB];
@@ -116,17 +119,17 @@ static t_uint32 g_lastBitAlive_u32 = (t_uint32)0;
 /**
 * @brief Actuators Values Containers for Gtry_X
 */
-static t_float32 g_ActContainerGtry_X_af32[APPLGC_SRV_GTRY_X_ACT_NB];
+static t_float32 g_ActContainerGtry_X_af32[APPLGC_GTRY_X_ACT_NB];
 
 /**
 * @brief Actuators Values Containers for Gtry_Y
 */
-static t_float32 g_ActContainerGtry_Y_af32[APPLGC_SRV_GTRY_Y_ACT_NB];
+static t_float32 g_ActContainerGtry_Y_af32[APPLGC_GTRY_Y_ACT_NB];
 
 /**
 * @brief Actuators Values Containers for Gtry_Z
 */
-static t_float32 g_ActContainerGtry_Z_af32[APPLGC_SRV_GTRY_Z_ACT_NB];
+static t_float32 g_ActContainerGtry_Z_af32[APPLGC_GTRY_Z_ACT_NB];
 
 /* CAUTION : Automatic generated code section for Variable: End */
 //********************************************************************************
@@ -196,6 +199,19 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void);
 *
 *
 */
+static t_eReturnCode s_APPLGC_UpdateActValues(void);
+/**
+*
+*	@brief
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
 static t_eReturnCode s_APPLGC_SetActValues(void);
 /**
 *
@@ -250,11 +266,7 @@ t_eReturnCode APPLGC_Init(void)
     //----- Set Service Init -----//
     for(idxSrv_u8 = (t_uint8)0 ; idxSrv_u8 < APPLGC_SRV_NB ; idxSrv_u8++)
     {
-        for(idxAct_u8 = (t_uint8)0; idxAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[idxAct_u8] ; idxAct_u8++)
-        {
-            g_srvFuncInfo_as[idxSrv_u8].actValues_paf32[idxAct_u8] = (t_float32)0.0;
-        }
-        
+
         g_srvFuncInfo_as[idxSrv_u8].health_e = APPLGC_SRV_HEALTH_OK;
         g_srvFuncInfo_as[idxSrv_u8].state_e = APPLGC_SRV_STATE_NB;
         
@@ -272,9 +284,15 @@ t_eReturnCode APPLGC_Init(void)
         Ret_e = SafeMem_memclear((void *)g_CmdInfo_as[idxCmd_u8].appData_ua8, APPLGC_CMD_BYTE_NB);
         g_CmdInfo_as[idxCmd_u8].maskEvnt_u8 = (t_uint8)0;
     }
+
+    //---- Set Actuators Init ----//
+    for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < APPACT_ACTUATOR_NB ; idxAct_u8++)
+    {
+        g_actInfo_as[idxAct_u8].currValue_f32 = (t_float32)0;
+        g_actInfo_as[idxAct_u8].setValue_f32 = (t_float32)0;
+    }
+
     return Ret_e;
-
-
 }
 
 /*********************************
@@ -386,9 +404,11 @@ t_eReturnCode APPLGC_SetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_S
         //----- if state is OFF, disable all act value instantly -----//
         if(f_srvHealth_e == APPLGC_SRV_HEALTH_ERROR)
         {
-            for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[idxAct_u8] ; idxAct_u8++)
+            for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[f_service_e] ; idxAct_u8++)
             {
-                g_srvFuncInfo_as[f_service_e].actValues_paf32[idxAct_u8] = (t_float32)0.0;
+                actuator_e = c_AppLGc_SrvDepedencies_pae[idxAct_u8];
+
+                g_actInfo_as[(t_uint8)actuator_e].setValue_f32 = (t_float32)0.0;
             }
         }
     }
@@ -586,14 +606,19 @@ static t_eReturnCode s_APPLGC_Operational(void)
         //------ Get Sensors Values for this cyclic -----//
         Ret_e = s_APPLGC_GetSnsValues();
     }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = s_APPLGC_UpdateActValues();
+    }
 
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
         for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e == RC_OK) ; idxAgent_u8)
         {
-            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb((t_float32 *)g_snsValues_af32,
-                                                                        (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
+            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
+                                                                        (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as,
+                                                                        (t_sAPPLGC_ActInfo *)(&g_actInfo_as));
         }
     }
 
@@ -636,27 +661,93 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void)
 /*********************************
  * s_APPLGC_SetActValues
  *********************************/
+static t_eReturnCode s_APPLGC_UpdateActValues(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxAct_u8 = (t_uint8)0;
+    t_sint16 currVal_s16;
+
+    //----- Loop on every Actuators -----//
+    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
+    {
+        //------ reset setVal Point -----//
+        g_actInfo_as[idxAct_u8].setValue_f32 = (t_float32)0.0;
+        Ret_e = APPACT_Get_ActValue(idxAct_u8, &currVal_s16);
+        g_actInfo_as[idxAct_u8].currValue_f32 = (t_float32)currVal_s16;
+    }
+
+    return Ret_e;
+}
+
+/*********************************
+ * s_APPLGC_UpdateActValues
+ *********************************/
+static t_eReturnCode s_APPLGC_UpdatSrvState(void)
+{
+    t_uint8 idxSrv_u8;
+
+    for(idxSrv_u8 = (t_uint8)0 ; idxSrv_u8 < APPLGC_SRV_NB ; idxSrv_u8++)
+    {
+        if(g_srvFuncInfo_as[idxSrv_u8].state_e != APPLGC_SRV_STATE_INHIBIT)
+        {
+            switch (idxSrv_u8)
+            {
+                case APPLGC_SRV_GTRY_X:
+                {
+                    if((g_actInfo_as[APPACT_ACTUATOR_MTR_X_L_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                    || (g_actInfo_as[APPACT_ACTUATOR_MTR_X_R_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON))
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_MOVING;
+                    }
+                    else 
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_STOPPED;
+                    }
+                    break;
+                }
+                case APPLGC_SRV_GTRY_Y:
+                {
+                    if(g_actInfo_as[APPACT_ACTUATOR_MTR_Y_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_MOVING;
+                    }
+                    else 
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_STOPPED;
+                    }
+                    break;
+                }
+                case APPLGC_SRV_GTRY_Z:  
+                {
+                    if(g_actInfo_as[APPACT_ACTUATOR_MTR_Z_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_MOVING;
+                    }
+                    else 
+                    {
+                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_STOPPED;
+                    }
+                    break;
+                } 
+            }
+        }
+    }
+
+    return RC_OK;
+}
+
+/*********************************
+ * s_APPLGC_SetActValues
+ *********************************/
 static t_eReturnCode s_APPLGC_SetActValues(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxSrv_u8 = (t_uint8)0;
-    t_uint8 idxSrvAct_u8 = (t_uint8)0;
-    t_eAPPACT_Actuators srvActuator_e;
-    t_sAPPLGC_ServiceInfo * srvInfo_ps;
+    t_uint8 idxAct_u8 = (t_uint8)0;
 
     //----- Loop on every Service -----//
-    for(idxSrv_u8 = (t_uint8)0 ; (idxSrv_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxSrv_u8++)
+    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
     {
-        srvInfo_ps = (t_sAPPLGC_ServiceInfo *)(&g_srvFuncInfo_as[idxSrv_u8]);
-        //----- Loop on every Actuators on that service 
-        for(idxSrvAct_u8 = (t_uint8)0 ; 
-            (idxSrvAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[idxSrv_u8]) 
-        &&  (Ret_e == RC_OK) ; 
-        idxSrvAct_u8++)
-        {
-            srvActuator_e = c_AppLGc_SrvDepedencies_pae[idxSrv_u8][idxSrvAct_u8];
-            Ret_e = APPACT_Set_ActValue(srvActuator_e, srvInfo_ps->actValues_paf32[idxSrvAct_u8]);
-        }
+        Ret_e = APPACT_Set_ActValue(idxAct_u8, (t_sint16)g_actInfo_as[idxAct_u8].setValue_f32);
     }
 
     return Ret_e;

@@ -26,7 +26,7 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-
+    #define GTRY_SNS_LIMSWITCH_NB ((t_uint8)8) /**< Number of Limits Switch Used */
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -60,7 +60,18 @@
     {// Init            Cyclic              EnterMode               ExitMode
         {GMCR_Init,      GMCR_Cyclic,        GMCR_EnterMode,         GMCR_ExitMode},
         {GMCAC_Init,     GMCAC_Cyclic,       GMCAC_EnterMode,        GMCAC_ExitMode},
-    }
+    };
+
+    const t_eAPPSNS_Sensors c_Gtry_LimSwitchIdx_ae[8] = {
+        APPSNS_SENSOR_LIM_SWCH_X_L_MAX,
+        APPSNS_SENSOR_LIM_SWCH_X_L_MIN,
+        APPSNS_SENSOR_LIM_SWCH_X_R_MAX,
+        APPSNS_SENSOR_LIM_SWCH_X_R_MIN,
+        APPSNS_SENSOR_LIM_SWCH_Y_MAX,
+        APPSNS_SENSOR_LIM_SWCH_Y_MIN,
+        APPSNS_SENSOR_LIM_SWCH_Z_MAX,
+        APPSNS_SENSOR_LIM_SWCH_Z_MIN,
+    };
     /* CAUTION : Automatic generated code section for Variable: Start */
 
     /* CAUTION : Automatic generated code section for Variable: End */

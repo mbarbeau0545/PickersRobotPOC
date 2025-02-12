@@ -22,6 +22,10 @@
 #include "./Gantry.h"
 #include "APP_CFG/ConfigFiles/Gantry_ConfigPrivate.h"
 #include "APP_LGC/Src/APP_LGC.h"
+#include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
+#include "APP_CFG/ConfigFiles/APPSNS_ConfigPublic.h"
+#include "APP_CTRL/APP_SDM/Src/APP_SDM.h"
+#include "APP_CTRL/APP_ACT/Src/APP_ACT.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -50,10 +54,14 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-static t_eGTRY_FSMProduction g_FSM_ProdMode_e = GTRY_SFM_PROD_NB;
-static t_eGTRY_FSMGantry g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PRE_PAUSE;
+static t_eGTRY_FSMProduction g_FSM_ProdMode_e = GTRY_FSM_PROD_SEO;
+static t_eGTRY_FSMProduction g_FSM_RsqtProdMode_e = GTRY_FSM_PROD_SEO;
+static t_eGTRY_FSMGantry g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PAUSE;
+static t_eGTRY_FSMGantry g_FSM_RqstGtryMode_e = GTRY_SFM_GANTRY_PAUSE;
+
 static t_float32 * g_snsValues_paf32;
 static t_sAPPLGC_ServiceInfo * g_SrvInfo_pas;
+static t_sAPPLGC_ActInfo * g_actInfo_pas;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -69,8 +77,33 @@ static t_sAPPLGC_ServiceInfo * g_SrvInfo_pas;
 *
 *
 */
-static t_eReturnCode s_GTRY_StateMachineMngmt(t_eGTRY_FSMGantry * f_rqstGtryMode_pe);
-
+static t_eReturnCode s_GTRY_StateMachineMngmt(void);
+/**
+*
+*	@brief      Check Limit switch Status, and check movement of the Gantry.\n
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
+static t_eReturnCode s_GTRY_SafetyMngmt(void);
+/**
+*
+*	@brief      Check Limit switch Status, and check movement of the Gantry.\n
+*	@note   
+*
+*
+*	@param[in] 
+*	@param[out]
+*	 
+*
+*
+*/
+static void s_GTR_SetGantryOff(void);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -86,7 +119,9 @@ t_eReturnCode Gantry_Init(void)
 /*********************************
  * APPLGC_Init
  *********************************/
-t_eReturnCode Gantry_Cyclic(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo * f_SrvInfo_pas)
+t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32, 
+                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
+                            t_sAPPLGC_ActInfo * f_actInfo_pas)
 {
     t_eReturnCode Ret_e = RC_OK;
     
@@ -94,35 +129,72 @@ t_eReturnCode Gantry_Cyclic(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo
     //----- Initialize Pointor to data -----//
     g_snsValues_paf32 = (t_float32 *)f_snsValues_paf32;
     g_SrvInfo_pas = (t_sAPPLGC_ServiceInfo *)f_SrvInfo_pas;
+    g_actInfo_pas = (t_sAPPLGC_ActInfo *)f_actInfo_pas;
+
+    //----- Check Gantry Mvmt Security and Update State-----//
+    Ret_e = s_GTRY_SafetyMngmt();
 
     //----- Get New Mode from Application -----//
-    
-    switch (g_FSM_GtryMode_e)
+    Ret_e = s_GTRY_StateMachineMngmt();
+
+
+    if(Ret_e == RC_OK)
     {
-        case GTRY_SFM_GANTRY_PRE_PRODUCTION:
+        switch (g_FSM_GtryMode_e)
         {
-            break;
-        }
-        case GTRY_SFM_GANTRY_PRODUCTION:
-        {
-            break;
-        }
-        case GTRY_SFM_GANTRY_PRE_PAUSE:
-        {
-            break;
-        }
-        case GTRY_SFM_GANTRY_PAUSE:
-        {
-            break;
-        }
-        case GTRY_SFM_GANTRY_DEFAULT:
-        {
-            break;
-        }
-        case GTRY_SFM_GANTRY_NB:
-        default:
-        {
-            break;
+            case GTRY_SFM_GANTRY_PRE_PRODUCTION:
+            {
+                Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Enter_pcb();
+
+                if(Ret_e == RC_OK)
+                {
+                    g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PRODUCTION;
+                }
+                break;
+            }
+            case GTRY_SFM_GANTRY_PRODUCTION:
+            {
+                if(g_FSM_RsqtProdMode_e != g_FSM_ProdMode_e)
+                {
+                    Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
+
+                    if(Ret_e == RC_OK)
+                    {
+                        Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_RsqtProdMode_e].Enter_pcb();
+
+                        if(Ret_e == RC_OK)
+                        {
+                            g_FSM_ProdMode_e = g_FSM_RsqtProdMode_e;
+                        }
+                    }
+                }
+                if(Ret_e == RC_OK)
+                {
+                    Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Cyclic_pcb( g_snsValues_paf32,
+                                                                                g_SrvInfo_pas,
+                                                                                g_actInfo_pas);
+                }
+                
+                if(Ret_e != RC_OK)
+                {
+                    g_FSM_GtryMode_e = GTRY_SFM_GANTRY_DEFAULT;
+                }
+                break;
+            }
+            case GTRY_SFM_GANTRY_PAUSE:
+            {
+                s_GTR_SetGantryOff();
+                break;
+            }
+            case GTRY_SFM_GANTRY_DEFAULT:
+            {
+                break;
+            }
+            case GTRY_SFM_GANTRY_NB:
+            default:
+            {
+                break;
+            }
         }
     }
     return Ret_e;
@@ -146,43 +218,87 @@ static t_eReturnCode s_GTRY_StateMachineMngmt(void)
     //      has been set by application else new mode -----//
     if(Ret_e == RC_OK)
     {
-        FSMGtryRqstMode_e = appCmd_u.SFMModeInfo_s.mainMode_u8;
-        FSMRqstProdMode_u8 = appCmd_u.SFMModeInfo_s.prodMode_u8;
-
-        //----- Find out if it's a change gantry -----//
-        if(FSMGtryRqstMode_e != g_FSM_GtryMode_e)
-        {
-            //------ also update the new sub mode -----//
-            switch(g_FSM_GtryMode_e)
-            {
-                case GTRY_SFM_GANTRY_PRE_PRODUCTION:
-                case GTRY_SFM_GANTRY_PRODUCTION:
-                {
-                    Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
-                    break;
-                }
-                case GTRY_SFM_GANTRY_PRE_PAUSE:
-                case GTRY_SFM_GANTRY_PAUSE:
-                case GTRY_SFM_GANTRY_DEFAULT:
-                case GTRY_SFM_GANTRY_NB:
-                default:
-                {
-                    break;
-                }
-            }
-            g_FSM_GtryMode_e = FSMGtryRqstMode_e;
-    
-        }
-
-        //----- Find out if it's a change of sub Mode -----//
-        if(FSMRqstProdMode_u8 != (t_uint8)g_FSM_ProdMode_e)
-        {
-            switch()
-        }
-        
-
-        
+        g_FSM_RqstGtryMode_e = appCmd_u.SFMModeInfo_s.mainMode_u8;
+        g_FSM_RsqtProdMode_e = appCmd_u.SFMModeInfo_s.prodMode_u8;
     }
+
+    if(Ret_e == RC_OK)
+    {
+        if(g_FSM_RqstGtryMode_e != g_FSM_GtryMode_e)
+        {
+            if(g_FSM_GtryMode_e == GTRY_SFM_GANTRY_PRODUCTION)
+            {
+                Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
+            }
+
+            g_FSM_GtryMode_e = g_FSM_RsqtProdMode_e;
+        }
+    }
+    if(Ret_e == RC_WARNING_NO_OPERATION)
+    {
+        Ret_e = RC_OK;
+    }
+    
+    return Ret_e;
+}
+
+/*********************************
+ * s_GTRY_SafetyMngmt
+ *********************************/
+static t_eReturnCode s_GTRY_SafetyMngmt(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxLimSw_u8;
+    t_uint8 idxSnsLimSw_u8 = 0;
+    t_bool reportDiag_b = False;
+
+    //----- check limit switch -----//
+    //----- In GMCR (Referencment) let this mode deal with
+    //      limit switch -----//
+    if(g_FSM_ProdMode_e != GTRY_FSM_PROD_SEO)
+    {
+        for(idxLimSw_u8 == (t_uint8)0 ; idxLimSw_u8 < GTRY_SNS_LIMSWITCH_NB ; idxLimSw_u8++)
+        {
+            idxSnsLimSw_u8 = c_Gtry_LimSwitchIdx_ae[idxLimSw_u8];
+            if(g_snsValues_paf32[idxSnsLimSw_u8] == APPSNS_LIM_SWCH_NC_CONTACT)
+            {
+                //---- Problem, call APPSDM -----//
+                Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_GANTRY_SWITCH_LIMIT,
+                                                APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                                (t_uint16)idxSnsLimSw_u8,
+                                                (t_uint16)0);
+
+                g_FSM_GtryMode_e = GTRY_SFM_GANTRY_DEFAULT;
+                reportDiag_b = (t_bool)True;
+                break;
+            }
+        }   
+    }
+    if(reportDiag_b == False)
+    {
+        Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_GANTRY_SWITCH_LIMIT,
+                                        APPSDM_DIAG_ITEM_REPORT_PASS,
+                                        (t_uint16)idxSnsLimSw_u8,
+                                        (t_uint16)0);
+    }
+
+    return Ret_e ;
+}
+
+/*********************************
+ * s_GTR_SetGantryOff
+ *********************************/
+static void s_GTR_SetGantryOff(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    //---- set All Pulses to Off -----//
+    g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)0.0;
+    g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)0.0;
+    g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32 = (t_float32)0.0;
+    g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32 = (t_float32)0.0;
+
+    return;
 }
 //************************************************************************************
 // End of File

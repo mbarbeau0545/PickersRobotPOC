@@ -286,8 +286,8 @@ t_eReturnCode APPSDM_ReportDiagEvnt(    t_eAPPSDM_DiagnosticItem f_item_e,
                 itemInfo_ps->debugInfo2_u16 = f_debugInfo2_u16;
                 itemInfo_ps->itemId_e = f_item_e;
                 itemInfo_ps->reportstate_e = f_reportState_e;
-                itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
                 FMKCPU_Get_Tick(&itemInfo_ps->reportTime_u32);
+                itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
 
                 //----- Update General Information -----//
                 s_APPSDM_FoundFreeIdx();

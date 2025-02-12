@@ -45,7 +45,6 @@
     {
         APPLGC_SRV_STATE_STOPPED = 0x00,
         APPLGC_SRV_STATE_MOVING,
-        APPLGC_SRV_STATE_INHIBIT,
 
         APPLGC_SRV_STATE_NB,
     } t_eAPPLGC_SrvState;
@@ -55,15 +54,15 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_X
     {
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_STATE = 0x00,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_DIR,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_PULSE,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_STATE,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_DIR,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_PULSE,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_L_SEED,
-        APPLGC_SRV_GTRY_X_ACT_MTR_X_R_SPEED,
-        APPLGC_SRV_GTRY_X_ACT_NB,
+        APPLGC_ACT_MTR_X_L_STATE = 0x00,
+        APPLGC_ACT_MTR_X_L_DIR,
+        APPLGC_ACT_MTR_X_L_PULSE,
+        APPLGC_ACT_MTR_X_R_STATE,
+        APPLGC_ACT_MTR_X_R_DIR,
+        APPLGC_ACT_MTR_X_R_PULSE,
+        APPLGC_ACT_MTR_X_L_SEED,
+        APPLGC_ACT_MTR_X_R_SPEED,
+        APPLGC_GTRY_X_ACT_NB,
     } t_eAPPLGC_SrvGtry_X;
 
     /**
@@ -71,11 +70,11 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_Y
     {
-        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_STATE = 0x00,
-        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_DIR,
-        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_PULSE,
-        APPLGC_SRV_GTRY_Y_ACT_MTR_Y_SPEED,
-        APPLGC_SRV_GTRY_Y_ACT_NB,
+        APPLGC_ACT_MTR_Y_STATE = 0x00,
+        APPLGC_ACT_MTR_Y_DIR,
+        APPLGC_ACT_MTR_Y_PULSE,
+        APPLGC_ACT_MTR_Y_SPEED,
+        APPLGC_GTRY_Y_ACT_NB,
     } t_eAPPLGC_SrvGtry_Y;
 
     /**
@@ -83,11 +82,11 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_Z
     {
-        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_STATE = 0x00,
-        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_DIR,
-        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_PULSE,
-        APPLGC_SRV_GTRY_Z_ACT_MTR_Z_SPEED,
-        APPLGC_SRV_GTRY_Z_ACT_NB,
+        APPLGC_ACT_MTR_Z_STATE = 0x00,
+        APPLGC_ACT_MTR_Z_DIR,
+        APPLGC_ACT_MTR_Z_PULSE,
+        APPLGC_ACT_MTR_Z_SPEED,
+        APPLGC_GTRY_Z_ACT_NB,
     } t_eAPPLGC_SrvGtry_Z;
 
     /**
@@ -141,8 +140,13 @@
     {
         t_eAPPLGC_SrvHealth health_e;
         t_eAPPLGC_SrvState  state_e;
-        t_float32 * actValues_paf32;
     } t_sAPPLGC_ServiceInfo;
+
+    typedef struct 
+    {
+        t_float32 currValue_f32;
+        t_float32 setValue_f32;
+    } t_sAPPLGC_ActInfo;
 
     /**
     *
@@ -158,7 +162,9 @@
     *   @param[in]  f_SrvInfo_pas     : All Services Infos.\n
     *
     */
-    typedef t_eReturnCode (t_cbAPPLGC_AgentPeriodicTask)(t_float32 *f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
+    typedef t_eReturnCode (t_cbAPPLGC_AgentPeriodicTask)(   t_float32 *f_snsValues_paf32, 
+                                                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
+                                                            t_sAPPLGC_ActInfo * f_actInfo_pas);
 
     /**
     *
@@ -171,7 +177,9 @@
     *	@brief      Set the Service Cyclic Function
     *
     */
-   typedef t_eReturnCode (t_cbAPPLGC_FSMCyclic)(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
+   typedef t_eReturnCode (t_cbAPPLGC_FSMCyclic)(t_float32 *f_snsValues_paf32, 
+                                                t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
+                                                t_sAPPLGC_ActInfo * f_actInfo_pas);
     /**
     *
     *	@brief      Set the Service Enter Mode Function

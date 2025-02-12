@@ -73,7 +73,8 @@
     "cl42t_configprivate.h": "c",
     "cl42t.h": "c",
     "applgc_configpublic.h": "c",
-    "gmcr.h": "c"
+    "gmcr.h": "c",
+    "fmk_srl.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",

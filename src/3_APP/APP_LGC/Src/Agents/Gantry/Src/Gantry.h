@@ -77,7 +77,9 @@
     *
     *
     */
-    t_eReturnCode Gantry_Cyclic(t_float32 * f_snsValues_paf32, t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
+    t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32, 
+                                t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
+                                t_sAPPLGC_ActInfo * f_actInfo_pas);
 
     //********************************************************************************
     //                      Public functions - Prototyupes

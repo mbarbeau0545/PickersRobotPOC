@@ -25,7 +25,7 @@
     // ********************************************************************
     #define GMCR_REF_FREQ_NOMINAL ((t_uint32)100) /**< Frequency is set to 100 when reference is done */
     #define GMCR_PULSE_REFERENCE ((t_uint16)20000)
-    #define GMCR_DIR_REFERENCE CL42T_MOTOR_DIRECTION_CLOCKWISE
+    #define GMCR_DIR_X_REFERENCE CL42T_MOTOR_DIRECTION_CLOCKWISE
     // ********************************************************************
     // *                      Types
     // ********************************************************************

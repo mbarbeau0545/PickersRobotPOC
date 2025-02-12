@@ -39,7 +39,7 @@
     typedef enum        
     {
         GTRY_FSM_PROD_SEO = 0x00,   /**< Production SEO (Referencement) */
-        GTRY_SFM_PROD_AC,           /**< Production Application Control */
+        GTRY_FSM_PROD_AC,           /**< Production Application Control */
 
         GTRY_SFM_PROD_NB,
     } t_eGTRY_FSMProduction;
