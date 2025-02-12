@@ -52,6 +52,7 @@ typedef struct __t_sFMKIO_AnaPwmSigInfo
 {
     t_bool IsSigConfigured_b;                   /**< Flag which indicate wether or not the signal has been configured */
     t_uint16 dutyCycleApplied_u16;
+    t_uint32 frequencyApplied_u32;
     t_cbFMKIO_PulseEvent    * pulseEvnt_pcb;      /**< callback function when a pulse is finihed if pwm pulse is set  */
     t_cbFMKIO_SigErrorMngmt * sigError_cb;      /**< callback function if an error occured  */
 
@@ -335,6 +336,7 @@ t_eReturnCode FMKIO_Init(void)
     {
         g_OutPwmSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
         g_OutPwmSigInfo_as[LLI_u8].dutyCycleApplied_u16   = (t_uint16)0;
+        g_OutPwmSigInfo_as[LLI_u8].frequencyApplied_u32   = (t_uint16)0;
         g_OutPwmSigInfo_as[LLI_u8].sigError_cb = (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION;
         g_OutPwmSigInfo_as[LLI_u8].pulseEvnt_pcb = (t_cbFMKIO_PulseEvent *)NULL_FONCTION;
     }
@@ -749,6 +751,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigCfg(t_eFMKIO_OutPwmSig       f_signal_e,
                 g_OutPwmSigInfo_as[f_signal_e].IsSigConfigured_b = (t_bool)True;
                 g_OutPwmSigInfo_as[f_signal_e].sigError_cb = f_sigErr_cb;
                 g_OutPwmSigInfo_as[f_signal_e].pulseEvnt_pcb = f_pulseEvnt_pcb;
+                g_OutPwmSigInfo_as[f_signal_e].frequencyApplied_u32 = (t_uint32)f_frequency_u32;
             }
         }
     }
@@ -994,6 +997,11 @@ t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
     {
         Ret_e = RC_WARNING_BUSY;
     }
+    if(g_OutPwmSigInfo_as[f_signal_e].frequencyApplied_u32 == f_frequency_u32)
+    {
+        Ret_e = RC_WARNING_NO_OPERATION;
+    }
+
     if (Ret_e == RC_OK)
     {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
@@ -1006,6 +1014,10 @@ t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
                                             (t_uint8)ITLineIO_e,
                                             pwmOpe_u,
                                             maskUpdate_u8);
+    }
+    if(Ret_e == RC_WARNING_NO_OPERATION)
+    {
+        Ret_e = RC_OK;
     }
 
     return Ret_e;
@@ -1425,7 +1437,7 @@ t_eReturnCode FMKIO_Get_InFreqSigValue(t_eFMKIO_InFreqSig f_signal_e, t_uint32 *
         // if flag writing value is False, make calcul on value, else make calcul on saved value
         if( g_InFreqSigInfo_as[f_signal_e].FlagValueWriting_b == (t_bool)False)
         {
-            *f_value_pu32 = (t_uint32)g_InFreqSigInfo_as[f_signal_e].value_u32;
+            value_f32 = (t_float32)g_InFreqSigInfo_as[f_signal_e].value_u32;
         }
         else
         {
@@ -1666,6 +1678,13 @@ static t_eReturnCode s_FMKIO_Operational(void)
                         }
                     }
                     case FMKIO_FREQ_MEAS_COUNT:
+                    {
+                        if(g_InFreqSigInfo_as[idxFreq_u8].isSigCalib_b == (t_bool)False)
+                        {
+                            g_InFreqSigInfo_as[idxFreq_u8].isSigCalib_b = (t_bool)True;
+                        }
+                        break;
+                    }
                     case FMKIO_FREQ_MEAS_NB:
                     default:
                     {

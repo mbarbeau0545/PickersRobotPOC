@@ -34,7 +34,7 @@
     // ********************************************************************
 
     #define APPSYS_SYSTEM_CORE_SPEED FMKCPU_CORE_CLOCK_SPEED_128MHZ
-    #define APPSYS_ELAPSED_TIME_CYCLIC ((t_uint8)500) /**< Elapsed time (in ms) between cyclic function call*/
+    #define APPSYS_ELAPSED_TIME_CYCLIC ((t_uint8)40) /**< Elapsed time (in ms) between cyclic function call*/
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -118,7 +118,7 @@
         //----- Application module -----//
         {APPSDM_Init,    APPSDM_Cyclic,     APPSDM_GetState,   APPSDM_SetState},
         {APPSNS_Init,    APPSNS_Cyclic,     APPSNS_GetState,   APPSNS_SetState},
-        {APPACT_Init,    APPACT_Cyclic,     APPACT_GetState,   APPACT_SetState},
+        //{APPACT_Init,    APPACT_Cyclic,     APPACT_GetState,   APPACT_SetState},
         {APPLGC_Init,    APPLGC_Cyclic,     APPLGC_GetState,   APPLGC_SetState},
     };
 

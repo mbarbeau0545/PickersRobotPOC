@@ -104,7 +104,7 @@
 
     typedef union 
     {
-        t_uint16 pulseState_e;
+        t_eCL42T_MotorPulseState pulseState_e;
         t_uint32 frequency_u32;
         t_eCL42T_MotorDirection dir_e;
         t_eCL42T_MotorState state_e;

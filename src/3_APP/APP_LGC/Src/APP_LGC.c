@@ -55,6 +55,48 @@
 // *                      Variables
 // ********************************************************************
 static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
+
+ const t_sCL42T_MotorSigCfg c_CL42T_MotorConfig_as[CL42T_MOTOR_NB] = {
+        [CL42T_MOTOR_AXE_X_1] = {
+            .PulseSigCfg_s = {
+                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_3, //PA10 GREEN WIRE
+                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+                .f_PulseInitFreq_u32 = 30000
+            },
+            .StateSigCfg = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_2, //PB13 BROWN WIRE
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DirSigCfg_s = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_1, //PB12 RED WIRE
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DiagSigCfg_s = {
+                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_1, //PC8 WHITE WIRE
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+        },
+
+        [CL42T_MOTOR_AXE_X_2] = {
+            .PulseSigCfg_s = {
+                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_4,
+                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+                .f_PulseInitFreq_u32 = 2
+            },
+            .StateSigCfg = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_4,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DirSigCfg_s = {
+                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_5,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+            .DiagSigCfg_s = {
+                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_2,
+                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            },
+        },
+    };
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -68,6 +110,9 @@ static void s_APPLGC_RcvSrlEvent(  t_uint8 * f_rxData_pu8,
 
 static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
 static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e);
+
+static void s_CL42T_Diag(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
+
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -77,6 +122,10 @@ static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e);
 t_eReturnCode APPLGC_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    Ret_e = CL42T_Init();
+    Ret_e = CL42T_AddMotorConfiguration(    CL42T_MOTOR_AXE_X_1,
+                                            c_CL42T_MotorConfig_as[CL42T_MOTOR_AXE_X_1],
+                                            s_CL42T_Diag);
     
     return Ret_e;
 }
@@ -88,7 +137,7 @@ t_eReturnCode APPLGC_Cyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     // code to run every x milliseconds, config in APPSYS_ConfigPrivate.h
-
+    Ret_e = CL42T_Cyclic();
     switch (g_AppLgc_ModState_e)
     {
     case STATE_CYCLIC_CFG:
@@ -162,6 +211,7 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 {
 
     g_AppLgc_ModState_e = f_State_e;
+    CL42T_SetState(f_State_e);
 
     return RC_OK;
 }
@@ -177,13 +227,13 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
     t_eReturnCode Ret_e = RC_OK;
      t_sFMKSRL_DrvSerialCfg SrlCfg_s;
 
-   Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
+   /*Ret_e = FMKIO_Set_OutPwmSigCfg( FMKIO_OUTPUT_SIGPWM_3,
                                     FMKIO_PULL_MODE_DISABLE,
                                     26000,
                                     FMKTIM_PWM_MODE_FINITE_PULSE,
                                     s_PulseCallback,
                                     NULL_FONCTION);
-    /*if(Ret_e == RC_OK)
+    if(Ret_e == RC_OK)
     {
         Ret_e = FMKIO_Set_InFreqSigCfg( FMKIO_INPUT_SIGFREQ_1,
                                         FMKIO_STC_RISING_EDGE,
@@ -221,10 +271,32 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
+/*Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
                                         (t_uint16)500,
-                                        (t_uint16)12000);
+                                        (t_uint16)12000);*/    
 
+    
+    t_uCL42T_SetMotorValue u_SetMotorValue;
+
+    u_SetMotorValue.state_e = CL42T_MOTOR_STATE_ON;
+
+    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_STATE,
+                                u_SetMotorValue);
+    
+    u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
+
+    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_DIR,
+                                u_SetMotorValue);
+
+
+    u_SetMotorValue.nbPulses_u16 = 60000;
+
+    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_PULSE,
+                                u_SetMotorValue);
+ 
 
     return Ret_e;
 }
@@ -235,6 +307,26 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    static t_bool s_logicdone_b = (t_bool)False;
+    
+
+    /*t_uCL42T_SetMotorValue u_SetMotorValue;
+    u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
+    if(s_logicdone_b == False)
+    {
+        
+        Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_DIR,
+                                u_SetMotorValue);
+
+        u_SetMotorValue.nbPulses_u16 = 10;
+
+        Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
+                                CL42T_SIGTYPE_PULSE,
+                                u_SetMotorValue);
+
+        s_logicdone_b = true;
+    }*/
     /*t_uint32 measCount_u32 = 0;
     char msgbuffer[40];
     Ret_e = FMKIO_Get_InFreqSigValue(FMKIO_INPUT_SIGFREQ_1, &measCount_u32);
@@ -249,6 +341,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
                                 0,
                                 False);
     }*/
+
 
     return Ret_e;
 }
@@ -286,6 +379,15 @@ static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallback
  *********************************/
 static void s_PulseCallback(t_eFMKIO_OutPwmSig f_signal_e)
 {
+    return;
+}
+
+/*********************************
+ * s_MotorCallback
+ *********************************/
+static void s_CL42T_Diag(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e){
+
+
     return;
 }
 //************************************************************************************
