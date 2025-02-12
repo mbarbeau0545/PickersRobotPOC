@@ -1576,7 +1576,7 @@ static t_eReturnCode s_CL42T_GetSpeedSignal( t_sCL42T_MotorInfo * f_motorInfo_ps
 }
 
 /*********************************
- * s_CL42T_GetSpeedSignal
+ * s_CL42T_CounterDiagMngmt
  *********************************/
 static t_eReturnCode s_CL42T_CounterDiagMngmt(t_eCL42T_MotorId f_motorId_e, t_uint8 * f_counter_pu8)
 {

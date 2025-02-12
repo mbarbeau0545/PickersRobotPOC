@@ -61,7 +61,7 @@ static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
             .PulseSigCfg_s = {
                 .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_3, //PA10 GREEN WIRE
                 .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
-                .f_PulseInitFreq_u32 = 22000
+                .f_PulseInitFreq_u32 = 30000
             },
             .StateSigCfg = {
                 .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_2, //PB13 BROWN WIRE
@@ -284,7 +284,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
                                 CL42T_SIGTYPE_STATE,
                                 u_SetMotorValue);
     
-    u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_CLOCKWISE;
+    u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
 
     Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
                                 CL42T_SIGTYPE_DIR,
@@ -308,6 +308,8 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_bool s_logicdone_b = (t_bool)False;
+    
+
     /*t_uCL42T_SetMotorValue u_SetMotorValue;
     u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
     if(s_logicdone_b == False)
