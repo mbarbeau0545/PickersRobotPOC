@@ -65,7 +65,7 @@
     *	@param[in] f_SnsValue_ps : structure to store value and validity
     *
     */
-    typedef t_eReturnCode (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * isValueOK_b);
+    typedef t_eReturnCode (t_cbAppSns_GetSigValue)(t_float32 *f_rawSigValue_pf32, t_bool * f_isValue_OK);
     /**
     *
     *	@brief      Format the value sensors depdning on how it will be treated in Logic

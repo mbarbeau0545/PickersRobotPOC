@@ -84,8 +84,13 @@
     typedef struct
     {
         t_sint16 rawValue_f32;      /**< Store the actuators rawValue */
-        t_bool   IsValueOK_b;       /**< Flag value is OK */
+        t_bool   f_isValue_OK;       /**< Flag value is OK */
     } t_sAPPACT_ValueInfo;
+
+    typedef struct 
+    {
+        
+    }
 	/* CAUTION : Automatic generated code section : Start */
 
 	/* CAUTION : Automatic generated code section : End */

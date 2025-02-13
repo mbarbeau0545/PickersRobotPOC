@@ -257,12 +257,6 @@ t_eReturnCode APPLGC_Init(void)
     t_uint8 idxAppData_u8;
     t_uint8 idxCmd_u8;
 
-    /* CAUTION : Automatic generated code section for Actuators Containers/Service: Start */
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_X_af32);
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_Y_af32);
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actValues_paf32 = (t_float32 *)(&g_ActContainerGtry_Z_af32);
-    /* CAUTION : Automatic generated code section for Actuators Containers/Service: End */
-
     //----- Set Service Init -----//
     for(idxSrv_u8 = (t_uint8)0 ; idxSrv_u8 < APPLGC_SRV_NB ; idxSrv_u8++)
     {
@@ -485,25 +479,25 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
             }
             case APPLGC_RCV_CMD_ID_DATA_SPEED_XYZ:
             {
-                f_cmdValues_pu->speedInfo_s.speedX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                f_cmdValues_pu->speedInfo_s.axeX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
                                                                             appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
                 
-                f_cmdValues_pu->speedInfo_s.speedY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                f_cmdValues_pu->speedInfo_s.axeY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
                                                                             appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
 
-                f_cmdValues_pu->speedInfo_s.speedZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                f_cmdValues_pu->speedInfo_s.axeZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
                                                                             appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
                 break;
             }
             case APPLGC_RCV_CMD_ID_DATA_DIR_XYZ:
             {
-                f_cmdValues_pu->dirInfo_s.DirX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                f_cmdValues_pu->dirInfo_s.axeX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
                                                                             appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
                 
-                f_cmdValues_pu->dirInfo_s.DirY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                f_cmdValues_pu->dirInfo_s.axeY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
                                                                         appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
 
-                f_cmdValues_pu->dirInfo_s.DirZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                f_cmdValues_pu->dirInfo_s.axeZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
                                                                         appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
                 break;
             }
@@ -511,22 +505,24 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
             {
                 if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
                 {
-                    f_cmdValues_pu->pulseInfo_s.nbPulseX_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
-                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
+                    f_cmdValues_pu->pulseInfo_s.axeX_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
 
-                    f_cmdValues_pu->pulseInfo_s.nbPulseY_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
-                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
+                    f_cmdValues_pu->pulseInfo_s.axeY_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
 
-                    f_cmdValues_pu->pulseInfo_s.nbPulseZ_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
-                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
+                    f_cmdValues_pu->pulseInfo_s.axeZ_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
                     
                     RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
                 }
                 else 
                 {
-                    f_cmdValues_pu->pulseInfo_s.nbPulseX_u16 = (t_uint16)0;
-                    f_cmdValues_pu->pulseInfo_s.nbPulseY_u16 = (t_uint16)0;
-                    f_cmdValues_pu->pulseInfo_s.nbPulseZ_u16 = (t_uint16)0;
+                    f_cmdValues_pu->pulseInfo_s.axeX_u16 = (t_uint16)0;
+                    f_cmdValues_pu->pulseInfo_s.axeY_u16 = (t_uint16)0;
+                    f_cmdValues_pu->pulseInfo_s.axeZ_u16 = (t_uint16)0;
+
+                    Ret_e = RC_WARNING_NO_OPERATION;
                 }
                 break;
             }
@@ -642,14 +638,14 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void)
     for(idxSns_u8 = (t_uint8)0 ; (idxSns_u8 < APPSNS_SENSOR_NB) && (Ret_e == RC_OK) ; idxSns_u8++)
     {
         //----- Reset Container values -----//
-        snsInfo_s.IsValueOK_b = (t_bool)False;
+        snsInfo_s.f_isValue_OK = (t_bool)False;
         snsInfo_s.rawValue_f32 = (t_float32)0.0;
         snsInfo_s.SnsValue_f32 = (t_float32)0.0;
 
         Ret_e = APPSNS_Get_SnsValue((t_eAPPSNS_Sensors)idxSns_u8, &snsInfo_s);
 
         if((Ret_e == RC_OK)
-        && (snsInfo_s.IsValueOK_b == (t_bool)true))
+        && (snsInfo_s.f_isValue_OK == (t_bool)true))
         {
             g_snsValues_af32[idxSns_u8] = snsInfo_s.SnsValue_f32;
         }
@@ -668,12 +664,19 @@ static t_eReturnCode s_APPLGC_UpdateActValues(void)
     t_sint16 currVal_s16;
 
     //----- Loop on every Actuators -----//
-    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
+    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPACT_ACTUATOR_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
     {
         //------ reset setVal Point -----//
         g_actInfo_as[idxAct_u8].setValue_f32 = (t_float32)0.0;
+    
+        //------ Get Actual Value Point -----//
         Ret_e = APPACT_Get_ActValue(idxAct_u8, &currVal_s16);
-        g_actInfo_as[idxAct_u8].currValue_f32 = (t_float32)currVal_s16;
+
+        if(Ret_e == RC_OK)
+        {
+            g_actInfo_as[idxAct_u8].currValue_f32 = (t_float32)currVal_s16;
+        }
+        
     }
 
     return Ret_e;
@@ -688,48 +691,45 @@ static t_eReturnCode s_APPLGC_UpdatSrvState(void)
 
     for(idxSrv_u8 = (t_uint8)0 ; idxSrv_u8 < APPLGC_SRV_NB ; idxSrv_u8++)
     {
-        if(g_srvFuncInfo_as[idxSrv_u8].state_e != APPLGC_SRV_STATE_INHIBIT)
+        switch (idxSrv_u8)
         {
-            switch (idxSrv_u8)
+            case APPLGC_SRV_GTRY_X:
             {
-                case APPLGC_SRV_GTRY_X:
+                if((g_actInfo_as[APPACT_ACTUATOR_MTR_X_L_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                || (g_actInfo_as[APPACT_ACTUATOR_MTR_X_R_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON))
                 {
-                    if((g_actInfo_as[APPACT_ACTUATOR_MTR_X_L_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
-                    || (g_actInfo_as[APPACT_ACTUATOR_MTR_X_R_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON))
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_MOVING;
-                    }
-                    else 
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_STOPPED;
-                    }
-                    break;
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_MOVING;
                 }
-                case APPLGC_SRV_GTRY_Y:
+                else 
                 {
-                    if(g_actInfo_as[APPACT_ACTUATOR_MTR_Y_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_MOVING;
-                    }
-                    else 
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_STOPPED;
-                    }
-                    break;
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_STOPPED;
                 }
-                case APPLGC_SRV_GTRY_Z:  
-                {
-                    if(g_actInfo_as[APPACT_ACTUATOR_MTR_Z_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_MOVING;
-                    }
-                    else 
-                    {
-                        g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_STOPPED;
-                    }
-                    break;
-                } 
+                break;
             }
+            case APPLGC_SRV_GTRY_Y:
+            {
+                if(g_actInfo_as[APPACT_ACTUATOR_MTR_Y_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                {
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_MOVING;
+                }
+                else 
+                {
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_STOPPED;
+                }
+                break;
+            }
+            case APPLGC_SRV_GTRY_Z:  
+            {
+                if(g_actInfo_as[APPACT_ACTUATOR_MTR_Z_PULSE].currValue_f32 == (t_float32)CL42T_MOTOR_PULSE_ON)
+                {
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_MOVING;
+                }
+                else 
+                {
+                    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_STOPPED;
+                }
+                break;
+            } 
         }
     }
 
@@ -827,6 +827,7 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
                                             APPSDM_DIAG_ITEM_REPORT_FAIL,
                                             0,
                                             0);
+            
         }
         //----- see if someone is reading it -----//
         if(GETBIT(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_READ) == BIT_IS_SET_8B)

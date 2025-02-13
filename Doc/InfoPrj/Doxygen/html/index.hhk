@@ -654,7 +654,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html"><param name="Name" value="APPSNS_ConfigPrivate.h"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#abe6ab8fe259e5a24df95888fd1dd7d61"><param name="Name" value="t_cbAppSns_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#abe6ab8fe259e5a24df95888fd1dd7d61"><param name="Name" value="t_cbAppSns_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html"><param name="Name" value="APPSNS_ConfigPrivate.h"></OBJECT>
   <UL>
@@ -1006,7 +1006,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html"><param name="Name" value="APPSNS_SPEC_AirHumidity.c"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html"><param name="Name" value="APPSNS_SPEC_AirHumidity.c"></OBJECT>
   <UL>
@@ -1018,7 +1018,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html"><param name="Name" value="APPSNS_SPEC_AirHumidity.h"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html"><param name="Name" value="APPSNS_SPEC_AirHumidity.h"></OBJECT>
   <UL>
@@ -1032,11 +1032,11 @@
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#ab8ac06e5f4b067916f6af0da31f1760d"><param name="Name" value="APPSNS_SPEC_AirHumidity.h"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8c.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity.c"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_humidity_8h.html#a57480e6cc119a8f82b5cf25959729712"><param name="Name" value="APPSNS_SPEC_AirHumidity.h"></OBJECT>
   </UL>
@@ -1054,7 +1054,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html"><param name="Name" value="APPSNS_SPEC_AirTemperature.c"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html"><param name="Name" value="APPSNS_SPEC_AirTemperature.c"></OBJECT>
   <UL>
@@ -1066,7 +1066,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html"><param name="Name" value="APPSNS_SPEC_AirTemperature.h"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html"><param name="Name" value="APPSNS_SPEC_AirTemperature.h"></OBJECT>
   <UL>
@@ -1080,11 +1080,11 @@
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#af4186cf15a145f157352b9a047c4bbdb"><param name="Name" value="APPSNS_SPEC_AirTemperature.h"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8c.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature.c"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___s_p_e_c___air_temperature_8h.html#a691b5991b63e7530492188f6888a7a30"><param name="Name" value="APPSNS_SPEC_AirTemperature.h"></OBJECT>
   </UL>
@@ -8629,11 +8629,11 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a926f8bdf51606ea805f9ee74c1c5bd8e"><param name="Name" value="IsTimerConfigured_b"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_f_m_k_c_p_u___timer_info.html#a2c088aca3251aca5476b5812078b9e86"><param name="Name" value="IsTimerRunning_b"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="IsValueOK_b"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="f_isValue_OK"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="t_sAPPACT_ValueInfo"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="IsValueOK_b"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="f_isValue_OK"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="t_sAPPSNS_SnsInfo"></OBJECT>
   </UL>
@@ -8966,7 +8966,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#a8fa442ec339952fbc7e252cba6e99d09"><param name="Name" value="t_cbAppSns_DrvCyclic(void)"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#af5ebdb14a4b055fcba9cd174df1caf70"><param name="Name" value="t_cbAppSns_DrvInit(void)"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#acac61b1d3ff60816004875ba049763d6"><param name="Name" value="t_cbAppSns_FormatValSI(t_float32 rawValue_f32, t_float32 *SnsValue_f32)"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#abe6ab8fe259e5a24df95888fd1dd7d61"><param name="Name" value="t_cbAppSns_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *isValueOK_b)"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#abe6ab8fe259e5a24df95888fd1dd7d61"><param name="Name" value="t_cbAppSns_GetSigValue(t_float32 *f_rawSigValue_pf32, t_bool *f_isValue_OK)"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_n_s___config_private_8h.html#a2dcf2c7e92f58b7b4cfeed4f62f0ab0b"><param name="Name" value="t_cbAppSns_SetSnsCfg(void)"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_y_s___config_private_8h.html#a90f760abb1c36284885a037fe1f03ef2"><param name="Name" value="t_cbAppSys_FuncCyclic(void)"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_a_p_p_s_y_s___config_private_8h.html#a27ddf1a61d23f2e8895d81d07761d7c3"><param name="Name" value="t_cbAppSys_FuncInit(void)"></OBJECT>
@@ -9108,7 +9108,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html"><param name="Name" value="t_sAPPACT_ValueInfo"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html"><param name="Name" value="t_sAPPACT_ValueInfo"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="IsValueOK_b"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="f_isValue_OK"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_a_c_t___value_info.html"><param name="Name" value="t_sAPPACT_ValueInfo"></OBJECT>
   <UL>
@@ -9117,7 +9117,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html"><param name="Name" value="t_sAPPSNS_SnsInfo"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html"><param name="Name" value="t_sAPPSNS_SnsInfo"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="IsValueOK_b"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html#afda7eddc72eb248165c068b7792a19b8"><param name="Name" value="f_isValue_OK"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structt__s_a_p_p_s_n_s___sns_info.html"><param name="Name" value="t_sAPPSNS_SnsInfo"></OBJECT>
   <UL>

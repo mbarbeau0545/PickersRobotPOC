@@ -47,6 +47,18 @@ For the doxygen documentation search the file "index.html"
 ## Urgent to do 
     - [APPSDM] faire en sorte de dire qu'une erreur est considéré OFF si on a plus de nouveau FAIL à partir de x secondes 
 
+    Gérer différemment les actuators, actuellement 
+    , un actuator = une valeur a set, c'est pratique lorsqu'e c'est high level mais la par exemple pour un stepper motor on a 4 valeurs (state, dir, speed, pulse), il est plus simple de dire un actuator bah c'est le motor, mais il faut quand même pouvoir set les actuators depuis les config Specific et ce indépendemment du type d'actuator et le nombre de sub_actuators qu'il possède 
+    , donc comment faire ??
+    on peut faire un union de structure/ varaible, 
+    ou dans la logique on initialise un array de type union de ACTUATOR_NB number, puis on le passe un pointeur à Actuators_Set_Value où GetValues, et eux savent qu'elle type dans l'union c'est. cela permet d'avoir plusieurs set sur un seul actuators. 
+    Cela ne règle pas le fondement de l'interrogation, qui était comment arrêter un pulse en cours sans utilisé le 'pulse = 0' (qui pouvait signifié 'arrêté pulse' mais pouvait se confondre avec une valeur par défaut).
+    Je pense que la meilleur façon de réglé ça est en début de logique, au lieu d'avoir pour les actuators, une structure de currentValue qu'on obtient avec les getValues et de setValue qui sera les valeurs set par la logic, on peut avoir une seule setValue, et lors de l'init (de la cyclic) on les set pas à 0, on les sets à l'actuel valeur. 
+    Ce qui signifie que si une PWM est de 50% et qu'on la change pas elle y reste, 
+    Si un pulse est ON et qu'on ne le change pas, il reste ON, (pulse nb est reset à 0 et dans la config spec bah on fera rien)
+    S'il est OFF on set à OFF et il se passe rien, 
+    On fait cela si et seulement si le Srv qui utilise cette actuators n'est pas OFF, sinon on ne touche pas.
+
 
 ## Left to do
 

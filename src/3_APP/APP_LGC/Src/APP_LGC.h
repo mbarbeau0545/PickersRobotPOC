@@ -60,24 +60,10 @@
 	//-----------------------------STRUCT TYPES---------------------------//
     typedef struct 
     {
-        t_uint16 nbPulseX_u16;
-        t_uint16 nbPulseY_u16;
-        t_uint16 nbPulseZ_u16;
-    } t_sAPPLGC_PulseInfo;
-
-    typedef struct 
-    {
-        t_uint16 DirX_u16;
-        t_uint16 DirY_u16;
-        t_uint16 DirZ_u16;
-    } t_sAPPLGC_DirInfo;
-
-    typedef struct 
-    {
-        t_uint16 speedX_u16;
-        t_uint16 speedY_u16;
-        t_uint16 speedZ_u16;
-    } t_sAPPLGC_SpeedInfo;
+        t_uint16 axeX_u16;
+        t_uint16 axeY_u16;
+        t_uint16 axeZ_u16;
+    } t_sAPPLGC_Axe;
 
     typedef struct 
     {
@@ -87,9 +73,9 @@
 
     typedef union 
     {
-        t_sAPPLGC_PulseInfo     pulseInfo_s;
-        t_sAPPLGC_DirInfo       dirInfo_s;
-        t_sAPPLGC_SpeedInfo     speedInfo_s;
+        t_sAPPLGC_Axe           pulseInfo_s;
+        t_sAPPLGC_Axe           dirInfo_s;
+        t_sAPPLGC_Axe           speedInfo_s;
         t_sAPPLGC_FSMModeInfo   SFMModeInfo_s;
     } t_uAPPLGC_CmdValues;
 	/* CAUTION : Automatic generated code section : Start */

@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2025-02-10T08:05:52.384Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="3-b7Zq41oPMQrEAKSekH" version="24.6.1" type="device" pages="5">
+<mxfile host="Electron" modified="2025-02-12T12:34:18.126Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="oinN4By071IoJLHA7u9P" version="24.6.1" type="device" pages="5">
   <diagram name="Type" id="Trd9Wxt2IUBviXF1dlTx">
     <mxGraphModel dx="2368" dy="2757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -125,7 +125,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="lXgZLLa1gq-T7ch590RW" name="Cyclic">
-    <mxGraphModel dx="767" dy="1619" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1036" dy="1776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -161,20 +161,26 @@
         <mxCell id="Ve9ahc74sYi8kfmxnvgA-1" value="switch case g_FSManual_e" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-840" width="478.5" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Ve9ahc74sYi8kfmxnvgA-2" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-align: left;&quot;&gt;GMCAC_FSM_MANUAL_PRE_MVMT&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="Ve9ahc74sYi8kfmxnvgA-2" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-align: left;&quot;&gt;GMCAC_FSM_PRE_MVMT&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="200" y="-720" width="478.5" height="40" as="geometry" />
         </mxCell>
         <mxCell id="HUQScozO2NVJD8gFbGux-1" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-align: left;&quot;&gt;GMCAP_FSM_MANUAL_MVMT&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
-          <mxGeometry x="200" y="-500" width="478.5" height="40" as="geometry" />
+          <mxGeometry x="200" y="-560" width="478.5" height="40" as="geometry" />
         </mxCell>
         <mxCell id="HUQScozO2NVJD8gFbGux-2" value="&lt;span style=&quot;color: rgb(0, 0, 0); text-align: left;&quot;&gt;GMCAP_FSM_MANUAL_GET_MVMT&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
-          <mxGeometry x="200" y="-240" width="478.5" height="40" as="geometry" />
+          <mxGeometry x="200" y="-400" width="478.5" height="40" as="geometry" />
         </mxCell>
         <mxCell id="jUHTzw6lVMMiTkmJk8Bg-1" value="wait gantry no move" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="635" y="-682" width="130" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="jUHTzw6lVMMiTkmJk8Bg-2" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Ret_e = APPLGC_GetCmd&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="jUHTzw6lVMMiTkmJk8Bg-2" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Verify No Longer Mvmtm in course&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="200" y="-640" width="478.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gey4isXN6fjX0FC07XEQ-1" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Set Cmd&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="200" y="-480" width="478.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gey4isXN6fjX0FC07XEQ-2" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Get Mvmt from Application&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="200" y="-320" width="478.5" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

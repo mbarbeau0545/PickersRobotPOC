@@ -1,6 +1,6 @@
 /*********************************************************************
- * @file        Gantry.c
- * @brief       Template_BriefDescription.
+ * @file        GMCR.c
+ * @brief       Gantry Motion Control Reference.
  * @note        TemplateDetailsDescription.\n
  *
  * @author      xxxxxx
@@ -24,6 +24,7 @@
 #include "APP_CFG/ConfigFiles/GMCR_ConfigPrivate.h"
 #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
 #include "APP_CFG/ConfigFiles/APPACT_ConfigPublic.h"
+#include "APP_LGC/Src/Agents/Gantry/Src/Gantry.h"
 
 // ********************************************************************
 // *                      Defines
@@ -141,13 +142,15 @@ t_eReturnCode GMCR_ExitMode(void)
  *********************************/
 t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32, 
                             t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
-                            t_sAPPLGC_ActInfo * f_g_actInfo_pas)
+                            t_sAPPLGC_ActInfo * f_actInfo_pas)
 {
     t_eReturnCode Ret_e = RC_OK;
+
     //----- Initialize Pointor to data -----//
     g_snsValues_paf32 = (t_float32 *)f_snsValues_paf32;
     g_SrvInfo_pas = (t_sAPPLGC_ServiceInfo *)f_SrvInfo_pas;
-
+    g_actInfo_pas = (t_sAPPLGC_ActInfo *)f_actInfo_pas;
+    
     switch (g_FSMReference_e)
     {
         case GMCR_FSM_REF_AXE_X:
@@ -200,6 +203,7 @@ t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32,
                 if(Ret_e == RC_OK)
                 {
                     //----- Send Message Application -----//
+                    Ret_e = Gantry_RqstSFMState(GTRY_SFM_GANTRY_PAUSE);
                     g_FSMReference_e = GMCR_FSM_REF_AXE_X;
                 }
             }

@@ -142,16 +142,6 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
     {
         switch (g_FSM_GtryMode_e)
         {
-            case GTRY_SFM_GANTRY_PRE_PRODUCTION:
-            {
-                Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Enter_pcb();
-
-                if(Ret_e == RC_OK)
-                {
-                    g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PRODUCTION;
-                }
-                break;
-            }
             case GTRY_SFM_GANTRY_PRODUCTION:
             {
                 if(g_FSM_RsqtProdMode_e != g_FSM_ProdMode_e)
@@ -183,7 +173,9 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
             }
             case GTRY_SFM_GANTRY_PAUSE:
             {
-                s_GTR_SetGantryOff();
+                //----- The transition of the state to anothter one 
+                //      is made in StateMachineMngmt or with public information ----//
+                s_GTR_SetGntryOff();
                 break;
             }
             case GTRY_SFM_GANTRY_DEFAULT:
@@ -197,6 +189,22 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
             }
         }
     }
+    return Ret_e;
+}
+
+t_eReturnCode Gantry_RqstSFMState(t_eGTRY_FSMGantry f_rqstGtryMode_e)
+{
+    t_eReturnCode Ret_e = RC_OK;
+
+    if(f_rqstGtryMode_e >= GTRY_SFM_GANTRY_NB)
+    {
+        Ret_e = RC_ERROR_PARAM_INVALID;
+    }
+    if(Ret_e == RC_OK)
+    {
+        g_FSM_RqstGtryMode_e = f_rqstGtryMode_e;
+    }
+
     return Ret_e;
 }
 //********************************************************************************
@@ -224,14 +232,20 @@ static t_eReturnCode s_GTRY_StateMachineMngmt(void)
 
     if(Ret_e == RC_OK)
     {
+        //----- Gantry Mode Change from App or From RqstSFMState public API -----//
         if(g_FSM_RqstGtryMode_e != g_FSM_GtryMode_e)
         {
+            //----- If we change Gantry Mode ensure to quit properly the Production mode -----//
             if(g_FSM_GtryMode_e == GTRY_SFM_GANTRY_PRODUCTION)
             {
                 Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
             }
 
-            g_FSM_GtryMode_e = g_FSM_RsqtProdMode_e;
+            //----- Change Mode only if exit ok -----//
+            if(Ret_e == RC_OK)
+            {
+                g_FSM_GtryMode_e = g_FSM_RqstGtryMode_e;
+            }
         }
     }
     if(Ret_e == RC_WARNING_NO_OPERATION)

@@ -21,8 +21,8 @@
     #include "APP_CFG/ConfigFiles/APPLGC_ConfigPublic.h"
     #include "APP_CFG/ConfigFiles/Gantry_ConfigPublic.h"
 
-    #include "APP_LGC/Src/Agents/Gantry/Src/GantryMotionControl/GMCAC/Src/GMCAC.h"
-    #include "APP_LGC/Src/Agents/Gantry/Src/GantryMotionControl/GMCR/Src/GMCR.h"
+    #include "APP_LGC/Src/Agents/Gantry/Src/GantryMotionControl/Src/GMCAC.h"
+    #include "APP_LGC/Src/Agents/Gantry/Src/GantryMotionControl/Src/GMCR.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
