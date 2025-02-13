@@ -19,7 +19,6 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
-    #include "APP_LGC/Src/APP_LGC.h"
     #include "APP_CFG/ConfigFiles/Gantry_ConfigPublic.h"
 
 
@@ -36,7 +35,14 @@
 	/* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
 
+    typedef enum 
+    {
+        GTRY_SFM_GANTRY_PRODUCTION = 0x00,
+        GTRY_SFM_GANTRY_PAUSE,
+        GTRY_SFM_GANTRY_DEFAULT,
 
+        GTRY_SFM_GANTRY_NB,
+    } t_eGTRY_FSMGantry;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
 	/* CAUTION : Automatic generated code section for Structure: End */
@@ -48,7 +54,7 @@
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
-        
+     
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
@@ -92,6 +98,32 @@
     *
     */
     t_eReturnCode Gantry_RqstSFMState(t_eGTRY_FSMGantry f_rqstGtryMode_e);
+     /**
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *
+    *
+    *
+    */
+    t_eReturnCode Gantry_GetFFMState(t_eGTRY_FSMGantry *f_rqstGtryMode_pe);
+    /**
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *
+    *
+    *
+    */
+    t_eReturnCode Gantry_InformAppMissionState(t_eGTRY_MissionStatus f_missionStatue_e);
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

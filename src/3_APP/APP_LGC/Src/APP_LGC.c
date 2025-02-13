@@ -21,13 +21,10 @@
 
 #include "./APP_LGC.h"
 #include "APP_CFG/ConfigFiles/APPLGC_ConfigPrivate.h"
-#include "APP_CTRL/APP_ACT/Src/APP_ACT.h"
-#include "APP_CTRL/APP_SNS/Src/APP_SNS.h"
-#include "APP_CTRL/APP_SDM/Src/APP_SDM.h"
-#include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
 #include "Motor/CL42T/Src/CL42T.h"
+#include "APP_LGC/Src/Agents/Gantry/Src/Gantry.h"
 
-#include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
+
 #include "Library/SafeMem/SafeMem.h"
 // ********************************************************************
 // *                      Defines
@@ -45,20 +42,6 @@ enum
     APPLGC_APP_CMD_BIT_WRITE = 0x00,
     APPLGC_APP_CMD_BIT_READ,
     APPLGC_APP_CMD_BIT_NEW_DATA,
-};
-
-enum 
-{
-    APPLGC_CMD_BYTE_0 = 0x00,
-    APPLGC_CMD_BYTE_1,
-    APPLGC_CMD_BYTE_2,
-    APPLGC_CMD_BYTE_3,
-    APPLGC_CMD_BYTE_4,
-    APPLGC_CMD_BYTE_5,
-    APPLGC_CMD_BYTE_6,
-    APPLGC_CMD_BYTE_7,
-
-    APPLGC_CMD_BYTE_NB,
 };
 
 
@@ -88,13 +71,11 @@ static t_sAPPLGC_AgentFunc g_AgentInfo_as[APPLGC_AGENT_NB];
 
 static t_sAPPLGC_ServiceInfo g_srvFuncInfo_as[APPLGC_SRV_NB];
 
-static t_uAPPACT_SetValue g_actSetPoint_as[APPACT_ACTUATOR_NB];
-
 static t_float32 g_snsValues_af32[APPSNS_SENSOR_NB];
 
 static t_sAPPLGC_AppCmdInfo g_CmdInfo_as[APPLGC_RCV_CMD_ID_NB];
 
-static t_uint32 g_lastBitAlive_u32 = (t_uint32)0;
+static t_uint8 g_sendAppData_ua8[APPLGC_APP_PROTOCOL_LEN_DATA];
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**
 * @brief Actuators Values Containers for Gtry_X
@@ -144,11 +125,7 @@ static t_eReturnCode s_APPLGC_Operational(void);
 /**
 *
 *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
+*	@note
 *	 
 *
 *
@@ -156,30 +133,23 @@ static t_eReturnCode s_APPLGC_Operational(void);
 static t_eReturnCode s_APPLGC_ConfigurationState(void);
 /**
 *
-*	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
+*	@brief      Get Sensors Values.\n
 *
 */
+
 static t_eReturnCode s_APPLGC_GetSnsValues(void);
 /**
 *
-*	@brief
-*	@note   
+*	@brief      Set Actuators Values Depending on g_srvFuncInfo_as
+*/
+static t_eReturnCode s_APPLGC_SetActValues(void);
+/**
 *
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
+*	@brief      Verify that Application still send his bit alive,
+*               and send ours.\n
 *
 */
-static t_eReturnCode s_APPLGC_UpdateActValues(void);
+static t_eReturnCode s_APPLGC_AppComStateMngmt(void);
 /**
 *
 *	@brief
@@ -205,9 +175,10 @@ static t_eReturnCode s_APPLGC_SetActValues(void);
 *
 *
 */
-static void s_APPLGC_AppEvntCallback(  t_uint8 * f_rxData_pu8, 
-                                    t_uint16 f_dataSize_u16, 
-                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
+static t_eReturnCode s_APPLGC_DiagnosticEvent(  t_eAPPSDM_DiagnosticItem f_item_e,
+                                                t_eAPPSDM_DiagnosticReport f_reportState_e,
+                                                t_uint16 f_debugInfo1_u16,
+                                                t_uint16 f_debugInfo2_u16);
 /**
 *
 *	@brief
@@ -220,7 +191,9 @@ static void s_APPLGC_AppEvntCallback(  t_uint8 * f_rxData_pu8,
 *
 *
 */
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e);
+static void s_APPLGC_AppEvntCallback(  t_uint8 * f_rxData_pu8, 
+                                    t_uint16 f_dataSize_u16, 
+                                    t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
 
 //****************************************************************************
 //                      Public functions - Implementation
@@ -238,9 +211,9 @@ t_eReturnCode APPLGC_Init(void)
     t_uint8 idxCmd_u8;
 
     /* CAUTION : Automatic generated code section for Actuators Containers/Service: Start */
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pu = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_X_au);
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actVal_pu = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_Y_au);
-   g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actVal_pu = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_Z_au);
+    g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_X_au);
+    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actVal_pau = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_Y_au);
+    g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actVal_pau = (t_uAPPACT_SetValue *)(&g_ActContainerGtry_Z_au);
     /* CAUTION : Automatic generated code section for Actuators Containers/Service: End */
 
     //----- Set Service Init -----//
@@ -265,11 +238,7 @@ t_eReturnCode APPLGC_Init(void)
         g_CmdInfo_as[idxCmd_u8].maskEvnt_u8 = (t_uint8)0;
     }
 
-    //---- Set Actuators Init ----//
-    for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < APPACT_ACTUATOR_NB ; idxAct_u8++)
-    {
-        g_actSetPoint_as[idxAct_u8].setPoint_s32 = 0;
-    }
+    Ret_e = APPSDM_AddCallbackEvnt(s_APPLGC_DiagnosticEvent);
 
     return Ret_e;
 }
@@ -379,15 +348,6 @@ t_eReturnCode APPLGC_SetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_S
     {
         //----- set Health state -----//
         g_srvFuncInfo_as[f_service_e].health_e = f_srvHealth_e; 
-
-        //----- if state is OFF, disable all act value instantly -----//
-        if(f_srvHealth_e == APPLGC_SRV_HEALTH_ERROR)
-        {
-            switch(f_service_e)
-            {
-
-            }
-        }
     }
 
     return Ret_e;
@@ -440,87 +400,77 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
     if(Ret_e == RC_OK)
     {
         appCmdInfo_ps = (t_sAPPLGC_AppCmdInfo *)(&g_CmdInfo_as[f_cmdId_e]);
-        switch (f_cmdId_e)
+
+        if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) != BIT_IS_SET_8B)
         {
-            
-            case APPLGC_RCV_CMD_ID_DATA_MODE:
-            {
-                if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
-                {
-                    f_cmdValues_pu->SFMModeInfo_s.mainMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1];
-                    f_cmdValues_pu->SFMModeInfo_s.prodMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2];
-
-                    RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
-                }
-                else
-                {
-                    f_cmdValues_pu->SFMModeInfo_s.mainMode_u8 = (t_uint8)0;
-                    f_cmdValues_pu->SFMModeInfo_s.prodMode_u8 = (t_uint8)0;
-                    Ret_e = RC_WARNING_NO_OPERATION;
-                } 
-                break;
-            }
-            case APPLGC_RCV_CMD_ID_DATA_SPEED_XYZ:
-            {
-                f_cmdValues_pu->speedInfo_s.axeX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
-                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
-                
-                f_cmdValues_pu->speedInfo_s.axeY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
-                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
-
-                f_cmdValues_pu->speedInfo_s.axeZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
-                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
-                break;
-            }
-            case APPLGC_RCV_CMD_ID_DATA_DIR_XYZ:
-            {
-                f_cmdValues_pu->dirInfo_s.axeX_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
-                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
-                
-                f_cmdValues_pu->dirInfo_s.axeY_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
-                                                                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
-
-                f_cmdValues_pu->dirInfo_s.axeZ_u16 = Mu16BuildFromByte( appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
-                                                                        appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
-                break;
-            }
-            case APPLGC_RCV_CMD_ID_DATA_PULSE_XYZ:
-            {
-                if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
-                {
-                    f_cmdValues_pu->pulseInfo_s.axeX_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
-                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2]);
-
-                    f_cmdValues_pu->pulseInfo_s.axeY_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
-                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
-
-                    f_cmdValues_pu->pulseInfo_s.axeZ_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
-                                                                                appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
-                    
-                    RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
-                }
-                else 
-                {
-                    f_cmdValues_pu->pulseInfo_s.axeX_u16 = (t_uint16)0;
-                    f_cmdValues_pu->pulseInfo_s.axeY_u16 = (t_uint16)0;
-                    f_cmdValues_pu->pulseInfo_s.axeZ_u16 = (t_uint16)0;
-
-                    Ret_e = RC_WARNING_NO_OPERATION;
-                }
-                break;
-            }
-            case APPLGC_RCV_CMD_ID_EMERGENCY_STOP:
-            case APPLGC_RCV_CMD_ID_BIT_ALIVE:
-            case APPLGC_RCV_CMD_ID_NB:
-            default:
+            //---- defualt value everything will be 0 -----//
+            Ret_e = SafeMem_memclear(f_cmdValues_pu, sizeof(t_uAPPLGC_CmdValues));
+            if(Ret_e >= RC_OK)
             {
                 Ret_e = RC_WARNING_NO_OPERATION;
             }
+        }
+        else 
+        {
+            //----- Do Check Sum ------//
+            //----- Update Flag -----//
+            RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
+            //----- Switch case on the command wanted -----//
+            switch (f_cmdId_e)
+            {
+                
+                case APPLGC_RCV_CMD_ID_DATA_MODE:
+                {
+                    
+                    f_cmdValues_pu->SFMModeInfo_s.mainMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1];
+                    f_cmdValues_pu->SFMModeInfo_s.prodMode_u8 = appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2];
+                    break;
+                }
+                case APPLGC_RCV_CMD_ID_GTRY_Z:
+                case APPLGC_RCV_CMD_ID_GTRY_Y:
+                case APPLGC_RCV_CMD_ID_GTRY_X:
+                {
 
+                    f_cmdValues_pu->axe_s.pulse_s32 = Ms32BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_3],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_4]);
+                    
+                    f_cmdValues_pu->axe_s.speed_u16 = Mu16BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_5],
+                                                                            appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_6]);
+                    break;
+                }
+                case APPLGC_RCV_CMD_ID_EMERGENCY_STOP:
+                case APPLGC_RCV_CMD_ID_BIT_ALIVE:
+                case APPLGC_RCV_CMD_ID_NB:
+                default:
+                {
+                    Ret_e = RC_WARNING_NO_OPERATION;
+                }
+
+            }
         }
     }
 
     return Ret_e;
+}
+
+/*********************************
+ * APPLGC_ComputeCheckSum
+ *********************************/
+void APPLGC_ComputeCheckSum(t_uint8 * f_startData_pu8, 
+                            t_uint8 f_dataLen_u8,
+                            t_uint8 * f_cheksum_pu8)
+{
+    t_uint32 checksum_u32 = (t_uint32)0;
+    t_uint8 idxData_u8;
+
+    for(idxData_u8 = (t_uint8)0; idxData_u8 < f_dataLen_u8 ; idxData_u8)
+    {
+        checksum_u32 += f_startData_pu8[idxData_u8];
+    }
+    
+    *f_cheksum_pu8 = (t_uint8)(checksum_u32 & 0xFF); // modulo 256
 }
 //********************************************************************************
 //                      Local functions - Implementation
@@ -553,55 +503,23 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8 = (t_uint8)0;
-    t_uint32 currentTime_u32 = (t_uint32)0;
     
-    FMKCPU_Get_Tick(&currentTime_u32);
-
-    //------ Verify AppData Bit Alive  -----//
-    if(GETBIT(g_CmdInfo_as[APPLGC_RCV_CMD_ID_BIT_ALIVE].maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
-    {
-        FMKCPU_Get_Tick(&g_lastBitAlive_u32);
-    }
-    else 
-    {
-        if((currentTime_u32 - g_lastBitAlive_u32) > APPLGC_APPUSER_COM_TIMEOUT)
-        {
-            g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
-            Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
-                                            APPSDM_DIAG_ITEM_REPORT_FAIL,
-                                            APPLGC_APPUSER_ERR_RX,
-                                            (t_uint16)0);
-        }
-        else 
-        {
-            Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
-                                            APPSDM_DIAG_ITEM_REPORT_PASS,
-                                            APPLGC_APPUSER_ERR_RX,
-                                            (t_uint16)0);
-        }
-    }
     if(Ret_e == RC_OK)
     {
         //------ Get Sensors Values for this cyclic -----//
         Ret_e = s_APPLGC_GetSnsValues();
     }
-    if(Ret_e == RC_OK)
-    {
-        Ret_e = s_APPLGC_UpdateActValues();
-    }
 
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
-        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e == RC_OK) ; idxAgent_u8)
+        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e > RC_OK) ; idxAgent_u8)
         {
             Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
                                                                         (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
         }
     }
-
-    //----- Set Actuators values -----//
-    if(Ret_e == RC_OK)
+    if(Ret_e >= RC_OK)
     {
         Ret_e = s_APPLGC_SetActValues();
     }
@@ -636,27 +554,6 @@ static t_eReturnCode s_APPLGC_GetSnsValues(void)
     return Ret_e;
 }
 
-/*********************************
- * s_APPLGC_SetActValues
- *********************************/
-static t_eReturnCode s_APPLGC_UpdateActValues(void)
-{
-    t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxAct_u8 = (t_uint8)0;
-    t_sint16 currVal_s16;
-
-    //----- Loop on every Actuators -----//
-    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPACT_ACTUATOR_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
-    {
-    
-        //------ Get Actual Value Point -----//
-        Ret_e = APPACT_Get_ActValue(idxAct_u8, &currVal_s16);
-        
-    }
-
-    return Ret_e;
-}
-
 
 /*********************************
  * s_APPLGC_SetActValues
@@ -664,18 +561,27 @@ static t_eReturnCode s_APPLGC_UpdateActValues(void)
 static t_eReturnCode s_APPLGC_SetActValues(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxSrv_u8 = (t_uint8)0;
     t_uint8 idxAct_u8 = (t_uint8)0;
+    t_eAPPACT_Actuators actuatorLabel_e;
 
     //----- Loop on every Service -----//
-    for(idxAct_u8 = (t_uint8)0 ; (idxAct_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxAct_u8++)
+    for(idxSrv_u8 = (t_uint8)0 ; (idxSrv_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxSrv_u8++)
     {
-        //Ret_e = APPACT_Set_ActValue(idxAct_u8, (t_sint16)g_actInfo_as[idxAct_u8].setValue_f32);
+        for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[idxSrv_u8] ; idxAct_u8++)
+        {
+            actuatorLabel_e = c_AppLGc_SrvDepedencies_pae[idxSrv_u8][idxAct_u8];
+
+            Ret_e = APPACT_Set_ActValue(actuatorLabel_e, (t_uAPPACT_SetValue)g_srvFuncInfo_as[idxSrv_u8].actVal_pau[idxAct_u8]);
+
+        }
     }
 
     return Ret_e;
 }
+
 /*********************************
- * s_MotorCallback
+ * s_APPLGC_AppEvntCallback
  *********************************/
 static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8, 
                                         t_uint16 f_dataSize_u16, 
@@ -774,14 +680,88 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
 }
 
 /*********************************
- * s_APPLGC_TranmistEvnt
+ * s_APPLGC_DiagnosticEvent
  *********************************/
-static void s_APPLGC_TranmistEvnt(t_bool f_isMsgTransmit_b, t_eFMKSRL_TxCallbackInfo f_InfoCb_e)
+static t_eReturnCode s_APPLGC_DiagnosticEvent(  t_eAPPSDM_DiagnosticItem f_item_e,
+                                                t_eAPPSDM_DiagnosticReport f_reportState_e,
+                                                t_uint16 f_debugInfo1_u16,
+                                                t_uint16 f_debugInfo2_u16)
 {
-    return;
+    t_eReturnCode Ret_e = RC_OK;
+
+    Ret_e = SafeMem_memclear((void *)g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
+
+    if(Ret_e == RC_OK)
+    {
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = (t_uint8)APPLGC_SEND_CMD_ID_ERROR_STATUS;
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = (t_uint8)f_item_e;
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_2] = (t_uint8)f_reportState_e;
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_3] = (t_uint8)Mu8ExtractByte1fromU16(f_debugInfo1_u16);
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_4] = (t_uint8)Mu8ExtractByte0fromU16(f_debugInfo1_u16);
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_5] = (t_uint8)Mu8ExtractByte1fromU16(f_debugInfo2_u16);
+        g_sendAppData_ua8[APPLGC_CMD_BYTE_6] = (t_uint8)Mu8ExtractByte0fromU16(f_debugInfo2_u16);
+
+        APPLGC_ComputeCheckSum( g_sendAppData_ua8,
+                                APPLGC_APP_PROTOCOL_LEN_DATA,
+                                &g_sendAppData_ua8[APPLGC_CMD_BYTE_7]);
+        
+        Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+    }
 }
 
+/*********************************
+ * s_APPLGC_AppComStateMngmt
+ *********************************/
+static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    static t_uint32 s_bitAliveRcv_u32 = (t_uint32)0;
+    t_uint32 currentTime_u32 = (t_uint32)0;
+    t_eGTRY_FSMGantry fsmGTRY_e;
 
+    FMKCPU_Get_Tick(&currentTime_u32);
+
+    //------ Verify AppData Bit Alive  -----//
+    if(GETBIT(g_CmdInfo_as[APPLGC_RCV_CMD_ID_BIT_ALIVE].maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_SET_8B)
+    {
+        FMKCPU_Get_Tick(&s_bitAliveRcv_u32);
+    }
+
+    if((currentTime_u32 - s_bitAliveRcv_u32) > APPLGC_APPUSER_COM_TIMEOUT)
+    {
+        g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
+        Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                        APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                        APPLGC_APPUSER_ERR_RX,
+                                        (t_uint16)0);
+    }
+    else 
+    {
+        Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,
+                                        APPSDM_DIAG_ITEM_REPORT_PASS,
+                                        APPLGC_APPUSER_ERR_RX,
+                                        (t_uint16)0);
+    }
+
+    //------ Send Ours  Bit Alive -----//
+    Ret_e = SafeMem_memclear(g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
+
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = Gantry_GetFSMState(&fsmGTRY_e);
+
+        if(Ret_e == RC_OK)
+        {
+            g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = APPLGC_SEND_CMD_ID_ROBOT_INFO;
+            g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = g_AppLgc_ModState_e;
+            g_sendAppData_ua8[APPLGC_CMD_BYTE_2] = fsmGTRY_e;
+            //---- the rest to 0 -----//
+            Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+        }
+    }
+
+    return Ret_e;
+}
 
 //************************************************************************************
 // End of File

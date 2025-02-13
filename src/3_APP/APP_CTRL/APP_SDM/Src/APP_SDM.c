@@ -287,7 +287,19 @@ t_eReturnCode APPSDM_ReportDiagEvnt(    t_eAPPSDM_DiagnosticItem f_item_e,
                 itemInfo_ps->itemId_e = f_item_e;
                 itemInfo_ps->reportstate_e = f_reportState_e;
                 FMKCPU_Get_Tick(&itemInfo_ps->reportTime_u32);
-                itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
+                
+                //---- check if actions has to be set now or later -----//
+                if(c_AppSdm_DiagItemCfg_as[f_item_e].debuncValueMs_u16 == (t_uint16)0)
+                {
+                    Ret_e = s_APPSDM_DiagStratMngmt(c_AppSdm_DiagItemCfg_as[f_item_e].diagStrat_e,
+                                                    APPSDM_DIAG_STRAT_INHIBIT_ON);
+
+                    itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_ON;    
+                }
+                else 
+                {
+                    itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
+                }
 
                 //----- Update General Information -----//
                 s_APPSDM_FoundFreeIdx();

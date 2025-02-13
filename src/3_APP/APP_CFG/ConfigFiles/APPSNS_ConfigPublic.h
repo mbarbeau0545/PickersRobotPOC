@@ -54,7 +54,6 @@
     */
     typedef enum
     {
-        //APPSNS_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPSNS_DRIVER_NB,
     } t_eAPPSNS_Drivers;

@@ -35,7 +35,12 @@
 
     /* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    
+    typedef enum 
+    {
+        GTRY_MISSION_SUCCEED = 0x00,
+        GTRY_MISSION_FAIL,
+        GTRY_MISSION_READY,
+    } t_eGTRY_MissionStatus;
 
 	/* CAUTION : Automatic generated code section for Structure: Start */
 

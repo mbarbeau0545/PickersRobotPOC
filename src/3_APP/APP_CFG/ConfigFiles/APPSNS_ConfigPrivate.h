@@ -124,7 +124,6 @@
     /* CAUTION : Automatic generated code section for Variable: Start */
     /**< Variable for System Sensors drivers functions*/
     const t_sAPPSNS_SysDrvFunc c_AppSns_SysDrv_apf[APPSNS_DRIVER_NB] = {
-       // {(t_cbAppSns_DrvInit *)CL42T_Init,                    (t_cbAppSns_DrvCyclic *)CL42T_Cyclic},  // APPSNS_DRIVER_CL42T
     };
 
     /**< Variable for System Sensors functions*/

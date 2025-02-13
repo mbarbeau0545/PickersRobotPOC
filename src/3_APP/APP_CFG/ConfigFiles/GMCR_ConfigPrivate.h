@@ -23,11 +23,10 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define GMCR_REF_FREQ_NOMINAL ((t_uint32)100) /**< Frequency is set to 100 when reference is done */
+    #define GMCR_REF_FREQ_NOMINAL ((t_uint32)50) /**< Frequency is set to 100 when reference is done */
     #define GMCR_PULSE_REFERENCE ((t_uint16)20000)
-    #define GMCR_DIR_X_REFERENCE CL42T_MOTOR_DIRECTION_CLOCKWISE
-    #define GMCR_DIR_Y_REFERENCE CL42T_MOTOR_DIRECTION_CLOCKWISE
-    #define GMCR_DIR_Z_REFERENCE CL42T_MOTOR_DIRECTION_CLOCKWISE
+
+    #define GMCR_NB_PULSE_REVERSE ((t_sint32)-10)
     // ********************************************************************
     // *                      Types
     // ********************************************************************

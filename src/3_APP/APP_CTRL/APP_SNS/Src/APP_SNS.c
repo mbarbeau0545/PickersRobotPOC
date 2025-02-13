@@ -67,7 +67,6 @@ t_eAPPSNS_SensorState g_snsState_ae[APPSNS_SENSOR_NB] = {
 
 /**< Variable for Sensors Drivers State*/
 t_eAPPSNS_DrvState g_SnsDrvState_ae[APPSNS_DRIVER_NB] = {
-    APPSNS_DRIVER_STATE_DISABLE, // APPSNS_DRIVER_CL42T
 };
 
 /* CAUTION : Automatic generated code section for Variable: End */

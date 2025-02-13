@@ -16,6 +16,7 @@
     // ********************************************************************
     #include "TypeCommon.h"
     #include "./APPACT_ConfigPublic.h"
+    #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"                
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -24,6 +25,8 @@
     #define APPLGC_APPUSER_COM_TIMEOUT ((t_uint32)1000)
     #define APPLGC_APPUSER_ERR_RX ((t_uint16)0)
     #define APPLGC_APPUSER_ERR_TX ((t_uint16)1)
+
+    #define APPLGC_SERIAL_LINE_APP FMKSRL_SERIAL_LINE_2
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -49,6 +52,7 @@
 
         APPLGC_SRV_STATE_NB,
     } t_eAPPLGC_SrvState;
+
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
     * @brief Enum for Service Gtry_X
@@ -129,14 +133,8 @@
     {
         t_eAPPLGC_SrvHealth health_e;
         t_eAPPLGC_SrvState  state_e;
-        t_uAPPACT_SetValue  * actVal_pu;
+        t_uAPPACT_SetValue  * actVal_pau;
     } t_sAPPLGC_ServiceInfo;
-
-    typedef struct 
-    {
-        t_float32 currValue_f32;
-        t_float32 setValue_f32;
-    } t_sAPPLGC_ActInfo;
 
     /**
     *
@@ -167,8 +165,7 @@
     *
     */
    typedef t_eReturnCode (t_cbAPPLGC_FSMCyclic)(t_float32 *f_snsValues_paf32, 
-                                                t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
-                                                t_sAPPLGC_ActInfo * f_actInfo_pas);
+                                                t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
     /**
     *
     *	@brief      Set the Service Enter Mode Function
