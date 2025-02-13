@@ -122,7 +122,20 @@
     *
     */
     t_eReturnCode APPSDM_GetDiagStatus( t_eAPPSDM_DiagnosticItem f_item_e,
-                                        t_eAPPSDM_DiagnosticReport * f_state_pe);         
+                                        t_eAPPSDM_DiagnosticReport * f_state_pe); 
+    /**
+    *
+    *	@brief
+    *	@note   
+    *
+    *
+    *	@param[in] 
+    *	@param[out]
+    *	 
+    *
+    *
+    */
+   t_eReturnCode APPSDM_ResetDiagEvnt(void);
     /**
     *
     *	@brief

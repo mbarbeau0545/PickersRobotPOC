@@ -161,41 +161,41 @@
     ;
     /* 0x000000FFUL*/
     // bit management 
-    #define Mu8ExtractByte0fromU16 (Mu16Value)     (t_uint8)((t_uint16)(Mu16Value)        )
-    #define Mu8ExtractByte1fromU16 (Mu16Value)     (t_uint8)((t_uint16)(Mu16Value) >> 8   )
+    #define Mu8ExtractByte0fromU16(Mu16Value)     (t_uint8)((t_uint16)(Mu16Value)        )
+    #define Mu8ExtractByte1fromU16(Mu16Value)     (t_uint8)((t_uint16)(Mu16Value) >> 8   )
     
-    #define Mu8ExtractByte0fromU32 (Mu32Value)     (t_uint8)((t_uint32)(Mu32Value)        )
-    #define Mu8ExtractByte1fromU32 (Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 8   )
-    #define Mu8ExtractByte2fromU32 (Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 16  )
-    #define Mu8ExtractByte3fromU32 (Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 24  )
+    #define Mu8ExtractByte0fromU32(Mu32Value)     (t_uint8)((t_uint32)(Mu32Value)        )
+    #define Mu8ExtractByte1fromU32(Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 8   )
+    #define Mu8ExtractByte2fromU32(Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 16  )
+    #define Mu8ExtractByte3fromU32(Mu32Value)     (t_uint8)((t_uint32)(Mu32Value) >> 24  )
     
-    #define Ms8ExtractByte0fromU16 (Ms16Value)     (t_sint8)((t_sint16)(Ms16Value)        )  
-    #define Ms8ExtractByte1fromU16 (Ms16Value)     (t_sint8)((t_sint16)(Ms16Value) >> 8   )  
+    #define Ms8ExtractByte0fromU16(Ms16Value)     (t_sint8)((t_sint16)(Ms16Value)        )  
+    #define Ms8ExtractByte1fromU16(Ms16Value)     (t_sint8)((t_sint16)(Ms16Value) >> 8   )  
     
-    #define Ms8ExtractByte0fromU32 (Ms32Value)     (t_sint8)((t_sint32)(Ms32Value)        )
-    #define Ms8ExtractByte1fromU32 (Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 8   )
-    #define Ms8ExtractByte2fromU32 (Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 16  )
-    #define Ms8ExtractByte3fromU32 (Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 24  )
+    #define Ms8ExtractByte0fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value)        )
+    #define Ms8ExtractByte1fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 8   )
+    #define Ms8ExtractByte2fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 16  )
+    #define Ms8ExtractByte3fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 24  )
     
 
-    #define Mu16BuildFromByte (Mu8ValueB0, Mu8ValueB1) \
+    #define Mu16BuildFromByte(Mu8ValueB0, Mu8ValueB1) \
     (((t_uint16)(Mu8ValueB0))            /* 0x00FFUL*/ | \
     (((t_uint16)(Mu8ValueB1)) << 8)     /* 0xFF00UL*/   )
 
+ 
 
-
-    #define Ms32BuildFromByte (Ms8ValueB0, Ms8ValueB1, Ms8ValueB2, Ms8ValueB3) \
+    #define Ms32BuildFromByte(Ms8ValueB0, Ms8ValueB1, Ms8ValueB2, Ms8ValueB3) \
     (((t_sint32)(Ms8ValueB0)          )       /* 0x000000FFUL*/ | \
     ((t_sint32)(Ms8ValueB1) << 8     )       /* 0x0000FF00UL*/ | \
     ((t_sint32)(Ms8ValueB2) << 16    )       /* 0x00FF0000UL*/ | \
     ((t_sint32)(Ms8ValueB3) << 24    )       /* 0xFF000000UL*/ )
 
 
-    #define Ms16BuildFromByte (Ms8ValueB0, Ms8ValueB1)  \
+    #define Ms16BuildFromByte(Ms8ValueB0, Ms8ValueB1)  \
     (((t_sint16)(Ms8ValueB0))            /* 0x00FFUL*/ | \
     (((t_sint16)(Ms8ValueB1)) << 8   )      /* 0xFF00UL*/)
 
-    #define Mu32BuildFromByte (Mu8ValueB0, Mu8ValueB1, Mu8ValueB2, Mu8ValueB3) \
+    #define Mu32BuildFromByte(Mu8ValueB0, Mu8ValueB1, Mu8ValueB2, Mu8ValueB3) \
     (((t_uint32)(Mu8ValueB0)         )       /* 0x000000FFUL*/ | \
     ((t_uint32)(Mu8ValueB1) << 8     )       /* 0x0000FF00UL*/ | \
     ((t_uint32)(Mu8ValueB2) << 16    )       /* 0x00FF0000UL*/ | \

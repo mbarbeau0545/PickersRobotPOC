@@ -22,7 +22,8 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-
+    #define APPSNS_LIM_SWCH_NC_CONTACT ((t_uint8)0)
+    #define APPSNS_LIM_SWCH_NC_NO_CONTACT ((t_uint8)1)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -31,7 +32,20 @@
     * @brief Enum for Sensors list.
     */
     typedef enum
-    {    
+    {
+        APPSNS_SENSOR_DIAGMTR_X_L = 0x0,        /**< Diagnostic From Motor Axe X, left Side */
+        APPSNS_SENSOR_DIAGMTR_X_R,              /**< Diagnostic From Motor Axe X, Right Side */
+        APPSNS_SENSOR_DIAGMTR_Y,                /**< Diagnostic From Motor Axe Y */
+        APPSNS_SENSOR_DIAGMTR_Z,                /**< Diagnostic From Motor Axe Z */
+        APPSNS_SENSOR_LIM_SWCH_X_L_MIN,         /**< Limit Switch for motor X left, min */
+        APPSNS_SENSOR_LIM_SWCH_X_L_MAX,         /**< Limit Switch for motor X left, max */
+        APPSNS_SENSOR_LIM_SWCH_X_R_MIN,         /**< Limit Switch for motor X right, min */
+        APPSNS_SENSOR_LIM_SWCH_X_R_MAX,         /**< Limit Switch for motor X right, max */
+        APPSNS_SENSOR_LIM_SWCH_Y_MIN,           /**< Limit Switch for motor Y, min */
+        APPSNS_SENSOR_LIM_SWCH_Y_MAX,           /**< Limit Switch for motor Y, max */
+        APPSNS_SENSOR_LIM_SWCH_Z_MIN,           /**< Limit Switch for motor Z, min */
+        APPSNS_SENSOR_LIM_SWCH_Z_MAX,           /**< Limit Switch for motor Z, max */
+    
         APPSNS_SENSOR_NB,
     } t_eAPPSNS_Sensors;
 
@@ -40,6 +54,7 @@
     */
     typedef enum
     {
+        APPSNS_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPSNS_DRIVER_NB,
     } t_eAPPSNS_Drivers;
@@ -182,7 +197,7 @@
         t_uAPPSNS_ReqestedUnity rqstedUnity_u;      /**< The unity ask for a sensors */
         t_float32 rawValue_f32;      /**< Store the sensor rawValue */
         t_float32 SnsValue_f32;      /**< Store the sensor after conversion */
-        t_bool   IsValueOK_b;       /**< Store flag value validity */
+        t_bool   f_isValue_OK;       /**< Store flag value validity */
     } t_sAPPSNS_SnsInfo;
 	/* CAUTION : Automatic generated code section : Start */
 

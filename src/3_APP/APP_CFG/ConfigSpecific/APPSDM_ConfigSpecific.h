@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -58,9 +59,30 @@
     // ********************************************************************
 
     //********************************************************************************
-    //                      Public functions - Prototyupes
+    //                      Public functions - Prototyupe
     //********************************************************************************
+    /* CAUTION : Automatic generated code section for Diag Strategy Function Declaration: Start */
+    /**
+    * @brief Stratefy Function : Set All Axe of the Gantry Off 
+    */
+     APPSDM_SPEC_DiagStrat_Gantry_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
 
+    /**
+    * @brief Stratefy Function : Set Axe X of the Gantry Off
+    */
+     APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+
+    /**
+    * @brief Stratefy Function : Set Axe Y of the Gantry Off
+    */
+     APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+
+    /**
+    * @brief Stratefy Function : Set Axe Z of the Gantry Off
+    */
+     APPSDM_SPEC_DiagStrat_Gantry_Axe_Z_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e);
+
+    /* CAUTION : Automatic generated code section for Diag Strategy Function Declaration: End */
    
 
 #endif // APPSDM_CONFIGSPECIFIC_H_INCLUDED           

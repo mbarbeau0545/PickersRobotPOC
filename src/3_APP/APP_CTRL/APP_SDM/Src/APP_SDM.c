@@ -286,8 +286,8 @@ t_eReturnCode APPSDM_ReportDiagEvnt(    t_eAPPSDM_DiagnosticItem f_item_e,
                 itemInfo_ps->debugInfo2_u16 = f_debugInfo2_u16;
                 itemInfo_ps->itemId_e = f_item_e;
                 itemInfo_ps->reportstate_e = f_reportState_e;
-                itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
                 FMKCPU_Get_Tick(&itemInfo_ps->reportTime_u32);
+                itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_DBC;
 
                 //----- Update General Information -----//
                 s_APPSDM_FoundFreeIdx();
@@ -348,6 +348,28 @@ t_eReturnCode APPSDM_GetDiagStatus( t_eAPPSDM_DiagnosticItem f_item_e,
     return Ret_e;
 }
 
+t_eReturnCode APPSDM_ResetDiagEvnt(void)
+{
+    t_eReturnCode Ret_e = RC_OK; 
+    t_uint8 idxItem_u8 = (t_uint8)0;
+
+    //----- if diagCounter == 0, already Reset -----//
+    if(g_diagItemCnt_u8 != (t_uint8)0)
+    {
+        //----- Loop to know if the item is repertory -----//
+        for(idxItem_u8  = (t_uint8)0 ; idxItem_u8 < g_MaxIdxRegistration_u8 ; idxItem_u8++)
+        {
+           g_diagItemInfo_as[idxItem_u8].mngmtState_e = APPSDM_DIAG_ITEM_STATUS_OFF; 
+        }
+
+        //----- Update max registration -----//
+        g_MaxIdxRegistration_u8 = (t_uint8)0;
+        g_diagItemCnt_u8 = (t_uint8)0;
+        g_rqstDiagMngmt_b = (t_bool)False;
+    }
+
+    return Ret_e;
+}
 /*********************************
  * APPSDM_AddCallbackEvnt
  *********************************/
@@ -542,7 +564,7 @@ static t_eReturnCode s_APPSDM_DiagStratMngmt(t_eAPPSDM_DiagnosticStrat f_diagStr
     {
         if(f_diagStrat_e != APPSDM_DIAG_STRAT_NONE)
         {
-            c_AppSdm_DiagStragies_pf[f_diagStrat_e](f_stratOpe_e);
+            c_AppSdm_DiagStragies_apf[f_diagStrat_e](f_stratOpe_e);
         }
     }
 

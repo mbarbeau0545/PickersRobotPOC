@@ -11,10 +11,6 @@
 #ifndef APPSDM_CONFIGPUBLIC_H_INCLUDED
 #define APPSDM_CONFIGPUBLIC_H_INCLUDED
 
-
-
-
-
     // ********************************************************************
     // *                      Includes
     // ********************************************************************
@@ -28,26 +24,42 @@
     // ********************************************************************
     /* CAUTION : Automatic generated code section for Enum: Start */
     /**
-    * @brief Enum for Diagnostic Item
+    * @brief Enum Diagnostic Item
     */
-    typedef enum __t_eAPPSDM_DiagnosticItem
+    typedef enum ____t_eAPPSDM_DiagnosticItem
     {
-        APPSDM_DIAG_ITEM_AAAAA = 0x00,
-        APPSDM_DIAG_ITEM_BBBBB,
-        APPSDM_DIAG_ITEM_CCCCC,
-        APPSDM_DIAG_ITEM_DDDD,
+        APPSDM_DIAG_ITEM_FMK_CFG_ERROR = 0x00,// None
+        APPSDM_DIAG_ITEM_FMK_OPE_ERROR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_X_ERR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_Y_ERR,// None
+        APPSDM_DIAG_ITEM_FMK_SIGNAL_AXE_Z_ERR,// None
+        APPSDM_DIAG_ITEM_SUPPLY_VOLTAGE_ERROR,// None
+        APPSDM_DIAG_ITEM_APPSYS_CYCLIC_TIMEOUT,// None
+        APPSDM_DIAG_ITEM_APPUSER_BIT_ALIVE_TIMEOUT,// None
+        APPSDM_DIAG_ITEM_APPUSER_COMMUNICATION_FAILED,// None
+        APPSDM_DIAG_ITEM_GANTRY_REF_AXE_FAILED,// None
+        APPSDM_DIAG_ITEM_GANTRY_MVMT_ERROR,// None
+        APPSDM_DIAG_ITEM_GANTRY_SWITCH_LIMIT,// None
+
         APPSDM_DIAG_ITEM_NB,
     } t_eAPPSDM_DiagnosticItem;
+    /**
+    * @brief Enum Diagnostic Strategy
+    */
+    typedef enum ____t_eAPPSDM_DiagnosticStrat
+    {
+        APPSDM_DIAG_STRAT_GANTRY_OFF = 0x00,   // Gantry_Z
+        APPSDM_DIAG_STRAT_GANTRY_AXE_X_OFF,// None
+        APPSDM_DIAG_STRAT_GANTRY_AXE_Y_OFF,// None
+        APPSDM_DIAG_STRAT_GANTRY_AXE_Z_OFF,// None
+
+        APPSDM_DIAG_STRAT_NB,
+
+        APPSDM_DIAG_STRAT_NONE,
+    } t_eAPPSDM_DiagnosticStrat;
     /* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
 
-
-    typedef enum 
-    {
-        APPSDM_DIAG_STRAT_NONE = -1,
-
-        APPSDM_DIAG_STRAT_NB,
-    } t_eAPPSDM_DiagnosticStrat;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
 	/* CAUTION : Automatic generated code section for Structure: End */
