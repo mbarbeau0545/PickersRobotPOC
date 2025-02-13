@@ -357,14 +357,14 @@ t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *
     if(Ret_e == RC_OK)
     {
         // call specific function to get value
-        Ret_e = (c_AppSns_SysSns_apf[f_Sns_e].GetValue_pcb)(&f_SnsInfo_ps->rawValue_f32, &f_SnsInfo_ps->IsValueOK_b);
+        Ret_e = (c_AppSns_SysSns_apf[f_Sns_e].GetValue_pcb)(&f_SnsInfo_ps->rawValue_f32, &f_SnsInfo_ps->isValueOK_b);
         if(Ret_e == RC_OK)
         {
             Ret_e = s_APPSNS_ConvertingManagement(f_Sns_e, f_SnsInfo_ps);
         }
         else 
         {
-            f_SnsInfo_ps->IsValueOK_b = (t_bool)False;
+            f_SnsInfo_ps->isValueOK_b = (t_bool)False;
             f_SnsInfo_ps->rawValue_f32 = (t_sint16)0;
             f_SnsInfo_ps->SnsValue_f32 = (t_sint16)0;
         }

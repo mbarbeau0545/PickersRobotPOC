@@ -33,32 +33,20 @@
     */
     typedef enum
     {
-        APPACT_ACT_MTR_X_L = 0x00,
-        APPACT_ACT_MTR_X_R,
-        APPACT_ACT_MTR_Y,
-        APPACT_ACT_MTR_Z,
-        APPACT_ACT_BOBINE_1 ,
-        APPACT_ACT_NB,
+        APPACT_ACTUATOR_MTR_X_L = 0x0,            /**< Left Motor Axe X on the left */
+        APPACT_ACTUATOR_MTR_X_R,                  /**< Left Motor Axe X on the right */
+        APPACT_ACTUATOR_MTR_Y,                    /**< Left Motor Axe Y */
+        APPACT_ACTUATOR_MTR_Z,                    /**< Left Motor Axe Z */
+    
+        APPACT_ACTUATOR_NB,
     } t_eAPPACT_Actuators;
 
-   
-    typedef union 
-    {
-        t_sCL42T_SetMotorValue Motor_s;
-        t_sint32 setPoint_s32;
-    } t_uAPPACT_GetValue;
-
-    typedef union 
-    {
-        t_sCL42T_GetMotorValue Motor_s;
-        t_sint32 setPoint_s32;
-    } t_uAPPACT_SetValue;
     /**
     * @brief Enum for Actuators drivers list.
     */
     typedef enum
     {
-        APPACT_DRIVER_CL42T = 0x0,              /**< None */
+        APPACT_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPACT_DRIVER_NB,
     } t_eAPPACT_Drivers;
@@ -82,6 +70,18 @@
 
 	/* CAUTION : Automatic generated code section for Structure: End */
 	//-----------------------------STRUCT TYPES---------------------------//
+    typedef union 
+    {
+        t_sCL42T_GetMotorValue Motor_s;
+        t_sint32 setPoint_s32;
+    } t_uAPPACT_GetValue;
+
+    typedef union 
+    {
+        t_sCL42T_SetMotorValue Motor_s;
+        t_sint32 setPoint_s32;
+    } t_uAPPACT_SetValue;
+
 
 	/* CAUTION : Automatic generated code section : Start */
 

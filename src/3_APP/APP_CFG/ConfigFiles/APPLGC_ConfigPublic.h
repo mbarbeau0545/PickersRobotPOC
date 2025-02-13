@@ -15,6 +15,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    #include "./APPACT_ConfigPublic.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -54,14 +55,8 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_X
     {
-        APPLGC_ACT_MTR_X_L_STATE = 0x00,
-        APPLGC_ACT_MTR_X_L_DIR,
-        APPLGC_ACT_MTR_X_L_PULSE,
-        APPLGC_ACT_MTR_X_R_STATE,
-        APPLGC_ACT_MTR_X_R_DIR,
-        APPLGC_ACT_MTR_X_R_PULSE,
-        APPLGC_ACT_MTR_X_L_SEED,
-        APPLGC_ACT_MTR_X_R_SPEED,
+        APPLGC_ACT_MTR_X_L = 0x00,
+        APPLGC_ACT_MTR_X_R,
         APPLGC_GTRY_X_ACT_NB,
     } t_eAPPLGC_SrvGtry_X;
 
@@ -70,10 +65,7 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_Y
     {
-        APPLGC_ACT_MTR_Y_STATE = 0x00,
-        APPLGC_ACT_MTR_Y_DIR,
-        APPLGC_ACT_MTR_Y_PULSE,
-        APPLGC_ACT_MTR_Y_SPEED,
+        APPLGC_ACT_MTR_Y = 0x00,
         APPLGC_GTRY_Y_ACT_NB,
     } t_eAPPLGC_SrvGtry_Y;
 
@@ -82,10 +74,7 @@
     */
     typedef enum ____t_eAPPLGC_SrvGtry_Z
     {
-        APPLGC_ACT_MTR_Z_STATE = 0x00,
-        APPLGC_ACT_MTR_Z_DIR,
-        APPLGC_ACT_MTR_Z_PULSE,
-        APPLGC_ACT_MTR_Z_SPEED,
+        APPLGC_ACT_MTR_Z = 0x00,
         APPLGC_GTRY_Z_ACT_NB,
     } t_eAPPLGC_SrvGtry_Z;
 
@@ -140,6 +129,7 @@
     {
         t_eAPPLGC_SrvHealth health_e;
         t_eAPPLGC_SrvState  state_e;
+        t_uAPPACT_SetValue  * actVal_pu;
     } t_sAPPLGC_ServiceInfo;
 
     typedef struct 
@@ -163,8 +153,7 @@
     *
     */
     typedef t_eReturnCode (t_cbAPPLGC_AgentPeriodicTask)(   t_float32 *f_snsValues_paf32, 
-                                                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
-                                                            t_sAPPLGC_ActInfo * f_actInfo_pas);
+                                                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas);
 
     /**
     *

@@ -20,7 +20,10 @@
     // ********************************************************************
     #include "./APPACT_ConfigPublic.h"
     /* CAUTION : Automatic generated code section for Include: Start */
-
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_L.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_X_R.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Y.h"
+    #include "APP_CFG\ConfigSpecific\AppAct_ConfigSpecific/APPACT_SPEC_Mtr_Z.h"
     /* CAUTION : Automatic generated code section for Include: End */
     #include "Motor/CL42T/Src/CL42T.h"
 
@@ -115,8 +118,11 @@
     };
 
     /**< Variable for System Actuators functions*/
-    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACT_NB] = {
-    
+    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {
+        {APPACT_SPEC_Mtr_X_L_SetCfg,                                 APPACT_SPEC_Mtr_X_L_SetValue,                               APPACT_SPEC_Mtr_X_L_GetValue}, //APPACT_ACTUATOR_MTR_X_L
+        {APPACT_SPEC_Mtr_X_R_SetCfg,                                 APPACT_SPEC_Mtr_X_R_SetValue,                               APPACT_SPEC_Mtr_X_R_GetValue}, //APPACT_ACTUATOR_MTR_X_R
+        {APPACT_SPEC_Mtr_Y_SetCfg,                                   APPACT_SPEC_Mtr_Y_SetValue,                                 APPACT_SPEC_Mtr_Y_GetValue}, //APPACT_ACTUATOR_MTR_Y
+        {APPACT_SPEC_Mtr_Z_SetCfg,                                   APPACT_SPEC_Mtr_Z_SetValue,                                 APPACT_SPEC_Mtr_Z_GetValue}, //APPACT_ACTUATOR_MTR_Z
     };
 
     /* CAUTION : Automatic generated code section for Variable: End */

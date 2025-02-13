@@ -103,7 +103,7 @@ static t_eReturnCode s_GTRY_SafetyMngmt(void);
 *
 *
 */
-static void s_GTR_SetGantryOff(void);
+static void s_GTRY_SetGantryOff(void);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -120,8 +120,7 @@ t_eReturnCode Gantry_Init(void)
  * APPLGC_Init
  *********************************/
 t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32, 
-                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
-                            t_sAPPLGC_ActInfo * f_actInfo_pas)
+                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas)
 {
     t_eReturnCode Ret_e = RC_OK;
     
@@ -129,7 +128,7 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
     //----- Initialize Pointor to data -----//
     g_snsValues_paf32 = (t_float32 *)f_snsValues_paf32;
     g_SrvInfo_pas = (t_sAPPLGC_ServiceInfo *)f_SrvInfo_pas;
-    g_actInfo_pas = (t_sAPPLGC_ActInfo *)f_actInfo_pas;
+    g_actInfo_pas = (t_sAPPLGC_ActInfo *)NULL;
 
     //----- Check Gantry Mvmt Security and Update State-----//
     Ret_e = s_GTRY_SafetyMngmt();
@@ -175,7 +174,7 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
             {
                 //----- The transition of the state to anothter one 
                 //      is made in StateMachineMngmt or with public information ----//
-                s_GTR_SetGntryOff();
+                s_GTRY_SetGantryOff();
                 break;
             }
             case GTRY_SFM_GANTRY_DEFAULT:
@@ -302,15 +301,15 @@ static t_eReturnCode s_GTRY_SafetyMngmt(void)
 /*********************************
  * s_GTR_SetGantryOff
  *********************************/
-static void s_GTR_SetGantryOff(void)
+static void s_GTRY_SetGantryOff(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
     //---- set All Pulses to Off -----//
-    g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)0.0;
-    g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)0.0;
-    g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32 = (t_float32)0.0;
-    g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32 = (t_float32)0.0;
+    //g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)0.0;
+    //g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)0.0;
+    //g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32 = (t_float32)0.0;
+    //g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32 = (t_float32)0.0;
 
     return;
 }
