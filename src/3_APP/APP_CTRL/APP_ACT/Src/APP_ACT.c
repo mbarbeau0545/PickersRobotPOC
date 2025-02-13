@@ -49,7 +49,7 @@
 // ********************************************************************
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**< Variable for Actuators Drivers State*/
-t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACTUATOR_NB] = {
+t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACT_NB] = {
 };
 
 /**< Variable for Actuators Drivers State*/
@@ -91,7 +91,20 @@ static t_eReturnCode s_APPACT_Operational(void);
  *********************************/
 t_eReturnCode APPACT_Init(void)
 {
-    return RC_OK;
+    t_eReturnCode Ret_e = RC_OK;
+    static t_uint8 s_LLDRV_u8 = (t_uint8)0;
+    
+    for(; (s_LLDRV_u8 < APPACT_DRIVER_NB) && (Ret_e == RC_OK) ; s_LLDRV_u8++)
+    {
+        if(g_ActDrvState_ae[s_LLDRV_u8] == APPACT_DRIVER_STATE_ENABLE
+        && c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb != (t_cbAppAct_DrvInit *)NULL_FONCTION)
+        {
+            Ret_e = (c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb)();
+            
+        }
+    }
+
+    return Ret_e;
 }
 
 /*********************************
@@ -170,16 +183,15 @@ t_eReturnCode APPACT_SetState(t_eCyclicModState f_State_e)
 /*********************************
  * APPACT_Get_ActValue
  *********************************/
-t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f_value_ps16)
+t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_GetValue * f_actValue_pu)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_sAPPACT_ValueInfo actValInfo_s = {0};
 
-    if(f_actuator_e > APPACT_ACTUATOR_NB)
+    if(f_actuator_e > APPACT_ACT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(f_value_ps16 == (t_sint16 *)NULL)
+    if(f_actValue_pu == (t_sint16 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -190,15 +202,7 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f
     if(Ret_e == RC_OK)
     {
         // call specFunc 
-        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].GetValue_pcb)(&actValInfo_s);
-        if(actValInfo_s.IsValueOK_b == True)
-        {
-            *f_value_ps16 = (t_sint16)actValInfo_s.rawValue_f32;
-        }
-        else
-        {
-            *f_value_ps16 = (t_sint16)0;
-        }
+        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].GetValue_pcb)(&f_actValue_pu);
     }
     
     return Ret_e;
@@ -207,11 +211,11 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f
 /*********************************
  * APPACT_Set_ActValue
  *********************************/
-t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_value_s16)
+t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_SetValue  f_actValue_u)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_actuator_e > APPACT_ACTUATOR_NB)
+    if(f_actuator_e > APPACT_ACT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -222,7 +226,7 @@ t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_v
     if(Ret_e == RC_OK)
     {
         // call specFunc 
-        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].SetValue_pcb)(f_value_s16);
+        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].SetValue_pcb)(f_actValue_u);
     }
 
     return Ret_e;    
@@ -235,7 +239,7 @@ t_eReturnCode APPACT_Set_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Actuator_e > APPACT_ACTUATOR_NB
+    if(f_Actuator_e > APPACT_ACT_NB
     || f_ActState_e > APPACT_ACTUATOR_STATE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -254,7 +258,7 @@ t_eReturnCode APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Actuator_e > APPACT_ACTUATOR_NB)
+    if(f_Actuator_e > APPACT_ACT_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -277,22 +281,11 @@ t_eReturnCode APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 static t_eReturnCode s_APPACT_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_uint8 s_LLDRV_u8 = 0;
     static t_uint8 s_LLACT_u8 = 0;
     // first call drv init function 
-
-    for(; (s_LLDRV_u8 < APPACT_DRIVER_NB) && (Ret_e == RC_OK) ; s_LLDRV_u8++)
-    {
-        if(g_ActDrvState_ae[s_LLDRV_u8] == APPACT_DRIVER_STATE_ENABLE
-        && c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb != (t_cbAppAct_DrvInit *)NULL_FONCTION)
-        {
-            Ret_e = (c_AppAct_SysDrv_apf[s_LLDRV_u8].Init_pcb)();
-            
-        }
-    }
     // actuators configuration call
         
-    for (; (s_LLACT_u8 < APPACT_ACTUATOR_NB) && (Ret_e == RC_OK) ; s_LLACT_u8++)  
+    for (; (s_LLACT_u8 < APPACT_ACT_NB) && (Ret_e == RC_OK) ; s_LLACT_u8++)  
     {
         if(g_actState_ae[s_LLACT_u8] == APPACT_ACTUATOR_STATE_ENABLE
         && c_AppAct_SysAct_apf[s_LLACT_u8].SetCfg_pcb != (t_cbAppAct_SetActCfg *)NULL_FONCTION)
@@ -302,8 +295,7 @@ static t_eReturnCode s_APPACT_ConfigurationState(void)
     }
 
     if(Ret_e == RC_OK
-    && s_LLDRV_u8 < APPACT_DRIVER_NB
-    && s_LLACT_u8 < APPACT_ACTUATOR_NB)
+    && s_LLACT_u8 < APPACT_ACT_NB)
     {
         Ret_e = RC_WARNING_BUSY;
     }
@@ -316,29 +308,20 @@ static t_eReturnCode s_APPACT_ConfigurationState(void)
 static t_eReturnCode s_APPACT_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool s_IsDrvCylic_b = True;
-    t_bool DrvCyclicCnt_u8 = 0;
     t_uint8 LLI_u8; 
 
-    if(s_IsDrvCylic_b == (t_bool)True)
+    for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPACT_DRIVER_NB) && (Ret_e == RC_OK); LLI_u8++)
     {
-        for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPACT_DRIVER_NB) && (Ret_e == RC_OK); LLI_u8++)
+        if(g_ActDrvState_ae[LLI_u8] == APPACT_DRIVER_STATE_ENABLE)
         {
-            if(g_ActDrvState_ae[LLI_u8] == APPACT_DRIVER_STATE_ENABLE)
+            if(c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppAct_DrvCyclic *)NULL_FONCTION)
             {
-                DrvCyclicCnt_u8 += (t_uint8)1;
-
-                if(c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppAct_DrvCyclic *)NULL_FONCTION)
-                {
-                    Ret_e = (c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb)();
-                }
+                Ret_e = (c_AppAct_SysDrv_apf[LLI_u8].Cyclic_pcb)();
             }
         }
-        if(DrvCyclicCnt_u8 == (t_uint8)0)
-        {
-            s_IsDrvCylic_b = (t_bool)False;
-        }
     }
+
+    
 
     return Ret_e;
 }

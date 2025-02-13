@@ -1,9 +1,0 @@
--regarder le signal dir avec la diode -> normalement ok mais pas sur 
-
--pulse/en/diag vérifié avec les diodes -> ok 
-
--regarder le inhib time avec un changement de direction -> ok
-
--pulse error max ->
-
--CL42T ligne 825 verifier car ya une erreur 

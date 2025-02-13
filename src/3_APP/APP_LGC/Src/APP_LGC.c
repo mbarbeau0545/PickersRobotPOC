@@ -271,33 +271,6 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
 
-/*Ret_e = FMKIO_Set_OutPwmSigPulses(  FMKIO_OUTPUT_SIGPWM_3,
-                                        (t_uint16)500,
-                                        (t_uint16)12000);*/    
-
-    
-    t_uCL42T_SetMotorValue u_SetMotorValue;
-
-    u_SetMotorValue.state_e = CL42T_MOTOR_STATE_ON;
-
-    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
-                                CL42T_SIGTYPE_STATE,
-                                u_SetMotorValue);
-    
-    u_SetMotorValue.dir_e = CL42T_MOTOR_DIRECTION_WISE;
-
-    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
-                                CL42T_SIGTYPE_DIR,
-                                u_SetMotorValue);
-
-
-    u_SetMotorValue.nbPulses_u16 = 60000;
-
-    Ret_e = CL42T_SetMotorSigValue( CL42T_MOTOR_AXE_X_1,
-                                CL42T_SIGTYPE_PULSE,
-                                u_SetMotorValue);
- 
-
     return Ret_e;
 }
 

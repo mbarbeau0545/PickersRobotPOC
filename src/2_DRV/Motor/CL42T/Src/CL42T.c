@@ -291,8 +291,8 @@ static t_eReturnCode s_CL42T_AddDiagSignal( t_sCL42T_MotorInfo * f_motorInfo_ps,
 *
 *
 */
-static t_eReturnCode s_CL42T_SetPulseSignal( t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                    t_uint16 f_nbPulses_u16);
+static t_eReturnCode s_CL42T_SetPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
+                                            t_sint32 f_nbPulses_s32);
 
 /**
  *
@@ -575,15 +575,13 @@ t_eReturnCode CL42T_AddMotorConfiguration(  t_eCL42T_MotorId f_motorId_e,
  * s_CL42T_SetPulseSignal
  *********************************/
 t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorSignalType f_sigType_e,
-                                        t_uCL42T_SetMotorValue f_MotorValue_u)
+                                        t_sCL42T_SetMotorValue f_MotorValue_s)
 {
     t_eReturnCode Ret_e = RC_OK;
 
     t_sCL42T_MotorInfo * motorInfo_ps;
 
-    if(f_motorId_e >= CL42T_MOTOR_NB
-    || f_sigType_e >= CL42T_SIGTYPE_NB) 
+    if(f_motorId_e >= CL42T_MOTOR_NB) 
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -600,35 +598,33 @@ t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
     {
         motorInfo_ps = (t_sCL42T_MotorInfo *)(&g_MotorInfo_as[f_motorId_e]);
 
-        switch (f_sigType_e)
+        //----- see if an stop pulse has been required -----//
+        if((f_MotorValue_s.stopPulse_b = (t_bool)True)
+        && (GETBIT(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B))
         {
-            case CL42T_SIGTYPE_PULSE:
+            motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32 = (t_uint32)0;
+
+            //----- Stop pulse now and don't wait cyclic -----//
+            Ret_e = FMKIO_Set_OutPwmSigPulses(  motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].signal_u8,
+                                                CL42T_NOMINATIVE_DUTYCYCLE,
+                                                (t_uint32)0);
+            if(Ret_e == RC_OK)
             {
-                Ret_e = s_CL42T_SetPulseSignal(motorInfo_ps, f_MotorValue_u.nbPulses_u16);
-                break;
+                RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON);
+                RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
             }
-            case CL42T_SIGTYPE_SPEED:
-            {
-                Ret_e = s_CL42T_SetSpeedSignal(motorInfo_ps, f_MotorValue_u.frequency_u32);
-                break;
-            }
-            case CL42T_SIGTYPE_DIR:
-            {
-                Ret_e = s_CL42T_SetDirSignal(motorInfo_ps, f_MotorValue_u.dir_e);
-                break;
-            }
-            case CL42T_SIGTYPE_STATE:
-            {
-                Ret_e = s_CL42T_SetStateSignal(motorInfo_ps, f_MotorValue_u.state_e);
-                break;
-            }
-            case CL42T_SIGTYPE_DIAG:
-            case CL42T_SIGTYPE_NB:
-            default:
-            {
-                Ret_e = RC_WARNING_NO_OPERATION;
-                break;
-            }
+        }
+        else 
+        {
+            Ret_e = s_CL42T_SetPulseSignal(motorInfo_ps, f_MotorValue_s.nbPulses_s32);
+        }
+        if(Ret_e >= RC_OK)
+        {
+            Ret_e = s_CL42T_SetSpeedSignal(motorInfo_ps, f_MotorValue_s.frequency_u32);
+        }
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = s_CL42T_SetStateSignal(motorInfo_ps, f_MotorValue_s.state_e);
         }
     }
 
@@ -639,19 +635,17 @@ t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
  * s_CL42T_SetPulseSignal
  *********************************/
 t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
-                                        t_eCL42T_MotorSignalType f_sigType_e,
-                                        t_uCL42T_GetMotorValue * f_MotorValue_pu)
+                                        t_sCL42T_GetMotorValue * f_MotorValue_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
 
     t_sCL42T_MotorInfo * motorInfo_ps;
 
-    if(f_motorId_e >= CL42T_MOTOR_NB
-    || f_sigType_e >= CL42T_SIGTYPE_NB) 
+    if(f_motorId_e >= CL42T_MOTOR_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(f_MotorValue_pu == (t_uCL42T_GetMotorValue *)NULL)
+    if(f_MotorValue_ps == (t_sCL42T_GetMotorValue *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -668,38 +662,18 @@ t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
     {
         motorInfo_ps = (t_sCL42T_MotorInfo *)(&g_MotorInfo_as[f_motorId_e]);
 
-        switch (f_sigType_e)
+        Ret_e = s_CL42T_GetPulseSignal(motorInfo_ps, &f_MotorValue_ps->pulseState_e);
+        if(Ret_e == RC_OK)
         {
-            case CL42T_SIGTYPE_PULSE:
-            {
-                Ret_e = s_CL42T_GetPulseSignal(motorInfo_ps, &f_MotorValue_pu->pulseState_e);
-                break;
-            }
-            case CL42T_SIGTYPE_SPEED:
-            {
-                Ret_e = s_CL42T_GetSpeedSignal(motorInfo_ps, &f_MotorValue_pu->frequency_u32);
-                break;
-            }
-            case CL42T_SIGTYPE_DIR:
-            {
-                Ret_e = s_CL42T_GetDirSignal(motorInfo_ps, &f_MotorValue_pu->dir_e);
-                break;
-            }
-            case CL42T_SIGTYPE_STATE:
-            {
-                Ret_e = s_CL42T_GetStateSignal(motorInfo_ps, &f_MotorValue_pu->state_e);
-                break;
-            }
-            case CL42T_SIGTYPE_DIAG:
-            {
-                Ret_e = s_CL42T_GetDiagError(motorInfo_ps, &f_MotorValue_pu->diagError_e);
-            }
-            case CL42T_SIGTYPE_NB:
-            default:
-            {
-                Ret_e = RC_WARNING_NO_OPERATION;
-                break;
-            }
+            Ret_e = s_CL42T_GetSpeedSignal(motorInfo_ps, &f_MotorValue_ps->frequency_u32);
+        }
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = s_CL42T_GetDirSignal(motorInfo_ps, &f_MotorValue_ps->dir_e);
+        }
+        if(Ret_e == RC_OK)
+        {
+            Ret_e = s_CL42T_GetStateSignal(motorInfo_ps, &f_MotorValue_ps->state_e);
         }
     }
 
@@ -736,12 +710,7 @@ static t_eReturnCode s_CL42T_ConfigurationState(void)
                 if(motorInfo_ps->SigInfo_as[idxSignal_u8].isConfigured_b == (t_bool)False)
                 {
                     Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
-                }
-                //---- Initialize Container ----//
-                else 
-                {
-                    motorInfo_ps->SigInfo_as[idxSignal_u8].value_u32 = (t_uint32)0;
-                }   
+                }  
             }
             if(Ret_e == RC_OK)
             {
@@ -797,6 +766,8 @@ static t_eReturnCode s_CL42T_SetSignalsValue(t_sCL42T_MotorInfo * f_motorInfo_ps
 {
     t_eReturnCode Ret_e = RC_OK; 
     t_bool setActuation_b = (t_bool)False;
+    t_uint32 remainingPulse_u32 = (t_uint32)0;
+    t_uint32 cmdPulseVal_u32 = (t_uint32)0;
     t_sCL42T_MotorSignalInfo * sigInfo_ps;
 
     if(f_motorInfo_ps == (t_sCL42T_MotorInfo *)NULL)
@@ -829,23 +800,45 @@ static t_eReturnCode s_CL42T_SetSignalsValue(t_sCL42T_MotorInfo * f_motorInfo_ps
             }
             if(Ret_e == RC_OK)
             {
-                #warning('Use the right function')
-                /*Ret_e = FMKIO_Set_OutPwmSigPulses(  sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
-                                                    CL42T_NOMINATIVE_DUTYCYCLE,
-                                                    sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32);*/
-                Ret_e = FMKIO_Set_OutPwmSigDutyCycle(sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
-                                                        CL42T_NOMINATIVE_DUTYCYCLE) ;     
-            }
-            if(Ret_e != RC_OK)
-            {
-                Ret_e = RC_OK;
+                remainingPulse_u32 = sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32;
+
+                if(remainingPulse_u32 > (t_uint32)0)
+                {
+                    if(remainingPulse_u32 > CST_MAX_UINT_16BIT)
+                    {
+                        cmdPulseVal_u32 = (t_uint32)(CST_MAX_UINT_16BIT - (t_uint32)1);
+                        remainingPulse_u32 -= cmdPulseVal_u32;
+                    }
+                    else
+                    {
+                        cmdPulseVal_u32 = remainingPulse_u32;
+                        remainingPulse_u32 = (t_uint32)0;
+                    }
+
+                    Ret_e = FMKIO_Set_OutPwmSigPulses(  sigInfo_ps[CL42T_SIGTYPE_PULSE].signal_u8,
+                                                        CL42T_NOMINATIVE_DUTYCYCLE,
+                                                        cmdPulseVal_u32);
+                    
+                    if(Ret_e == RC_OK)
+                    {
+                        SETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON);
+                    }
+                }
+                
             }
             if(Ret_e == RC_OK)
             {
-                //---- Reset Value for Security Purpose ----//
-                sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32 = (t_uint32)0;
-                RESETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
-                SETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON);
+                
+                if(remainingPulse_u32 == (t_uint32)0)
+                {
+                    //---- no pulse left reset rqst cmd -----//
+                    RESETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
+                }
+
+                sigInfo_ps[CL42T_SIGTYPE_PULSE].value_u32 = remainingPulse_u32;
+
+                
+                
             }
         }
     }
@@ -1264,8 +1257,8 @@ static t_eReturnCode s_CL42T_AddDiagSignal(  t_sCL42T_MotorInfo * f_motorInfo_ps
 /*********************************
  * s_CL42T_SetPulseSignal
  *********************************/
-static t_eReturnCode s_CL42T_SetPulseSignal(   t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                        t_uint16 f_nbPulses_u16)
+static t_eReturnCode s_CL42T_SetPulseSignal(    t_sCL42T_MotorInfo * f_motorInfo_ps,
+                                                t_sint32 f_nbPulses_s32)
 {
     t_eReturnCode Ret_e = RC_OK;
 
@@ -1275,9 +1268,22 @@ static t_eReturnCode s_CL42T_SetPulseSignal(   t_sCL42T_MotorInfo * f_motorInfo_
     }
     if(Ret_e == RC_OK)
     {
-        if( f_nbPulses_u16 > (t_uint16)0)
+        if( f_nbPulses_s32 >= (t_sint32)0)
         {
-            f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32= f_nbPulses_u16;
+            f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32 += (t_uint32)f_nbPulses_s32;
+            f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_DIR].value_u32 = CL42T_MOTOR_DIRECTION_CLOCKWISE; 
+            SETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
+        }
+        else if (f_nbPulses_s32 < (t_sint32)0)
+        {
+            f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32 += (t_uint32)f_nbPulses_s32;
+            f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_DIR].value_u32 = CL42T_MOTOR_DIRECTION_WISE; 
+        }
+
+        //------ update mask rqst cmd if needed -----//
+        if((f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32 > (t_uint32)0)
+        && GETBIT(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD) == BIT_IS_RESET_8B)
+        {
             SETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
         }
     }
@@ -1400,6 +1406,7 @@ static t_eReturnCode s_CL42T_SetSpeedSignal( t_sCL42T_MotorInfo * f_motorInfo_ps
     {
         if(f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_SPEED].value_u32 != f_speed_u32)
         {
+            SETBIT_8B(f_motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
             f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_SPEED].value_u32 = f_speed_u32;
         }
         
@@ -1524,8 +1531,8 @@ static t_eReturnCode s_CL42T_GetStateSignal(   t_sCL42T_MotorInfo * f_motorInfo_
 /*********************************
  * s_CL42T_GetDiagError
  *********************************/
-static t_eReturnCode s_CL42T_GetDiagError(   t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                        t_eCL42T_DiagError * f_infoErr_pe)
+static t_eReturnCode s_CL42T_GetDiagError(  t_sCL42T_MotorInfo * f_motorInfo_ps,
+                                            t_eCL42T_DiagError * f_infoErr_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
