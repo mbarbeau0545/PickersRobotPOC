@@ -59,7 +59,7 @@
     *	@param[in]  f_value_ps : structure to store value and validity
     *
     */
-    typedef t_eReturnCode (t_cbAppAct_GetActValue)(t_sAPPACT_ValueInfo *f_value_ps);
+    typedef t_eReturnCode (t_cbAppAct_GetActValue)(t_uAPPACT_GetValue *f_value_pu);
     /**
     *
     *	@brief      Set value for an actuator
@@ -67,7 +67,7 @@
     *	@param[in] f_value_s16 : value to set
     *
     */
-    typedef t_eReturnCode (t_cbAppAct_SetActValue)(t_sint16 f_value_s16);
+    typedef t_eReturnCode (t_cbAppAct_SetActValue)(t_uAPPACT_SetValue f_value_u);
     /**
     *
     *	@brief      Set the driver init function
@@ -115,7 +115,7 @@
     };
 
     /**< Variable for System Actuators functions*/
-    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {
+    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACT_NB] = {
     
     };
 

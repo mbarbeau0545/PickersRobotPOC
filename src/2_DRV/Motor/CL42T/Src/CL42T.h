@@ -92,25 +92,23 @@
     */
     typedef void (t_cbCL42T_Diagnostic)(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagError f_DefeultInfo_e);
 
-    typedef union 
+    typedef struct 
     {
-        t_uint16 nbPulses_u16;
+        t_sint32 nbPulses_s32;
         t_uint32 frequency_u32;
-        t_eCL42T_MotorDirection dir_e;
         t_eCL42T_MotorState state_e;
-        t_eCL42T_DiagError diagError_e;
+        t_bool stopPulse_b;
 
-    } t_uCL42T_SetMotorValue;
+    } t_sCL42T_SetMotorValue;
 
-    typedef union 
+    typedef struct 
     {
         t_eCL42T_MotorPulseState pulseState_e;
         t_uint32 frequency_u32;
         t_eCL42T_MotorDirection dir_e;
         t_eCL42T_MotorState state_e;
-        t_eCL42T_DiagError diagError_e;
 
-    } t_uCL42T_GetMotorValue;
+    } t_sCL42T_GetMotorValue;
     // ********************************************************************
     // *                      Prototypes
     // ********************************************************************
@@ -204,8 +202,7 @@
     *
     */
     t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
-                                            t_eCL42T_MotorSignalType f_sigType_e,
-                                            t_uCL42T_SetMotorValue f_MotorValue_u);
+                                            t_sCL42T_SetMotorValue f_MotorValue_s);
     
     /**
      *
@@ -220,8 +217,7 @@
     *
     */
     t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
-                                            t_eCL42T_MotorSignalType f_sigType_e,
-                                            t_uCL42T_GetMotorValue * f_MotorValue_pu);
+                                            t_sCL42T_GetMotorValue * f_MotorValue_ps);
 
                                                                                                                                            
     //********************************************************************************

@@ -19,6 +19,7 @@
     // *                      Includes
     // ********************************************************************
     #include "TypeCommon.h"
+    #include "Motor/CL42T/Src/CL42T.h"
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
@@ -32,9 +33,26 @@
     */
     typedef enum
     {
-        APPACT_ACTUATOR_NB,
+        APPACT_ACT_MTR_X_L = 0x00,
+        APPACT_ACT_MTR_X_R,
+        APPACT_ACT_MTR_Y,
+        APPACT_ACT_MTR_Z,
+        APPACT_ACT_BOBINE_1 ,
+        APPACT_ACT_NB,
     } t_eAPPACT_Actuators;
 
+   
+    typedef union 
+    {
+        t_sCL42T_SetMotorValue Motor_s;
+        t_sint32 setPoint_s32;
+    } t_uAPPACT_GetValue;
+
+    typedef union 
+    {
+        t_sCL42T_GetMotorValue Motor_s;
+        t_sint32 setPoint_s32;
+    } t_uAPPACT_SetValue;
     /**
     * @brief Enum for Actuators drivers list.
     */
@@ -64,11 +82,7 @@
 
 	/* CAUTION : Automatic generated code section for Structure: End */
 	//-----------------------------STRUCT TYPES---------------------------//
-    typedef struct
-    {
-        t_sint16 rawValue_f32;      /**< Store the actuators rawValue */
-        t_bool   IsValueOK_b;       /**< Flag value is OK */
-    } t_sAPPACT_ValueInfo;
+
 	/* CAUTION : Automatic generated code section : Start */
 
 	/* CAUTION : Automatic generated code section : End */
@@ -81,8 +95,6 @@
     // *                      Variables
     // ********************************************************************
     
-
-
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

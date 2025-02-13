@@ -114,7 +114,7 @@
     *	@param[in]  f_value_ps16   : storage for the value 
     * 
     */
-    t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 * f_value_ps16);
+    t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_GetValue * f_actValue_pu);
     /**
     *
     *	@brief      Set value for an actuator
@@ -123,7 +123,7 @@
     *	@param[in] f_value_s16 : value to set
     *
     */
-    t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_sint16 f_value_s16);
+    t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_SetValue  f_actValue_u);
 
 #endif // APP_ACT_H_INCLUDED           
 //************************************************************************************

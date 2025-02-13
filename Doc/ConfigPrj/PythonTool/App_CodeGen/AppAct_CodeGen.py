@@ -91,9 +91,9 @@ class AppAct_CodeGen():
         #-----------------------------Make Header/Src fil-----------------
         #-----------------------------------------------------------------
         var_act += "    /**< Variable for System Actuators functions*/\n" \
-                    + "    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {\n"
+                    + "    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACT_NB] = {\n"
         var_act_state += "/**< Variable for Actuators Drivers State*/\n" \
-                        + "t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACTUATOR_NB] = {\n"
+                        + "t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACT_NB] = {\n"
         for act_cfg in actuators_cfg_a:
             # make var sensors
             if(str(act_cfg[0]) != EMPTY_CELL):
@@ -192,8 +192,8 @@ class AppAct_CodeGen():
         include_c = f'#include "./{VAR_APPACT_SPEC}_{f_act_name}.h"\n'
         suffix_func = {
             "SetCfg" : ["(void)", "t_cbAppAct_SetActCfg"], 
-            "GetValue" :  ["(t_sAPPACT_ValueInfo *f_value_ps)", "t_cbAppAct_GetActValue" ],
-            "SetValue" : ["(t_sint16 f_value_s16)", "t_cbAppAct_SetActValue"]
+            "GetValue" :  ["(t_uAPPACT_GetValue *f_value_pu)", "t_cbAppAct_GetActValue" ],
+            "SetValue" : ["(t_uAPPACT_SetValue f_value_u)", "t_cbAppAct_SetActValue"]
             }
         distination_file_h = os.path.join(ACT_SPEC_FOLDER_FULLPATH, f"{VAR_APPACT_SPEC}_{f_act_name}.h")
         distination_file_c = os.path.join(ACT_SPEC_FOLDER_FULLPATH, f"{VAR_APPACT_SPEC}_{f_act_name}.c")
