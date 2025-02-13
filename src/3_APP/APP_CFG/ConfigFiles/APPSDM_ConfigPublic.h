@@ -48,7 +48,7 @@
     */
     typedef enum ____t_eAPPSDM_DiagnosticStrat
     {
-        APPSDM_DIAG_STRAT_GANTRY_OFF = 0x00,   // Gantry_Z
+        APPSDM_DIAG_STRAT_GANTRY_OFF = 0x00,   // Gtry_Z
         APPSDM_DIAG_STRAT_GANTRY_AXE_X_OFF,// None
         APPSDM_DIAG_STRAT_GANTRY_AXE_Y_OFF,// None
         APPSDM_DIAG_STRAT_GANTRY_AXE_Z_OFF,// None

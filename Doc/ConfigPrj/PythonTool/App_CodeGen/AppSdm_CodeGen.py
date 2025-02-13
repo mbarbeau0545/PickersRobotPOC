@@ -95,10 +95,10 @@ class AppSdm_CodeGen():
             if str(item_info[5]) == 'None':
                 var_item_info += f'{APPSDM_ENM_DIAG_STRAT}_NONE'
             else:
-                var_item_info += f'{APPSDM_ENM_DIAG_STRAT}_{item_info[5]}'
+                var_item_info += f'{APPSDM_ENM_DIAG_STRAT}_{str(item_info[5]).upper()}'
 
             var_item_info += '},'\
-                            + " " * ((SPACE_VARIABLE) - len(f"{APPSDM_ENM_DIAG_STRAT}_{str(item_info[5]).upper()}"))\
+                            + " " * ((SPACE_VARIABLE) - len(f"{APPSDM_ENM_DIAG_STRAT}_{str(item_info[5])}"))\
                             + f'// {item_info[1]}\n'
         
         enum_item += f'\n        {APPSDM_ENUM_ROOT_DIAG_ITEM}_NB,\n'
@@ -124,10 +124,10 @@ class AppSdm_CodeGen():
                 enum_strat += " " * ((SPACE_VARIABLE) - len(f"{APPSDM_ENUM_ROOT_DIAG_ITEM}_{strat_info[0]}"))\
                             + f'// {str(strat_info[-1])}\n'
 
-                var_strat_cb += f'        APPSDM_SPEC_DiagStrat_{str(strat_info[0]).upper()},\n'
+                var_strat_cb += f'        APPSDM_SPEC_DiagStrat_{str(strat_info[0])},\n'
 
                 decl_strat_func +=  "    /**\n" + f"    * @brief Stratefy Function : {strat_info[1]}\n" + "    */\n"\
-                    + f'     APPSDM_SPEC_DiagStrat_{str(strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e);\n\n'
+                    + f'    void APPSDM_SPEC_DiagStrat_{str(strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e);\n\n'
                 
                 impl_strat_func += AppSdm_CodeGen.make_diag_strat_impl(strat_info)
         var_strat_cb += '    };\n\n'
@@ -175,7 +175,7 @@ class AppSdm_CodeGen():
         retval += '/*********************************\n'\
                 + f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0])}\n'\
                 + ' *********************************/\n'
-        retval +=  f'APPSDM_SPEC_DiagStrat_{str(f_strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e)\n' + '{\n'\
+        retval +=  f'void APPSDM_SPEC_DiagStrat_{str(f_strat_info[0])}(t_eAPPSDM_DiagStratOpe f_stratOpe_e)\n' + '{\n'\
                 + '    t_eAPPLGC_SrvHealth srvHealth_e;\n'\
                 + '    t_eReturnCode Ret_e = RC_OK;\n\n'\
                 + '    Ret_e = s_APPSDM_SPEC_GetHealthFromStratOpe(f_stratOpe_e, &srvHealth_e);\n\n'\

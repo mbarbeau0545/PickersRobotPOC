@@ -224,7 +224,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(void)
     static t_bool s_setMvmt_b = False;
 
     //----- Check Contact -----//
-    if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
     || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
     || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
     || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MAX] == APPSNS_LIM_SWCH_NC_CONTACT))
@@ -249,7 +249,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(void)
 
         Ret_e = RC_WARNING_BUSY;
         s_setMvmt_b = (t_bool)True;
-    }
+    }*/
 
     return Ret_e;
 }
@@ -263,7 +263,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeY(void)
     static t_bool s_setMvmt_b = False;
 
     //----- Check Contact -----//
-    if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
     || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
     {
         g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)0.0;
@@ -280,7 +280,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeY(void)
         s_setMvmt_b = (t_bool)True;
     }
 
-    return Ret_e;
+    return Ret_e;*/
 }
  /*********************************
  * s_GMCR_ReferenceAxeZ
@@ -291,11 +291,11 @@ static t_eReturnCode s_GMCR_ReferenceAxeZ(void)
     static t_bool s_setMvmt_b = False;
 
     //----- Check Contact -----//
-    if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
     || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
     {
         g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)0.0;
-        Ret_e == RC_OK;
+        Ret_e = RC_OK;
     }
 
     //----- Set Actuators for reference -----//
@@ -306,7 +306,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeZ(void)
         g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_DIR].setValue_f32 =  (t_float32)GMCR_DIR_Z_REFERENCE; 
         Ret_e = RC_WARNING_BUSY;
         s_setMvmt_b = (t_bool)True;
-    }
+    }*/
 
     return Ret_e;
 }

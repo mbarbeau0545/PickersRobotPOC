@@ -68,7 +68,7 @@ t_eReturnCode s_APPSDM_SPEC_GetHealthFromStratOpe(t_eAPPSDM_DiagStratOpe f_strat
 /*********************************
 APPSDM_SPEC_DiagStrat_Gantry_Off
  *********************************/
-APPSDM_SPEC_DiagStrat_Gantry_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+void APPSDM_SPEC_DiagStrat_Gantry_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 {
     t_eAPPLGC_SrvHealth srvHealth_e;
     t_eReturnCode Ret_e = RC_OK;
@@ -77,15 +77,15 @@ APPSDM_SPEC_DiagStrat_Gantry_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_X, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_X, srvHealth_e);
     }
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_Y, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Y, srvHealth_e);
     }
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_Z, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Z, srvHealth_e);
     }
 
     return;
@@ -94,7 +94,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 /*********************************
 APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off
  *********************************/
-APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+void APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 {
     t_eAPPLGC_SrvHealth srvHealth_e;
     t_eReturnCode Ret_e = RC_OK;
@@ -103,7 +103,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_X, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_X, srvHealth_e);
     }
 
     return;
@@ -112,7 +112,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Axe_X_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 /*********************************
 APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off
  *********************************/
-APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+void APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 {
     t_eAPPLGC_SrvHealth srvHealth_e;
     t_eReturnCode Ret_e = RC_OK;
@@ -121,7 +121,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_Y, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Y, srvHealth_e);
     }
 
     return;
@@ -130,7 +130,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Axe_Y_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 /*********************************
 APPSDM_SPEC_DiagStrat_Gantry_Axe_Z_Off
  *********************************/
-APPSDM_SPEC_DiagStrat_Gantry_Axe_Z_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
+void APPSDM_SPEC_DiagStrat_Gantry_Axe_Z_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 {
     t_eAPPLGC_SrvHealth srvHealth_e;
     t_eReturnCode Ret_e = RC_OK;
@@ -139,7 +139,7 @@ APPSDM_SPEC_DiagStrat_Gantry_Axe_Z_Off(t_eAPPSDM_DiagStratOpe f_stratOpe_e)
 
     if(Ret_e == RC_OK)
     {
-        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GANTRY_Z, srvHealth_e);
+        Ret_e = APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Z, srvHealth_e);
     }
 
     return;

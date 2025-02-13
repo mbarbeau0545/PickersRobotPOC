@@ -54,7 +54,7 @@
     */
     typedef enum
     {
-        APPSNS_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
+        //APPSNS_DRIVER_CL42T = 0x0,              /**< Driver for Motor Variateur */
     
         APPSNS_DRIVER_NB,
     } t_eAPPSNS_Drivers;
@@ -197,7 +197,7 @@
         t_uAPPSNS_ReqestedUnity rqstedUnity_u;      /**< The unity ask for a sensors */
         t_float32 rawValue_f32;      /**< Store the sensor rawValue */
         t_float32 SnsValue_f32;      /**< Store the sensor after conversion */
-        t_bool   f_isValue_OK;       /**< Store flag value validity */
+        t_bool   isValueOK_b;       /**< Store flag value validity */
     } t_sAPPSNS_SnsInfo;
 	/* CAUTION : Automatic generated code section : Start */
 

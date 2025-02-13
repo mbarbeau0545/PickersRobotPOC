@@ -387,20 +387,6 @@ static t_eReturnCode s_CL42T_GetDirSignal(  t_sCL42T_MotorInfo * f_motorInfo_ps,
 static t_eReturnCode s_CL42T_GetStateSignal(    t_sCL42T_MotorInfo * f_motorInfo_ps,
                                                 t_eCL42T_MotorState *f_state_pe);   
 
-/**
- *
- *	@brief
-*	@note   
-*
-*
-*	@param[in] 
-*	@param[out]
-*	 
-*
-*
-*/
-static t_eReturnCode s_CL42T_GetDiagError(      t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                                t_eCL42T_DiagError * f_infoErr_pe);
 
 /**
  *
@@ -603,6 +589,7 @@ t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
         && (GETBIT(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B))
         {
             motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32 = (t_uint32)0;
+            RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
 
             //----- Stop pulse now and don't wait cyclic -----//
             Ret_e = FMKIO_Set_OutPwmSigPulses(  motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].signal_u8,
@@ -611,7 +598,6 @@ t_eReturnCode CL42T_SetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
             if(Ret_e == RC_OK)
             {
                 RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_STATE_ON);
-                RESETBIT_8B(motorInfo_ps->pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD);
             }
         }
         else 
@@ -1523,26 +1509,6 @@ static t_eReturnCode s_CL42T_GetStateSignal(   t_sCL42T_MotorInfo * f_motorInfo_
 
             }
         }
-    }
-
-    return Ret_e;
-}
-
-/*********************************
- * s_CL42T_GetDiagError
- *********************************/
-static t_eReturnCode s_CL42T_GetDiagError(  t_sCL42T_MotorInfo * f_motorInfo_ps,
-                                            t_eCL42T_DiagError * f_infoErr_pe)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if(f_motorInfo_ps == (t_sCL42T_MotorInfo *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if(Ret_e == RC_OK)
-    {
-        *f_infoErr_pe = f_motorInfo_ps->Health_e;
     }
 
     return Ret_e;

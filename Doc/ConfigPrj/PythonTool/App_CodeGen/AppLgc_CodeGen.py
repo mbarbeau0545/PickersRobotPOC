@@ -126,7 +126,7 @@ class AppLgc_CodeGen():
                     + f'        const t_eAPPACT_Actuators c_AppLgc_ActService{service_cfg[0]}Mapp_ae[APPLGC_{str(service_cfg[0]).upper()}_ACT_NB]' + '= {\n'
 
             decl_srv_val_container +=  "/**\n" + f"* @brief Actuators Values Containers for {service_cfg[0]}\n" + "*/\n"\
-                    + f'static t_float32 g_ActContainer{service_cfg[0]}_af32[APPLGC_{str(service_cfg[0]).upper()}_ACT_NB];\n\n'
+                    + f'static t_uAPPACT_SetValue g_ActContainer{service_cfg[0]}_au[APPLGC_{str(service_cfg[0]).upper()}_ACT_NB];\n\n'
             
             var_srv_dependencies += f'        (t_eAPPACT_Actuators *)(&c_AppLgc_ActService{service_cfg[0]}Mapp_ae),\n'
             for idx, actuator in enumerate(service_cfg[1:]):
@@ -143,7 +143,7 @@ class AppLgc_CodeGen():
             enm_dependencies += f'        APPLGC_{str(service_cfg[0]).upper()}_ACT_NB,\n'
             enm_dependencies += '    } ' +f't_eAPPLGC_Srv{service_cfg[0]};\n\n'
 
-            var_act_srv_asso += f'   g_srvFuncInfo_as[{APPLGC_ENUM_SRV}_{str(service_cfg[0]).upper()}].actValues_paf32 = (t_float32 *)(&g_ActContainer{service_cfg[0]}_af32);\n'
+            var_act_srv_asso += f'   g_srvFuncInfo_as[{APPLGC_ENUM_SRV}_{str(service_cfg[0]).upper()}].actVal_pu = (t_uAPPACT_SetValue *)(&g_ActContainer{service_cfg[0]}_au);\n'
 
         var_max_act_value += '    };\n\n'
         var_srv_dependencies += '    };\n\n'

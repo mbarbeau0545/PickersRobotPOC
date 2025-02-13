@@ -211,7 +211,7 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(void)
     if(Ret_e == RC_OK)
     {
         //----- Copy Data -----//
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_DIR].setValue_f32     = (t_float32)AxeXMvmtInfo_s.Dir_u8;
+        /*g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_DIR].setValue_f32     = (t_float32)AxeXMvmtInfo_s.Dir_u8;
         g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_DIR].setValue_f32     = (t_float32)AxeXMvmtInfo_s.Dir_u8;
         g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32   = (t_float32)AxeXMvmtInfo_s.Pulse_u16;
         g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32   = (t_float32)AxeXMvmtInfo_s.Pulse_u16;
@@ -224,7 +224,7 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(void)
 
         g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_DIR].setValue_f32       = (t_float32)AxeZMvmtInfo_s.Dir_u8;
         g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32     = (t_float32)AxeZMvmtInfo_s.Pulse_u16;
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_SPEED].setValue_f32     = (t_float32)AxeZMvmtInfo_s.Speed_u32;
+        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_SPEED].setValue_f32     = (t_float32)AxeZMvmtInfo_s.Speed_u32;*/
     }
 
     return Ret_e;

@@ -91,9 +91,9 @@ class AppAct_CodeGen():
         #-----------------------------Make Header/Src fil-----------------
         #-----------------------------------------------------------------
         var_act += "    /**< Variable for System Actuators functions*/\n" \
-                    + "    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACT_NB] = {\n"
+                    + "    const t_sAPPACT_SysActFunc c_AppAct_SysAct_apf[APPACT_ACTUATOR_NB] = {\n"
         var_act_state += "/**< Variable for Actuators Drivers State*/\n" \
-                        + "t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACT_NB] = {\n"
+                        + "t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACTUATOR_NB] = {\n"
         for act_cfg in actuators_cfg_a:
             # make var sensors
             if(str(act_cfg[0]) != EMPTY_CELL):

@@ -49,7 +49,11 @@
 // ********************************************************************
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**< Variable for Actuators Drivers State*/
-t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACT_NB] = {
+t_eAPPACT_ActuatorState g_actState_ae[APPACT_ACTUATOR_NB] = {
+    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MTR_X_L
+    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MTR_X_R
+    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MTR_Y
+    APPACT_ACTUATOR_STATE_ENABLE, // APPACT_ACTUATOR_MTR_Z
 };
 
 /**< Variable for Actuators Drivers State*/
@@ -187,7 +191,7 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_Ge
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_actuator_e > APPACT_ACT_NB)
+    if(f_actuator_e > APPACT_ACTUATOR_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -215,7 +219,7 @@ t_eReturnCode APPACT_Set_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_Se
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_actuator_e > APPACT_ACT_NB)
+    if(f_actuator_e > APPACT_ACTUATOR_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -239,7 +243,7 @@ t_eReturnCode APPACT_Set_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Actuator_e > APPACT_ACT_NB
+    if(f_Actuator_e > APPACT_ACTUATOR_NB
     || f_ActState_e > APPACT_ACTUATOR_STATE_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -258,7 +262,7 @@ t_eReturnCode APPACT_Get_ActuatorState(t_eAPPACT_Actuators f_Actuator_e, t_eAPPA
 {
     t_eReturnCode Ret_e = RC_OK;
 
-    if(f_Actuator_e > APPACT_ACT_NB)
+    if(f_Actuator_e > APPACT_ACTUATOR_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -285,7 +289,7 @@ static t_eReturnCode s_APPACT_ConfigurationState(void)
     // first call drv init function 
     // actuators configuration call
         
-    for (; (s_LLACT_u8 < APPACT_ACT_NB) && (Ret_e == RC_OK) ; s_LLACT_u8++)  
+    for (; (s_LLACT_u8 < APPACT_ACTUATOR_NB) && (Ret_e == RC_OK) ; s_LLACT_u8++)  
     {
         if(g_actState_ae[s_LLACT_u8] == APPACT_ACTUATOR_STATE_ENABLE
         && c_AppAct_SysAct_apf[s_LLACT_u8].SetCfg_pcb != (t_cbAppAct_SetActCfg *)NULL_FONCTION)
@@ -295,7 +299,7 @@ static t_eReturnCode s_APPACT_ConfigurationState(void)
     }
 
     if(Ret_e == RC_OK
-    && s_LLACT_u8 < APPACT_ACT_NB)
+    && s_LLACT_u8 < APPACT_ACTUATOR_NB)
     {
         Ret_e = RC_WARNING_BUSY;
     }
