@@ -20,6 +20,7 @@
     // ********************************************************************
     #include "TypeCommon.h"
     #include "APP_CFG/ConfigFiles/Gantry_ConfigPublic.h"
+    #include "APP_LGC/Src/APP_LGC.h"
 
 
 
@@ -110,7 +111,7 @@
     *
     *
     */
-    t_eReturnCode Gantry_GetFFMState(t_eGTRY_FSMGantry *f_rqstGtryMode_pe);
+    t_eReturnCode Gantry_GetFSMState(t_eGTRY_FSMGantry *f_rqstGtryMode_pe);
     /**
     *
     *	@brief

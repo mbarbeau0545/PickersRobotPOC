@@ -245,8 +245,6 @@ t_eReturnCode Gantry_RqstSFMState(t_eGTRY_FSMGantry f_rqstGtryMode_e)
 static t_eReturnCode s_GTRY_StateMachineMngmt(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_eGTRY_FSMGantry FSMGtryRqstMode_e;
-    t_uint8 FSMRqstProdMode_u8;
     t_uAPPLGC_CmdValues appCmd_u;
 
     Ret_e = APPLGC_GetAppCmd(APPLGC_RCV_CMD_ID_DATA_MODE, &appCmd_u);
@@ -259,24 +257,22 @@ static t_eReturnCode s_GTRY_StateMachineMngmt(void)
         g_FSM_RsqtProdMode_e = appCmd_u.SFMModeInfo_s.prodMode_u8;
     }
 
-    if(Ret_e == RC_OK)
+    //----- Gantry Mode Change from App or From RqstSFMState public API -----//
+    if(g_FSM_RqstGtryMode_e != g_FSM_GtryMode_e)
     {
-        //----- Gantry Mode Change from App or From RqstSFMState public API -----//
-        if(g_FSM_RqstGtryMode_e != g_FSM_GtryMode_e)
+        //----- If we change Gantry Mode ensure to quit properly the Production mode -----//
+        if(g_FSM_GtryMode_e == GTRY_SFM_GANTRY_PRODUCTION)
         {
-            //----- If we change Gantry Mode ensure to quit properly the Production mode -----//
-            if(g_FSM_GtryMode_e == GTRY_SFM_GANTRY_PRODUCTION)
-            {
-                Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
-            }
+            Ret_e = c_Gtry_SFMProdFunc_as[g_FSM_ProdMode_e].Exit_pcb();
+        }
 
-            //----- Change Mode only if exit ok -----//
-            if(Ret_e == RC_OK)
-            {
-                g_FSM_GtryMode_e = g_FSM_RqstGtryMode_e;
-            }
+        //----- Change Mode only if exit ok -----//
+        if(Ret_e == RC_OK)
+        {
+            g_FSM_GtryMode_e = g_FSM_RqstGtryMode_e;
         }
     }
+    
     if(Ret_e == RC_WARNING_NO_OPERATION)
     {
         Ret_e = RC_OK;
@@ -300,9 +296,9 @@ static t_eReturnCode s_GTRY_SafetyMngmt(void)
     //      limit switch -----//
     if(g_FSM_ProdMode_e != GTRY_FSM_PROD_SEO)
     {
-        for(idxLimSw_u8 == (t_uint8)0 ; idxLimSw_u8 < GTRY_SNS_LIMSWITCH_NB ; idxLimSw_u8++)
+        for(idxLimSw_u8 = (t_uint8)0 ; idxLimSw_u8 < GTRY_SNS_LIMSWITCH_NB ; idxLimSw_u8++)
         {
-            idxSnsLimSw_u8 = c_Gtry_LimSwitchIdx_ae[idxLimSw_u8];
+            idxSnsLimSw_u8 = (t_uint8)c_Gtry_LimSwitchIdx_ae[idxLimSw_u8];
             if(g_snsValues_paf32[idxSnsLimSw_u8] == APPSNS_LIM_SWCH_NC_CONTACT)
             {
                 //---- Problem, call APPSDM -----//
@@ -333,7 +329,6 @@ static t_eReturnCode s_GTRY_SafetyMngmt(void)
  *********************************/
 static void s_GTRY_SetGantryOff(t_eGTRY_FSMGantry f_GtryState_e)
 {
-    t_eReturnCode Ret_e = RC_OK;
     t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
     t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
     t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
@@ -376,7 +371,6 @@ static void s_GTRY_SetGantryOff(t_eGTRY_FSMGantry f_GtryState_e)
         case GTRY_SFM_GANTRY_PRODUCTION:
         case GTRY_SFM_GANTRY_NB:
         {
-            Ret_e = RC_WARNING_NO_OPERATION;
             break;
         }
     }
@@ -385,28 +379,9 @@ static void s_GTRY_SetGantryOff(t_eGTRY_FSMGantry f_GtryState_e)
 }
 
 /*********************************
- * Gantry_RqstSFMState
- *********************************/
-t_eReturnCode Gantry_RqstSFMState(t_eGTRY_FSMGantry f_rqstGtryMode_e)
-{
-    t_eReturnCode Ret_e = RC_OK;
-
-    if(f_rqstGtryMode_e >= GTRY_SFM_GANTRY_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(Ret_e == RC_OK)
-    {
-        g_FSM_RqstGtryMode_e = f_rqstGtryMode_e;
-    }
-
-    return Ret_e;
-}
-
-/*********************************
  * Gantry_GetFFMState
  *********************************/
-t_eReturnCode Gantry_GetFFMState(t_eGTRY_FSMGantry *f_rqstGtryMode_pe)
+t_eReturnCode Gantry_GetFSMState(t_eGTRY_FSMGantry *f_rqstGtryMode_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
 
@@ -530,30 +505,29 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
  *********************************/
 static void s_GTRY_ResetActuatorState(void)
 {
-    t_eReturnCode Ret_e = RC_OK;
     t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
     t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
-    t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
-    t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
+    t_uAPPACT_SetValue * actgtrY_u  = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
+    t_uAPPACT_SetValue * actgtrZ_u  = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
 
     //---- reset pulses and stopPulse variable -----//
     actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
     actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-    actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+    actgtrY_u->Motor_s.nbPulses_s32  = (t_sint32)0;
+    actgtrZ_u->Motor_s.nbPulses_s32  = (t_sint32)0;
 
     actgtrXL_u->Motor_s.stopPulse_b = (t_bool)False;
     actgtrXR_u->Motor_s.stopPulse_b = (t_bool)False;
-    actgtrY_u->Motor_s.stopPulse_b = (t_bool)False;
-    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)False;
+    actgtrY_u->Motor_s.stopPulse_b  = (t_bool)False;
+    actgtrZ_u->Motor_s.stopPulse_b  = (t_bool)False;
 
     //----- by default we set motor state to ON 
     //      if someone has to set Motor Off it will 
     //      if not, it means the motor has to be ON ----//
-    actgtrXL_u->Motor_s.stopPulse_b = (t_bool)CL42T_MOTOR_STATE_ON;
-    actgtrXR_u->Motor_s.stopPulse_b = (t_bool)CL42T_MOTOR_STATE_ON;
-    actgtrY_u->Motor_s.stopPulse_b = (t_bool)CL42T_MOTOR_STATE_ON;
-    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)CL42T_MOTOR_STATE_ON;
+    actgtrXL_u->Motor_s.state_e = (t_bool)CL42T_MOTOR_STATE_ON;
+    actgtrXR_u->Motor_s.state_e = (t_bool)CL42T_MOTOR_STATE_ON;
+    actgtrY_u->Motor_s.state_e  = (t_bool)CL42T_MOTOR_STATE_ON;
+    actgtrZ_u->Motor_s.state_e  = (t_bool)CL42T_MOTOR_STATE_ON;
 }
 
 /*********************************

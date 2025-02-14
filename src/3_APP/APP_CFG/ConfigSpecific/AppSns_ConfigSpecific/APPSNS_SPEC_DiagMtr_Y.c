@@ -92,7 +92,7 @@ t_eReturnCode APPSNS_SPEC_DiagMtr_Y_GetSigValue(t_float32 *f_rawSigValue_pf32, t
 /******************************************
 * APPSNS_SPEC_DiagMtr_Y_FormatValue
 ******************************************/
-t_eReturnCode APPSNS_SPEC_DiagMtr_Y_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32)
+t_eReturnCode APPSNS_SPEC_DiagMtr_Y_FormatValue(t_float32  f_rawValue_f32, t_float32 * f_SnsValue_f32)
 {
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for DiagMtr_Y_FormatValSI here

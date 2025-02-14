@@ -227,6 +227,12 @@ t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32,
             }
             break;
         }
+        case GMCR_FSM_NB:
+        default:
+        {
+            Ret_e = RC_WARNING_NO_OPERATION;
+        }
+    
     }
 
     return Ret_e;
@@ -254,11 +260,11 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
         || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
         || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MAX] == APPSNS_LIM_SWCH_NC_CONTACT))
         {
-            actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
-            actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-
-            actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+            actgtrXL_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXL_u->Motor_s.stopPulse_b  = (t_bool)True;
+            
             actgtrXR_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXR_u->Motor_s.stopPulse_b  = (t_bool)True;
             s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
         }
         //----- State Machine -----//
@@ -266,11 +272,11 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
         {
             case GMCR_FSM_SEO_SET_MOVE:
             {
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
-
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_PULSE_REFERENCE);
                 actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
-                actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                
+                actgtrXR_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_R_DIR * GMCR_PULSE_REFERENCE);
 
                 s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
                 break;
@@ -278,14 +284,14 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
             case GMCR_FSM_SEO_WAIT_CONTACT:
             {
                 // just wait
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
                 actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
                 break;
             }
             case GMCR_FSM_SEO_GO_REVERSE:
             {
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
+                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
 
                 s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
                 //----- Refereence Axe X done -----//

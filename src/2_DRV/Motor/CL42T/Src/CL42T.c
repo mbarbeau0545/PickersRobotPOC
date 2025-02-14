@@ -928,7 +928,6 @@ static t_eReturnCode s_CL42T_PulseOpeMngmt( t_sCL42T_MotorInfo * f_motorInfo_ps,
  *********************************/
 static void s_CL42T_PulseEventMngmt(t_eFMKIO_OutPwmSig f_signal_e)
 {
-    t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxMotor_u8 = (t_uint8)0;
     t_sCL42T_MotorInfo * motorInfo_ps = NULL;
 
@@ -1098,11 +1097,10 @@ static t_eReturnCode s_CL42T_AddPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
         }
         if(Ret_e == RC_OK)
         {
-            #warning('pulse in infinite mode')
             Ret_e = FMKIO_Set_OutPwmSigCfg( f_pulseCfg_ps->PulseSignal_e, 
                                             f_pulseCfg_ps->PullMode_e, 
                                             f_pulseCfg_ps->f_PulseInitFreq_u32,
-                                            FMKTIM_PWM_MODE_INFINITE_PULSE,
+                                            FMKTIM_PWM_MODE_FINITE_PULSE,
                                             s_CL42T_PulseEventMngmt,
                                             s_CL42T_SigErrorMngmt);
            

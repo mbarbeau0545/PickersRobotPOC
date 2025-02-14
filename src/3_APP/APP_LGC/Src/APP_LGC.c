@@ -65,17 +65,30 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+/**
+* @brief App Logic Module State
+*/
 static t_eCyclicModState g_AppLgc_ModState_e = STATE_CYCLIC_CFG;
-
-static t_sAPPLGC_AgentFunc g_AgentInfo_as[APPLGC_AGENT_NB];
-
+/**
+* @brief Structure for Service Information 
+*/
 static t_sAPPLGC_ServiceInfo g_srvFuncInfo_as[APPLGC_SRV_NB];
-
+/**
+* @brief Container for Sensors Values
+*/
 static t_float32 g_snsValues_af32[APPSNS_SENSOR_NB];
-
+/**
+* @brief Container for all command Info
+*/
 static t_sAPPLGC_AppCmdInfo g_CmdInfo_as[APPLGC_RCV_CMD_ID_NB];
-
+/**
+* @brief Container to send a Msg for application
+*/
 static t_uint8 g_sendAppData_ua8[APPLGC_APP_PROTOCOL_LEN_DATA];
+/**
+* @brief Flag to Reset Service State
+*/
+static t_bool  g_resetSrvState_b = (t_bool)False; 
 /* CAUTION : Automatic generated code section for Variable: Start */
 /**
 * @brief Actuators Values Containers for Gtry_X
@@ -156,9 +169,12 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void);
 *	@note   
 *
 *
-*	@param[in] 
-*	@param[out]
-*	 
+*/
+static t_eReturnCode s_APPLGC_ResetSrvState(void);
+/**
+*
+*	@brief
+*	@note   
 *
 *
 */
@@ -175,10 +191,10 @@ static t_eReturnCode s_APPLGC_SetActValues(void);
 *
 *
 */
-static t_eReturnCode s_APPLGC_DiagnosticEvent(  t_eAPPSDM_DiagnosticItem f_item_e,
-                                                t_eAPPSDM_DiagnosticReport f_reportState_e,
-                                                t_uint16 f_debugInfo1_u16,
-                                                t_uint16 f_debugInfo2_u16);
+static void s_APPLGC_DiagnosticEvent(   t_eAPPSDM_DiagnosticItem f_item_e,
+                                        t_eAPPSDM_DiagnosticReport f_reportState_e,
+                                        t_uint16 f_debugInfo1_u16,
+                                        t_uint16 f_debugInfo2_u16);
 /**
 *
 *	@brief
@@ -206,8 +222,6 @@ t_eReturnCode APPLGC_Init(void)
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8 = (t_uint8)0; 
     t_uint8 idxSrv_u8 = (t_uint8)0;
-    t_uint8 idxAct_u8 = (t_uint8)0;
-    t_uint8 idxAppData_u8;
     t_uint8 idxCmd_u8;
 
     /* CAUTION : Automatic generated code section for Actuators Containers/Service: Start */
@@ -336,8 +350,6 @@ t_eReturnCode APPLGC_SetState(t_eCyclicModState f_State_e)
 t_eReturnCode APPLGC_SetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_SrvHealth f_srvHealth_e)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxAct_u8 = (t_uint8)0;
-    t_eAPPACT_Actuators actuator_e;
 
     if((f_service_e >= APPLGC_SRV_NB)
     || (f_srvHealth_e >= APPLGC_SRV_HEALTH_NB))
@@ -359,8 +371,6 @@ t_eReturnCode APPLGC_SetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_S
 t_eReturnCode APPLGC_GetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_SrvHealth * f_srvHealth_pe)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxAct_u8 = (t_uint8)0;
-    t_eAPPACT_Actuators actuator_e;
 
     if(f_service_e >= APPLGC_SRV_NB)
     {
@@ -385,6 +395,9 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
 {
     t_eReturnCode Ret_e = RC_OK;
     t_sAPPLGC_AppCmdInfo * appCmdInfo_ps;
+    t_uint8 checksum_u8;
+    t_bool copyCmd_b = False;
+
     if(f_cmdId_e >= APPLGC_RCV_CMD_ID_NB)
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
@@ -401,20 +414,42 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
     {
         appCmdInfo_ps = (t_sAPPLGC_AppCmdInfo *)(&g_CmdInfo_as[f_cmdId_e]);
 
-        if(GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) != BIT_IS_SET_8B)
+        if((GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) != BIT_IS_SET_8B)
+        || (GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE) == BIT_IS_SET_8B))
         {
             //---- defualt value everything will be 0 -----//
-            Ret_e = SafeMem_memclear(f_cmdValues_pu, sizeof(t_uAPPLGC_CmdValues));
-            if(Ret_e >= RC_OK)
-            {
-                Ret_e = RC_WARNING_NO_OPERATION;
-            }
+            Ret_e = RC_WARNING_NO_OPERATION;
         }
         else 
         {
-            //----- Do Check Sum ------//
             //----- Update Flag -----//
             RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA);
+
+            //----- Do Check Sum ------//
+            APPLGC_ComputeCheckSum((appCmdInfo_ps->appData_ua8), 
+                                    (APPLGC_APP_PROTOCOL_LEN_DATA - (t_uint8)1),
+                                    &checksum_u8);
+
+            if(checksum_u8 != (t_uint8)appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_7])
+            {
+                Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COM_CHECKSUM_FAILED,
+                                                APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                                f_cmdId_e,
+                                                checksum_u8);
+            }
+            else 
+            {
+                copyCmd_b = (t_bool)False;
+
+                Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPUSER_COM_CHECKSUM_FAILED,
+                                                APPSDM_DIAG_ITEM_REPORT_PASS,
+                                                (t_uint16)0,
+                                                (t_uint16)0);
+            }
+        }
+        if(copyCmd_b == (t_bool)True)
+        {
+            SETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_READ);
             //----- Switch case on the command wanted -----//
             switch (f_cmdId_e)
             {
@@ -430,6 +465,7 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
                 case APPLGC_RCV_CMD_ID_GTRY_Y:
                 case APPLGC_RCV_CMD_ID_GTRY_X:
                 {
+                    
 
                     f_cmdValues_pu->axe_s.pulse_s32 = Ms32BuildFromByte(   appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_1],
                                                                             appCmdInfo_ps->appData_ua8[APPLGC_CMD_BYTE_2],
@@ -447,8 +483,12 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
                 {
                     Ret_e = RC_WARNING_NO_OPERATION;
                 }
-
             }
+            RESETBIT_8B(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_READ);
+        }
+        else 
+        {
+            Ret_e = SafeMem_memclear((void *)f_cmdValues_pu, sizeof(t_uAPPLGC_CmdValues));
         }
     }
 
@@ -465,7 +505,7 @@ void APPLGC_ComputeCheckSum(t_uint8 * f_startData_pu8,
     t_uint32 checksum_u32 = (t_uint32)0;
     t_uint8 idxData_u8;
 
-    for(idxData_u8 = (t_uint8)0; idxData_u8 < f_dataLen_u8 ; idxData_u8)
+    for(idxData_u8 = (t_uint8)0; idxData_u8 < f_dataLen_u8 ; idxData_u8++)
     {
         checksum_u32 += f_startData_pu8[idxData_u8];
     }
@@ -492,7 +532,36 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_sFMKSRL_DrvSerialCfg SrlCfg_s;
+
     Ret_e = APPSDM_ResetDiagEvnt();
+    
+    if(Ret_e == RC_OK)
+    {
+        
+        SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
+        SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
+
+        SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_115200,
+        SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
+        SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
+        SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
+        SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
+
+        SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
+        SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
+
+    Ret_e = FMKSRL_InitDrv( APPLGC_SERIAL_LINE_APP, 
+                            SrlCfg_s,
+                            s_APPLGC_AppEvntCallback,
+                            (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION);
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = FMKSRL_ConfigureReception(  APPLGC_SERIAL_LINE_APP,
+                                            FMKSRL_OPE_RX_CYCLIC_SIZE,
+                                            (t_uint16)APPLGC_APP_PROTOCOL_LEN_DATA);
+    }
     return Ret_e;
 }
 
@@ -502,8 +571,20 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uint8 idxAgent_u8 = (t_uint8)0;
+    t_uint8 idxAgent_u8;
     
+    if(g_resetSrvState_b == (t_bool)True)
+    {
+        Ret_e = s_APPLGC_ResetSrvState();
+        if(Ret_e == RC_OK)
+        {
+            g_resetSrvState_b = (t_bool)True;
+        }
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = s_APPLGC_AppComStateMngmt();
+    }
     if(Ret_e == RC_OK)
     {
         //------ Get Sensors Values for this cyclic -----//
@@ -513,12 +594,13 @@ static t_eReturnCode s_APPLGC_Operational(void)
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
-        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e > RC_OK) ; idxAgent_u8)
+        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e > RC_OK) ; idxAgent_u8++)
         {
             Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
                                                                         (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
         }
     }
+
     if(Ret_e >= RC_OK)
     {
         Ret_e = s_APPLGC_SetActValues();
@@ -568,6 +650,7 @@ static t_eReturnCode s_APPLGC_SetActValues(void)
     //----- Loop on every Service -----//
     for(idxSrv_u8 = (t_uint8)0 ; (idxSrv_u8 < APPLGC_SRV_NB) && (Ret_e == RC_OK) ; idxSrv_u8++)
     {
+        //----- Loop on every Actuators For this Service -----//
         for(idxAct_u8 = (t_uint8)0 ; idxAct_u8 < c_AppLGc_SrvActuatorsMax_ua8[idxSrv_u8] ; idxAct_u8++)
         {
             actuatorLabel_e = c_AppLGc_SrvDepedencies_pae[idxSrv_u8][idxAct_u8];
@@ -591,7 +674,7 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
     t_bool receptionComplete_b = False;
     t_uint8 idxCmd_u8;
     static t_uint8 s_idxWrite_u8 = (t_uint8)0;
-    static s_appCmd_ua8[APPLGC_CMD_BYTE_NB];
+    static t_uint8 s_appCmd_ua8[APPLGC_CMD_BYTE_NB];
 
     if(f_dataSize_u16 > APPLGC_CMD_BYTE_NB)
     {
@@ -655,12 +738,27 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
                                             APPSDM_DIAG_ITEM_REPORT_FAIL,
                                             0,
                                             0);
+
+            Ret_e = Gantry_RqstSFMState(GTRY_SFM_GANTRY_DEFAULT);
             
         }
+        else if (idxCmd_u8 == APPLGC_RCV_CMD_ID_RESET_GTRY_STATE)
+        {
+            g_resetSrvState_b = (t_bool)True;
+        }
         //----- see if someone is reading it -----//
-        if(GETBIT(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_READ) == BIT_IS_SET_8B)
+        else if(GETBIT(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_READ) == BIT_IS_SET_8B)
         {
             //----- Send Message with WARNING BUSY -----//
+            Ret_e = SafeMem_memclear((void *)g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
+
+            if(Ret_e == RC_OK)
+            {
+                g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = APPLGC_SEND_CMD_ID_GTRY_INFO;
+                g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = GTRY_MISSION_BUSY;
+
+                Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+            }
         }
         else 
         {
@@ -682,10 +780,10 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
 /*********************************
  * s_APPLGC_DiagnosticEvent
  *********************************/
-static t_eReturnCode s_APPLGC_DiagnosticEvent(  t_eAPPSDM_DiagnosticItem f_item_e,
-                                                t_eAPPSDM_DiagnosticReport f_reportState_e,
-                                                t_uint16 f_debugInfo1_u16,
-                                                t_uint16 f_debugInfo2_u16)
+static void s_APPLGC_DiagnosticEvent(   t_eAPPSDM_DiagnosticItem f_item_e,
+                                        t_eAPPSDM_DiagnosticReport f_reportState_e,
+                                        t_uint16 f_debugInfo1_u16,
+                                        t_uint16 f_debugInfo2_u16)
 {
     t_eReturnCode Ret_e = RC_OK;
 
@@ -702,11 +800,13 @@ static t_eReturnCode s_APPLGC_DiagnosticEvent(  t_eAPPSDM_DiagnosticItem f_item_
         g_sendAppData_ua8[APPLGC_CMD_BYTE_6] = (t_uint8)Mu8ExtractByte0fromU16(f_debugInfo2_u16);
 
         APPLGC_ComputeCheckSum( g_sendAppData_ua8,
-                                APPLGC_APP_PROTOCOL_LEN_DATA,
+                                (APPLGC_APP_PROTOCOL_LEN_DATA - (t_uint8)1),
                                 &g_sendAppData_ua8[APPLGC_CMD_BYTE_7]);
         
         Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
     }
+
+    return;
 }
 
 /*********************************
@@ -744,7 +844,7 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
     }
 
     //------ Send Ours  Bit Alive -----//
-    Ret_e = SafeMem_memclear(g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
+    Ret_e = SafeMem_memclear((void *)g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
 
     if(Ret_e == RC_OK)
     {
@@ -763,6 +863,30 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
     return Ret_e;
 }
 
+/*********************************
+ * s_APPLGC_ResetSrvState
+ *********************************/
+static t_eReturnCode s_APPLGC_ResetSrvState(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint8 idxSrv_u8;
+
+    Ret_e = APPSDM_ResetDiagEvnt();
+
+    if(Ret_e == RC_OK)
+    {
+        for(idxSrv_u8 = (t_uint8)0 ; 
+            (idxSrv_u8 < APPLGC_SRV_NB)
+        &&  (Ret_e == RC_OK) ; 
+        idxSrv_u8++)
+        {
+            Ret_e = APPLGC_SetServiceHealth((t_eAPPLGC_SrvList)idxSrv_u8, 
+                                            APPLGC_SRV_HEALTH_OK);
+        }
+    }
+
+    return Ret_e;
+}
 //************************************************************************************
 // End of File
 //************************************************************************************

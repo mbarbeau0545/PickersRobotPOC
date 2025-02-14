@@ -83,14 +83,14 @@
     */
         {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // FMK_CFG_ERROR
         {(t_uint16)1000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // FMK_OPE_ERROR
-        {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_X_OFF},// FMK_SIGNAL_AXE_X_ERR
-        {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_Y_OFF},// FMK_SIGNAL_AXE_Y_ERR
-        {(t_uint16)1000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_Z_OFF},// FMK_SIGNAL_AXE_Z_ERR
+        {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_X_OFF},// GTRY_AXE_X_ERR
+        {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_Y_OFF},// GTRY_AXE_Y_ERR
+        {(t_uint16)1000,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_AXE_Z_OFF},// GTRY_AXE_Z_ERR
         {(t_uint16)500,                (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // SUPPLY_VOLTAGE_ERROR
         {(t_uint16)1500,               (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // APPSYS_CYCLIC_TIMEOUT
         {(t_uint16)250,                (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // APPUSER_BIT_ALIVE_TIMEOUT
         {(t_uint16)250,                (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_NONE},        // APPUSER_COMMUNICATION_FAILED
-        {(t_uint16)50,                 (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // GANTRY_REF_AXE_FAILED
+        {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_NONE},        // APPUSER_COM_CHECKSUM_FAILED
         {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // GANTRY_MVMT_ERROR
         {(t_uint16)0,                  (t_bool)True,                 (t_bool)False,                APPSDM_DIAG_STRAT_GANTRY_OFF},  // GANTRY_SWITCH_LIMIT
     };

@@ -80,7 +80,9 @@
     "applgc_configprivate.h": "c",
     "gantry.h": "c",
     "app_sdm.h": "c",
-    "gantry_configpublic.h": "c"
+    "gantry_configpublic.h": "c",
+    "appact_spec_mtr_y.h": "c",
+    "appact_spec_mtr_x_l.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",

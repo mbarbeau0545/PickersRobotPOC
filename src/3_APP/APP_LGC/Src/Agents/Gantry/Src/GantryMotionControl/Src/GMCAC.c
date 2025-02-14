@@ -92,7 +92,7 @@ static t_sGMCAC_MvmtInfo g_axeZMvmtInfo_s;
 *
 *
 */
-static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo  f_axeMvmtInfo_s);
+static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo  f_axeActivation_s);
 /**
 *
 *	@brief
@@ -105,7 +105,7 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo  f_axeMvmtInfo_s);
 *
 *
 */
-static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps);
+static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeActivation_ps);
 /**
 *
 *	@brief
@@ -118,7 +118,7 @@ static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps
 *
 *
 */
-static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps);
+static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeActivation_ps);
 
 //****************************************************************************
 //                      Public functions - Implementation
@@ -128,7 +128,7 @@ static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps);
  *********************************/
 t_eReturnCode GMCAC_Init(void)
 {
-
+    return RC_OK;
 }
 
 /*********************************
@@ -136,7 +136,7 @@ t_eReturnCode GMCAC_Init(void)
  *********************************/
 t_eReturnCode GMCAC_EnterMode(void)
 {
-
+    return RC_OK;
 }
 
 /*********************************
@@ -144,7 +144,7 @@ t_eReturnCode GMCAC_EnterMode(void)
  *********************************/
 t_eReturnCode GMCAC_ExitMode(void)
 {
-
+    return RC_OK;
 }
 
 /*********************************
@@ -154,7 +154,7 @@ t_eReturnCode GMCAC_Cyclic( t_float32 *f_snsValues_paf32,
                             t_sAPPLGC_ServiceInfo *f_SrvInfo_pas)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_sGMCAC_AxeMvmtInfo s_axeMvmtInfo_s;
+    static t_sGMCAC_AxeMvmtInfo s_axeActivation_ps;
 
     //----- Initialize Pointor to data -----//
     g_snsValues_paf32 = (t_float32 *)f_snsValues_paf32;
@@ -164,23 +164,23 @@ t_eReturnCode GMCAC_Cyclic( t_float32 *f_snsValues_paf32,
     {
         case GMCMAC_FSM_MVMT:
         {
-            Ret_e = s_GMCAC_SetAxesMvmt(s_axeMvmtInfo_s);
+            Ret_e = s_GMCAC_SetAxesMvmt(s_axeActivation_ps);
 
             if(Ret_e == RC_OK)
             {
-                s_GMCAC_ResetAxesValues(&s_axeMvmtInfo_s);
+                s_GMCAC_ResetAxesValues(&s_axeActivation_ps);
                 Ret_e = Gantry_InformAppMissionState(GTRY_MISSION_READY);
             }
             break;
         }
         case GMCMAC_FSM_GET_MVMT:
         {
-            Ret_e = s_GMCAC_GetInfoMvmt(&s_axeMvmtInfo_s);
+            Ret_e = s_GMCAC_GetInfoMvmt(&s_axeActivation_ps);
 
             if((Ret_e == RC_OK)
-            && (   (s_axeMvmtInfo_s.setAxeXMvmt_b == (t_bool)True)
-                || (s_axeMvmtInfo_s.setAxeYMvmt_b == (t_bool)True)
-                || (s_axeMvmtInfo_s.setAxeZMvmt_b == (t_bool)True)))
+            && (   (s_axeActivation_ps.setAxeXMvmt_b == (t_bool)True)
+                || (s_axeActivation_ps.setAxeYMvmt_b == (t_bool)True)
+                || (s_axeActivation_ps.setAxeZMvmt_b == (t_bool)True)))
             {
                 g_FSMMvmt_e = GMCMAC_FSM_MVMT;
             }
@@ -192,6 +192,8 @@ t_eReturnCode GMCAC_Cyclic( t_float32 *f_snsValues_paf32,
             Ret_e = RC_OK;
         }
     }
+
+    return Ret_e;
 }
 //********************************************************************************
 //                      Local functions - Implementation
@@ -199,7 +201,7 @@ t_eReturnCode GMCAC_Cyclic( t_float32 *f_snsValues_paf32,
 /*********************************
  * s_GMCAC_SetAxesMvmt
  *********************************/
-static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo f_axeMvmtInfo_s)
+static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo f_axeActivation_s)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
@@ -208,29 +210,28 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo f_axeMvmtInfo_s)
     t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
 
     //----- Copy Data -----//
-    if(f_axeMvmtInfo_s.setAxeXMvmt_b == (t_bool)True)
+    if(f_axeActivation_s.setAxeXMvmt_b == (t_bool)True)
     {
         if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
         {
             actgtrXL_u->Motor_s.frequency_u32 = (t_uint32)g_axeXMvmtInfo_s.Speed_u32;
-            actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)g_axeXMvmtInfo_s.Pulse_s32;
+            actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_L_DIR * g_axeXMvmtInfo_s.Pulse_s32);
 
             actgtrXR_u->Motor_s.frequency_u32 = (t_uint32)g_axeXMvmtInfo_s.Speed_u32;
-            actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)g_axeXMvmtInfo_s.Pulse_s32;
+            actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_R_DIR * g_axeXMvmtInfo_s.Pulse_s32);
         }
         else 
         {
             actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-            actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-
             actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
-            actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
-
             actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            
+            actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+            actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
             actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
         }
     }
-    if(f_axeMvmtInfo_s.setAxeYMvmt_b == (t_bool)True)
+    if(f_axeActivation_s.setAxeYMvmt_b == (t_bool)True)
     {   
         if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
         {
@@ -244,7 +245,7 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo f_axeMvmtInfo_s)
             actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
         }
     }
-    if(f_axeMvmtInfo_s.setAxeZMvmt_b == (t_bool)True)
+    if(f_axeActivation_s.setAxeZMvmt_b == (t_bool)True)
     {
         if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
         {
@@ -263,7 +264,7 @@ static t_eReturnCode s_GMCAC_SetAxesMvmt(t_sGMCAC_AxeMvmtInfo f_axeMvmtInfo_s)
 /*********************************
  * s_GMCAC_GetInfoMvmt
  *********************************/
-static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps)
+static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeActivation_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uAPPLGC_CmdValues appAxeX_u;
@@ -273,7 +274,8 @@ static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps
     Ret_e = APPLGC_GetAppCmd(APPLGC_RCV_CMD_ID_GTRY_X, &appAxeX_u);
     if(Ret_e == RC_OK)
     {
-        f_axeMvmtInfo_ps->setAxeXMvmt_b = (t_bool)True;
+        f_axeActivation_ps->setAxeXMvmt_b = (t_bool)True;
+
         g_axeXMvmtInfo_s.Pulse_s32 = (t_sint32)appAxeX_u.axe_s.pulse_s32;
         g_axeYMvmtInfo_s.Speed_u32 = (t_uint32)appAxeX_u.axe_s.speed_u16;
     }
@@ -281,7 +283,8 @@ static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps
     Ret_e = APPLGC_GetAppCmd(APPLGC_RCV_CMD_ID_GTRY_Y, &appAxeY_u);
     if(Ret_e == RC_OK)
     {
-        f_axeMvmtInfo_ps->setAxeYMvmt_b = (t_bool)True;
+        f_axeActivation_ps->setAxeYMvmt_b = (t_bool)True;
+
         g_axeYMvmtInfo_s.Pulse_s32 = (t_sint32)appAxeY_u.axe_s.pulse_s32;
         g_axeYMvmtInfo_s.Speed_u32 = (t_uint32)appAxeY_u.axe_s.speed_u16;
     }
@@ -289,7 +292,8 @@ static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps
     Ret_e = APPLGC_GetAppCmd(APPLGC_RCV_CMD_ID_GTRY_Z, &appAxeZ_u);
     if(Ret_e == RC_OK)
     {
-        f_axeMvmtInfo_ps->setAxeZMvmt_b = (t_bool)True;
+        f_axeActivation_ps->setAxeZMvmt_b = (t_bool)True;
+
         g_axeZMvmtInfo_s.Pulse_s32 = (t_sint32)appAxeZ_u.axe_s.pulse_s32;
         g_axeZMvmtInfo_s.Speed_u32 = (t_uint32)appAxeZ_u.axe_s.speed_u16;
     }
@@ -300,7 +304,7 @@ static t_eReturnCode s_GMCAC_GetInfoMvmt(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps
 /*********************************
  * s_GMCAC_ResetAxesValues
  *********************************/
-static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps)
+static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeActivation_ps)
 {
      
     g_axeXMvmtInfo_s.Pulse_s32 = (t_sint32)0;
@@ -312,9 +316,9 @@ static void s_GMCAC_ResetAxesValues(t_sGMCAC_AxeMvmtInfo * f_axeMvmtInfo_ps)
     g_axeZMvmtInfo_s.Pulse_s32 = (t_sint32)0;
     g_axeZMvmtInfo_s.Speed_u32 = (t_uint32)0;
 
-    f_axeMvmtInfo_ps->setAxeXMvmt_b = (t_bool)False;
-    f_axeMvmtInfo_ps->setAxeYMvmt_b = (t_bool)False;
-    f_axeMvmtInfo_ps->setAxeZMvmt_b = (t_bool)False;
+    f_axeActivation_ps->setAxeXMvmt_b = (t_bool)False;
+    f_axeActivation_ps->setAxeYMvmt_b = (t_bool)False;
+    f_axeActivation_ps->setAxeZMvmt_b = (t_bool)False;
 
     return;
 }

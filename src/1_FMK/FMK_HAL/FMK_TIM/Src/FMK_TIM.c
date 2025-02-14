@@ -105,7 +105,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_1
         .bspTimer_s.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
     },
     {
         // Timer_2
@@ -147,7 +147,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_8
         .bspTimer_s.Instance = TIM8,
         .c_clock_e = FMKCPU_RCC_CLK_TIM8,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM8_UP_IRQN
     },
     {
         // Timer_15
@@ -171,7 +171,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_20
         .bspTimer_s.Instance = TIM20,
         .c_clock_e = FMKCPU_RCC_CLK_TIM20,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM20_UP_IRQN
     },
 };
 
@@ -1511,7 +1511,6 @@ static t_eReturnCode s_FMKTIM_Set_ICChannelCfg( t_eFMKTIM_Timer f_timer_e,
     {
       
         //----------Set Input Compare configuration for all channels------------------//
-        #warning('Found the right frequency for Ic Cfg')
         Ret_e = s_FMKTIM_Set_BspTimerInit(  timerInfo_ps,
                                             FMKTIM_HWTIM_CFG_IC,
                                             (t_uint32)1,
@@ -2180,7 +2179,7 @@ static t_eReturnCode s_FMKTIM_Get_CCRxValue(t_eFMKTIM_Timer f_timer_e,
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if (f_comparedValue_pu32 == (t_uint16 *)NULL)
+    if (f_comparedValue_pu32 == (t_uint32 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -2752,17 +2751,17 @@ static t_eReturnCode s_FMKTIM_Get_TimChnlFromITLine(t_eFMKTIM_InterruptLineType 
 *********************************/
 void TIM1_BRK_TIM15_IRQHandler(void)      {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_15].bspTimer_s);}
 /*********************************
- * TIM1_UP_TIM16_IRQHandler
+ * TIM20_TRG_COM_IRQHandler
 *********************************/
-void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_16].bspTimer_s);}
+void TIM20_TRG_COM_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_16].bspTimer_s);}
 /*********************************
  * TIM1_TRG_COM_TIM17_IRQHandler
 *********************************/
 void TIM1_TRG_COM_TIM17_IRQHandler(void)  {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_17].bspTimer_s);}
 /*********************************
- * TIM1_CC_IRQHandler
+ * TIM1_UP_TIM16_IRQHandler
 *********************************/
-void TIM1_CC_IRQHandler(void)             {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_1].bspTimer_s);}
+void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_1].bspTimer_s);}
 /*********************************
  * TIM2_IRQHandler
 *********************************/
@@ -2784,6 +2783,10 @@ void TIM6_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInf
 *********************************/
 void TIM7_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_7].bspTimer_s);}
 /*********************************
+ * TIM8_UP_IRQHandler
+*********************************/
+void TIM8_UP_IRQHandler(void)             {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_8].bspTimer_s);}
+/*********************************
  * TIM20_BRK_IRQHandler
 *********************************/
 void TIM20_BRK_IRQHandler(void)           {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
@@ -2791,10 +2794,6 @@ void TIM20_BRK_IRQHandler(void)           {return HAL_TIM_IRQHandler(&g_TimerInf
  * TIM20_UP_IRQHandler
 *********************************/
 void TIM20_UP_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
-/*********************************
- * TIM20_TRG_COM_IRQHandler
-*********************************/
-void TIM20_TRG_COM_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
 /*********************************
  * TIM20_CC_IRQHandler
 *********************************/

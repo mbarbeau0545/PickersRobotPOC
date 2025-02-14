@@ -18,7 +18,8 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    
+    #define GTRY_MTR_X_L_DIR ((t_sint32)1)
+    #define GTRY_MTR_X_R_DIR ((t_sint32)-1)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -50,6 +51,7 @@
         GTRY_MISSION_SUCCEED = 0x00,
         GTRY_MISSION_FAIL,
         GTRY_MISSION_READY,
+        GTRY_MISSION_BUSY,
     } t_eGTRY_MissionStatus;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 

@@ -26,8 +26,10 @@
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
-        CL42T_MOTOR_AXE_X_1,
-        CL42T_MOTOR_AXE_X_2,
+        CL42T_MOTOR_1,
+        CL42T_MOTOR_2,
+        CL42T_MOTOR_3,
+        CL42T_MOTOR_4,
 
         CL42T_MOTOR_NB
     } t_eCL42T_MotorId;

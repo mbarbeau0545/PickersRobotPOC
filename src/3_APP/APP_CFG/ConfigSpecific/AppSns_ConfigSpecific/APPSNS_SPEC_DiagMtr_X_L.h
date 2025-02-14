@@ -76,7 +76,7 @@
     * @brief     @ref t_cbAppSns_FormatValSI
     *
     */
-    t_eReturnCode APPSNS_SPEC_DiagMtr_X_L_FormatValue(t_float32  rawValue_f32, t_float32 *SnsValue_f32);
+    t_eReturnCode APPSNS_SPEC_DiagMtr_X_L_FormatValue(t_float32  f_rawValue_f32, t_float32 * f_SnsValue_f32);
 
     /* CAUTION : Automatic generated code section for Specific Function Declaration: End */
 #endif            
