@@ -29,8 +29,8 @@
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
-        CL42T_MOTOR_DIRECTION_CLOCKWISE,
-        CL42T_MOTOR_DIRECTION_WISE,
+        CL42T_MOTOR_DIRECTION_CW,
+        CL42T_MOTOR_DIRECTION_CCW,
         
         CL42T_MOTOR_DIRECTION_NB
     }t_eCL42T_MotorDirection;
@@ -69,6 +69,14 @@
 
         CL42T_DIAGNOSTIC_NB
     }t_eCL42T_DiagError;
+
+    typedef enum 
+    {
+        CL42T_PULSE_CHANGE_DIR_OPE_CANCEL = 0x00,
+        CL42T_PULSE_CHANGE_DIR_OPE_ADD,
+
+        CL42T_PULSE_CHANGE_DIR_OPE_NB
+    } t_eCL42T_PulseChgDirOpe;
     /* CAUTION : Automatic generated code section for Enum: Start */
 
     /* CAUTION : Automatic generated code section for Enum: End */
@@ -157,7 +165,7 @@
     *
     *
     */
-    t_eReturnCode CL42T_GetState(   t_eCyclicModState *f_State_pe);
+    t_eReturnCode CL42T_GetState(t_eCyclicModState *f_State_pe);
 
     /**
      *
@@ -171,7 +179,7 @@
     *
     *
     */
-    t_eReturnCode CL42T_SetState(   t_eCyclicModState f_State_e);
+    t_eReturnCode CL42T_SetState(t_eCyclicModState f_State_e);
 
     /**
     *
@@ -187,6 +195,7 @@
     */
     t_eReturnCode CL42T_AddMotorConfiguration(  t_eCL42T_MotorId f_motorId_e,
                                                 t_sCL42T_MotorSigCfg f_MotorCfg_s,
+                                                t_eCL42T_PulseChgDirOpe f_PulseOpe_e,
                                                 t_cbCL42T_Diagnostic *f_diagEvnt_pcb);
 
     /**

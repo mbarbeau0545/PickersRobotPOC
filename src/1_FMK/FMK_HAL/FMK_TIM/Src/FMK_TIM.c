@@ -179,7 +179,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
 /**< In Pulses Mode when the timer is Launch hardware make a Interruption */
 static t_bool g_timerPeriodPwm_ab[FMKTIM_TIMER_NB];
 /** Only One Channel Has the Right to be in Pulses Mode */
-static t_bool g_isPwmFinitePulseSet_ab[FMKTIM_TIMER_NB];
+static t_bool g_PwmBoundCfg_ae[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB];
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -612,6 +612,8 @@ t_eReturnCode FMKTIM_Init(void)
                     chnlInfo_ps->DmaInfo_ps.BufferAdd1_pu32 = (t_uint32 *)NULL;
                     chnlInfo_ps->DmaInfo_ps.BufferAdd2_pu32 = (t_uint32 *)NULL;
                     chnlInfo_ps->DmaInfo_ps.bufferLen_u16 = (t_uint16)0;
+
+                    g_PwmBoundCfg_ae[timIndex_u8][chnlIndex_u8] = FMKTIM_PWM_MODE_FINITE_PULSE;
                 }
             }
         }
@@ -725,19 +727,6 @@ t_eReturnCode FMKTIM_Set_PWMLineCfg(    t_eFMKTIM_InterruptLineIO f_InterruptLin
                                                 (void *)NULL);
         }
 
-        if(f_PwmMode_e == FMKTIM_PWM_MODE_FINITE_PULSE)
-        {
-            if(g_isPwmFinitePulseSet_ab[timer_e] == (t_bool)False)
-            {   
-                g_isPwmFinitePulseSet_ab[timer_e] = (t_bool)True;
-            }
-            else 
-            {
-                Ret_e = RC_ERROR_NOT_ALLOWED;
-            }
-        }
-        
-
         if(Ret_e == RC_OK)
         {
             Ret_e = s_FMKTIM_Set_PwmChannelCfg( (&g_TimerInfo_as[timer_e]), 
@@ -748,6 +737,7 @@ t_eReturnCode FMKTIM_Set_PWMLineCfg(    t_eFMKTIM_InterruptLineIO f_InterruptLin
         if(Ret_e == RC_OK)
         {
             g_TimerInfo_as[timer_e].Channel_as[chnl_e].chnl_cb = f_PwmPulseFinished_pcb;
+            g_PwmBoundCfg_ae[timer_e][chnl_e] = f_PwmMode_e;
         }
     }
     return Ret_e;
@@ -2363,8 +2353,8 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
                         //----- Reset PWM ON & call user-----//
                         for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < FMKTIM_CHANNEL_NB) && (Ret_e == RC_OK) ; LLI_u8++)
                         {
-                            if(timerInfo_ps->Channel_as[LLI_u8].State_e == FMKTIM_CHNLST_ACTIVATED
-                            && timerInfo_ps->Channel_as[LLI_u8].RunMode_e == FMKTIM_LINE_RUNMODE_INTERRUPT)
+                            if((timerInfo_ps->Channel_as[LLI_u8].State_e == FMKTIM_CHNLST_ACTIVATED)
+                            && (g_PwmBoundCfg_ae[Calltimer_e][LLI_u8] == FMKTIM_PWM_MODE_FINITE_PULSE))
                             {
                                 Ret_e = s_FMKTIM_Set_HwChannelState(Calltimer_e, LLI_u8, FMKTIM_CHNLST_DISACTIVATED);
 

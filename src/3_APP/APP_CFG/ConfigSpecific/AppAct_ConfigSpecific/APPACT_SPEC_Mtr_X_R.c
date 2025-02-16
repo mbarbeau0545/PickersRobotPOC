@@ -91,6 +91,7 @@ t_eReturnCode APPACT_SPEC_Mtr_X_R_SetCfg(void)
 
     Ret_e = CL42T_AddMotorConfiguration(c_MotorId_e,
                                         MotorConfig_s,
+                                        CL42T_PULSE_CHANGE_DIR_OPE_CANCEL,
                                         MtrX_R_MotorDiagnostic);
     
     

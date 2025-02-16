@@ -135,7 +135,7 @@ t_eReturnCode APPSDM_Init(void)
 {
     t_uint8 idxItem_u8; 
 
-    for(idxItem_u8 = (t_uint8)0 ; idxItem_u8 < APPSDM_DIAG_ITEM_NB ; idxItem_u8++)
+    for(idxItem_u8 = (t_uint8)0 ; idxItem_u8 < APPSDM_MAX_DIAG_ITEM_MONITORING ; idxItem_u8++)
     {
         g_diagItemInfo_as[idxItem_u8].debugInfo1_u16 = (t_uint16)0;
         g_diagItemInfo_as[idxItem_u8].debugInfo2_u16 = (t_uint16)0;

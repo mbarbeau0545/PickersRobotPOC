@@ -33,11 +33,7 @@
     */
     typedef enum
     {
-        APPSNS_SENSOR_DIAGMTR_X_L = 0x0,        /**< Diagnostic From Motor Axe X, left Side */
-        APPSNS_SENSOR_DIAGMTR_X_R,              /**< Diagnostic From Motor Axe X, Right Side */
-        APPSNS_SENSOR_DIAGMTR_Y,                /**< Diagnostic From Motor Axe Y */
-        APPSNS_SENSOR_DIAGMTR_Z,                /**< Diagnostic From Motor Axe Z */
-        APPSNS_SENSOR_LIM_SWCH_X_L_MIN,         /**< Limit Switch for motor X left, min */
+        APPSNS_SENSOR_LIM_SWCH_X_L_MIN = 0x0,   /**< Limit Switch for motor X left, min */
         APPSNS_SENSOR_LIM_SWCH_X_L_MAX,         /**< Limit Switch for motor X left, max */
         APPSNS_SENSOR_LIM_SWCH_X_R_MIN,         /**< Limit Switch for motor X right, min */
         APPSNS_SENSOR_LIM_SWCH_X_R_MAX,         /**< Limit Switch for motor X right, max */

@@ -195,7 +195,7 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_Ge
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if(f_actValue_pu == (t_sint16 *)NULL)
+    if(f_actValue_pu == (t_uAPPACT_GetValue *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -206,7 +206,7 @@ t_eReturnCode APPACT_Get_ActValue(t_eAPPACT_Actuators f_actuator_e, t_uAPPACT_Ge
     if(Ret_e == RC_OK)
     {
         // call specFunc 
-        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].GetValue_pcb)(&f_actValue_pu);
+        Ret_e = (c_AppAct_SysAct_apf[f_actuator_e].GetValue_pcb)(f_actValue_pu);
     }
     
     return Ret_e;
