@@ -190,7 +190,7 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
                                                                                 g_SrvInfo_pas);
                 }
                 
-                if(Ret_e != RC_OK)
+                if(Ret_e < RC_OK)
                 {
                     g_FSM_GtryMode_e = GTRY_SFM_GANTRY_DEFAULT;
                 }
@@ -349,6 +349,7 @@ static void s_GTRY_SetGantryOff(t_eGTRY_FSMGantry f_GtryState_e)
 
             actgtrZ_u->Motor_s.nbPulses_s32 = (t_uint32)0;
             actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+            break;
         }
         case GTRY_SFM_GANTRY_DEFAULT:
         {
@@ -367,6 +368,7 @@ static void s_GTRY_SetGantryOff(t_eGTRY_FSMGantry f_GtryState_e)
             actgtrZ_u->Motor_s.nbPulses_s32 = (t_uint32)0;
             actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
             actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            break;
         }
         case GTRY_SFM_GANTRY_PRODUCTION:
         case GTRY_SFM_GANTRY_NB:

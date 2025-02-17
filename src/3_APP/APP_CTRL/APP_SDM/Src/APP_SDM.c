@@ -248,7 +248,6 @@ t_eReturnCode APPSDM_ReportDiagEvnt(    t_eAPPSDM_DiagnosticItem f_item_e,
             if(f_reportState_e == APPSDM_DIAG_ITEM_REPORT_PASS)
             {
                 initItem_b = (t_bool)False;
-                Ret_e = RC_WARNING_NO_OPERATION;
             }
         }
         else 

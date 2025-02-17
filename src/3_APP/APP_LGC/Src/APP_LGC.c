@@ -393,6 +393,7 @@ t_eReturnCode APPLGC_GetServiceHealth(t_eAPPLGC_SrvList f_service_e, t_eAPPLGC_S
  *********************************/
 t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValues * f_cmdValues_pu)
 {
+    t_eReturnCode subRet_e = RC_OK;
     t_eReturnCode Ret_e = RC_OK;
     t_sAPPLGC_AppCmdInfo * appCmdInfo_ps;
     t_uint8 checksum_u8;
@@ -414,7 +415,7 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
     {
         appCmdInfo_ps = (t_sAPPLGC_AppCmdInfo *)(&g_CmdInfo_as[f_cmdId_e]);
 
-        if((GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) != BIT_IS_SET_8B)
+        if((GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_NEW_DATA) == BIT_IS_RESET_8B)
         || (GETBIT(appCmdInfo_ps->maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE) == BIT_IS_SET_8B))
         {
             //---- defualt value everything will be 0 -----//
@@ -488,7 +489,12 @@ t_eReturnCode APPLGC_GetAppCmd(t_eAPPGC_AppRcvCmdId f_cmdId_e, t_uAPPLGC_CmdValu
         }
         else 
         {
-            Ret_e = SafeMem_memclear((void *)f_cmdValues_pu, sizeof(t_uAPPLGC_CmdValues));
+            subRet_e = SafeMem_memclear((void *)f_cmdValues_pu, sizeof(t_uAPPLGC_CmdValues));
+
+            if(subRet_e != RC_OK)
+            {
+                Ret_e = subRet_e;
+            }
         }
     }
 
@@ -594,7 +600,7 @@ static t_eReturnCode s_APPLGC_Operational(void)
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
-        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e > RC_OK) ; idxAgent_u8++)
+        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e >= RC_OK) ; idxAgent_u8++)
         {
             Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
                                                                         (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
