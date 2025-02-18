@@ -143,7 +143,7 @@ class AppLgc_CodeGen():
             enm_dependencies += f'        APPLGC_{str(service_cfg[0]).upper()}_ACT_NB,\n'
             enm_dependencies += '    } ' +f't_eAPPLGC_Srv{service_cfg[0]};\n\n'
 
-            var_act_srv_asso += f'   g_srvFuncInfo_as[{APPLGC_ENUM_SRV}_{str(service_cfg[0]).upper()}].actVal_pu = (t_uAPPACT_SetValue *)(&g_ActContainer{service_cfg[0]}_au);\n'
+            var_act_srv_asso += f'    g_srvFuncInfo_as[{APPLGC_ENUM_SRV}_{str(service_cfg[0]).upper()}].actVal_pau = (t_uAPPACT_SetValue *)(&g_ActContainer{service_cfg[0]}_au);\n'
 
         var_max_act_value += '    };\n\n'
         var_srv_dependencies += '    };\n\n'

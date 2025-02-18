@@ -184,7 +184,8 @@ t_eReturnCode FMKTIM_GetPwmTimerInitParam(  t_eFMKCPU_ClockPort f_timClock_e,
             }
             //----Verify Range Validity--------//
             if(realPrescaler_u32 > (t_uint32)(maxNumberBit_u32)
-            || realARR_u32 > (t_uint32)maxNumberBit_u32)
+            || realARR_u32 > (t_uint32)maxNumberBit_u32
+            || realARR_u32 == (t_uint32)0)
             {
                 Ret_e = RC_ERROR_WRONG_RESULT;
             }
@@ -313,7 +314,8 @@ t_eReturnCode FMKTIM_GetEvntTimerInitParam( t_eFMKCPU_ClockPort f_timClock_e,
 
         //----Varify Range Value--------//
         if(realARR_u32 > maxNumberBit_u32
-        ||realPrescaler_u32 > maxNumberBit_u32)
+        ||realPrescaler_u32 > maxNumberBit_u32
+        || realARR_u32 == (t_uint32)0)
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
         }

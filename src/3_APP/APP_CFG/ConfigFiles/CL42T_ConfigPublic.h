@@ -26,8 +26,10 @@
     //-----------------------------ENUM TYPES-----------------------------//
     typedef enum 
     {
-        CL42T_MOTOR_AXE_X_1,
-        CL42T_MOTOR_AXE_X_2,
+        CL42T_MOTOR_1,
+        CL42T_MOTOR_2,
+        CL42T_MOTOR_3,
+        CL42T_MOTOR_4,
 
         CL42T_MOTOR_NB
     } t_eCL42T_MotorId;
@@ -86,47 +88,7 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
-    /*const t_sCL42T_MotorSigCfg c_CL42T_MotorConfig_as[CL42T_MOTOR_NB] = {
-        [CL42T_MOTOR_AXE_X_1] = {
-            .PulseSigCfg_s = {
-                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_8,
-                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
-                .f_PulseInitFreq_u32 = 0
-            },
-            .StateSigCfg = {
-                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_2,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-            .DirSigCfg_s = {
-                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_1,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-            .DiagSigCfg_s = {
-                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_1,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-        },
 
-        [CL42T_MOTOR_AXE_X_2] = {
-            .PulseSigCfg_s = {
-                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_4,
-                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
-                .f_PulseInitFreq_u32 = 0
-            },
-            .StateSigCfg = {
-                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_4,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-            .DirSigCfg_s = {
-                .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_5,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-            .DiagSigCfg_s = {
-                .FreqSignal_e = FMKIO_INPUT_SIGFREQ_2,
-                .PullMode_e = FMKIO_PULL_MODE_DISABLE,
-            },
-        },
-    };*/
     //********************************************************************************
     //                      Public functions - Prototyupes
     //********************************************************************************

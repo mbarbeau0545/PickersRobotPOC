@@ -105,7 +105,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_1
         .bspTimer_s.Instance = TIM1,
         .c_clock_e = FMKCPU_RCC_CLK_TIM1,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM1_BRK_TIM15_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM1_UP_TIM16_IRQN
     },
     {
         // Timer_2
@@ -147,7 +147,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_8
         .bspTimer_s.Instance = TIM8,
         .c_clock_e = FMKCPU_RCC_CLK_TIM8,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM8_BRK_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM8_UP_IRQN
     },
     {
         // Timer_15
@@ -171,7 +171,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
         // Timer_20
         .bspTimer_s.Instance = TIM20,
         .c_clock_e = FMKCPU_RCC_CLK_TIM20,
-        .c_IRQNType_e = FMKCPU_NVIC_TIM20_BRK_IRQN
+        .c_IRQNType_e = FMKCPU_NVIC_TIM20_UP_IRQN
     },
 };
 
@@ -179,7 +179,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
 /**< In Pulses Mode when the timer is Launch hardware make a Interruption */
 static t_bool g_timerPeriodPwm_ab[FMKTIM_TIMER_NB];
 /** Only One Channel Has the Right to be in Pulses Mode */
-static t_bool g_isPwmFinitePulseSet_ab[FMKTIM_TIMER_NB];
+static t_bool g_PwmBoundCfg_ae[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB];
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -612,6 +612,8 @@ t_eReturnCode FMKTIM_Init(void)
                     chnlInfo_ps->DmaInfo_ps.BufferAdd1_pu32 = (t_uint32 *)NULL;
                     chnlInfo_ps->DmaInfo_ps.BufferAdd2_pu32 = (t_uint32 *)NULL;
                     chnlInfo_ps->DmaInfo_ps.bufferLen_u16 = (t_uint16)0;
+
+                    g_PwmBoundCfg_ae[timIndex_u8][chnlIndex_u8] = FMKTIM_PWM_MODE_FINITE_PULSE;
                 }
             }
         }
@@ -725,19 +727,6 @@ t_eReturnCode FMKTIM_Set_PWMLineCfg(    t_eFMKTIM_InterruptLineIO f_InterruptLin
                                                 (void *)NULL);
         }
 
-        if(f_PwmMode_e == FMKTIM_PWM_MODE_FINITE_PULSE)
-        {
-            if(g_isPwmFinitePulseSet_ab[timer_e] == (t_bool)False)
-            {   
-                g_isPwmFinitePulseSet_ab[timer_e] = (t_bool)True;
-            }
-            else 
-            {
-                Ret_e = RC_ERROR_NOT_ALLOWED;
-            }
-        }
-        
-
         if(Ret_e == RC_OK)
         {
             Ret_e = s_FMKTIM_Set_PwmChannelCfg( (&g_TimerInfo_as[timer_e]), 
@@ -748,6 +737,7 @@ t_eReturnCode FMKTIM_Set_PWMLineCfg(    t_eFMKTIM_InterruptLineIO f_InterruptLin
         if(Ret_e == RC_OK)
         {
             g_TimerInfo_as[timer_e].Channel_as[chnl_e].chnl_cb = f_PwmPulseFinished_pcb;
+            g_PwmBoundCfg_ae[timer_e][chnl_e] = f_PwmMode_e;
         }
     }
     return Ret_e;
@@ -1100,6 +1090,7 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
         if( (GETBIT(timerInfo_ps->Channel_as[chnl_e].ErrState_u16, FMKTIM_ERRSTATE_OK) == BIT_IS_RESET_16B)
         ||  (timerInfo_ps->Channel_as[chnl_e].State_e == FMKTIM_CHNLST_DISACTIVATED))
         {
+            SafeMem_memclear((void *)f_ITLineValue_u, sizeof(t_uFMKTIM_ITLineValue));
             Ret_e = RC_WARNING_BUSY;
         }
         if(Ret_e == RC_OK)
@@ -1511,7 +1502,6 @@ static t_eReturnCode s_FMKTIM_Set_ICChannelCfg( t_eFMKTIM_Timer f_timer_e,
     {
       
         //----------Set Input Compare configuration for all channels------------------//
-        #warning('Found the right frequency for Ic Cfg')
         Ret_e = s_FMKTIM_Set_BspTimerInit(  timerInfo_ps,
                                             FMKTIM_HWTIM_CFG_IC,
                                             (t_uint32)1,
@@ -2180,7 +2170,7 @@ static t_eReturnCode s_FMKTIM_Get_CCRxValue(t_eFMKTIM_Timer f_timer_e,
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
-    if (f_comparedValue_pu32 == (t_uint16 *)NULL)
+    if (f_comparedValue_pu32 == (t_uint32 *)NULL)
     {
         Ret_e = RC_ERROR_PTR_NULL;
     }
@@ -2364,8 +2354,8 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
                         //----- Reset PWM ON & call user-----//
                         for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < FMKTIM_CHANNEL_NB) && (Ret_e == RC_OK) ; LLI_u8++)
                         {
-                            if(timerInfo_ps->Channel_as[LLI_u8].State_e == FMKTIM_CHNLST_ACTIVATED
-                            && timerInfo_ps->Channel_as[LLI_u8].RunMode_e == FMKTIM_LINE_RUNMODE_INTERRUPT)
+                            if((timerInfo_ps->Channel_as[LLI_u8].State_e == FMKTIM_CHNLST_ACTIVATED)
+                            && (g_PwmBoundCfg_ae[Calltimer_e][LLI_u8] == FMKTIM_PWM_MODE_FINITE_PULSE))
                             {
                                 Ret_e = s_FMKTIM_Set_HwChannelState(Calltimer_e, LLI_u8, FMKTIM_CHNLST_DISACTIVATED);
 
@@ -2752,17 +2742,17 @@ static t_eReturnCode s_FMKTIM_Get_TimChnlFromITLine(t_eFMKTIM_InterruptLineType 
 *********************************/
 void TIM1_BRK_TIM15_IRQHandler(void)      {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_15].bspTimer_s);}
 /*********************************
- * TIM1_UP_TIM16_IRQHandler
+ * TIM20_TRG_COM_IRQHandler
 *********************************/
-void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_16].bspTimer_s);}
+void TIM20_TRG_COM_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_16].bspTimer_s);}
 /*********************************
  * TIM1_TRG_COM_TIM17_IRQHandler
 *********************************/
 void TIM1_TRG_COM_TIM17_IRQHandler(void)  {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_17].bspTimer_s);}
 /*********************************
- * TIM1_CC_IRQHandler
+ * TIM1_UP_TIM16_IRQHandler
 *********************************/
-void TIM1_CC_IRQHandler(void)             {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_1].bspTimer_s);}
+void TIM1_UP_TIM16_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_1].bspTimer_s);}
 /*********************************
  * TIM2_IRQHandler
 *********************************/
@@ -2784,6 +2774,10 @@ void TIM6_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInf
 *********************************/
 void TIM7_DAC_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_7].bspTimer_s);}
 /*********************************
+ * TIM8_UP_IRQHandler
+*********************************/
+void TIM8_UP_IRQHandler(void)             {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_8].bspTimer_s);}
+/*********************************
  * TIM20_BRK_IRQHandler
 *********************************/
 void TIM20_BRK_IRQHandler(void)           {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
@@ -2791,10 +2785,6 @@ void TIM20_BRK_IRQHandler(void)           {return HAL_TIM_IRQHandler(&g_TimerInf
  * TIM20_UP_IRQHandler
 *********************************/
 void TIM20_UP_IRQHandler(void)            {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
-/*********************************
- * TIM20_TRG_COM_IRQHandler
-*********************************/
-void TIM20_TRG_COM_IRQHandler(void)       {return HAL_TIM_IRQHandler(&g_TimerInfo_as[FMKTIM_TIMER_20].bspTimer_s);}
 /*********************************
  * TIM20_CC_IRQHandler
 *********************************/

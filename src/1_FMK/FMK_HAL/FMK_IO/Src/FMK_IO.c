@@ -1113,55 +1113,17 @@ t_eReturnCode FMKIO_Get_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
         {
             *f_frequency_pu32 = (t_uint32)pwmValue_u.PwmValue_s.frequency_u32;
         }
-    }
-
-    return Ret_e;
-}
-
-/*********************************
- * FMKIO_Get_OutPwmSigPulsesLeft
- *********************************/
-t_eReturnCode FMKIO_Get_OutPwmSigPulsesLeft(t_eFMKIO_OutPwmSig f_signal_e, t_uint16 * f_pulsesLeft_pu16)
-{
-    t_eReturnCode Ret_e = RC_OK;
-    t_uFMKTIM_ITLineValue pwmValue_u;
-    t_eFMKTIM_InterruptLineIO ITLineIO_e;
-    t_uint8 maskValue_u8 = (t_uint8)0; 
-
-    if (f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
-    {
-        Ret_e = RC_ERROR_PARAM_INVALID;
-    }
-    if(f_pulsesLeft_pu16 == (t_uint16 *)NULL)
-    {
-        Ret_e = RC_ERROR_PTR_NULL;
-    }
-    if(g_OutPwmSigInfo_as[f_signal_e].IsSigConfigured_b == (t_bool)False)
-    {
-        Ret_e = RC_ERROR_MISSING_CONFIG;
-    }
-    if(g_FmkIO_ModState_e != STATE_CYCLIC_OPE)
-    {
-        Ret_e = RC_WARNING_BUSY;
-    }
-    if (Ret_e == RC_OK)
-    {
-        ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
-        SETBIT_8B(maskValue_u8, FMKTIM_BIT_PWM_NB_PULSES);
-
-        Ret_e = FMKTIM_Get_InterruptLineValue(  FMKTIM_INTERRUPT_LINE_TYPE_IO,
-                                                ITLineIO_e,
-                                                &pwmValue_u,
-                                                maskValue_u8);
-
-        if(Ret_e == RC_OK)
+        else if (Ret_e == RC_WARNING_BUSY)
         {
-            *f_pulsesLeft_pu16 = (t_uint16)pwmValue_u.PwmValue_s.nbPulses_u16;
+            *f_frequency_pu32 = (t_uint32)0;
+            //----- don't block the application, busy 'cause it line son't start yet -----//
+            Ret_e = RC_OK;
         }
     }
 
     return Ret_e;
 }
+
 /*********************************
  * FMKIO_Get_OutPwmSigDutyCycle
  *********************************/
@@ -1197,6 +1159,12 @@ t_eReturnCode FMKIO_Get_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint
         if(Ret_e == RC_OK)
         {
             *f_dutyCycle_pu16 = (t_uint16)pwmValue_u.PwmValue_s.dutyCycle_u16;
+        }
+        else if (Ret_e == RC_WARNING_BUSY)
+        {
+            *f_dutyCycle_pu16 = (t_uint32)0;
+            //----- don't block the application, busy 'cause it line son't start yet -----//
+            Ret_e = RC_OK;
         }
     }
 
@@ -1515,10 +1483,10 @@ t_eReturnCode FMKIO_Get_OutDigSigValue(t_eFMKIO_OutDigSig f_signal_e, t_eFMKIO_D
     }
     if (Ret_e == RC_OK)
     {
-        Ret_e = FMKIO_Get_BspGpioPort(c_InDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
+        Ret_e = FMKIO_Get_BspGpioPort(c_OutDigSigBspMap_as[f_signal_e].HwGpio_e, &bspGpio_ps);
         if (Ret_e == RC_OK)
         {
-            bspSigValue_e = HAL_GPIO_ReadPin(bspGpio_ps, c_BspPinMapping_ua16[c_InDigSigBspMap_as[f_signal_e].HwPin_e]);
+            bspSigValue_e = HAL_GPIO_ReadPin(bspGpio_ps, c_BspPinMapping_ua16[c_OutDigSigBspMap_as[f_signal_e].HwPin_e]);
             switch (bspSigValue_e)
             {
             case GPIO_PIN_RESET:

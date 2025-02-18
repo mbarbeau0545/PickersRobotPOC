@@ -35,7 +35,6 @@
 
     /* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    
 
 	/* CAUTION : Automatic generated code section for Structure: Start */
 

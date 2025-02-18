@@ -24,6 +24,7 @@
 #include "APP_CFG/ConfigFiles/GMCR_ConfigPrivate.h"
 #include "FMK_HAL/FMK_SRL/Src/FMK_SRL.h"
 #include "APP_CFG/ConfigFiles/APPACT_ConfigPublic.h"
+#include "APP_CFG/ConfigFiles/Gantry_ConfigPublic.h"
 #include "APP_LGC/Src/Agents/Gantry/Src/Gantry.h"
 
 // ********************************************************************
@@ -35,14 +36,23 @@
 // ********************************************************************
 typedef enum
 {
-    GMCR_FSM_REF_AXE_X = 0x00,
+    
+    GMCR_FSM_PRE_REF_AXE_X = 0x00,
+    GMCR_FSM_REF_AXE_X,
+    GMCR_FSM_PRE_REF_AXE_Y,
     GMCR_FSM_REF_AXE_Y,
+    GMCR_FSM_PRE_REF_AXE_Z,
     GMCR_FSM_REF_AXE_Z,
 
     GMCR_FSM_NB
-} t_eGMCR_FSMReference;
+} t_eGMCR_FSMAxe;
 
-
+typedef enum 
+{
+    GMCR_FSM_SEO_SET_MOVE = 0x00,
+    GMCR_FSM_SEO_WAIT_CONTACT,
+    GMCR_FSM_SEO_GO_REVERSE,
+} t_eGMCR_FSMSeo;
 /* CAUTION : Automatic generated code section for Enum: Start */
 
 /* CAUTION : Automatic generated code section for Enum: End */
@@ -65,8 +75,7 @@ typedef enum
 // ********************************************************************
 static t_float32 * g_snsValues_paf32;
 static t_sAPPLGC_ServiceInfo * g_SrvInfo_pas;
-static t_sAPPLGC_ActInfo * g_actInfo_pas;
-static t_eGMCR_FSMReference g_FSMReference_e = GMCR_FSM_REF_AXE_X;
+static t_eGMCR_FSMAxe g_FSMAxeRef_e = GMCR_FSM_REF_AXE_X;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -82,7 +91,7 @@ static t_eGMCR_FSMReference g_FSMReference_e = GMCR_FSM_REF_AXE_X;
 *
 *
 */
-static t_eReturnCode s_GMCR_ReferenceAxeX(void);
+static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_);
 /**
 *
 *	@brief
@@ -95,7 +104,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(void);
 *
 *
 */
-static t_eReturnCode s_GMCR_ReferenceAxeY(void);
+static t_eReturnCode s_GMCR_ReferenceAxeY(t_bool * f_SEODone_pb);
 /**
 *
 *	@brief
@@ -108,7 +117,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeY(void);
 *
 *
 */
-static t_eReturnCode s_GMCR_ReferenceAxeZ(void);
+static t_eReturnCode s_GMCR_ReferenceAxeZ(t_bool * f_SEODone_pb);
 
 //****************************************************************************
 //                      Public functions - Implementation
@@ -118,7 +127,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeZ(void);
  *********************************/
 t_eReturnCode GMCR_Init(void)
 {
-
+    return RC_OK;
 }
 
 /*********************************
@@ -126,7 +135,8 @@ t_eReturnCode GMCR_Init(void)
  *********************************/
 t_eReturnCode GMCR_EnterMode(void)
 {
-
+    g_FSMAxeRef_e = GMCR_FSM_REF_AXE_X;
+    return RC_OK;
 }
 
 /*********************************
@@ -134,83 +144,98 @@ t_eReturnCode GMCR_EnterMode(void)
  *********************************/
 t_eReturnCode GMCR_ExitMode(void)
 {
-
+    return RC_OK;
 }
 
 /*********************************
  * GMCR_Cyclic
  *********************************/
 t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32, 
-                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas,
-                            t_sAPPLGC_ActInfo * f_actInfo_pas)
+                            t_sAPPLGC_ServiceInfo *f_SrvInfo_pas)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_bool SEODone_b = (t_bool)False;
 
     //----- Initialize Pointor to data -----//
     g_snsValues_paf32 = (t_float32 *)f_snsValues_paf32;
     g_SrvInfo_pas = (t_sAPPLGC_ServiceInfo *)f_SrvInfo_pas;
-    g_actInfo_pas = (t_sAPPLGC_ActInfo *)f_actInfo_pas;
     
-    switch (g_FSMReference_e)
+    switch (g_FSMAxeRef_e)
     {
+        case GMCR_FSM_PRE_REF_AXE_X:
+        {
+            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].state_e == APPLGC_SRV_STATE_STOPPED
+            && (g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK))
+            {
+                g_FSMAxeRef_e = GMCR_FSM_REF_AXE_X;
+            }
+            break;
+        }
         case GMCR_FSM_REF_AXE_X:
         {
-            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].state_e != APPLGC_SRV_STATE_STOPPED
-            || (g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK))
+            
             {
-                Ret_e = RC_WARNING_BUSY;
-            }
-            else
-            {
-                Ret_e = s_GMCR_ReferenceAxeX();
+                Ret_e = s_GMCR_ReferenceAxeX(&SEODone_b);
 
-                if(Ret_e == RC_OK)
+                if((Ret_e == RC_OK)
+                && (SEODone_b == (t_bool)True))
                 {
-                    g_FSMReference_e = GMCR_FSM_REF_AXE_Y;
+                    g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Y;
                 }
+            }
+            break;
+        }
+        case GMCR_FSM_PRE_REF_AXE_Y:
+        {
+            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e == APPLGC_SRV_STATE_STOPPED)
+            {
+                g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Y;
             }
             break;
         }
         case GMCR_FSM_REF_AXE_Y:
         {
-            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e != APPLGC_SRV_STATE_STOPPED
-            || (g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e != APPLGC_SRV_HEALTH_OK))
-            {
-                Ret_e = RC_WARNING_BUSY;
-            }
-            else
-            {
-                Ret_e = s_GMCR_ReferenceAxeY();
+            Ret_e = s_GMCR_ReferenceAxeY(&SEODone_b);
 
-                if(Ret_e == RC_OK)
-                {
-                    g_FSMReference_e = GMCR_FSM_REF_AXE_Z;
-                }
+            if((Ret_e == RC_OK)
+            && (SEODone_b == (t_bool)True))
+            {
+                g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Z;
+            }
+            break;
+        }
+        case GMCR_FSM_PRE_REF_AXE_Z:
+        {
+            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e == APPLGC_SRV_STATE_STOPPED)
+            {
+                g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Z;
             }
             break;
         }
         case GMCR_FSM_REF_AXE_Z:
         {
-            if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e != APPLGC_SRV_STATE_STOPPED
-            || (g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e != APPLGC_SRV_HEALTH_OK))
-            {
-                Ret_e = RC_WARNING_BUSY;
-            }
-            else
-            {
-                Ret_e = s_GMCR_ReferenceAxeZ();
+            Ret_e = s_GMCR_ReferenceAxeZ(&SEODone_b);
 
-                if(Ret_e == RC_OK)
-                {
-                    //----- Send Message Application -----//
-                    Ret_e = Gantry_RqstSFMState(GTRY_SFM_GANTRY_PAUSE);
-                    g_FSMReference_e = GMCR_FSM_REF_AXE_X;
-                }
+            if((Ret_e == RC_OK)
+            && (SEODone_b == (t_bool)True))
+            {
+                //----- Send Message Application -----//
+                Ret_e = Gantry_InformAppMissionState(GTRY_MISSION_SUCCEED);
+                
+                Ret_e = Gantry_RqstSFMState(GTRY_SFM_GANTRY_PAUSE);
+                g_FSMAxeRef_e = GMCR_FSM_REF_AXE_X;
             }
             break;
         }
+        case GMCR_FSM_NB:
+        default:
+        {
+            Ret_e = RC_WARNING_NO_OPERATION;
+        }
+    
     }
 
+    return Ret_e;
 }
 //********************************************************************************
 //                      Local functions - Implementation
@@ -218,38 +243,73 @@ t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32,
 /*********************************
  * GMCR_Cyclic
  *********************************/
-static t_eReturnCode s_GMCR_ReferenceAxeX(void)
+static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
 {
-    t_eReturnCode Ret_e = RC_WARNING_BUSY;
-    static t_bool s_setMvmt_b = False;
-
-    //----- Check Contact -----//
-    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
-    || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
-    || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
-    || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MAX] == APPSNS_LIM_SWCH_NC_CONTACT))
+    t_eReturnCode Ret_e = RC_OK; /**< reference Axe X on Going */
+    static t_eGMCR_FSMSeo s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
+    t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
+    *f_SEODone_pb = (t_bool)False;
+    
+    if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
     {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32 = (t_float32)0.0;
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32 = (t_float32)0.0;
-        Ret_e == RC_OK;
+
+        //----- Check Contact -----//
+        if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_L_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_X_R_MAX] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrXL_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXL_u->Motor_s.stopPulse_b  = (t_bool)True;
+            
+            actgtrXR_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXR_u->Motor_s.stopPulse_b  = (t_bool)True;
+            s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
+        }
+        //----- State Machine -----//
+        switch (s_SFMSeo_e)
+        {
+            case GMCR_FSM_SEO_SET_MOVE:
+            {
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_PULSE_REFERENCE);
+                actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
+                
+                actgtrXR_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_R_DIR * GMCR_PULSE_REFERENCE);
+
+                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
+                break;
+            }
+            case GMCR_FSM_SEO_WAIT_CONTACT:
+            {
+                // just wait
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                break;
+            }
+            case GMCR_FSM_SEO_GO_REVERSE:
+            {
+                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
+                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
+
+                s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+                //----- Refereence Axe X done -----//
+                *f_SEODone_pb = (t_bool)True;
+            }
+        }
     }
-
-    //----- Set Actuators for reference -----//
-    if(s_setMvmt_b == (t_bool)False);
+    else
     {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_PULSE].setValue_f32 = (t_float32)GMCR_PULSE_REFERENCE;
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_PULSE].setValue_f32 = (t_float32)GMCR_PULSE_REFERENCE;
+        actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+        actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
 
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_SPEED].setValue_f32 =  (t_float32)GMCR_REF_FREQ_NOMINAL; 
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_SPEED].setValue_f32 =  (t_float32)GMCR_REF_FREQ_NOMINAL; 
+        actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+        actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
 
-
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_L_DIR].setValue_f32 = (t_float32)GMCR_DIR_X_REFERENCE; 
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_X_R_DIR].setValue_f32 = (t_float32)GMCR_DIR_X_REFERENCE; 
-
-        Ret_e = RC_WARNING_BUSY;
-        s_setMvmt_b = (t_bool)True;
-    }*/
+        actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+        actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+    }
 
     return Ret_e;
 }
@@ -257,56 +317,123 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(void)
 /*********************************
  * s_GMCR_ReferenceAxeY
  *********************************/
-static t_eReturnCode s_GMCR_ReferenceAxeY(void)
+static t_eReturnCode s_GMCR_ReferenceAxeY(t_bool * f_SEODone_pb)
 {
-    t_eReturnCode Ret_e = RC_WARNING_BUSY;
-    static t_bool s_setMvmt_b = False;
+    t_eReturnCode Ret_e = RC_OK; /**< reference Axe Y on Going */
+    static t_eGMCR_FSMSeo s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+    t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
+    *f_SEODone_pb = (t_bool)False; 
 
-    //----- Check Contact -----//
-    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
-    || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+    if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
     {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)0.0;
-        Ret_e == RC_OK;
+        //----- Check Contact -----//
+        if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Y_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+            actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+            s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
+        }
+
+        switch (s_SFMSeo_e)
+        {
+            case GMCR_FSM_SEO_SET_MOVE:
+            {
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+
+                actgtrY_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
+                actgtrY_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+
+                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;      
+                break;
+            }
+            case GMCR_FSM_SEO_WAIT_CONTACT:
+            {
+                // just wait
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                break;
+            }
+            case GMCR_FSM_SEO_GO_REVERSE:
+            {
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+                actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+
+                s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+                //----- Refereence Axe Y done -----//
+                *f_SEODone_pb = (t_bool)True; 
+            }
+        }
+    }
+    else 
+    {
+        actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+        actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+        actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
     }
 
-    //----- Set Actuators for reference -----//
-    if(s_setMvmt_b == (t_bool)False);
-    {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_PULSE].setValue_f32 = (t_float32)GMCR_PULSE_REFERENCE;
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_SPEED].setValue_f32 =  (t_float32)GMCR_REF_FREQ_NOMINAL; 
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Y_DIR].setValue_f32 =  (t_float32)GMCR_DIR_Y_REFERENCE; 
-        Ret_e = RC_WARNING_BUSY;
-        s_setMvmt_b = (t_bool)True;
-    }
-
-    return Ret_e;*/
+    return Ret_e;
 }
  /*********************************
  * s_GMCR_ReferenceAxeZ
  *********************************/
-static t_eReturnCode s_GMCR_ReferenceAxeZ(void)
+static t_eReturnCode s_GMCR_ReferenceAxeZ(t_bool * f_SEODone_pb)
 {
-    t_eReturnCode Ret_e = RC_WARNING_BUSY;
-    static t_bool s_setMvmt_b = False;
+    t_eReturnCode Ret_e = RC_OK; /**< reference Axe Y on Going */
+    static t_eGMCR_FSMSeo s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+    t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
+    *f_SEODone_pb = (t_bool)False;
 
-    //----- Check Contact -----//
-    /*if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
-    || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+    if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
     {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)0.0;
-        Ret_e = RC_OK;
+        //----- Check Contact -----//
+        if((g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_paf32[APPSNS_SENSOR_LIM_SWCH_Z_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+            actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+            s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
+
+        }
+
+        switch (s_SFMSeo_e)
+        {
+            case GMCR_FSM_SEO_SET_MOVE:
+            {
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+
+                actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
+                actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+
+                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
+                break;
+            }
+            case GMCR_FSM_SEO_WAIT_CONTACT:
+            {
+                // just wait
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                break;
+            }
+            case GMCR_FSM_SEO_GO_REVERSE:
+            {
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+
+                s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+                //----- Refereence Axe Y done -----//
+                *f_SEODone_pb = (t_bool)True;
+            }
+        }
     }
-
-    //----- Set Actuators for reference -----//
-    if(s_setMvmt_b == (t_bool)False);
+    else 
     {
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_PULSE].setValue_f32 = (t_float32)GMCR_PULSE_REFERENCE;
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_SPEED].setValue_f32 =  (t_float32)GMCR_REF_FREQ_NOMINAL; 
-        g_actInfo_pas[APPACT_ACTUATOR_MTR_Z_DIR].setValue_f32 =  (t_float32)GMCR_DIR_Z_REFERENCE; 
-        Ret_e = RC_WARNING_BUSY;
-        s_setMvmt_b = (t_bool)True;
-    }*/
+        actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+        actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+        actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+    }
 
     return Ret_e;
 }

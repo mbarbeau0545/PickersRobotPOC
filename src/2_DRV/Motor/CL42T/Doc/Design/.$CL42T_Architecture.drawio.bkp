@@ -23,10 +23,10 @@
             <mxRectangle x="-1160" y="-1210" width="240" height="40" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-13" value="CL42T_MOTOR_DIRECTION_CLOCKWISE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-13" value="CL42T_MOTOR_DIRECTION_CW" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">
           <mxGeometry y="40" width="270" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GfyHRPOfNkN_5rqHJgt4-14" value="CL42T_MOTOR_DIRECTION_WISE" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">
+        <mxCell id="GfyHRPOfNkN_5rqHJgt4-14" value="CL42T_MOTOR_DIRECTION_CCW" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">
           <mxGeometry y="70" width="270" height="30" as="geometry" />
         </mxCell>
         <mxCell id="GfyHRPOfNkN_5rqHJgt4-15" value="CL42T_MOTOR_DIRECTION_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="GfyHRPOfNkN_5rqHJgt4-12" vertex="1">

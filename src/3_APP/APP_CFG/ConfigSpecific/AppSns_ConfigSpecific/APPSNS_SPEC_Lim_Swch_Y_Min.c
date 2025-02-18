@@ -19,6 +19,7 @@
 /* CAUTION : Automatic generated code section for Include: Start */
 #include "./APPSNS_SPEC_Lim_Swch_Y_Min.h"
 /* CAUTION : Automatic generated code section for Include: End */
+#include "FMK_HAL/FMK_IO/Src/FMK_IO.h"
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
@@ -49,7 +50,7 @@
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
-
+static const t_eFMKIO_InDigSig c_LimSwSig_e = FMKIO_INPUT_SIGDIG_5;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -66,7 +67,8 @@ t_eReturnCode APPSNS_SPEC_Lim_Swch_Y_Min_SetCfg(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Lim_Swch_Y_Min_SetSnsCfg here
-
+    Ret_e = FMKIO_Set_InDigSigCfg(  c_LimSwSig_e,
+                                    FMKIO_PULL_MODE_UP);
 
 
     return Ret_e;
@@ -81,8 +83,20 @@ t_eReturnCode APPSNS_SPEC_Lim_Swch_Y_Min_GetSigValue(t_float32 *f_rawSigValue_pf
 {
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Lim_Swch_Y_Min_GetSigValue here
+    t_eFMKIO_DigValue digValue_e;
+    
+    Ret_e = FMKIO_Get_InDigSigValue(c_LimSwSig_e, &digValue_e);
 
-
+    if(Ret_e == RC_OK)
+    {
+        *f_rawSigValue_pf32 = (t_float32)digValue_e;
+        *f_isValue_OK = (t_bool)True;
+    }
+    else 
+    {   
+        *f_rawSigValue_pf32 = (t_float32)0.0;
+        *f_isValue_OK = (t_bool)False;
+    }
 
     return Ret_e;
 }
@@ -96,7 +110,7 @@ t_eReturnCode APPSNS_SPEC_Lim_Swch_Y_Min_FormatValue(t_float32  rawValue_f32, t_
 {
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Lim_Swch_Y_Min_FormatValSI here
-
+    *SnsValue_f32 = rawValue_f32;
 
 
     return Ret_e;

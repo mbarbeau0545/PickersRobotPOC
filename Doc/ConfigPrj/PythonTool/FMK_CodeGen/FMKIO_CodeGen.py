@@ -103,7 +103,7 @@ class FMKIO_CodeGen():
         enum_description = ""
         element_description_a:  List[str] = []
         # this pin are usually used by hardware
-        stm_pin = ["PC14", "PC15"]
+        stm_pin = ['PA14', 'PA13']
         stm_tim_chnl:List = FMKTIM_CodeGen.get_tim_chnl_used()
         max_pin_per_gpio: int = 0
         #---------------------------------------------------
@@ -276,7 +276,7 @@ class FMKIO_CodeGen():
         for idx, pin_evnt_cfg in enumerate(InEvnt_astr[1:]):
             sig_name = f'P{pin_evnt_cfg[0][5:]}{pin_evnt_cfg[1][4:]}'
             if sig_name in stm_pin:
-                raise GPIO_AlreadyConfgigured(f"{pin_evnt_cfg[3]} has already been configured")
+                raise GPIO_AlreadyConfgigured(f"{sig_name} has already been configured")
             
             sig_in_evnt.append(sig_name)
             stm_pin.append(sig_name)
@@ -338,7 +338,7 @@ class FMKIO_CodeGen():
         for idx, pin_dig_cfg in enumerate(OutDig_astr[1:]):
             sig_name = f'P{pin_dig_cfg[0][5:]}{pin_dig_cfg[1][4:]}'
             if sig_name in stm_pin:
-                    raise GPIO_AlreadyConfgigured(f"{pin_dig_cfg[2]} has already been configured")
+                    raise GPIO_AlreadyConfgigured(f"{sig_name} has already been configured")
             
             sig_out_dig.append(sig_name)
             stm_pin.append(sig_name)

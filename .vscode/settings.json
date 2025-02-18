@@ -77,7 +77,12 @@
     "fmk_srl.h": "c",
     "gantry_configprivate.h": "c",
     "gmcac.h": "c",
-    "applgc_configprivate.h": "c"
+    "applgc_configprivate.h": "c",
+    "gantry.h": "c",
+    "app_sdm.h": "c",
+    "gantry_configpublic.h": "c",
+    "appact_spec_mtr_y.h": "c",
+    "appact_spec_mtr_x_l.h": "c"
   },
   "stm32-for-vscode.armToolchainPath": false,
   "C_Cpp_Runner.cCompilerPath": "gcc",

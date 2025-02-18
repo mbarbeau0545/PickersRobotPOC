@@ -9,4 +9,6 @@
     Un noeud possède strictement 
         - Un état général ON/OFF
         - Un état fonctionnel STOPPED/MOVING_INHIBIT etc
-        - un/des setPoints pour les actuators. 
+        - un/des setPoints pour les actuators
+
+    Le rôle de chaque agent est de d'actualiser cycliquement l'état de leur service et 

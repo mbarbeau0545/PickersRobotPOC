@@ -18,6 +18,8 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
+    #define GTRY_MTR_X_L_DIR ((t_sint32)1)
+    #define GTRY_MTR_X_R_DIR ((t_sint32)-1)
     // ********************************************************************
     // *                      Types
     // ********************************************************************
@@ -25,15 +27,6 @@
 
     /* CAUTION : Automatic generated code section for Enum: End */
 	//-----------------------------ENUM TYPES-----------------------------//
-    typedef enum 
-    {
-        GTRY_SFM_GANTRY_PRE_PRODUCTION = 0x00,
-        GTRY_SFM_GANTRY_PRODUCTION,
-        GTRY_SFM_GANTRY_PAUSE,
-        GTRY_SFM_GANTRY_DEFAULT,
-
-        GTRY_SFM_GANTRY_NB,
-    } t_eGTRY_FSMGantry;
 
     typedef enum        
     {
@@ -52,6 +45,14 @@
     {
         GTRY_FSM_FAILURE_NB = 0x00,
     } t_eGTRY_FSMFailure;
+
+    typedef enum 
+    {
+        GTRY_MISSION_SUCCEED = 0x00,
+        GTRY_MISSION_FAIL,
+        GTRY_MISSION_READY,
+        GTRY_MISSION_BUSY,
+    } t_eGTRY_MissionStatus;
 	/* CAUTION : Automatic generated code section for Structure: Start */
 
 	/* CAUTION : Automatic generated code section for Structure: End */

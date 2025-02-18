@@ -206,7 +206,7 @@ class AppSns_CodeGen():
         include_c = f'#include "./{VAR_APPSNS_SPEC}_{f_sns_name}.h"\n'
         suffix_func = {"SetCfg" : ["(void)", "t_cbAppSns_SetSnsCfg"], 
                        "GetSigValue" :  ["(t_float32 *f_rawSigValue_pf32, t_bool * f_isValue_OK)", "t_cbAppSns_GetSigValue" ],
-                       "FormatValue" : ["(t_float32  rawValue_f32, t_float32 *SnsValue_f32)", "t_cbAppSns_FormatValSI" ]}
+                       "FormatValue" : ["(t_float32  f_rawValue_f32, t_float32 * f_SnsValue_f32)", "t_cbAppSns_FormatValSI" ]}
         distination_file_h = os.path.join(SNS_SPEC_FOLDER_FULLPATH, f"{VAR_APPSNS_SPEC}_{f_sns_name}.h")
         distination_file_c = os.path.join(SNS_SPEC_FOLDER_FULLPATH, f"{VAR_APPSNS_SPEC}_{f_sns_name}.c")
         # copy both files with new name
