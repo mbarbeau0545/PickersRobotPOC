@@ -151,9 +151,9 @@
         FMKIO_OUTPUT_SIGDIG_6,                        /**< Reference to PA10 */
         FMKIO_OUTPUT_SIGDIG_7,                        /**< Reference to PA11 */
         FMKIO_OUTPUT_SIGDIG_8,                        /**< Reference to PA12 */
-        FMKIO_OUTPUT_SIGDIG_9,                        /**< Reference to PA13 */
-        FMKIO_OUTPUT_SIGDIG_10,                       /**< Reference to PA14 */
-        FMKIO_OUTPUT_SIGDIG_11,                       /**< Reference to PA8 */
+        FMKIO_OUTPUT_SIGDIG_9,                        /**< Reference to PA8 */
+        FMKIO_OUTPUT_SIGDIG_10,                       /**< Reference to PB5 */
+        FMKIO_OUTPUT_SIGDIG_11,                       /**< Reference to PD2 */
     
         FMKIO_OUTPUT_SIGDIG_NB,
     } t_eFMKIO_OutDigSig;

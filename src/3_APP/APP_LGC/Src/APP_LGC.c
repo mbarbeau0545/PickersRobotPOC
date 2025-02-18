@@ -528,6 +528,30 @@ void APPLGC_ComputeCheckSum(t_uint8 * f_startData_pu8,
 static t_eReturnCode s_APPLGC_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_sFMKSRL_DrvSerialCfg SrlCfg_s;
+    SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
+    SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
+
+    SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_115200,
+    SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
+    SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
+    SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
+    SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
+
+    SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
+    SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
+
+    Ret_e = FMKSRL_InitDrv( APPLGC_SERIAL_LINE_APP, 
+                            SrlCfg_s,
+                            s_APPLGC_AppEvntCallback,
+                            (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION);
+    
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = FMKSRL_ConfigureReception(  APPLGC_SERIAL_LINE_APP,
+                                            FMKSRL_OPE_RX_CYCLIC_SIZE,
+                                            (t_uint16)APPLGC_APP_PROTOCOL_LEN_DATA);
+    }
 
     return Ret_e;
 }
@@ -538,36 +562,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_sFMKSRL_DrvSerialCfg SrlCfg_s;
-
-    Ret_e = APPSDM_ResetDiagEvnt();
     
-    if(Ret_e == RC_OK)
-    {
-        
-        SrlCfg_s.runMode_e = FMKSRL_LINE_RUNMODE_DMA;
-        SrlCfg_s.hwProtType_e = FMKSRL_HW_PROTOCOL_UART;
+    Ret_e = APPSDM_ResetDiagEvnt();
 
-        SrlCfg_s.hwCfg_s.Baudrate_e = FMKSRL_LINE_BAUDRATE_115200,
-        SrlCfg_s.hwCfg_s.Mode_e = FMKSRL_LINE_MODE_RX_TX;
-        SrlCfg_s.hwCfg_s.Parity_e = FMKSRL_LINE_PARITY_NONE,
-        SrlCfg_s.hwCfg_s.Stopbit_e = FMKSRL_LINE_STOPBIT_1,
-        SrlCfg_s.hwCfg_s.wordLenght_e = FMKSRL_LINE_WORDLEN_8BITS,
-
-        SrlCfg_s.CfgSpec_u.uartCfg_s.hwFlowCtrl_e = FMKSRL_UART_HW_FLOW_CTRL_NONE;
-        SrlCfg_s.CfgSpec_u.uartCfg_s.Type_e = FMKSRL_UART_TYPECFG_UART,
-
-    Ret_e = FMKSRL_InitDrv( APPLGC_SERIAL_LINE_APP, 
-                            SrlCfg_s,
-                            s_APPLGC_AppEvntCallback,
-                            (t_cbFMKSRL_TransmitMsgEvent *)NULL_FONCTION);
-    }
-    if(Ret_e == RC_OK)
-    {
-        Ret_e = FMKSRL_ConfigureReception(  APPLGC_SERIAL_LINE_APP,
-                                            FMKSRL_OPE_RX_CYCLIC_SIZE,
-                                            (t_uint16)APPLGC_APP_PROTOCOL_LEN_DATA);
-    }
     return Ret_e;
 }
 

@@ -156,6 +156,11 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
 
     if(Ret_e == RC_OK)
     {
+        Ret_e = s_GTRY_UpdateSrvState();
+    }
+    
+    if(Ret_e == RC_OK)
+    {
         switch (g_FSM_GtryMode_e)
         {
             case GTRY_SFM_GANTRY_PRODUCTION:
@@ -163,7 +168,6 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
                 if(Ret_e == RC_OK)
                 {
                     //----- Update Service & Reset Actuators Value -----//
-                    Ret_e = s_GTRY_UpdateSrvState();
                     s_GTRY_ResetActuatorState();
                 }
                 if(Ret_e == RC_OK)

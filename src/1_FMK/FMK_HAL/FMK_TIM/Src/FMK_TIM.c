@@ -1090,6 +1090,7 @@ t_eReturnCode FMKTIM_Get_InterruptLineValue(t_eFMKTIM_InterruptLineType f_ITLine
         if( (GETBIT(timerInfo_ps->Channel_as[chnl_e].ErrState_u16, FMKTIM_ERRSTATE_OK) == BIT_IS_RESET_16B)
         ||  (timerInfo_ps->Channel_as[chnl_e].State_e == FMKTIM_CHNLST_DISACTIVATED))
         {
+            SafeMem_memclear((void *)f_ITLineValue_u, sizeof(t_uFMKTIM_ITLineValue));
             Ret_e = RC_WARNING_BUSY;
         }
         if(Ret_e == RC_OK)

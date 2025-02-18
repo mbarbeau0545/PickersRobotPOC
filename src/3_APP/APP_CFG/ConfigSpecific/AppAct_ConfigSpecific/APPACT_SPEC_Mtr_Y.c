@@ -80,7 +80,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Y_SetCfg(void)
             .PullMode_e = FMKIO_PULL_MODE_DISABLE,
         },
         .DirSigCfg_s = {
-            .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_11, 
+            .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_3, 
             .PullMode_e = FMKIO_PULL_MODE_DISABLE,
         },
         .DiagSigCfg_s = {

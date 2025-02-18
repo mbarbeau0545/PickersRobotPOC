@@ -239,6 +239,8 @@ t_eReturnCode APPSNS_Init(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxSns_u8;
+    t_uint8 LLDRV_u8;
+
 
     // check sensors cfg
     for(idxSns_u8 = (t_uint8)0 ; (idxSns_u8 < APPSNS_SENSOR_NB) && (Ret_e == RC_OK) ; idxSns_u8++)
@@ -251,7 +253,14 @@ t_eReturnCode APPSNS_Init(void)
             Ret_e = RC_ERROR_PARAM_INVALID;
         }
     }
-    // check configuration validity 
+    //---- driver init -----//
+    for(LLDRV_u8 = (t_uint8)0; (LLDRV_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK) ; LLDRV_u8++)
+    {
+        if(c_AppSns_SysDrv_apf[LLDRV_u8].Init_pcb != (t_cbAppSns_DrvInit *)NULL_FONCTION)
+        {
+            Ret_e = (c_AppSns_SysDrv_apf[LLDRV_u8].Init_pcb)();
+        }
+    }
 
     return Ret_e;
 }
@@ -377,25 +386,12 @@ t_eReturnCode APPSNS_Get_SnsValue(t_eAPPSNS_Sensors f_Sns_e, t_sAPPSNS_SnsInfo *
 static t_eReturnCode s_AppSns_ConfigurationState(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_uint8 s_LLDRV_u8 = 0;
     static t_uint8 s_LLSNS_u8 = 0;
     
-    // driver init
-    for(; (s_LLDRV_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK) ; s_LLDRV_u8++)
-    {
-        if(c_AppSns_SysDrv_apf[s_LLDRV_u8].Init_pcb != (t_cbAppSns_DrvInit *)NULL_FONCTION)
-        {
-            Ret_e = (c_AppSns_SysDrv_apf[s_LLDRV_u8].Init_pcb)();
-        }
-        else
-        {
-            Ret_e = RC_ERROR_PTR_NULL;
-        }
-    }
     // sensors configuration call
     for(; (s_LLSNS_u8 < APPSNS_SENSOR_NB) && (Ret_e == RC_OK) ; s_LLSNS_u8++)
     {
-        if(c_AppSns_SysSns_apf[s_LLDRV_u8].SetCfg_pcb != (t_cbAppSns_SetSnsCfg *)NULL_FONCTION)
+        if(c_AppSns_SysSns_apf[s_LLSNS_u8].SetCfg_pcb != (t_cbAppSns_SetSnsCfg *)NULL_FONCTION)
         {
             Ret_e = (c_AppSns_SysSns_apf[s_LLSNS_u8].SetCfg_pcb)();
         }
@@ -404,8 +400,7 @@ static t_eReturnCode s_AppSns_ConfigurationState(void)
             Ret_e = RC_ERROR_PTR_NULL;
         }
     }
-    if( s_LLDRV_u8 < APPSNS_DRIVER_NB
-    &&  s_LLSNS_u8 < APPSNS_SENSOR_NB
+    if(s_LLSNS_u8 < APPSNS_SENSOR_NB
     && Ret_e == RC_OK) // only if problem has not been captured yet
     {// problem or waiting on init or sensors config just waiting for next cycle
         Ret_e = RC_WARNING_BUSY;
@@ -419,25 +414,13 @@ static t_eReturnCode s_AppSns_ConfigurationState(void)
 static t_eReturnCode s_APPSNS_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_bool s_IsDrvCylic_b = True;
-    t_uint8 DrvCyclicCnt_u8 = 0;
     t_uint8 LLI_u8; 
 
-    if(s_IsDrvCylic_b == (t_bool)True)
+    for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK); LLI_u8++)
     {
-        for(LLI_u8 = (t_uint8)0 ; (LLI_u8 < APPSNS_DRIVER_NB) && (Ret_e == RC_OK); LLI_u8++)
+        if(c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppSns_DrvCyclic *)NULL_FONCTION)
         {
-
-            DrvCyclicCnt_u8 += (t_uint8)1;
-
-            if(c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb != (t_cbAppSns_DrvCyclic *)NULL_FONCTION)
-            {
-                Ret_e = (c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb)();
-            }
-        }
-        if(DrvCyclicCnt_u8 == (t_uint8)0)
-        {
-            s_IsDrvCylic_b = (t_bool)False;
+            Ret_e = (c_AppSns_SysDrv_apf[LLI_u8].Cyclic_pcb)();
         }
     }
 
@@ -450,8 +433,6 @@ static t_eReturnCode s_APPSNS_Operational(void)
 t_eReturnCode s_APPSNS_ConvertingManagement(t_eAPPSNS_Sensors f_sns_e, t_sAPPSNS_SnsInfo *f_snsInfo_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
-
-    // see if there is a ConvertValSI for this sensors
 
     Ret_e = c_AppSns_SysSns_apf[f_sns_e].FormatValSI_pcb(f_snsInfo_ps->rawValue_f32, &f_snsInfo_ps->SnsValue_f32);
     if(Ret_e == RC_OK)

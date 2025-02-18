@@ -103,7 +103,7 @@ class FMKIO_CodeGen():
         enum_description = ""
         element_description_a:  List[str] = []
         # this pin are usually used by hardware
-        stm_pin = []
+        stm_pin = ['PA14', 'PA13']
         stm_tim_chnl:List = FMKTIM_CodeGen.get_tim_chnl_used()
         max_pin_per_gpio: int = 0
         #---------------------------------------------------
