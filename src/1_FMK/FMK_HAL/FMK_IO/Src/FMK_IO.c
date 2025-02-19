@@ -15,6 +15,7 @@
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPrivate.h"
 #include "FMK_HAL/FMK_CDA/Src/FMK_CDA.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+#include "Library/SafeMem/SafeMem.h"
 
 // ********************************************************************
 // *                      Defines
@@ -959,6 +960,10 @@ t_eReturnCode FMKIO_Set_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint
     }
     if (Ret_e == RC_OK)
     {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
+    {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.dutyCycle_u16 = f_dutyCycle_u16;
         SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
@@ -1004,6 +1009,10 @@ t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
 
     if (Ret_e == RC_OK)
     {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
+    {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.frequency_u32 = f_frequency_u32;
         pwmOpe_u.PwmOpe_s.dutyCycle_u16 = g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16;
@@ -1037,7 +1046,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e,
 
     if ((f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
     ||  (f_dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE)
-    ||  (f_pulses_u16 > (t_uint16)0xFFFF))
+    ||  (f_pulses_u16 > (t_uint16)CST_MAX_UINT_16BIT))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1050,6 +1059,10 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e,
         Ret_e = RC_WARNING_BUSY;
     }
     if (Ret_e == RC_OK)
+    {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
     {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.nbPulses_u16 = f_pulses_u16;

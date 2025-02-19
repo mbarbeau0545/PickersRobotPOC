@@ -206,7 +206,7 @@
         <mxCell id="Jur4rvrfF9LPQLyBYyrp-1" value="CL42T_PULSE_BIT_DEAD_TIME" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="4dmD2tTbzXhdYYISqZpw-2" vertex="1">
           <mxGeometry y="100" width="270" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="bKBw6nodVyOs6xMyvSZ9-2" value="CL42T_PULSE_BIT_RQST_CMD" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="4dmD2tTbzXhdYYISqZpw-2" vertex="1">
+        <mxCell id="bKBw6nodVyOs6xMyvSZ9-2" value="CL42T_PULSE_BIT_RQST_PULSE_CMD" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="4dmD2tTbzXhdYYISqZpw-2" vertex="1">
           <mxGeometry y="130" width="270" height="30" as="geometry" />
         </mxCell>
         <mxCell id="4dmD2tTbzXhdYYISqZpw-6" value="CL42T_PULSE_BIT_NB" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;gradientColor=#ea6b66;fontColor=#000000;" parent="4dmD2tTbzXhdYYISqZpw-2" vertex="1">
@@ -1027,7 +1027,7 @@
         <mxCell id="no3IaD30DrdjINV9f5-L-2" value="motorInfo_ps-&amp;gt;SignalIngo_as[CL42T_SIGTYPE_PULSE].&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;value_u32&lt;/span&gt;= f_nbPulses_u16" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-560" width="478.5" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="rjYnAsjlMGhq16KGJERL-1" value="SETBIT_8B(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="rjYnAsjlMGhq16KGJERL-1" value="SETBIT_8B(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_PULSE_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-260" width="478.5" height="70" as="geometry" />
         </mxCell>
         <mxCell id="K156DuJJ1_Juw-KPuzUM-5" value="WARNING_BUSY" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
@@ -1802,7 +1802,7 @@
         <mxCell id="PXXwwzzqNQ0swsjHJsox-1" value="motorInfo_ps-&amp;gt;signalInfo_as[CL42T_MOTORSIGTYPE_PULSE].value_u32 = 0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-130" width="478.5" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="PXXwwzzqNQ0swsjHJsox-2" value="RESETBIT(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="PXXwwzzqNQ0swsjHJsox-2" value="RESETBIT(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_PULSE_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="174.75" y="-100" width="478.5" height="30" as="geometry" />
         </mxCell>
         <mxCell id="SXotDfAqMiZhXgnzF2Iw-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="nilbLr26E19cuy5gYG5O-4" target="ud3b_JjnnYYjh60eOIfC-1" edge="1">
@@ -1916,10 +1916,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="9dQimvTcsDBmUv8uvlL1-1" value="if GETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_RQST_CMD) == BIT_IS_SET ??&lt;div&gt;&amp;amp;&amp;amp;&lt;/div&gt;&lt;div&gt;GETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_DEADTIME) == BIT_IS_RESET ??&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="9dQimvTcsDBmUv8uvlL1-1" value="if GETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_RQST_PULSE_CMD) == BIT_IS_SET ??&lt;div&gt;&amp;amp;&amp;amp;&lt;/div&gt;&lt;div&gt;GETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_DEADTIME) == BIT_IS_RESET ??&lt;/div&gt;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="230.83" y="-420" width="355" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="9dQimvTcsDBmUv8uvlL1-3" value="RESETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_RQST_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="9dQimvTcsDBmUv8uvlL1-3" value="RESETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_RQST_PULSE_CMD)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="169.81000000000003" y="-220" width="478.5" height="50" as="geometry" />
         </mxCell>
         <mxCell id="9dQimvTcsDBmUv8uvlL1-4" value="SETBIT(*&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;f_motorInfo_ps-&amp;gt;puilseMask_u8&lt;/span&gt;, CL42T_PULSE_BIT_ON)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
@@ -1994,7 +1994,7 @@
         <mxCell id="MpbbQDaZJRoc68sYYdI6-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MpbbQDaZJRoc68sYYdI6-6" target="MpbbQDaZJRoc68sYYdI6-9" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="MpbbQDaZJRoc68sYYdI6-6" value="GETBIT(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_CMD) == BIT_IS_SET" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+        <mxCell id="MpbbQDaZJRoc68sYYdI6-6" value="GETBIT(motorInfo_ps-&amp;gt;pulseMask_u8, CL42T_PULSE_BIT_RQST_PULSE_CMD) == BIT_IS_SET" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="236.78" y="-580.8" width="355" height="30" as="geometry" />
         </mxCell>
         <mxCell id="OX9Nbn9eqsWQ9XiUtyoJ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MpbbQDaZJRoc68sYYdI6-9" target="OX9Nbn9eqsWQ9XiUtyoJ-1" edge="1">

@@ -176,7 +176,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
 };
 
 /* CAUTION : Automatic generated code section for Timer Configuration: End */
-/**< In Pulses Mode when the timer is Launch hardware make a Interruption */
+/**< In Pulses Mode when the timer is Launch hardware make an Interruption */
 static t_bool g_timerPeriodPwm_ab[FMKTIM_TIMER_NB];
 /** Only One Channel Has the Right to be in Pulses Mode */
 static t_bool g_PwmBoundCfg_ae[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB];
@@ -1870,34 +1870,28 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                     chnlState_e = FMKTIM_CHNLST_ACTIVATED;
                 }
             }
-            if(GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
+            if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
+            && (f_PwmOpe_s.nbPulses_u16 != (t_uint32)0))
             {
-                if(f_PwmOpe_s.nbPulses_u16 != (t_uint16)0)
+                //----- If user required a number of pulse 
+                // we have to enable NVIC state to get ElapedTimeCallback 
+                // when RCR goes to 0, then we start PWM in polling Mode-----//
+                if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
                 {
-                    //----- If user required a number of pulse 
-                    // we have to enable NVIC state to get ElapedTimeCallback 
-                    // when RCR goes to 0, then we start PWM in polling Mode-----//
-                    if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
+                    Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+
+                    if(Ret_e == RC_OK)
                     {
-                        Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
-
-                        if(Ret_e == RC_OK)
-                        {
-                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
-                        }
+                        timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
                     }
-    
-                    timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT; 
-                    bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
                 }
-                else
-                {
-                    chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
-                }
-            }
 
-            //-------Forced actuation-------------//
+                timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT; 
+                bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
+                chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+                
+            }
+            
             if(Ret_e == RC_OK)
             {
                 //-------Activate/ Deactivate  channel-------------//
