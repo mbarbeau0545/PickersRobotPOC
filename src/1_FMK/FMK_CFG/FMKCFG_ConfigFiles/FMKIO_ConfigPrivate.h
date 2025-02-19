@@ -147,7 +147,7 @@
     const t_sFMKIO_BspEvntSigCfg c_InEvntSigBspMap_as[FMKIO_INPUT_SIGEVNT_NB] = {
         //GPIO_name                     Pin_name                      GPIO_IRQN                     
         {{FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_2},              FMKCPU_NVIC_EXTI2_IRQN},               // FMKIO_INPUT_SIGEVNT_1,
-        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_9},              FMKCPU_NVIC_EXTI9_5_IRQN},             // FMKIO_INPUT_SIGEVNT_2,
+        {{FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_5},              FMKCPU_NVIC_EXTI9_5_IRQN},             // FMKIO_INPUT_SIGEVNT_2,
     };
 
     /**< Variable for bsp_Gpio_Pin Digital ouput signal mapping */
@@ -158,19 +158,17 @@
         {FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_12},   // FMKIO_OUTPUT_SIGDIG_3,
         {FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_13},   // FMKIO_OUTPUT_SIGDIG_4,
         {FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_14},   // FMKIO_OUTPUT_SIGDIG_5,
-        {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_10},   // FMKIO_OUTPUT_SIGDIG_6,
+        {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_8},    // FMKIO_OUTPUT_SIGDIG_6,
         {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_11},   // FMKIO_OUTPUT_SIGDIG_7,
         {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_12},   // FMKIO_OUTPUT_SIGDIG_8,
-        {FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_8},    // FMKIO_OUTPUT_SIGDIG_9,
-        {FMKIO_GPIO_PORT_B,             FMKIO_GPIO_PIN_5},    // FMKIO_OUTPUT_SIGDIG_10,
-        {FMKIO_GPIO_PORT_D,             FMKIO_GPIO_PIN_2},    // FMKIO_OUTPUT_SIGDIG_11,
+        {FMKIO_GPIO_PORT_D,             FMKIO_GPIO_PIN_2},    // FMKIO_OUTPUT_SIGDIG_9,
     };
 
     /**< Variable for bsp_Gpio_Pin PWM output signal mapping */
     const t_sFMKIO_BspTimerSigCfg c_OutPwmSigBspMap_as[FMKIO_OUTPUT_SIGPWM_NB] = {
         //GPIO_name                     Pin_name                      alternate function            Interrupt Line                
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_0},              GPIO_AF2_TIM1,                 FMKTIM_INTERRUPT_LINE_IO_11},    // FMKIO_OUTPUT_SIGPWM_1,
-        {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_1},              GPIO_AF2_TIM1,                 FMKTIM_INTERRUPT_LINE_IO_12},    // FMKIO_OUTPUT_SIGPWM_2,
+        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_9},              GPIO_AF6_TIM1,                 FMKTIM_INTERRUPT_LINE_IO_12},    // FMKIO_OUTPUT_SIGPWM_1,
+        {{FMKIO_GPIO_PORT_A,             FMKIO_GPIO_PIN_10},             GPIO_AF6_TIM1,                 FMKTIM_INTERRUPT_LINE_IO_13},    // FMKIO_OUTPUT_SIGPWM_2,
         {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_2},              GPIO_AF6_TIM20,                FMKTIM_INTERRUPT_LINE_IO_72},    // FMKIO_OUTPUT_SIGPWM_3,
         {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_3},              GPIO_AF2_TIM1,                 FMKTIM_INTERRUPT_LINE_IO_14},    // FMKIO_OUTPUT_SIGPWM_4,
         {{FMKIO_GPIO_PORT_C,             FMKIO_GPIO_PIN_6},              GPIO_AF4_TIM8,                 FMKTIM_INTERRUPT_LINE_IO_61},    // FMKIO_OUTPUT_SIGPWM_5,

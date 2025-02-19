@@ -567,9 +567,11 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
     Ret_e = APPSDM_ResetDiagEvnt();
     actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
     actgtrXR_u->Motor_s.frequency_u32 = 2;
-    actgtrXR_u->Motor_s.nbPulses_s32 = 240;
+    actgtrXR_u->Motor_s.nbPulses_s32 = 45;
 
     Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
+    //Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_1, FMKIO_PULL_MODE_DISABLE, 2, FMKTIM_PWM_MODE_FINITE_PULSE,NULL_FONCTION,NULL_FONCTION);
+    //Ret_e = FMKIO_Set_OutPwmSigPulses(FMKIO_OUTPUT_SIGPWM_1, 500, 12);
     return Ret_e;
 }
 
@@ -580,16 +582,18 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint8 s_counter_u8 = (t_uint8)0;
+    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
 
-    if(s_counter_u8 < 5)
+    if(s_counter_u8 < 100)
     {
         s_counter_u8++;
-        t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
-        actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-        actgtrXR_u->Motor_s.frequency_u32 = 2;
-        actgtrXR_u->Motor_s.nbPulses_s32 = 10;
-        actgtrXR_u->Motor_s.stopPulse_b = False;
-        
+    }
+    else
+    {
+        actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+        actgtrXR_u->Motor_s.frequency_u32 = 0;
+        actgtrXR_u->Motor_s.nbPulses_s32 = 0;
+        actgtrXR_u->Motor_s.stopPulse_b = True;
         Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
 
     }

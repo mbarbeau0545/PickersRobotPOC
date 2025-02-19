@@ -71,8 +71,8 @@ t_eReturnCode APPACT_SPEC_Mtr_X_L_SetCfg(void)
 
     t_sCL42T_MotorSigCfg MotorConfig_s = {
             .PulseSigCfg_s = {
-                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_1, //PA10 GREEN WIRE
-                .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+                .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_2, 
+                .PullMode_e =  FMKIO_PULL_MODE_DOWN,
                 .f_PulseInitFreq_u32 = APPACT_DEFAULT_FREQ_MOTOR
             },
             .StateSigCfg = {
@@ -93,7 +93,7 @@ t_eReturnCode APPACT_SPEC_Mtr_X_L_SetCfg(void)
                                         MotorConfig_s,
                                         CL42T_PULSE_CHANGE_DIR_OPE_CANCEL,
                                         MtrX_L_MotorDiagnostic);
-
+    
     return Ret_e;
 }
 
