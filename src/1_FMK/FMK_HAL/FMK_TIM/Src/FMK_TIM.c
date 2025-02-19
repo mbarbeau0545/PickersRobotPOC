@@ -1805,7 +1805,6 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                                                 t_uint8 f_maskUpdate_u8)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_bool rqstBaseTimerOpe_b = False;
     HAL_StatusTypeDef bspRet_e = HAL_OK;
     t_sFMKTIM_TimerInfo * timerInfo_ps;
     TIM_TypeDef * bspIsct_ps;
@@ -1865,6 +1864,8 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
 
                 //----- don't change channel state ----//
                 chnlState_e = timerInfo_ps->Channel_as[f_chnl_e].State_e;
+                //----- Update Event -----//
+                //timerInfo_ps->bspTimer_s.Instance->EGR |= TIM_EGR_UG;
             }
             if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE) == BIT_IS_SET_8B)
             && (f_PwmOpe_s.dutyCycle_u16 != (t_uint16)0))
@@ -1899,8 +1900,11 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                     }
                 }
 
-                timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT; 
-                bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)1);
+                timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT;
+                //----- event update -----//
+                timerInfo_ps->bspTimer_s.Instance->EGR |= TIM_EGR_UG;
+                timerInfo_ps->bspTimer_s.Instance->CNT = 0;
+                bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
                 chnlState_e = FMKTIM_CHNLST_ACTIVATED;
                 
             }
@@ -2067,6 +2071,11 @@ static t_eReturnCode s_FMKTIM_Set_HwChannelState(   t_eFMKTIM_Timer f_timer_e,
                     if (timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
                     {
                         Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+
+                        if(Ret_e == RC_OK)
+                        {
+                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;
+                        }
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -2110,6 +2119,11 @@ static t_eReturnCode s_FMKTIM_Set_HwChannelState(   t_eFMKTIM_Timer f_timer_e,
                     if (timerInfo_ps->IsNVICTimerEnable_b == (t_bool)True)
                     {
                         Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_DISABLE);
+
+                        if(Ret_e == RC_OK)
+                        {
+                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)False;
+                        }
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -2378,6 +2392,10 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
                                 }
                             }
                         }
+                        //----- End Properly Timer Base -----//
+                        timerInfo_ps->bspTimer_s.Instance->RCR = 0;
+                        timerInfo_ps->bspTimer_s.Instance->EGR = TIM_EGR_UG;
+                        HAL_TIM_Base_Stop_IT(&timerInfo_ps->bspTimer_s);
                     }
                 }
                 break;

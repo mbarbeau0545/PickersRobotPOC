@@ -737,7 +737,7 @@ static t_eReturnCode s_CL42T_SetSignalsValue(t_sCL42T_MotorInfo * f_motorInfo_ps
                     {
                         if(remainingPulse_u32 > CST_MAX_UINT_16BIT)
                         {
-                            cmdPulseVal_u32 = (t_uint32)(CST_MAX_UINT_16BIT - (t_uint32)1);
+                            cmdPulseVal_u32 = (t_uint32)(CST_MAX_UINT_16BIT);
                         }
                         else
                         {
