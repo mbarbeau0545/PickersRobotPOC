@@ -567,7 +567,7 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
     Ret_e = APPSDM_ResetDiagEvnt();
     actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
     actgtrXR_u->Motor_s.frequency_u32 = 1;
-    actgtrXR_u->Motor_s.nbPulses_s32 = 1000;
+    actgtrXR_u->Motor_s.nbPulses_s32 = 10;
 
     Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
     //Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_1, FMKIO_PULL_MODE_DISABLE, 2, FMKTIM_PWM_MODE_FINITE_PULSE,NULL_FONCTION,NULL_FONCTION);
@@ -582,36 +582,22 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint32 s_counter_u32 = (t_uint8)0;
+    t_uAPPACT_GetValue actGtrXVal;
     t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
 
-    if(s_counter_u32 < 10)
-    {
-        s_counter_u32++;
-    }
-    /*else
-    {
-        if(s_counter_u32 == 10)
-        {
-            actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-            actgtrXR_u->Motor_s.frequency_u32 = 10;
-            actgtrXR_u->Motor_s.nbPulses_s32 = 0;
-            actgtrXR_u->Motor_s.stopPulse_b = False;
-            Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
-        }
-        if(s_counter_u32 < 20)
-        {
-            s_counter_u32++;
-        }
-        else
-        {   
-            actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-            actgtrXR_u->Motor_s.frequency_u32 = 100;
-            actgtrXR_u->Motor_s.nbPulses_s32 = 0;
-            actgtrXR_u->Motor_s.stopPulse_b = False;
-            Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
-        }
+    Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_X_L, &actGtrXVal);
 
-    }*/
+    if(Ret_e == RC_OK)
+    {
+        if(actGtrXVal.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_OFF)
+        {
+            actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
+            actgtrXR_u->Motor_s.frequency_u32 = 3;
+            actgtrXR_u->Motor_s.nbPulses_s32 = 20;
+            actgtrXR_u->Motor_s.stopPulse_b = False;
+            Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
+        }
+    }
 
     /*if(Ret_e == RC_OK)
     {

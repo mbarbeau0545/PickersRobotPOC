@@ -69,7 +69,7 @@ static t_eReturnCode s_APPSYS_Operational();
 *	@brief  Call driver cyclic function
 *
 */
-static t_eReturnCode s_APPSYS_Set_ModulesCyclic();
+static void s_APPSYS_Set_ModulesCyclic();
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -151,7 +151,7 @@ void APPSYS_Cyclic(void)
 /*********************************
  * s_APPSYS_Set_ModulesCyclic
  *********************************/
-static t_eReturnCode s_APPSYS_Set_ModulesCyclic(void)
+static void s_APPSYS_Set_ModulesCyclic(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 modIndex_u8;
@@ -163,7 +163,7 @@ static t_eReturnCode s_APPSYS_Set_ModulesCyclic(void)
             Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].Cyclic_pcb();  
         }
     }
-    return Ret_e;
+    return;
 }
 
 /*********************************
@@ -175,18 +175,17 @@ static t_eReturnCode s_APPSYS_PreOperational(void)
     t_uint8 modIndex_u8;
     t_uint8 ModuleInitCnt_u8 = 0;
 
-    Ret_e = s_APPSYS_Set_ModulesCyclic();
-    if(Ret_e == RC_OK)
-    {//  get the state of all modules
-        for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
+    s_APPSYS_Set_ModulesCyclic();
+
+    for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
+    {
+        Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].GetState_pcb(&g_ModuleState_ae[modIndex_u8]);
+        if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
         {
-            Ret_e = c_AppSys_ModuleFunc_apf[modIndex_u8].GetState_pcb(&g_ModuleState_ae[modIndex_u8]);
-            if(g_ModuleState_ae[modIndex_u8] == STATE_CYCLIC_WAITING)
-            {
-                ModuleInitCnt_u8 += 1;
-            }
+            ModuleInitCnt_u8 += 1;
         }
     }
+    
     if(ModuleInitCnt_u8 >= (t_uint8)APPSYS_MODULE_NB)
     {// set the all state module to pre-ope
         for(modIndex_u8 = (t_uint8)0 ; (modIndex_u8 <  (t_uint8)APPSYS_MODULE_NB) && (Ret_e == RC_OK) ; modIndex_u8++)
@@ -223,21 +222,26 @@ static t_eReturnCode s_APPSYS_Operational(void)
         {
             // reset whatchdog for fmk/app cycle
             s_previousCnt_u32 = currentCnt_u32;
-            Ret_e = s_APPSYS_Set_ModulesCyclic();
-            if(Ret_e < RC_OK)
-            {
-                // deal with error
-            }
-            else 
-            {
-                FMKCPU_Get_Tick(&currentCnt_u32); 
-                g_CyclicDuration_u32 = (t_uint32)(currentCnt_u32 - s_previousCnt_u32);
+            s_APPSYS_Set_ModulesCyclic();
 
-                if(g_CyclicDuration_u32 > APPSYS_ELAPSED_TIME_CYCLIC)
-                {
-                    Ret_e = RC_WARNING_PENDING;
-                }
+            FMKCPU_Get_Tick(&currentCnt_u32); 
+            g_CyclicDuration_u32 = (t_uint32)(currentCnt_u32 - s_previousCnt_u32);
+
+            if(g_CyclicDuration_u32 > APPSYS_ELAPSED_TIME_CYCLIC)
+            {
+               Ret_e = APPSDM_ReportDiagEvnt(   APPSDM_DIAG_ITEM_APPSYS_CYCLIC_TIMEOUT,
+                                                APPSDM_DIAG_ITEM_REPORT_FAIL,
+                                                Mu16ExtractByte1from32(g_CyclicDuration_u32),
+                                                Mu16ExtractByte0from32(g_CyclicDuration_u32));
             }
+            else
+            {
+                Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_APPSYS_CYCLIC_TIMEOUT,
+                                                APPSDM_DIAG_ITEM_REPORT_PASS,
+                                                (t_uint16)0,
+                                                (t_uint16)0);
+            }
+            
         }
     }
     
