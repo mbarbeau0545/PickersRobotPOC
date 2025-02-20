@@ -1880,10 +1880,15 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                 {
                     if(chnlState_e == FMKTIM_CHNLST_ACTIVATED)
                     {
-                        //----- Effacer le flag d'update avant de démarrer les IT -----//
-                        __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
-                        //----- Start Period Callback after RCR passed -----//
-                        bspRet_e = HAL_TIM_Base_Start_IT(&timerInfo_ps->bspTimer_s);
+                        //----- see if base timer has already been set -----//
+                        if(timerInfo_ps->bspTimer_s.State != HAL_TIM_STATE_BUSY)
+                        {
+                            //----- Effacer le flag d'update avant de démarrer les IT -----//
+                            __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
+                            //----- Start Period Callback after RCR passed -----//
+                            bspRet_e = HAL_TIM_Base_Start_IT(&timerInfo_ps->bspTimer_s);
+                        }
+                        
                     }
                     else 
                     {

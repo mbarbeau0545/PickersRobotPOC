@@ -161,12 +161,12 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
         Ret_e = s_GTRY_StateMachineMngmt();    
     }*/
 
-    if(Ret_e == RC_OK)
+    if(Ret_e >= RC_OK)
     {
         Ret_e = s_GTRY_UpdateSrvState();
     }
     
-    if(Ret_e == RC_OK)
+    if(Ret_e >= RC_OK)
     {
         s_GTRY_TestMovement();
     }

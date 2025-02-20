@@ -590,7 +590,6 @@ t_eReturnCode CL42T_GetMotorSigValue(   t_eCL42T_MotorId f_motorId_e,
                                         t_sCL42T_GetMotorValue * f_MotorValue_ps)
 {
     t_eReturnCode Ret_e = RC_OK;
-
     t_sCL42T_MotorInfo * motorInfo_ps;
 
     if(f_motorId_e >= CL42T_MOTOR_NB)
@@ -671,6 +670,10 @@ static t_eReturnCode s_CL42T_OperationalState(void)
                 Ret_e = s_CL42T_SetSignalsValue(motorInfo_ps);
             }
         }
+    }
+    if(Ret_e < RC_OK)
+    {
+        Ret_e = RC_WARNING_INIT_PROBLEM;
     }
 
     return Ret_e;
@@ -851,11 +854,11 @@ static t_eReturnCode s_CL42T_PulseOpeMngmt( t_sCL42T_MotorInfo * f_motorInfo_ps,
         {
             *f_setAcutation_pb = (t_bool)False;
             //----- check pulse time -----//
-            if((currentTime_u32 - f_motorInfo_ps->PulseRunMaxCnt_u32) > CL42T_PULSE_RUN_TIME_MAX)
+            /*if((currentTime_u32 - f_motorInfo_ps->PulseRunMaxCnt_u32) > CL42T_PULSE_RUN_TIME_MAX)
             {
                 f_motorInfo_ps->Health_e = CL42T_DIAGNOSTIC_PULSE_INFINITE;
                 f_motorInfo_ps->flagErrorDetected_b = (t_bool)True;
-            }
+            }*/
         }
     }
 
@@ -1157,7 +1160,6 @@ static t_eReturnCode s_CL42T_SetPulseSignal(    t_sCL42T_MotorInfo * f_motorInfo
     t_eReturnCode Ret_e = RC_OK;
     t_eFMKIO_DigValue digValue_e = FMKIO_DIG_VALUE_LOW;
     t_uint32 currentTime_u32;
-    t_eCL42T_MotorDirection newdir_e;
     t_sint32 remainingPulses_u32;
     t_uint32 substractPulses_u32;
 
@@ -1169,16 +1171,17 @@ static t_eReturnCode s_CL42T_SetPulseSignal(    t_sCL42T_MotorInfo * f_motorInfo
     {
         if( f_nbPulses_s32 >= (t_sint32)0)
         {
-            newdir_e = CL42T_MOTOR_DIRECTION_CW;
+            //newdir_e = CL42T_MOTOR_DIRECTION_CW;
+            digValue_e = FMKIO_DIG_VALUE_LOW;
 
         }
         else // f_nbPulses_s32 < 0
         {
             f_nbPulses_s32 = -f_nbPulses_s32;
-            newdir_e = CL42T_MOTOR_DIRECTION_CCW;
+            digValue_e = FMKIO_DIG_VALUE_HIGH;
         }
+
         remainingPulses_u32 = f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32;
-        digValue_e = (newdir_e == CL42T_MOTOR_DIRECTION_CW) ? FMKIO_DIG_VALUE_LOW : FMKIO_DIG_VALUE_HIGH;
 
         //----- change of direction management -----//
         
