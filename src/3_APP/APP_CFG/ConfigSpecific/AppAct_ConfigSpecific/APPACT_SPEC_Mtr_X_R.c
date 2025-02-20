@@ -69,7 +69,7 @@ t_eReturnCode APPACT_SPEC_Mtr_X_R_SetCfg(void)
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Mtr_X_R_SetActCfg here
 
-    /*t_sCL42T_MotorSigCfg MotorConfig_s = {
+    t_sCL42T_MotorSigCfg MotorConfig_s = {
         .PulseSigCfg_s = {
             .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_2,
             .PullMode_e =  FMKIO_PULL_MODE_DOWN,
@@ -80,19 +80,19 @@ t_eReturnCode APPACT_SPEC_Mtr_X_R_SetCfg(void)
             .PullMode_e = FMKIO_PULL_MODE_DISABLE,
         },
         .DirSigCfg_s = {
-            .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_10,
+            .DigitalSignal_e = FMKIO_OUTPUT_SIGDIG_6,
             .PullMode_e = FMKIO_PULL_MODE_DISABLE,
         },
         .DiagSigCfg_s = {
             .FreqSignal_e = FMKIO_INPUT_SIGFREQ_2,
-            .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            .PullMode_e = FMKIO_PULL_MODE_UP,
         },
     };
 
     Ret_e = CL42T_AddMotorConfiguration(c_MotorId_e,
                                         MotorConfig_s,
                                         CL42T_PULSE_CHANGE_DIR_OPE_CANCEL,
-                                        MtrX_R_MotorDiagnostic);*/
+                                        MtrX_R_MotorDiagnostic);
     
     
 

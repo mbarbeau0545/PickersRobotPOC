@@ -85,7 +85,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Y_SetCfg(void)
         },
         .DiagSigCfg_s = {
             .FreqSignal_e = FMKIO_INPUT_SIGFREQ_3,
-            .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            .PullMode_e = FMKIO_PULL_MODE_UP,
         },
     };
 

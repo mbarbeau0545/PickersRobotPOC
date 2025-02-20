@@ -25,11 +25,16 @@
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
-
+#define GTRY_PULSES_NB ((t_sint32)6400)
+#define GTRY_SPEED ((t_uint32)6000)
 // ********************************************************************
 // *                      Types
 // ********************************************************************
-
+typedef enum 
+{
+    GTRY_GO_FORWARD = 0x00,
+    GTRY_GO_BACKWARD,
+} t_eGTRY_TestState;
 /* CAUTION : Automatic generated code section for Enum: Start */
 
 /* CAUTION : Automatic generated code section for Enum: End */
@@ -122,6 +127,8 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void);
 *
 */
 static void s_GTRY_ResetActuatorState(void);
+
+static t_eReturnCode s_GTRY_TestMovement(void);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -148,11 +155,11 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
 
     //----- Check Gantry Mvmt Security and Update State-----//
     Ret_e = s_GTRY_SafetyMngmt();
-    if(Ret_e == RC_OK)
+    /*if(Ret_e == RC_OK)
     {
         //----- Get New Mode from Application -----//
         Ret_e = s_GTRY_StateMachineMngmt();    
-    }
+    }*/
 
     if(Ret_e == RC_OK)
     {
@@ -160,6 +167,10 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
     }
     
     if(Ret_e == RC_OK)
+    {
+        s_GTRY_TestMovement();
+    }
+    /*if(Ret_e == RC_OK)
     {
         switch (g_FSM_GtryMode_e)
         {
@@ -218,7 +229,7 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
                 break;
             }
         }
-    }
+    }*/
     return Ret_e;
 }
 
@@ -471,7 +482,7 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
             g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_STOPPED;
         }
     }
-    if(Ret_e == RC_OK)
+    /*if(Ret_e == RC_OK)
     {
         //----- send msg for application ------//
         Ret_e = SafeMem_memclear((void *)appCmd_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
@@ -501,7 +512,7 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
                 Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
             }
         }
-    }
+    }*/
 
     return Ret_e;
 }
@@ -555,6 +566,132 @@ t_eReturnCode Gantry_InformAppMissionState(t_eGTRY_MissionStatus f_missionStatue
     }
 
     return Ret_e;
+}
+
+static t_eReturnCode s_GTRY_TestMovement(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    static t_eGTRY_TestState s_State = GTRY_GO_FORWARD; 
+    t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
+    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
+    t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
+    t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
+    t_bool setActuation_b = False;
+
+    //---- check state -----//
+    if((g_SrvInfo_pas[APPLGC_SRV_GTRY_X].state_e == APPLGC_SRV_STATE_STOPPED)
+    && (g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e == APPLGC_SRV_STATE_STOPPED)
+    && (g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e == APPLGC_SRV_STATE_STOPPED))
+    {
+        setActuation_b = True;
+    }
+    if(setActuation_b == (t_bool)True)
+    {
+        switch(s_State)
+        {
+            case GTRY_GO_FORWARD:
+            {
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrXL_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_L_DIR * GTRY_PULSES_NB);
+
+                    actgtrXR_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_R_DIR * GTRY_PULSES_NB);
+                }
+                else 
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                    
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrY_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrY_u->Motor_s.nbPulses_s32  = (t_sint32)GTRY_PULSES_NB;    
+                }
+                else 
+                {
+                    actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrZ_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrZ_u->Motor_s.nbPulses_s32  = (t_sint32)GTRY_PULSES_NB;
+                }
+                else 
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }  
+                s_State = GTRY_GO_BACKWARD;
+                break;
+            }
+            case GTRY_GO_BACKWARD:
+            {
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrXL_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)(-(GTRY_MTR_X_L_DIR * GTRY_PULSES_NB));
+
+                    actgtrXR_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)(-(GTRY_MTR_X_R_DIR * GTRY_PULSES_NB));
+                }
+                else 
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                    
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrY_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrY_u->Motor_s.nbPulses_s32  = (t_sint32)(-GTRY_PULSES_NB);  
+                }
+                else 
+                {
+                    actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+
+                if(g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrZ_u->Motor_s.frequency_u32 = (t_uint32)GTRY_SPEED;
+                    actgtrZ_u->Motor_s.nbPulses_s32  = (t_sint32)(-GTRY_PULSES_NB);
+                }
+                else 
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                } 
+                s_State = GTRY_GO_FORWARD;
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+    }
+    
 }
 //************************************************************************************
 // End of File

@@ -70,7 +70,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Z_SetCfg(void)
     //    Your code for Mtr_Z_SetActCfg here
     t_sCL42T_MotorSigCfg MotorConfig_s = {
         .PulseSigCfg_s = {
-            .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_5,
+            .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_6,
             .PullMode_e =  FMKIO_PULL_MODE_DOWN,
             .f_PulseInitFreq_u32 = APPACT_DEFAULT_FREQ_MOTOR
         },
@@ -84,7 +84,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Z_SetCfg(void)
         },
         .DiagSigCfg_s = {
             .FreqSignal_e = FMKIO_INPUT_SIGFREQ_4, 
-            .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            .PullMode_e = FMKIO_PULL_MODE_UP,
         },
     };
 

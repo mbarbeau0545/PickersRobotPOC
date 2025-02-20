@@ -562,16 +562,6 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
-    
-    Ret_e = APPSDM_ResetDiagEvnt();
-    actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-    actgtrXR_u->Motor_s.frequency_u32 = 1;
-    actgtrXR_u->Motor_s.nbPulses_s32 = 10;
-
-    Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
-    //Ret_e = FMKIO_Set_OutPwmSigCfg(FMKIO_OUTPUT_SIGPWM_1, FMKIO_PULL_MODE_DISABLE, 2, FMKTIM_PWM_MODE_FINITE_PULSE,NULL_FONCTION,NULL_FONCTION);
-    //Ret_e = FMKIO_Set_OutPwmSigPulses(FMKIO_OUTPUT_SIGPWM_1, 500, 12);
     return Ret_e;
 }
 
@@ -581,51 +571,39 @@ static t_eReturnCode s_APPLGC_PreOperational(void)
 static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
-    static t_uint32 s_counter_u32 = (t_uint8)0;
-    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
-    /*t_uAPPACT_GetValue actGtrXVal;
-
-    Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_X_L, &actGtrXVal);
-
-    if(Ret_e == RC_OK)
+    t_uint8 idxAgent_u8;
+    
+    if(g_resetSrvState_b == (t_bool)True)
     {
-        if(actGtrXVal.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_OFF)
+        Ret_e = s_APPLGC_ResetSrvState();
+        if(Ret_e == RC_OK)
         {
-            actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-            actgtrXR_u->Motor_s.frequency_u32 = 3;
-            actgtrXR_u->Motor_s.nbPulses_s32 = 20;
-            actgtrXR_u->Motor_s.stopPulse_b = False;
-            Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
+            g_resetSrvState_b = (t_bool)True;
         }
-    }*/
-   if(s_counter_u32 < 100)
-   {
-        s_counter_u32++;
-   }
-   else
-   {
-        actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
-        actgtrXR_u->Motor_s.frequency_u32 = 4;
-        actgtrXR_u->Motor_s.nbPulses_s32 = 0;
-        actgtrXR_u->Motor_s.stopPulse_b = False;
-        Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
-   }
-
-    /*if(Ret_e == RC_OK)
+    }
+    if(Ret_e == RC_OK)
     {
         //------ Get Sensors Values for this cyclic -----//
         Ret_e = s_APPLGC_GetSnsValues();
     }
 
     //----- Call Agent Periodic Task Depending on Coordinator -----//
-
+    if(Ret_e == RC_OK)
+    {   
+        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e >= RC_OK) ; idxAgent_u8++)
+        {
+            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
+                                                                        (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
+        }
+    }
 
     if(Ret_e >= RC_OK)
     {
         Ret_e = s_APPLGC_SetActValues();
-    }*/
+    }
     return Ret_e;
 }
+
 
 /*********************************
  * s_APPLGC_GetSnsValues
@@ -890,7 +868,6 @@ static t_eReturnCode s_APPLGC_ResetSrvState(void)
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxSrv_u8;
 
-    Ret_e = APPSDM_ResetDiagEvnt();
 
     if(Ret_e == RC_OK)
     {

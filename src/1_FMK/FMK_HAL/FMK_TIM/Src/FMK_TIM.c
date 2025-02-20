@@ -2649,7 +2649,6 @@ static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_time
 {
     t_eReturnCode Ret_e = RC_OK;
     TIM_TypeDef * bspIsct_ps;
-    t_eFMKTIM_ChnlState actualChnlState_e;
     t_uint32 bspARRVal_u32 = (t_uint32)0;
     t_uint32 bspPSCVal_u32 = (t_uint32)0;
     t_float32 dutyCycle_f32 = (t_uint32)0;
@@ -2675,7 +2674,6 @@ static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_time
         }
         if(Ret_e == RC_OK)
         {        
-            actualChnlState_e = f_timerInfo_ps->Channel_as[f_chnl_e].State_e;
             //----- calculate New DutyCyle to applied ----//
             //                                              CCRx / ARR               
             dutyCycle_f32 = (t_float32)( (t_float32)__HAL_TIM_GET_COMPARE(&f_timerInfo_ps->bspTimer_s, bspChnl_u32) /
@@ -2707,15 +2705,6 @@ static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_time
                     Ret_e = RC_ERROR_NOT_ALLOWED;
                     break;
             }
-            if(actualChnlState_e == FMKTIM_CHNLST_ACTIVATED)
-            {
-                TIM_CCxChannelCmd(f_timerInfo_ps->bspTimer_s.Instance, f_chnl_e, TIM_CCx_DISABLE);
-                if (IS_TIM_BREAK_INSTANCE(f_timerInfo_ps->bspTimer_s.Instance) != RESET)
-                {
-                    /* Disable the Main Output */
-                    __HAL_TIM_MOE_DISABLE(&f_timerInfo_ps->bspTimer_s);
-                }
-            }
             if(Ret_e == RC_OK)
             {
                 //----- Update ARR and PSC for next cycle (shadow registers) -----//
@@ -2725,35 +2714,6 @@ static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_time
                 //----- Update Duty Cycle -----//
                 Ret_e = s_FMKTIM_UpdateDutyCycle(f_timerInfo_ps, f_chnl_e, (t_uint32)dutyCycle_f32);
             }
-            if(Ret_e == RC_OK)
-            {
-                if(actualChnlState_e == FMKTIM_CHNLST_ACTIVATED)
-                {
-                    if(f_timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
-                    {
-                        Ret_e = FMKCPU_Set_NVICState(f_timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
-
-                        if(Ret_e == RC_OK)
-                        {
-                            f_timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
-                        }
-                    }
-                    TIM_CCxChannelCmd(f_timerInfo_ps->bspTimer_s.Instance, f_chnl_e, TIM_CCx_ENABLE);
-                    //__HAL_TIM_ENABLE(&f_timerInfo_ps->bspTimer_s);
-                    if (IS_TIM_BREAK_INSTANCE(f_timerInfo_ps->bspTimer_s.Instance) != RESET)
-                    {
-                        /* Disable the Main Output */
-                        __HAL_TIM_MOE_ENABLE(&f_timerInfo_ps->bspTimer_s);
-                    }
-                    bspIsct_ps->EGR |= TIM_EGR_UG;
-                    g_timerPeriodPwm_ab[FMKTIM_TIMER_1] = (t_bool)False;
-                }
-            }
-                
-            //----- Generate an update eent to apply changes -----//
-
-            //----- Restart Timer without forcing an update (no UG event) -----//
-            //bspIsct_ps->CR1 |= TIM_CR1_CEN;
         }
     }
     return Ret_e;
@@ -2768,7 +2728,6 @@ static t_eReturnCode s_FMKTIM_UpdateDutyCycle(  t_sFMKTIM_TimerInfo * f_timerInf
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint32 CCRxValue_u32 = (t_uint32)0;
-    t_uint32 actualCCRxValue_u32;
     t_uint32 bspChannel_u32 = (t_uint32)0;
 
     if(f_timerInfo_ps == (t_sFMKTIM_TimerInfo *)NULL)
