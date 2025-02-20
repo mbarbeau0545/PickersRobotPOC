@@ -92,13 +92,11 @@
      * @brief Reset a bit in a 32 bit flag
      */
     #ifndef RESETBIT_8B
-        #define RESETBIT_8B(flag, bit) ((flag) &= ~(t_uint8)1 << (bit))
+        #define RESETBIT_8B(flag, bit) ((flag) &= ~((t_uint8)1 << (bit)))
     #endif
-    /**
-     * @brief Reset a bit in a 32 bit flag
-     */
-     #ifndef SETBIT_8B
-        #define SETBIT_8B(flag, bit) ((flag) |= (t_uint8)1 << (bit))
+
+    #ifndef SETBIT_8B
+        #define SETBIT_8B(flag, bit) ((flag) |= ((t_uint8)1 << (bit)))
     #endif
     /**
      * @brief Enum for return function

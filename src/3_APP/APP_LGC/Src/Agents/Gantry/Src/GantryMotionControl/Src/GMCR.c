@@ -293,7 +293,7 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
                 actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
                 actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
 
-                s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
                 //----- Refereence Axe X done -----//
                 *f_SEODone_pb = (t_bool)True;
             }

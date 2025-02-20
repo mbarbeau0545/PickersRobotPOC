@@ -39,6 +39,7 @@ For the doxygen documentation search the file "index.html"
 ## bugs
 - Comprendre pourquoi HAL_Delay -> Infinite Loop
 - Comprendre pourquoi FDCAN marche po lo
+- FMKSRL en mode interruption , Size Cyclic, dans la callback quand on reset la reception on la reset à 0 après 
 
 ## To test 
     - retester les PWM en mode normal 

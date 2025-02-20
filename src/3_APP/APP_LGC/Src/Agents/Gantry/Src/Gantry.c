@@ -65,6 +65,7 @@ static t_eGTRY_FSMGantry g_FSM_RqstGtryMode_e = GTRY_SFM_GANTRY_PAUSE;
 
 static t_float32 * g_snsValues_paf32;
 static t_sAPPLGC_ServiceInfo * g_SrvInfo_pas;
+t_uint32 g_ticksendapp_u32;
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -415,6 +416,7 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
     t_uAPPACT_GetValue actMotorZVal_u;
     t_sGTRY_Axe gtryAxeSpeed_s;
     t_uint8 appCmd_ua8[APPLGC_APP_PROTOCOL_LEN_DATA];
+    t_uint32 currenTime_u32;
 
 
     //----- update Gantry Service X -----//
@@ -482,7 +484,16 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
             appCmd_ua8[APPLGC_CMD_BYTE_2] = (t_uint8)g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e;
             appCmd_ua8[APPLGC_CMD_BYTE_3] = (t_uint8)g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e;
 
-            Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+            // limite l'envoie des msg a 1 par seconde
+            FMKCPU_Get_Tick(&currenTime_u32);
+
+            if((currenTime_u32 - g_ticksendapp_u32) > GTRY_TIME_BEFORE_SEND)
+            {
+                g_ticksendapp_u32 = currenTime_u32;
+                Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+            }
+            //
+            
         }
         if(Ret_e == RC_OK)
         {
@@ -498,7 +509,15 @@ static t_eReturnCode s_GTRY_UpdateSrvState(void)
                 appCmd_ua8[APPLGC_CMD_BYTE_5] = (t_uint8)Ms8ExtractByte1fromU16((t_uint16)gtryAxeSpeed_s.axeZ_u32);
                 appCmd_ua8[APPLGC_CMD_BYTE_6] = (t_uint8)Ms8ExtractByte0fromU16((t_uint16)gtryAxeSpeed_s.axeZ_u32);
 
-                Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+                // limite l'envoi des messages a 1 par seconde
+                FMKCPU_Get_Tick(&currenTime_u32);
+
+                if((currenTime_u32 - g_ticksendapp_u32) > GTRY_TIME_BEFORE_SEND)
+                {
+                    g_ticksendapp_u32 = currenTime_u32;
+                    Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+                }
+                //
             }
         }
     }
@@ -543,6 +562,7 @@ t_eReturnCode Gantry_InformAppMissionState(t_eGTRY_MissionStatus f_missionStatue
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 appCmd_ua8[APPLGC_APP_PROTOCOL_LEN_DATA];
+    t_uint32 currenTime_u32;
 
     Ret_e = SafeMem_memclear((void *)appCmd_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
 
@@ -551,7 +571,14 @@ t_eReturnCode Gantry_InformAppMissionState(t_eGTRY_MissionStatus f_missionStatue
         appCmd_ua8[APPLGC_CMD_BYTE_0] = (t_uint8)APPLGC_SEND_CMD_ID_GTRY_INFO;
         appCmd_ua8[APPLGC_CMD_BYTE_1] = (t_uint8)f_missionStatue_e;
 
-        Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+        //limite a 1 envoie par seconde
+        FMKCPU_Get_Tick(&currenTime_u32);
+
+        if((currenTime_u32 - g_ticksendapp_u32) > GTRY_TIME_BEFORE_SEND)
+        {
+            g_ticksendapp_u32 = currenTime_u32;
+            Ret_e = APPLGC_APP_COM_SEND(appCmd_ua8);
+        }
     }
 
     return Ret_e;

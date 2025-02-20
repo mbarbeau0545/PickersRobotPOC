@@ -33,6 +33,8 @@
 // ********************************************************************
 // *                      Types
 // ********************************************************************
+
+
 /* CAUTION : Automatic generated code section for Enum: Start */
 
 /* CAUTION : Automatic generated code section for Enum: End */
@@ -65,6 +67,7 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+t_uint32 g_ticksendapp_u32;
 /**
 * @brief App Logic Module State
 */
@@ -296,10 +299,7 @@ t_eReturnCode APPLGC_Cyclic(void)
     case STATE_CYCLIC_OPE:
     {
         Ret_e = s_APPLGC_Operational();
-        if(Ret_e < RC_OK)
-        {
-            g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
-        }
+
         break;
     }
     case STATE_CYCLIC_ERROR:
@@ -576,12 +576,14 @@ static t_eReturnCode s_APPLGC_Operational(void)
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8;
     
+    FMKCPU_Get_Tick(&g_timeCounterLGC); // Sert a limiter lenvoi des messages 
+
     if(g_resetSrvState_b == (t_bool)True)
     {
         Ret_e = s_APPLGC_ResetSrvState();
         if(Ret_e == RC_OK)
         {
-            g_resetSrvState_b = (t_bool)True;
+            g_resetSrvState_b = (t_bool)False;
         }
     }
     if(Ret_e == RC_OK)
@@ -678,6 +680,7 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
     t_uint8 idxCmd_u8;
     static t_uint8 s_idxWrite_u8 = (t_uint8)0;
     static t_uint8 s_appCmd_ua8[APPLGC_CMD_BYTE_NB];
+    t_uint32 currenTime_u32;
 
     if(f_dataSize_u16 > APPLGC_CMD_BYTE_NB)
     {
@@ -693,15 +696,15 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
         {
             case FMKSRL_CB_INFO_RECEIVE_PENDING:
             {
-                Ret_e = SafeMem_memcpy( (void *)(&s_appCmd_ua8[s_idxWrite_u8]),
-                                        (const void *)f_rxData_pu8,
+                Ret_e = SafeMem_memcpy( (&s_appCmd_ua8[s_idxWrite_u8]),
+                                        f_rxData_pu8,
                                         f_dataSize_u16);
                 break;
             }
             case FMKSRL_CB_INFO_RECEIVE_ENDING:
             {
-                Ret_e = SafeMem_memcpy( (void *)(&s_appCmd_ua8[s_idxWrite_u8]),
-                                        (const void *)f_rxData_pu8,
+                Ret_e = SafeMem_memcpy( (&s_appCmd_ua8[s_idxWrite_u8]),
+                                        f_rxData_pu8,
                                         f_dataSize_u16);
                 if(Ret_e == RC_OK)
                 {
@@ -760,7 +763,13 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
                 g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = APPLGC_SEND_CMD_ID_GTRY_INFO;
                 g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = GTRY_MISSION_BUSY;
 
-                Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+                FMKCPU_Get_Tick(&currenTime_u32);
+
+                if((currenTime_u32 - g_ticksendapp_u32) > LGC_TIME_BEFORE_SEND)
+                {
+                    g_ticksendapp_u32 = currenTime_u32;
+                    Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+                }
             }
         }
         else 
@@ -768,8 +777,8 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
             SETBIT_8B(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE);
 
             //----- copy data -----//
-            Ret_e = SafeMem_memcpy( (void *)(g_CmdInfo_as[idxCmd_u8].appData_ua8),
-                                    (const void *)(s_appCmd_ua8),
+            Ret_e = SafeMem_memcpy( (g_CmdInfo_as[idxCmd_u8].appData_ua8),
+                                    (s_appCmd_ua8),
                                     f_dataSize_u16);
             
             RESETBIT_8B(g_CmdInfo_as[idxCmd_u8].maskEvnt_u8, APPLGC_APP_CMD_BIT_WRITE);
@@ -821,6 +830,7 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
     static t_uint32 s_bitAliveRcv_u32 = (t_uint32)0;
     t_uint32 currentTime_u32 = (t_uint32)0;
     t_eGTRY_FSMGantry fsmGTRY_e;
+    t_uint32 currenTime_u32;
 
     FMKCPU_Get_Tick(&currentTime_u32);
 
@@ -829,7 +839,7 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
     {
         FMKCPU_Get_Tick(&s_bitAliveRcv_u32);
     }
-
+/*
     if((currentTime_u32 - s_bitAliveRcv_u32) > APPLGC_APPUSER_COM_TIMEOUT)
     {
         g_AppLgc_ModState_e = STATE_CYCLIC_ERROR;
@@ -844,22 +854,29 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
                                         APPSDM_DIAG_ITEM_REPORT_PASS,
                                         APPLGC_APPUSER_ERR_RX,
                                         (t_uint16)0);
-    }
+    } 
+*/
 
     //------ Send Ours  Bit Alive -----//
     Ret_e = SafeMem_memclear((void *)g_sendAppData_ua8, APPLGC_APP_PROTOCOL_LEN_DATA);
 
     if(Ret_e == RC_OK)
-    {
-        Ret_e = Gantry_GetFSMState(&fsmGTRY_e);
+    {   
+        FMKCPU_Get_Tick(&currenTime_u32);
 
-        if(Ret_e == RC_OK)
+        if((currenTime_u32 - g_ticksendapp_u32) > LGC_TIME_BEFORE_SEND)
         {
-            g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = APPLGC_SEND_CMD_ID_ROBOT_INFO;
-            g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = g_AppLgc_ModState_e;
-            g_sendAppData_ua8[APPLGC_CMD_BYTE_2] = fsmGTRY_e;
-            //---- the rest to 0 -----//
-            Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+            g_ticksendapp_u32 = currenTime_u32;
+            Ret_e = Gantry_GetFSMState(&fsmGTRY_e);
+
+            if(Ret_e == RC_OK)
+            {
+                g_sendAppData_ua8[APPLGC_CMD_BYTE_0] = APPLGC_SEND_CMD_ID_ROBOT_INFO;
+                g_sendAppData_ua8[APPLGC_CMD_BYTE_1] = g_AppLgc_ModState_e;
+                g_sendAppData_ua8[APPLGC_CMD_BYTE_2] = fsmGTRY_e;
+                //---- the rest to 0 -----//
+                Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
+            }
         }
     }
 

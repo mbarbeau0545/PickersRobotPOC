@@ -53,7 +53,7 @@
 
     typedef enum 
     {
-        APPLGC_RCV_CMD_ID_DATA_MODE = 0x00,
+        APPLGC_RCV_CMD_ID_DATA_MODE = 0x01,
         APPLGC_RCV_CMD_ID_GTRY_X,
         APPLGC_RCV_CMD_ID_GTRY_Y,
         APPLGC_RCV_CMD_ID_GTRY_Z,
@@ -66,7 +66,7 @@
 
     typedef enum 
     {
-        APPLGC_SEND_CMD_ID_GTRY_STATE_XYZ = 0x00,
+        APPLGC_SEND_CMD_ID_GTRY_STATE_XYZ = 0x01,
         APPLGC_SEND_CMD_ID_GTRY_SPEED_XYZ,
         APPLGC_SEND_CMD_ID_GTRY_INFO,
         APPLGC_SEND_CMD_ID_ROBOT_INFO,
@@ -120,6 +120,7 @@
     // ********************************************************************
     // *                      Variables
     // ********************************************************************
+    t_uint32 g_timeCounterLGC; 
     /**
     *
     *	@brief

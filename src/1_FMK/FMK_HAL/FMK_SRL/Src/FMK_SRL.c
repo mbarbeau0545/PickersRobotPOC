@@ -1558,10 +1558,11 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveMngmt( t_sFMKSRL_SerialInfo * f_srl
     }
     if(Ret_e == RC_OK)
     {
+
         Ret_e = s_FMKSRL_UpdateRxBufferInfo(f_srlInfo_ps, 
                                             f_rcvDataSize_u16, 
                                             &writeIdx_u16,
-                                            &RxBuffSizeLeft_u16);
+                                            &RxBuffSizeLeft_u16);   
     }
     if(Ret_e == RC_OK)
     {
@@ -1609,6 +1610,10 @@ static t_eReturnCode s_FMKSRL_BspRxOpeReceiveMngmt( t_sFMKSRL_SerialInfo * f_srl
         else if (bspRet_e != HAL_OK)
         {
             Ret_e = RC_ERROR_WRONG_RESULT;
+        }
+        else
+        {
+            RxBuffer_s->bytesPending_u16 = (t_uint16)f_rcvDataSize_u16;
         }
     }
 
@@ -2044,7 +2049,6 @@ static t_eReturnCode s_FMKSRL_UpdateRxBufferInfo(t_sFMKSRL_SerialInfo * f_srlInf
                 
                 //------ Reset pending bytes as no data has been accepted yet ------//
                 RxBuffer_s->bytesPending_u16 = (t_uint16)0;
-
                 //------ Size Management ------//
                 if(f_rcvDataClaim_u16 > RxBuffer_s->buffferSize_u16)
                 {
@@ -2988,12 +2992,14 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
         {
             case FMKSRL_BSP_RX_OPE_RECEIVE:
             {
-                dataLength_u16 = RxBuffer_s->bytesPending_u16;
+                dataLength_u16 = f_srlInfo_ps->RxInfo_s.infoMode_u16;
+                // don't reset byte pending 'cause we don't know 
                 break;
             }
             case FMKSRL_BSP_RX_OPE_RECEIVE_IDLE:
             {
                 dataLength_u16 = f_InfoCb_u16;
+                RxBuffer_s->bytesPending_u16 = (t_uint16)0; // may be inaccurate
                 
                 break;
             }
@@ -3033,8 +3039,18 @@ static t_eReturnCode s_FMKSRL_CallUserMngmt(t_sFMKSRL_SerialInfo * f_srlInfo_ps,
         }
 
         //--------- Update End Idx Buffer & BytesPending---------//
-        RxBuffer_s->readIdx_u16 = RxBuffer_s->writeIdx_u16;
-        RxBuffer_s->bytesPending_u16 = (t_uint16)0; // may be inaccurate
+        //--------- if runMode Dma, Dma buffer is exact size expected
+        //          which means readIdx = 0 
+        if(f_srlInfo_ps->runMode_e == FMKSRL_LINE_RUNMODE_DMA)
+        {
+            RxBuffer_s->readIdx_u16  = (t_uint16)0;
+            RxBuffer_s->writeIdx_u16 = (t_uint16)0;
+        }
+        else
+        {
+            RxBuffer_s->readIdx_u16 = RxBuffer_s->writeIdx_u16;
+        }
+        
     }
 
     return Ret_e;
