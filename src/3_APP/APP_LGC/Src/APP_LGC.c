@@ -582,8 +582,8 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     static t_uint32 s_counter_u32 = (t_uint8)0;
-    t_uAPPACT_GetValue actGtrXVal;
     t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
+    /*t_uAPPACT_GetValue actGtrXVal;
 
     Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_X_L, &actGtrXVal);
 
@@ -597,7 +597,19 @@ static t_eReturnCode s_APPLGC_Operational(void)
             actgtrXR_u->Motor_s.stopPulse_b = False;
             Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
         }
-    }
+    }*/
+   if(s_counter_u32 < 100)
+   {
+        s_counter_u32++;
+   }
+   else
+   {
+        actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_ON;
+        actgtrXR_u->Motor_s.frequency_u32 = 4;
+        actgtrXR_u->Motor_s.nbPulses_s32 = 0;
+        actgtrXR_u->Motor_s.stopPulse_b = False;
+        Ret_e = APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
+   }
 
     /*if(Ret_e == RC_OK)
     {
