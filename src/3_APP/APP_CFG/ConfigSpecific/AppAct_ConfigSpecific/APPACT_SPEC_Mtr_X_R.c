@@ -163,7 +163,7 @@ static void MtrX_R_MotorDiagnostic(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagEr
             case CL42T_DIAGNOSTIC_POSITION:
             case CL42T_DIAGNOSTIC_PCB_BOARD:
             case CL42T_DIAGNOSTIC_SIGNAL_PULSE:
-            case CL42T_DIAGNOSTIC_SIGNAL_DIG:
+            case CL42T_DIAGNOSTIC_SIGNAL_FREQ:
             case CL42T_DIAGNOSTIC_PULSE_INFINITE:
             {
                 Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_GTRY_AXE_X_ERR,

@@ -165,7 +165,10 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
     {
         Ret_e = s_GTRY_UpdateSrvState();
     }
-    
+    if(Ret_e >= RC_OK)
+    {
+        s_GTRY_ResetActuatorState();
+    }
     if(Ret_e >= RC_OK)
     {
         s_GTRY_TestMovement();
@@ -576,17 +579,23 @@ static t_eReturnCode s_GTRY_TestMovement(void)
     t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
     t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
     t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
-    t_bool setActuation_b = False;
+    static t_bool s_setActuation_b = False;
+    static t_uint32 s_actTime_u32 = 0; 
+    t_uint32 currentTime_u32;
+    FMKCPU_Get_Tick(&currentTime_u32);
 
     //---- check state -----//
     if((g_SrvInfo_pas[APPLGC_SRV_GTRY_X].state_e == APPLGC_SRV_STATE_STOPPED)
     && (g_SrvInfo_pas[APPLGC_SRV_GTRY_Y].state_e == APPLGC_SRV_STATE_STOPPED)
-    && (g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e == APPLGC_SRV_STATE_STOPPED))
+    && (g_SrvInfo_pas[APPLGC_SRV_GTRY_Z].state_e == APPLGC_SRV_STATE_STOPPED)
+    && ((currentTime_u32 - s_actTime_u32) > 1000))
     {
-        setActuation_b = True;
+        FMKCPU_Get_Tick(&s_actTime_u32);
+        s_setActuation_b = True;
     }
-    if(setActuation_b == (t_bool)True)
+    if(s_setActuation_b == (t_bool)True)
     {
+        s_setActuation_b = False;
         switch(s_State)
         {
             case GTRY_GO_FORWARD:
