@@ -2432,16 +2432,15 @@ static t_eReturnCode s_FMKSRL_SetUartBspInit(   t_eFMKSRL_SerialLine      f_SrlL
 
 #ifdef FMKCPU_STM32_ECU_FAMILY_G
             
-            if(Ret_e == RC_OK)
-            {
-                //--------- Get Bsp Hardware Flow Control ---------//
-                Ret_e = s_FMKSRL_GetUartBspHwFlowCtrl( f_UartCfg_ps->hwFlowCtrl_e, &bspLineHwFlowCtrl_u32);
-                bspUartInit_ps->HwFlowCtl  = bspLineHwFlowCtrl_u32;
 
-                //--------- Set Advance Configuration ---------//
-                Ret_e = s_FMKSRL_SetUartAdvanceCfg( &srlInfo_ps->bspHandle_u.uartH_s.AdvancedInit,
-                                                &f_UartCfg_ps->advProtCfg_s);
-            }
+        //--------- Get Bsp Hardware Flow Control ---------//
+        Ret_e = s_FMKSRL_GetUartBspHwFlowCtrl( f_UartCfg_ps->hwFlowCtrl_e, &bspLineHwFlowCtrl_u32);
+        bspUartInit_ps->HwFlowCtl  = bspLineHwFlowCtrl_u32;
+
+        //--------- Set Advance Configuration ---------//
+        Ret_e = s_FMKSRL_SetUartAdvanceCfg( &srlInfo_ps->bspHandle_u.uartH_s.AdvancedInit,
+                                        &f_UartCfg_ps->advProtCfg_s);
+            
 #endif
 
         if(Ret_e == RC_OK)

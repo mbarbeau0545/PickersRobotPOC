@@ -25,7 +25,7 @@
      * @brief Get a bit from a flag macro
      */
     #ifndef GETBIT
-        #define GETBIT(flag, bit) ((flag >> (bit)) & 1)
+        #define GETBIT(flag, bit) ((flag >> (bit)) & 1U)
     #endif
     /**
      * @brief Set a bit in a 16 bit flag
@@ -92,13 +92,14 @@
      * @brief Reset a bit in a 32 bit flag
      */
     #ifndef RESETBIT_8B
-        #define RESETBIT_8B(flag, bit) ((flag) &= ~(t_uint8)1 << (bit))
+        #define RESETBIT_8B(flag, bit) ((flag) &= ~((t_uint8)1 << (bit)))
+
     #endif
     /**
      * @brief Reset a bit in a 32 bit flag
      */
      #ifndef SETBIT_8B
-        #define SETBIT_8B(flag, bit) ((flag) |= (t_uint8)1 << (bit))
+        #define SETBIT_8B(flag, bit) ((flag) |= ((t_uint8)1 << (bit)))
     #endif
     /**
      * @brief Enum for return function
@@ -176,6 +177,10 @@
     #define Ms8ExtractByte1fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 8   )
     #define Ms8ExtractByte2fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 16  )
     #define Ms8ExtractByte3fromU32(Ms32Value)     (t_sint8)((t_sint32)(Ms32Value) >> 24  )
+
+    #define Mu16ExtractByte0from32(Ms32Value)     (t_uint16)((t_uint32)(Ms32Value) >> 8  & 0xFF)
+    #define Mu16ExtractByte1from32(Ms32Value)     (t_uint16)((t_uint32)(Ms32Value) >> 16 & 0xFF)
+
     
 
     #define Mu16BuildFromByte(Mu8ValueB0, Mu8ValueB1) \

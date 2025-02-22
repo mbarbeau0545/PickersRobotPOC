@@ -133,7 +133,7 @@
     typedef enum
     {
         FMKIO_INPUT_SIGEVNT_1 = 0x0,                  /**< Reference to PB2 */
-        FMKIO_INPUT_SIGEVNT_2,                        /**< Reference to PA9 */
+        FMKIO_INPUT_SIGEVNT_2,                        /**< Reference to PB5 */
     
         FMKIO_INPUT_SIGEVNT_NB,
     } t_eFMKIO_InEvntSig;
@@ -148,12 +148,10 @@
         FMKIO_OUTPUT_SIGDIG_3,                        /**< Reference to PB12 */
         FMKIO_OUTPUT_SIGDIG_4,                        /**< Reference to PB13 */
         FMKIO_OUTPUT_SIGDIG_5,                        /**< Reference to PB14 */
-        FMKIO_OUTPUT_SIGDIG_6,                        /**< Reference to PA10 */
+        FMKIO_OUTPUT_SIGDIG_6,                        /**< Reference to PA8 */
         FMKIO_OUTPUT_SIGDIG_7,                        /**< Reference to PA11 */
         FMKIO_OUTPUT_SIGDIG_8,                        /**< Reference to PA12 */
-        FMKIO_OUTPUT_SIGDIG_9,                        /**< Reference to PA8 */
-        FMKIO_OUTPUT_SIGDIG_10,                       /**< Reference to PB5 */
-        FMKIO_OUTPUT_SIGDIG_11,                       /**< Reference to PD2 */
+        FMKIO_OUTPUT_SIGDIG_9,                        /**< Reference to PD2 */
     
         FMKIO_OUTPUT_SIGDIG_NB,
     } t_eFMKIO_OutDigSig;
@@ -163,8 +161,8 @@
     */
     typedef enum
     {
-        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< Reference to PC0 */
-        FMKIO_OUTPUT_SIGPWM_2,                        /**< Reference to PC1 */
+        FMKIO_OUTPUT_SIGPWM_1 = 0x0,                  /**< Reference to PA9 */
+        FMKIO_OUTPUT_SIGPWM_2,                        /**< Reference to PA10 */
         FMKIO_OUTPUT_SIGPWM_3,                        /**< Reference to PC2 */
         FMKIO_OUTPUT_SIGPWM_4,                        /**< Reference to PC3 */
         FMKIO_OUTPUT_SIGPWM_5,                        /**< Reference to PC6 */
