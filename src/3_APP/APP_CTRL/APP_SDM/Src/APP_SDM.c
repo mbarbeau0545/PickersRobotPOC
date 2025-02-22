@@ -552,7 +552,7 @@ static t_eReturnCode s_APPSDM_DiagnosticMngmt(  t_sAPPSDM_DiagItemInfo * f_itemI
             }
             f_itemInfo_ps->mngmtState_e = APPSDM_DIAG_ITEM_STATUS_OFF;
             f_itemInfo_ps->debugInfo1_u16 = (t_uint16)0;
-           f_itemInfo_ps->debugInfo2_u16 = (t_uint16)0;
+            f_itemInfo_ps->debugInfo2_u16 = (t_uint16)0;
         }
     }
 

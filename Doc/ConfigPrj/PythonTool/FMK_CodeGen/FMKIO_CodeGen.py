@@ -103,7 +103,7 @@ class FMKIO_CodeGen():
         enum_description = ""
         element_description_a:  List[str] = []
         # this pin are usually used by hardware
-        stm_pin = ['PA14', 'PA13']
+        stm_pin = ['PA14', 'PA13', 'PA15', 'PC0', 'PC1']
         stm_tim_chnl:List = FMKTIM_CodeGen.get_tim_chnl_used()
         max_pin_per_gpio: int = 0
         #---------------------------------------------------
@@ -304,7 +304,7 @@ class FMKIO_CodeGen():
         for idx, pin_pwm_cfg in enumerate(OutPWM_astr[1:]):
             sig_name = f'P{pin_pwm_cfg[0][5:]}{pin_pwm_cfg[1][4:]}'
             if sig_name in stm_pin:
-                raise GPIO_AlreadyConfgigured(f"{pin_pwm_cfg[5]} has already been configured")
+                raise GPIO_AlreadyConfgigured(f"{sig_name} has already been configured")
             if str(pin_pwm_cfg[3]+pin_pwm_cfg[4]) in stm_tim_chnl:
                 raise TimerCfg_alreadyUsed(f" the timer {pin_pwm_cfg[3]} and his channel {pin_pwm_cfg[4]} has already been configured")
 

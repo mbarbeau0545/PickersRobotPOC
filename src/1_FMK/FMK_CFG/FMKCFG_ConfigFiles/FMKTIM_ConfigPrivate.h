@@ -31,7 +31,7 @@
     #define FMKTIM_MAX_CHNL_TIMER_5 ((t_uint8)4)
     #define FMKTIM_MAX_CHNL_TIMER_6 ((t_uint8)1)
     #define FMKTIM_MAX_CHNL_TIMER_7 ((t_uint8)1)
-    #define FMKTIM_MAX_CHNL_TIMER_8 ((t_uint8)6)
+    #define FMKTIM_MAX_CHNL_TIMER_8 ((t_uint8)4)
     #define FMKTIM_MAX_CHNL_TIMER_15 ((t_uint8)2)
     #define FMKTIM_MAX_CHNL_TIMER_16 ((t_uint8)1)
     #define FMKTIM_MAX_CHNL_TIMER_17 ((t_uint8)1)
@@ -65,7 +65,7 @@
         FMKTIM_TIMER_5,                        /**< Reference for HAL timer_5, this timer has 4 channel(s) */
         FMKTIM_TIMER_6,                        /**< Reference for HAL timer_6, this timer has 1 channel(s) */
         FMKTIM_TIMER_7,                        /**< Reference for HAL timer_7, this timer has 1 channel(s) */
-        FMKTIM_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 6 channel(s) */
+        FMKTIM_TIMER_8,                        /**< Reference for HAL timer_8, this timer has 4 channel(s) */
         FMKTIM_TIMER_15,                       /**< Reference for HAL timer_15, this timer has 2 channel(s) */
         FMKTIM_TIMER_16,                       /**< Reference for HAL timer_16, this timer has 1 channel(s) */
         FMKTIM_TIMER_17,                       /**< Reference for HAL timer_17, this timer has 1 channel(s) */
@@ -81,8 +81,6 @@
         FMKTIM_CHANNEL_2,              // f"Reference to HAL channel 2
         FMKTIM_CHANNEL_3,              // f"Reference to HAL channel 3
         FMKTIM_CHANNEL_4,              // f"Reference to HAL channel 4
-        FMKTIM_CHANNEL_5,              // f"Reference to HAL channel 5
-        FMKTIM_CHANNEL_6,              // f"Reference to HAL channel 6
 
         FMKTIM_CHANNEL_NB,
         FMKTIM_CHANNEL_ALL,
@@ -316,8 +314,6 @@
         {FMKTIM_TIMER_8,                        FMKTIM_CHANNEL_2},    // FMKTIM_INTERRUPT_LINE_EVNT_62
         {FMKTIM_TIMER_8,                        FMKTIM_CHANNEL_3},    // FMKTIM_INTERRUPT_LINE_EVNT_63
         {FMKTIM_TIMER_8,                        FMKTIM_CHANNEL_4},    // FMKTIM_INTERRUPT_LINE_EVNT_64
-        {FMKTIM_TIMER_8,                        FMKTIM_CHANNEL_5},    // FMKTIM_INTERRUPT_LINE_EVNT_65
-        {FMKTIM_TIMER_8,                        FMKTIM_CHANNEL_6},    // FMKTIM_INTERRUPT_LINE_EVNT_66
         {FMKTIM_TIMER_20,                       FMKTIM_CHANNEL_1},    // FMKTIM_INTERRUPT_LINE_EVNT_71
         {FMKTIM_TIMER_20,                       FMKTIM_CHANNEL_2},    // FMKTIM_INTERRUPT_LINE_EVNT_72
         {FMKTIM_TIMER_20,                       FMKTIM_CHANNEL_3},    // FMKTIM_INTERRUPT_LINE_EVNT_73
@@ -345,45 +341,33 @@
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_12},    // FMKTIM_INTERRUPT_LINE_IO_12
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_13},    // FMKTIM_INTERRUPT_LINE_IO_13
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_14},    // FMKTIM_INTERRUPT_LINE_IO_14
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_2] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_21},    // FMKTIM_INTERRUPT_LINE_IO_21
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_22},    // FMKTIM_INTERRUPT_LINE_IO_22
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_23},    // FMKTIM_INTERRUPT_LINE_IO_23
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_24},    // FMKTIM_INTERRUPT_LINE_IO_24
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_3] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_31},    // FMKTIM_INTERRUPT_LINE_IO_31
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_32},    // FMKTIM_INTERRUPT_LINE_IO_32
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_33},    // FMKTIM_INTERRUPT_LINE_IO_33
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_34},    // FMKTIM_INTERRUPT_LINE_IO_34
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_4] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_41},    // FMKTIM_INTERRUPT_LINE_IO_41
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_42},    // FMKTIM_INTERRUPT_LINE_IO_42
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_43},    // FMKTIM_INTERRUPT_LINE_IO_43
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_44},    // FMKTIM_INTERRUPT_LINE_IO_44
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_5] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_51},    // FMKTIM_INTERRUPT_LINE_IO_51
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_52},    // FMKTIM_INTERRUPT_LINE_IO_52
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_53},    // FMKTIM_INTERRUPT_LINE_IO_53
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_54},    // FMKTIM_INTERRUPT_LINE_IO_54
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_6] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_DAC,                   FMKTIM_INTERRUPT_LINE_DAC_1},    // FMKTIM_INTERRUPT_LINE_DAC_1
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
@@ -393,29 +377,21 @@
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_8] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_61},    // FMKTIM_INTERRUPT_LINE_IO_61
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_62},    // FMKTIM_INTERRUPT_LINE_IO_62
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_63},    // FMKTIM_INTERRUPT_LINE_IO_63
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_64},    // FMKTIM_INTERRUPT_LINE_IO_64
-            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_65},    // FMKTIM_INTERRUPT_LINE_IO_65
-            {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_66},    // FMKTIM_INTERRUPT_LINE_IO_66
         },
         [FMKTIM_TIMER_15] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,                  FMKTIM_INTERRUPT_LINE_EVNT_1},    // FMKTIM_INTERRUPT_LINE_EVNT_1
             {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,                  FMKTIM_INTERRUPT_LINE_EVNT_1},    // FMKTIM_INTERRUPT_LINE_EVNT_1
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_16] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_EVNT,                  FMKTIM_INTERRUPT_LINE_EVNT_3},    // FMKTIM_INTERRUPT_LINE_EVNT_3
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
@@ -425,16 +401,12 @@
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
             {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
         [FMKTIM_TIMER_20] = {
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_71},    // FMKTIM_INTERRUPT_LINE_IO_71
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_72},    // FMKTIM_INTERRUPT_LINE_IO_72
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_73},    // FMKTIM_INTERRUPT_LINE_IO_73
             {FMKTIM_INTERRUPT_LINE_TYPE_IO,                     FMKTIM_INTERRUPT_LINE_IO_74},    // FMKTIM_INTERRUPT_LINE_IO_74
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
-            {FMKTIM_INTERRUPT_LINE_TYPE_NB,                     FMKTIM_INTERRUPT_LINE_UNUSED},    // NOT AVAILABLE ON HARDWARE
         },
     };
 

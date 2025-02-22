@@ -15,6 +15,7 @@
 #include "FMK_CFG/FMKCFG_ConfigFiles/FMKIO_ConfigPrivate.h"
 #include "FMK_HAL/FMK_CDA/Src/FMK_CDA.h"
 #include "FMK_HAL/FMK_CPU/Src/FMK_CPU.h"
+#include "Library/SafeMem/SafeMem.h"
 
 // ********************************************************************
 // *                      Defines
@@ -51,7 +52,6 @@ typedef struct __t_sFMKIO_AnaigInfo
 typedef struct __t_sFMKIO_AnaPwmSigInfo
 {
     t_bool IsSigConfigured_b;                   /**< Flag which indicate wether or not the signal has been configured */
-    t_uint16 dutyCycleApplied_u16;
     t_uint32 frequencyApplied_u32;
     t_cbFMKIO_PulseEvent    * pulseEvnt_pcb;      /**< callback function when a pulse is finihed if pwm pulse is set  */
     t_cbFMKIO_SigErrorMngmt * sigError_cb;      /**< callback function if an error occured  */
@@ -335,7 +335,6 @@ t_eReturnCode FMKIO_Init(void)
     for(LLI_u8 = (t_uint8)0 ; LLI_u8 < (t_uint8)FMKIO_OUTPUT_SIGPWM_NB ; LLI_u8++)
     {
         g_OutPwmSigInfo_as[LLI_u8].IsSigConfigured_b   = False;
-        g_OutPwmSigInfo_as[LLI_u8].dutyCycleApplied_u16   = (t_uint16)0;
         g_OutPwmSigInfo_as[LLI_u8].frequencyApplied_u32   = (t_uint16)0;
         g_OutPwmSigInfo_as[LLI_u8].sigError_cb = (t_cbFMKIO_SigErrorMngmt *)NULL_FONCTION;
         g_OutPwmSigInfo_as[LLI_u8].pulseEvnt_pcb = (t_cbFMKIO_PulseEvent *)NULL_FONCTION;
@@ -959,6 +958,10 @@ t_eReturnCode FMKIO_Set_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint
     }
     if (Ret_e == RC_OK)
     {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
+    {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.dutyCycle_u16 = f_dutyCycle_u16;
         SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
@@ -967,10 +970,6 @@ t_eReturnCode FMKIO_Set_OutPwmSigDutyCycle(t_eFMKIO_OutPwmSig f_signal_e, t_uint
                                             (t_uint8)ITLineIO_e,
                                             pwmOpe_u,
                                             maskUpdate_u8);
-        if(Ret_e == RC_OK)
-        {
-            g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16 = f_dutyCycle_u16;
-        }
     }
     return Ret_e;
 }
@@ -1004,10 +1003,12 @@ t_eReturnCode FMKIO_Set_OutPwmSigFrequency(t_eFMKIO_OutPwmSig f_signal_e, t_uint
 
     if (Ret_e == RC_OK)
     {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
+    {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.frequency_u32 = f_frequency_u32;
-        pwmOpe_u.PwmOpe_s.dutyCycle_u16 = g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16;
-        SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
         SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_FREQUENCY);
 
         Ret_e = FMKTIM_Set_InterruptLineOpe(FMKTIM_INTERRUPT_LINE_TYPE_IO,
@@ -1037,7 +1038,7 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e,
 
     if ((f_signal_e >= FMKIO_OUTPUT_SIGPWM_NB)
     ||  (f_dutyCycle_u16 > FMKTIM_PWM_MAX_DUTY_CYLCE)
-    ||  (f_pulses_u16 > (t_uint16)0xFFFF))
+    ||  (f_pulses_u16 > (t_uint16)CST_MAX_UINT_16BIT))
     {
         Ret_e = RC_ERROR_PARAM_INVALID;
     }
@@ -1051,27 +1052,21 @@ t_eReturnCode FMKIO_Set_OutPwmSigPulses(t_eFMKIO_OutPwmSig f_signal_e,
     }
     if (Ret_e == RC_OK)
     {
+        Ret_e = SafeMem_memclear((void *)(&pwmOpe_u), sizeof(t_uFMKTIM_ITLineOpe));
+    }
+    if(Ret_e == RC_OK)
+    {
         ITLineIO_e = c_OutPwmSigBspMap_as[f_signal_e].ITLine_e;
         pwmOpe_u.PwmOpe_s.nbPulses_u16 = f_pulses_u16;
+        pwmOpe_u.PwmOpe_s.dutyCycle_u16 = f_dutyCycle_u16;
 
         SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES);
-
-        if(g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16 != f_dutyCycle_u16)
-        {
-            pwmOpe_u.PwmOpe_s.dutyCycle_u16 = f_dutyCycle_u16;
-            SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
-        }
-        
+        SETBIT_8B(maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE);
 
         Ret_e = FMKTIM_Set_InterruptLineOpe(FMKTIM_INTERRUPT_LINE_TYPE_IO,
                                             (t_uint8)ITLineIO_e,
                                             pwmOpe_u,
                                             maskUpdate_u8);
-
-        if(Ret_e == RC_OK)
-        {
-            g_OutPwmSigInfo_as[f_signal_e].dutyCycleApplied_u16 = f_dutyCycle_u16;
-        }
     }
 
     return Ret_e;

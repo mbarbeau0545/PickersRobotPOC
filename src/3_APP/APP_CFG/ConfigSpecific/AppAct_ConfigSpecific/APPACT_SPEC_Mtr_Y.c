@@ -72,7 +72,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Y_SetCfg(void)
     t_sCL42T_MotorSigCfg MotorConfig_s = {
         .PulseSigCfg_s = {
             .PulseSignal_e = FMKIO_OUTPUT_SIGPWM_3, 
-            .PullMode_e =  FMKIO_PULL_MODE_DISABLE,
+            .PullMode_e =  FMKIO_PULL_MODE_DOWN,
             .f_PulseInitFreq_u32 = APPACT_DEFAULT_FREQ_MOTOR
         },
         .StateSigCfg = {
@@ -85,7 +85,7 @@ t_eReturnCode APPACT_SPEC_Mtr_Y_SetCfg(void)
         },
         .DiagSigCfg_s = {
             .FreqSignal_e = FMKIO_INPUT_SIGFREQ_3,
-            .PullMode_e = FMKIO_PULL_MODE_DISABLE,
+            .PullMode_e = FMKIO_PULL_MODE_UP,
         },
     };
 
@@ -162,7 +162,7 @@ static void MtrY_MotorDiagnostic(t_eCL42T_MotorId f_MotorID_e, t_eCL42T_DiagErro
             case CL42T_DIAGNOSTIC_POSITION:
             case CL42T_DIAGNOSTIC_PCB_BOARD:
             case CL42T_DIAGNOSTIC_SIGNAL_PULSE:
-            case CL42T_DIAGNOSTIC_SIGNAL_DIG:
+            case CL42T_DIAGNOSTIC_SIGNAL_FREQ:
             case CL42T_DIAGNOSTIC_PULSE_INFINITE:
             {
                 Ret_e = APPSDM_ReportDiagEvnt(  APPSDM_DIAG_ITEM_GTRY_AXE_Y_ERR,

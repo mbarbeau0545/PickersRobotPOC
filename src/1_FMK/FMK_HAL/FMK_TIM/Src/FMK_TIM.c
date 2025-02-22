@@ -176,7 +176,7 @@ t_sFMKTIM_TimerInfo g_TimerInfo_as[FMKTIM_TIMER_NB] = {
 };
 
 /* CAUTION : Automatic generated code section for Timer Configuration: End */
-/**< In Pulses Mode when the timer is Launch hardware make a Interruption */
+/**< In Pulses Mode when the timer is Launch hardware make an Interruption */
 static t_bool g_timerPeriodPwm_ab[FMKTIM_TIMER_NB];
 /** Only One Channel Has the Right to be in Pulses Mode */
 static t_bool g_PwmBoundCfg_ae[FMKTIM_TIMER_NB][FMKTIM_CHANNEL_NB];
@@ -555,6 +555,13 @@ static t_eReturnCode s_FMKTIM_Get_TimChnlFromITLine(t_eFMKTIM_InterruptLineType 
                                                     t_eFMKTIM_Timer             *f_timer_pe,
                                                     t_eFMKTIM_InterruptChnl     *f_channel_pe);
 
+static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_timerInfo_ps, 
+                                                    t_eFMKTIM_InterruptChnl f_chnl_e,
+                                                    t_uint32 f_timFreq_u32); 
+
+                                                    static t_eReturnCode s_FMKTIM_UpdateDutyCycle(  t_sFMKTIM_TimerInfo * f_timerInfo_ps, 
+                                                        t_eFMKTIM_InterruptChnl f_chnl_e,
+                                                        t_uint32 f_dutyCycle_u32);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -993,6 +1000,10 @@ t_eReturnCode FMKTIM_Set_InterruptLineOpe(  t_eFMKTIM_InterruptLineType f_ITLine
         || (timerInfo_ps->Channel_as[chnl_e].IsChnlConfigure_b == (t_bool)False))
         {
             Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
+        }
+        if(GETBIT(timerInfo_ps->Channel_as[chnl_e].ErrState_u16, FMKTIM_ERRSTATE_OK) != BIT_IS_SET_16B)
+        {
+            Ret_e = RC_ERROR_WRONG_STATE;
         }
         if(Ret_e == RC_OK)
         {
@@ -1688,59 +1699,52 @@ static t_eReturnCode s_FMKTIM_Set_EcdrOpeState( t_eFMKTIM_Timer   f_timer_e,
     }
     if(Ret_e == RC_OK)
     {
-        //---------Get timer information---------//
-        if(g_TimerInfo_as[f_timer_e].isConfigured_b == (t_bool)False)
+        switch (f_EcdrOpe)
         {
-            Ret_e = RC_ERROR_INSTANCE_NOT_INITIALIZED;
-        }
-        else 
-        {
-            switch (f_EcdrOpe)
+            case FMKTIM_ECDR_OPE_START_TI1:
             {
-                case FMKTIM_ECDR_OPE_START_TI1:
-                {
-                    chnl_e = FMKTIM_CHANNEL_1;
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_START_TI2:
-                {
-                    chnl_e = FMKTIM_CHANNEL_2;
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_START_BOTH:
-                {
-                    chnl_e = FMKTIM_CHANNEL_ALL;
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_STOP_TI1:
-                {
-                    chnl_e = FMKTIM_CHANNEL_1;
-                    chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_STOP_TI2:
-                {
-                    chnl_e = FMKTIM_CHANNEL_2;
-                    chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_STOP_BOTH:
-                {
-                    chnl_e = FMKTIM_CHANNEL_ALL;
-                    chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
-                    break;
-                }
-                case FMKTIM_ECDR_OPE_NB:
-                default:
-                {   
-                    Ret_e = RC_ERROR_NOT_SUPPORTED;
-                    break;
-                }
+                chnl_e = FMKTIM_CHANNEL_1;
+                chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_START_TI2:
+            {
+                chnl_e = FMKTIM_CHANNEL_2;
+                chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_START_BOTH:
+            {
+                chnl_e = FMKTIM_CHANNEL_ALL;
+                chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_STOP_TI1:
+            {
+                chnl_e = FMKTIM_CHANNEL_1;
+                chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_STOP_TI2:
+            {
+                chnl_e = FMKTIM_CHANNEL_2;
+                chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_STOP_BOTH:
+            {
+                chnl_e = FMKTIM_CHANNEL_ALL;
+                chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
+                break;
+            }
+            case FMKTIM_ECDR_OPE_NB:
+            default:
+            {   
+                Ret_e = RC_ERROR_NOT_SUPPORTED;
+                break;
             }
         }
+        
         if(Ret_e == RC_OK)
         {
             Ret_e = s_FMKTIM_Set_HwChannelState(f_timer_e,
@@ -1809,10 +1813,6 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
     t_sFMKTIM_TimerInfo * timerInfo_ps;
     TIM_TypeDef * bspIsct_ps;
     t_eFMKTIM_ChnlState chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
-    t_uint32 CCRxValue_u32 = (t_uint32)0;
-    t_uint32 bspChannel_u32 = (t_uint32)0;
-    t_uint32 bspARRVal_u32 = (t_uint32)0;
-    t_uint32 bspPSCVal_u32 = (t_uint32)0;
 
     if((f_timer_e >= FMKTIM_TIMER_NB)
     || (f_chnl_e >= FMKTIM_CHANNEL_NB)
@@ -1824,114 +1824,91 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
     {
         timerInfo_ps = (t_sFMKTIM_TimerInfo *)(&g_TimerInfo_as[f_timer_e]);
         bspIsct_ps = (TIM_TypeDef *)(timerInfo_ps->bspTimer_s.Instance); 
+        // See if bit change frequency is SET
+        if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_FREQUENCY) == BIT_IS_SET_8B)
+        && (f_PwmOpe_s.frequency_u32 != (t_uint32)0))
+        {
+            //----- an event is going to be made -----//
+            Ret_e = s_FMKTIM_UpdateTimerFrequency(timerInfo_ps, f_chnl_e, f_PwmOpe_s.frequency_u32);
+            //----- don't change channel state ----//
+            chnlState_e = timerInfo_ps->Channel_as[f_chnl_e].State_e;
+        }
+        if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE) == BIT_IS_SET_8B)
+        && (f_PwmOpe_s.dutyCycle_u16 != (t_uint16)0))
+        {
+            Ret_e = s_FMKTIM_UpdateDutyCycle(   timerInfo_ps, 
+                                                f_chnl_e,
+                                                (t_uint32)f_PwmOpe_s.dutyCycle_u16);
 
-        if( (timerInfo_ps->isConfigured_b == (t_bool)False)
-        ||  (timerInfo_ps->Channel_as[f_chnl_e].IsChnlConfigure_b == (t_bool)False))
-        {
-            Ret_e = RC_ERROR_MISSING_CONFIG;
+            chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+            
         }
-        if(GETBIT(timerInfo_ps->Channel_as[f_chnl_e].ErrState_u16, FMKTIM_ERRSTATE_OK) != BIT_IS_SET_16B)
+        if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
+        && (f_PwmOpe_s.nbPulses_u16 != (t_uint32)0))
         {
-            Ret_e = RC_ERROR_WRONG_STATE;
-        }
-        if(Ret_e == RC_OK)
-        {
-            // See if bit change frequency is SET
-            if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_FREQUENCY) == BIT_IS_SET_8B)
-            && (f_PwmOpe_s.frequency_u32 != (t_uint32)0))
+            //----- If user required a number of pulse 
+            // we have to enable NVIC state to get ElapedTimeCallback 
+            // when RCR goes to 0, then we start PWM in polling Mode-----//
+            if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
             {
-                Ret_e = c_FMKTIM_TimerFunc_apf[FMKTIM_HWTIM_CFG_PWM].
-                        GetTimerInfoInit_pcb(   timerInfo_ps->c_clock_e,
-                                                timerInfo_ps->timerFreqMHz_u32,
-                                                (t_float32)f_PwmOpe_s.frequency_u32,
-                                                &bspARRVal_u32,
-                                                &bspPSCVal_u32);
+                Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
 
                 if(Ret_e == RC_OK)
                 {
-                    bspIsct_ps->ARR = (t_uint32)bspARRVal_u32;
-                    bspIsct_ps->PSC = (t_uint32)bspPSCVal_u32;
-                }
-            }
-            if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_DUTYCYCLE) == BIT_IS_SET_8B)
-            && (f_PwmOpe_s.dutyCycle_u16 != (t_uint16)0))
-            {
-                //-------Calculate new CCR value-------------//
-                CCRxValue_u32 = (t_uint32)((t_float32)f_PwmOpe_s.dutyCycle_u16 / (t_float32)FMKTIM_PWM_MAX_DUTY_CYLCE *
-                            (t_float32)(timerInfo_ps->bspTimer_s.Init.Period + (t_uint32)1));
-
-                //------- Get Bsp Channel -------------//
-                Ret_e = s_FMKTIM_Get_BspChannel(f_chnl_e, &bspChannel_u32);
-                
-                if (Ret_e == RC_OK)
-                {
-                    //-------Update Duty Cycle-------------//
-                    __HAL_TIM_SET_COMPARE(&timerInfo_ps->bspTimer_s, bspChannel_u32, (t_uint32)CCRxValue_u32);
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
-                }
-            }
-            if(GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
-            {
-                if(f_PwmOpe_s.nbPulses_u16 != (t_uint16)0)
-                {
-                    //----- If user required a number of pulse 
-                    // we have to enable NVIC state to get ElapedTimeCallback 
-                    // when RCR goes to 0, then we start PWM in polling Mode-----//
-                    if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
-                    {
-                        Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
-
-                        if(Ret_e == RC_OK)
-                        {
-                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
-                        }
-                    }
-    
-                    timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT; 
-                    bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
-                    chnlState_e = FMKTIM_CHNLST_ACTIVATED;
-                }
-                else
-                {
-                    chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
+                    timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
                 }
             }
 
-            //-------Forced actuation-------------//
-            if(Ret_e == RC_OK)
+            timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT;
+            //----- event update -----//
+            timerInfo_ps->bspTimer_s.Instance->CNT = 0;
+            bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
+            chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+            
+        }
+        
+        if(Ret_e == RC_OK)
+        {
+            //-------Activate/ Deactivate  channel-------------//
+            if(timerInfo_ps->Channel_as[f_chnl_e].State_e != chnlState_e)
             {
-                //-------Activate/ Deactivate  channel-------------//
-                if(timerInfo_ps->Channel_as[f_chnl_e].State_e != chnlState_e)
+                //----- Start Pwm Polling Mode -----//
+                Ret_e = s_FMKTIM_Set_HwChannelState(f_timer_e, f_chnl_e, chnlState_e);
+
+                //----- if Pwm Ope requested ------//
+                if(g_PwmBoundCfg_ae[f_timer_e][f_chnl_e] == FMKTIM_PWM_MODE_FINITE_PULSE)
                 {
-                    //----- Start Pwm Polling Mode -----//
-                    Ret_e = s_FMKTIM_Set_HwChannelState(f_timer_e, f_chnl_e, chnlState_e);
-
-                    //----- Effacer le flag d'update avant de démarrer les IT -----//
-                    __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
-
                     if(chnlState_e == FMKTIM_CHNLST_ACTIVATED)
                     {
-                        //----- Start Period Callback after RCR passed -----//
-                        bspRet_e = HAL_TIM_Base_Start_IT(&timerInfo_ps->bspTimer_s);
+                        //----- see if base timer has already been set -----//
+                        if(timerInfo_ps->bspTimer_s.State != HAL_TIM_STATE_BUSY)
+                        {
+                            //----- Effacer le flag d'update avant de démarrer les IT -----//
+                            __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
+                            //----- Start Period Callback after RCR passed -----//
+                            bspRet_e = HAL_TIM_Base_Start_IT(&timerInfo_ps->bspTimer_s);
+                        }
+                        
                     }
                     else 
                     {
                         //----- Stop Period Callback after RCR passed -----//
                         bspRet_e = HAL_TIM_Base_Stop_IT(&timerInfo_ps->bspTimer_s);
                     }
+                }
 
-                    if(bspRet_e != HAL_OK)
-                    {
-                        Ret_e = RC_ERROR_WRONG_RESULT; 
-                    }
-                    else
-                    {
-                        //----- Reset Flag -----//
-                        g_timerPeriodPwm_ab[f_timer_e] = (t_bool)False;
-                    }
+                if(bspRet_e != HAL_OK)
+                {
+                    Ret_e = RC_ERROR_WRONG_RESULT; 
+                }
+                else
+                {
+                    //----- Reset Flag -----//
+                    g_timerPeriodPwm_ab[f_timer_e] = (t_bool)False;
                 }
             }
         }
+        
     }
 
     return Ret_e;
@@ -2056,6 +2033,11 @@ static t_eReturnCode s_FMKTIM_Set_HwChannelState(   t_eFMKTIM_Timer f_timer_e,
                     if (timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
                     {
                         Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
+
+                        if(Ret_e == RC_OK)
+                        {
+                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;
+                        }
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -2099,6 +2081,11 @@ static t_eReturnCode s_FMKTIM_Set_HwChannelState(   t_eFMKTIM_Timer f_timer_e,
                     if (timerInfo_ps->IsNVICTimerEnable_b == (t_bool)True)
                     {
                         Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_DISABLE);
+
+                        if(Ret_e == RC_OK)
+                        {
+                            timerInfo_ps->IsNVICTimerEnable_b = (t_bool)False;
+                        }
                     }
                     if (Ret_e == RC_OK)
                     {
@@ -2181,16 +2168,12 @@ static t_eReturnCode s_FMKTIM_Get_CCRxValue(t_eFMKTIM_Timer f_timer_e,
         timerInfo_ps = (t_sFMKTIM_TimerInfo *)(&g_TimerInfo_as[f_timer_e]);
         
         //--------- get dutycycle only if channel is active---------//
+        Ret_e = s_FMKTIM_Get_BspChannel(f_channel_e, &BspChannel_u32);
 
         if (Ret_e == RC_OK)
-        {  
-            Ret_e = s_FMKTIM_Get_BspChannel(f_channel_e, &BspChannel_u32);
-
-            if (Ret_e == RC_OK)
-            {
-                //--------- use BSP function to know dutycyle---------//
-                *f_comparedValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s, BspChannel_u32);
-            }
+        {
+            //--------- use BSP function to know dutycyle---------//
+            *f_comparedValue_pu32 = (t_uint32)HAL_TIM_ReadCapturedValue(&timerInfo_ps->bspTimer_s, BspChannel_u32);
         }
     }
 
@@ -2367,10 +2350,14 @@ static void s_FMKTIM_BspRqst_InterruptMngmt(TIM_HandleTypeDef *f_timerIstce_ps, 
                                                 c_FmkTim_ChnlItLineMapp[Calltimer_e][LLI_u8].ITLine_u8);
 
                                     //---- update chnl state ----//
-                                    timerInfo_ps->Channel_as[LLI_u8].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT;
+                                    timerInfo_ps->Channel_as[LLI_u8].RunMode_e = FMKTIM_LINE_RUNMODE_POLLING;
                                 }
                             }
                         }
+                        //----- End Properly Timer Base -----//
+                        timerInfo_ps->bspTimer_s.Instance->RCR = 0;
+                        timerInfo_ps->bspTimer_s.Instance->EGR = TIM_EGR_UG;
+                        HAL_TIM_Base_Stop_IT(&timerInfo_ps->bspTimer_s);
                     }
                 }
                 break;
@@ -2655,6 +2642,113 @@ static t_eReturnCode s_FMKTIM_GetBspEcdrSelection(t_eFMKTIM_ICSelection f_ICEcdr
                 break;
         }
     }
+    return Ret_e;
+}
+
+/*********************************
+ * s_FMKTIM_UpdateTimerFrequency
+ *********************************/
+static t_eReturnCode s_FMKTIM_UpdateTimerFrequency( t_sFMKTIM_TimerInfo * f_timerInfo_ps, 
+                                                    t_eFMKTIM_InterruptChnl f_chnl_e,
+                                                    t_uint32 f_timFreq_u32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    TIM_TypeDef * bspIsct_ps;
+    t_uint32 bspARRVal_u32 = (t_uint32)0;
+    t_uint32 bspPSCVal_u32 = (t_uint32)0;
+    t_float32 dutyCycle_f32 = (t_uint32)0;
+    t_uint32 bspChnl_u32   = (t_uint32)0;
+
+    if(f_timerInfo_ps == (t_sFMKTIM_TimerInfo *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        bspIsct_ps = (TIM_TypeDef *)(f_timerInfo_ps->bspTimer_s.Instance); 
+        Ret_e = c_FMKTIM_TimerFunc_apf[FMKTIM_HWTIM_CFG_PWM].
+                        GetTimerInfoInit_pcb(   f_timerInfo_ps->c_clock_e,
+                                                f_timerInfo_ps->timerFreqMHz_u32,
+                                                (t_float32)(f_timFreq_u32),
+                                                &bspARRVal_u32,
+                                                &bspPSCVal_u32);
+
+        if (Ret_e == RC_OK)
+        {
+            Ret_e = s_FMKTIM_Get_BspChannel(f_chnl_e, &bspChnl_u32);
+        }
+        if(Ret_e == RC_OK)
+        {        
+            //----- calculate New DutyCyle to applied ----//
+            //                                              CCRx / ARR               
+            dutyCycle_f32 = (t_float32)( (t_float32)__HAL_TIM_GET_COMPARE(&f_timerInfo_ps->bspTimer_s, bspChnl_u32) /
+                                                            (t_float32)bspIsct_ps->ARR);
+            dutyCycle_f32 *= FMKTIM_PWM_MAX_DUTY_CYLCE;
+            //----- Stop timer to avoid glitches -----//
+            //bspIsct_ps->CR1 &= ~TIM_CR1_CEN;
+
+            //----- Activate Shadow Register for ARR & PSC -----//
+            bspIsct_ps->CR1 |= TIM_CR1_ARPE;
+
+            //----- Update PWM channel settings if necessary -----//
+            switch(f_chnl_e)
+            {
+                case FMKTIM_CHANNEL_1: 
+                    bspIsct_ps->CCMR1 |= TIM_CCMR1_OC1CE; 
+                    break;
+                case FMKTIM_CHANNEL_2: 
+                    bspIsct_ps->CCMR1 |= TIM_CCMR1_OC2CE; 
+                    break;
+                case FMKTIM_CHANNEL_3: 
+                    bspIsct_ps->CCMR2 |= TIM_CCMR2_OC3CE; 
+                    break;
+                case FMKTIM_CHANNEL_4: 
+                    bspIsct_ps->CCMR2 |= TIM_CCMR2_OC4CE; 
+                    break;
+                case FMKTIM_CHANNEL_NB:
+                default:
+                    Ret_e = RC_ERROR_NOT_ALLOWED;
+                    break;
+            }
+            if(Ret_e == RC_OK)
+            {
+                //----- Update ARR and PSC for next cycle (shadow registers) -----//
+                bspIsct_ps->ARR = (t_uint32)bspARRVal_u32;
+                bspIsct_ps->PSC = (t_uint32)bspPSCVal_u32;
+                
+                //----- Update Duty Cycle -----//
+                Ret_e = s_FMKTIM_UpdateDutyCycle(f_timerInfo_ps, f_chnl_e, (t_uint32)dutyCycle_f32);
+            }
+        }
+    }
+    return Ret_e;
+}
+
+/*********************************
+ * s_FMKTIM_Get_TimChnlFromITLine
+ *********************************/
+static t_eReturnCode s_FMKTIM_UpdateDutyCycle(  t_sFMKTIM_TimerInfo * f_timerInfo_ps, 
+                                                t_eFMKTIM_InterruptChnl f_chnl_e,
+                                                t_uint32 f_dutyCycle_u32)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uint32 CCRxValue_u32 = (t_uint32)0;
+    t_uint32 bspChannel_u32 = (t_uint32)0;
+
+    if(f_timerInfo_ps == (t_sFMKTIM_TimerInfo *)NULL)
+    {
+        Ret_e = RC_ERROR_PTR_NULL;
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = s_FMKTIM_Get_BspChannel(f_chnl_e, &bspChannel_u32);
+
+        CCRxValue_u32 = (t_uint32)((t_float32)(f_dutyCycle_u32) / (t_float32)FMKTIM_PWM_MAX_DUTY_CYLCE *
+                    (t_float32)(f_timerInfo_ps->bspTimer_s.Instance->ARR + (t_uint32)1));
+
+        __HAL_TIM_SET_COMPARE(&f_timerInfo_ps->bspTimer_s, bspChannel_u32, (t_uint32)CCRxValue_u32);
+    }
+
     return Ret_e;
 }
 
