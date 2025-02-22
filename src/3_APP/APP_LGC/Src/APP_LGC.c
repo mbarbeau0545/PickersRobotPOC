@@ -562,6 +562,9 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    
+    Ret_e = APPSDM_ResetDiagEvnt();
+
     return Ret_e;
 }
 
@@ -580,6 +583,10 @@ static t_eReturnCode s_APPLGC_Operational(void)
         {
             g_resetSrvState_b = (t_bool)True;
         }
+    }
+    if(Ret_e == RC_OK)
+    {
+        Ret_e = s_APPLGC_AppComStateMngmt();
     }
     if(Ret_e == RC_OK)
     {
@@ -603,7 +610,6 @@ static t_eReturnCode s_APPLGC_Operational(void)
     }
     return Ret_e;
 }
-
 
 /*********************************
  * s_APPLGC_GetSnsValues
@@ -868,6 +874,7 @@ static t_eReturnCode s_APPLGC_ResetSrvState(void)
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxSrv_u8;
 
+    Ret_e = APPSDM_ResetDiagEvnt();
 
     if(Ret_e == RC_OK)
     {
