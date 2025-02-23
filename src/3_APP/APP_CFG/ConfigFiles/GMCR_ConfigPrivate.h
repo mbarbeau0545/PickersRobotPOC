@@ -23,10 +23,13 @@
     // ********************************************************************
     // *                      Defines
     // ********************************************************************
-    #define GMCR_REF_FREQ_NOMINAL ((t_uint32)100) /**< Frequency is set to 100 when reference is done */
-    #define GMCR_PULSE_REFERENCE ((t_uint16)20000)
+    #define GMCR_REF_FREQ_NOMINAL ((t_uint32)6000) /**< Frequency is set to 100 when reference is done */
+    #define GMCR_REF_FREQ_NOMINAL_Z ((t_uint32)6000) /**< Frequency is set to 100 when reference is done */
+    #define GMCR_PULSE_REFERENCE ((t_uint16)30000)
+    #define GMCR_PULSE_REFERENCE_Z ((t_uint16)65000)
 
-    #define GMCR_NB_PULSE_REVERSE ((t_sint32)-10)
+    #define GMCR_NB_PULSE_REVERSE   ((t_sint32)3200)
+    #define GMCR_NB_PULSE_REVERSE_Z ((t_sint32)12000)
     // ********************************************************************
     // *                      Types
     // ********************************************************************

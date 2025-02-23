@@ -180,7 +180,7 @@ t_eReturnCode GMCR_Cyclic(  t_float32 *f_snsValues_paf32,
                 if((Ret_e == RC_OK)
                 && (SEODone_b == (t_bool)True))
                 {
-                    g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Y;
+                    g_FSMAxeRef_e = GMCR_FSM_REF_AXE_Z;
                 }
             }
             break;
@@ -267,37 +267,43 @@ static t_eReturnCode s_GMCR_ReferenceAxeX(t_bool * f_SEODone_pb)
             actgtrXR_u->Motor_s.stopPulse_b  = (t_bool)True;
             s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
         }
-        //----- State Machine -----//
-        switch (s_SFMSeo_e)
+        else 
         {
-            case GMCR_FSM_SEO_SET_MOVE:
+            //----- State Machine -----//
+            switch (s_SFMSeo_e)
             {
-                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_PULSE_REFERENCE);
-                actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
-                
-                actgtrXR_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_R_DIR * GMCR_PULSE_REFERENCE);
+                case GMCR_FSM_SEO_SET_MOVE:
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_PULSE_REFERENCE);
+                    actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
+                    
+                    actgtrXR_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_R_DIR * GMCR_PULSE_REFERENCE);
 
-                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
-                break;
-            }
-            case GMCR_FSM_SEO_WAIT_CONTACT:
-            {
-                // just wait
-                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-                break;
-            }
-            case GMCR_FSM_SEO_GO_REVERSE:
-            {
-                actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
-                actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE);
+                    s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
+                    break;
+                }
+                case GMCR_FSM_SEO_WAIT_CONTACT:
+                {
+                    // just wait
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    break;
+                }
+                case GMCR_FSM_SEO_GO_REVERSE:
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)(-(GTRY_MTR_X_L_DIR * GMCR_NB_PULSE_REVERSE));
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)(-(GTRY_MTR_X_R_DIR * GMCR_NB_PULSE_REVERSE));
+                    actgtrXL_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                    actgtrXR_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
 
-                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
-                //----- Refereence Axe X done -----//
-                *f_SEODone_pb = (t_bool)True;
+                    s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
+                    //----- Refereence Axe X done -----//
+                    *f_SEODone_pb = (t_bool)True;
+                }
             }
         }
+        
     }
     else
     {
@@ -396,35 +402,40 @@ static t_eReturnCode s_GMCR_ReferenceAxeZ(t_bool * f_SEODone_pb)
             s_SFMSeo_e = GMCR_FSM_SEO_GO_REVERSE;
 
         }
-
-        switch (s_SFMSeo_e)
+        else
         {
-            case GMCR_FSM_SEO_SET_MOVE:
+            switch (s_SFMSeo_e)
             {
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+                case GMCR_FSM_SEO_SET_MOVE:
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_PULSE_REFERENCE;
 
-                actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL; 
-                actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL;
+                    actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL_Z; 
+                    actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)GMCR_REF_FREQ_NOMINAL_Z;
 
-                s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
-                break;
-            }
-            case GMCR_FSM_SEO_WAIT_CONTACT:
-            {
-                // just wait
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
-                break;
-            }
-            case GMCR_FSM_SEO_GO_REVERSE:
-            {
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
-                actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)GMCR_NB_PULSE_REVERSE;
+                    s_SFMSeo_e = GMCR_FSM_SEO_WAIT_CONTACT;
+                    break;
+                }
+                case GMCR_FSM_SEO_WAIT_CONTACT:
+                {
+                    // just wait
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    break;
+                }
+                case GMCR_FSM_SEO_GO_REVERSE:
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)(GMCR_NB_PULSE_REVERSE_Z);
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)(GMCR_NB_PULSE_REVERSE_Z);
 
-                s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
-                //----- Refereence Axe Y done -----//
-                *f_SEODone_pb = (t_bool)True;
+                    actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)1000; 
+                    actgtrZ_u->Motor_s.frequency_u32 =  (t_sint32)1000;
+
+                    s_SFMSeo_e = GMCR_FSM_SEO_SET_MOVE;
+                    //----- Refereence Axe Y done -----//
+                    *f_SEODone_pb = (t_bool)True;
+                }
             }
         }
     }

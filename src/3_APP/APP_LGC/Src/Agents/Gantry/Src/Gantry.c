@@ -60,7 +60,7 @@ typedef struct
 // ********************************************************************
 static t_eGTRY_FSMProduction g_FSM_ProdMode_e = GTRY_FSM_PROD_SEO;
 static t_eGTRY_FSMProduction g_FSM_RsqtProdMode_e = GTRY_FSM_PROD_SEO;
-static t_eGTRY_FSMGantry g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PAUSE;
+static t_eGTRY_FSMGantry g_FSM_GtryMode_e = GTRY_SFM_GANTRY_PRODUCTION;
 static t_eGTRY_FSMGantry g_FSM_RqstGtryMode_e = GTRY_SFM_GANTRY_PAUSE;
 
 static t_float32 * g_snsValues_paf32;
@@ -152,7 +152,7 @@ t_eReturnCode Gantry_Cyclic(t_float32 *f_snsValues_paf32,
     if(Ret_e == RC_OK)
     {
         //----- Get New Mode from Application -----//
-        Ret_e = s_GTRY_StateMachineMngmt();    
+        //Ret_e = s_GTRY_StateMachineMngmt();    
     }
 
     if(Ret_e == RC_OK)
@@ -236,8 +236,15 @@ t_eReturnCode Gantry_RqstSFMState(t_eGTRY_FSMGantry f_rqstGtryMode_e)
     }
     if(Ret_e == RC_OK)
     {
-        g_FSM_RqstGtryMode_e = f_rqstGtryMode_e;
+        if(f_rqstGtryMode_e == GTRY_SFM_GANTRY_PAUSE)
+        {
+            // stay in production mode for debug
+            g_FSM_RsqtProdMode_e = GTRY_FSM_PROD_AC;
+
+        }
+        //g_FSM_RqstGtryMode_e = f_rqstGtryMode_e;
     }
+
 
     return Ret_e;
 }

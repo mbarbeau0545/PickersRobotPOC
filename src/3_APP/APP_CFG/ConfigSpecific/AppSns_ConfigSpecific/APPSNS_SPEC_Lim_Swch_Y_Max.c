@@ -68,7 +68,7 @@ t_eReturnCode APPSNS_SPEC_Lim_Swch_Y_Max_SetCfg(void)
     t_eReturnCode Ret_e = RC_OK;
     //    Your code for Lim_Swch_Y_Max_SetSnsCfg here
     Ret_e = FMKIO_Set_InDigSigCfg(  c_LimSwSig_e,
-                                    FMKIO_PULL_MODE_UP);
+                                    FMKIO_PULL_MODE_DOWN);
 
 
     return Ret_e;

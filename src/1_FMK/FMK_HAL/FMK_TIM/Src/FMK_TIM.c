@@ -1843,27 +1843,40 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
             chnlState_e = FMKTIM_CHNLST_ACTIVATED;
             
         }
-        if((GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
-        && (f_PwmOpe_s.nbPulses_u16 != (t_uint32)0))
+        if(GETBIT(f_maskUpdate_u8, FMKTIM_BIT_PWM_NB_PULSES) == BIT_IS_SET_8B)
         {
-            //----- If user required a number of pulse 
-            // we have to enable NVIC state to get ElapedTimeCallback 
-            // when RCR goes to 0, then we start PWM in polling Mode-----//
-            if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
+            if(f_PwmOpe_s.nbPulses_u16 != (t_uint32)0)
             {
-                Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
-
-                if(Ret_e == RC_OK)
+                //----- If user required a number of pulse 
+                // we have to enable NVIC state to get ElapedTimeCallback 
+                // when RCR goes to 0, then we start PWM in polling Mode-----//
+                if(timerInfo_ps->IsNVICTimerEnable_b == (t_bool)False)
                 {
-                    timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
-                }
-            }
+                    Ret_e = FMKCPU_Set_NVICState(timerInfo_ps->c_IRQNType_e, FMKCPU_NVIC_OPE_ENABLE);
 
-            timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT;
-            //----- event update -----//
-            timerInfo_ps->bspTimer_s.Instance->CNT = 0;
-            bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
-            chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+                    if(Ret_e == RC_OK)
+                    {
+                        timerInfo_ps->IsNVICTimerEnable_b = (t_bool)True;   
+                    }
+                    timerInfo_ps->Channel_as[f_chnl_e].RunMode_e = FMKTIM_LINE_RUNMODE_INTERRUPT;
+                    
+                }
+                //----- event update -----//
+                if(timerInfo_ps->bspTimer_s.State == HAL_TIM_STATE_READY)
+                {
+                    bspIsct_ps->CNT = 0;
+                    bspIsct_ps->RCR = (t_uint16)(f_PwmOpe_s.nbPulses_u16 - (t_uint16)2);
+                }
+                chnlState_e = FMKTIM_CHNLST_ACTIVATED;
+            }
+            else 
+            {
+                //------ generate an event to reset RCR timer if not 0 -----//
+                bspIsct_ps->EGR |= TIM_EGR_UG;
+                __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
+                bspIsct_ps->RCR = (t_uint16)(0);
+                chnlState_e = FMKTIM_CHNLST_DISACTIVATED;
+            }
             
         }
         
@@ -1886,6 +1899,7 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                             //----- Effacer le flag d'update avant de démarrer les IT -----//
                             __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
                             //----- Start Period Callback after RCR passed -----//
+                            //bspIsct_ps->EGR |= TIM_EGR_UG;
                             bspRet_e = HAL_TIM_Base_Start_IT(&timerInfo_ps->bspTimer_s);
                         }
                         
@@ -1893,6 +1907,8 @@ static t_eReturnCode s_FMKTIM_Set_PwmOpeState(  t_eFMKTIM_Timer   f_timer_e,
                     else 
                     {
                         //----- Stop Period Callback after RCR passed -----//
+                        bspIsct_ps->EGR |= TIM_EGR_UG;
+                        __HAL_TIM_CLEAR_FLAG(&timerInfo_ps->bspTimer_s, TIM_FLAG_UPDATE);
                         bspRet_e = HAL_TIM_Base_Stop_IT(&timerInfo_ps->bspTimer_s);
                     }
                 }

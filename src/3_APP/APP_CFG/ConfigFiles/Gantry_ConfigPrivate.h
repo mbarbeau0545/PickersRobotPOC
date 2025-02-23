@@ -28,7 +28,7 @@
     // *                      Defines
     // ********************************************************************
     #define GTRY_SNS_LIMSWITCH_NB ((t_uint8)8) /**< Number of Limits Switch Used */
-    #define GTRY_TIME_BEFORE_SEND ((t_uint32)10000)
+    #define GTRY_TIME_BEFORE_SEND ((t_uint32)2000)
     // ********************************************************************
     // *                      Types
     // ********************************************************************

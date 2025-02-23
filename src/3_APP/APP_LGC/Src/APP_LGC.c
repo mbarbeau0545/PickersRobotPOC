@@ -575,8 +575,6 @@ static t_eReturnCode s_APPLGC_Operational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
     t_uint8 idxAgent_u8;
-    
-    FMKCPU_Get_Tick(&g_timeCounterLGC); // Sert a limiter lenvoi des messages 
 
     if(g_resetSrvState_b == (t_bool)True)
     {
@@ -765,7 +763,7 @@ static void s_APPLGC_AppEvntCallback(   t_uint8 * f_rxData_pu8,
 
                 FMKCPU_Get_Tick(&currenTime_u32);
 
-                if((currenTime_u32 - g_ticksendapp_u32) > LGC_TIME_BEFORE_SEND)
+                if((currenTime_u32 - g_ticksendapp_u32) > APPLGC_TIME_BEFORE_SEND)
                 {
                     g_ticksendapp_u32 = currenTime_u32;
                     Ret_e = APPLGC_APP_COM_SEND(g_sendAppData_ua8);
@@ -864,7 +862,7 @@ static t_eReturnCode s_APPLGC_AppComStateMngmt(void)
     {   
         FMKCPU_Get_Tick(&currenTime_u32);
 
-        if((currenTime_u32 - g_ticksendapp_u32) > LGC_TIME_BEFORE_SEND)
+        if((currenTime_u32 - g_ticksendapp_u32) > APPLGC_TIME_BEFORE_SEND)
         {
             g_ticksendapp_u32 = currenTime_u32;
             Ret_e = Gantry_GetFSMState(&fsmGTRY_e);

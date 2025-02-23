@@ -52,7 +52,7 @@ typedef struct __t_sCL42T_MotorInfo
     t_eCL42T_PulseChgDirOpe pulseOpe_e;
     t_eCL42T_DiagError Health_e;
     t_uint32 InhibTime_u32;
-    t_uint32 PulseRunMaxCnt_u32;
+    t_bool firstPulseCmd_b;                                         /**< To Avoid Changement in the First Command (and potentially inhibition) which is not logic 'cause it's the command, */
     t_bool isConfigured_b;
     t_uint8 evntMask_u8;
     t_bool flagErrorDetected_b;
@@ -74,13 +74,18 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+/**
+* @brief Motor Inforrmation
+*/
 static t_sCL42T_MotorInfo g_MotorInfo_as[CL42T_MOTOR_NB];
-
+/**
+* @brief Cyclic Module State
+*/
 static t_eCyclicModState g_CL42T_ModState_e = STATE_CYCLIC_OPE;
-
+/**
+* @brief Diag Managemnt to receive Pulse from Driver
+*/
 static t_sCL42T_DiagMngmt g_diagMngmt_as[CL42T_MOTOR_NB];
-
-
 //********************************************************************************
 //                      Local functions - Prototypes
 //********************************************************************************
@@ -402,7 +407,7 @@ t_eReturnCode CL42T_Init(void)
         g_MotorInfo_as[idxMotor_u8].isConfigured_b = (t_bool)False;
         g_MotorInfo_as[idxMotor_u8].pulseOpe_e = CL42T_PULSE_CHANGE_DIR_OPE_CANCEL;
         g_MotorInfo_as[idxMotor_u8].evntMask_u8 = (t_uint8)0;
-        g_MotorInfo_as[idxMotor_u8].PulseRunMaxCnt_u32 = (t_uint32)0;
+        g_MotorInfo_as[idxMotor_u8].firstPulseCmd_b = (t_bool)False;
 
         g_diagMngmt_as[idxMotor_u8].counterDiag_u16 = (t_uint8)0;
         g_diagMngmt_as[idxMotor_u8].flagReception_b = (t_bool)false;
@@ -840,7 +845,6 @@ static t_eReturnCode s_CL42T_PulseOpeMngmt( t_sCL42T_MotorInfo * f_motorInfo_ps,
             if((GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_RQST_PULSE_CMD) == BIT_IS_SET_8B)
             && (GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_DEAD_TIME) != BIT_IS_SET_8B))
             {
-                FMKCPU_Get_Tick(&f_motorInfo_ps->PulseRunMaxCnt_u32);
                 *f_setAcutation_pb = (t_bool)True;
             }
             else
@@ -1163,53 +1167,66 @@ static t_eReturnCode s_CL42T_SetPulseSignal(    t_sCL42T_MotorInfo * f_motorInfo
     }
     if(Ret_e == RC_OK)
     {
-        if( f_nbPulses_s32 >= (t_sint32)0)
+        if( f_nbPulses_s32 > (t_sint32)0)
         {
             //CL42T_MOTOR_DIRECTION_CW;
             digValue_e = FMKIO_DIG_VALUE_LOW;
 
         }
-        else // f_nbPulses_s32 < 0
+        else if (f_nbPulses_s32 < 0)
         {
             //CL42T_MOTOR_DIRECTION_CW;
             f_nbPulses_s32 = -f_nbPulses_s32;
             digValue_e = FMKIO_DIG_VALUE_HIGH;
         }
+        else // == 0
+        {
+            digValue_e = f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_DIR].value_u32;
+        }
 
         remainingPulses_u32 = f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_PULSE].value_u32;
 
         //----- change of direction management -----//
-        
         //----- if change of direction and inhibition not pasted or the pulse is still on 
         //              request dead time -----//
         if(digValue_e != f_motorInfo_ps->SigInfo_as[CL42T_SIGTYPE_DIR].value_u32)
         {
-            //----- change of direction detected ------//
-            FMKCPU_Get_Tick(&currentTime_u32);
-            if(((currentTime_u32 - f_motorInfo_ps->InhibTime_u32) < CL42T_DEAD_TIME_TRANSITION)
-            || (GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B))
-            {
-                SETBIT_8B(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_DEAD_TIME);
+            if(f_motorInfo_ps->firstPulseCmd_b == (t_bool)False)
+            {   
+                // first command means no need to inhib the motor
+                f_motorInfo_ps->firstPulseCmd_b = (t_bool)True;
+                remainingPulses_u32 += f_nbPulses_s32;
             }
-
-            //---- pulse managment ----//
-            if(f_motorInfo_ps->pulseOpe_e == CL42T_PULSE_CHANGE_DIR_OPE_CANCEL)
+            else
             {
-                // ----- reset conter to pulses ask -----//
-                remainingPulses_u32 = f_nbPulses_s32;
-            }
-            else // add/substract
-            {
-                //------ set it positive for calculation -----//
-                substractPulses_u32 = (t_uint32)(f_nbPulses_s32);
-
-                if(substractPulses_u32 > remainingPulses_u32)
+                //----- change of direction detected ------//
+                FMKCPU_Get_Tick(&currentTime_u32);
+                if(((currentTime_u32 - f_motorInfo_ps->InhibTime_u32) < CL42T_DEAD_TIME_TRANSITION)
+                || (GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B))
                 {
-                    remainingPulses_u32 = (t_uint32)0;
+                    SETBIT_8B(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_DEAD_TIME);
                 }
-                else
+
+
+                //---- pulse managment ----//
+                if(f_motorInfo_ps->pulseOpe_e == CL42T_PULSE_CHANGE_DIR_OPE_CANCEL)
                 {
-                    remainingPulses_u32 -= (t_uint32)substractPulses_u32;
+                    // ----- reset conter to pulses ask -----//
+                    remainingPulses_u32 = f_nbPulses_s32;
+                }
+                else // add/substract
+                {
+                    //------ set it positive for calculation -----//
+                    substractPulses_u32 = (t_uint32)(f_nbPulses_s32);
+
+                    if(substractPulses_u32 > remainingPulses_u32)
+                    {
+                        remainingPulses_u32 = (t_uint32)0;
+                    }
+                    else
+                    {
+                        remainingPulses_u32 -= (t_uint32)substractPulses_u32;
+                    }
                 }
             }
         }
@@ -1309,8 +1326,7 @@ static t_eReturnCode s_CL42T_GetPulseSignal(t_sCL42T_MotorInfo * f_motorInfo_ps,
     }
     if(Ret_e == RC_OK)
     {
-        if(GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B
-        || GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_DEAD_TIME) == BIT_IS_SET_8B)
+        if(GETBIT(f_motorInfo_ps->evntMask_u8, CL42T_PULSE_BIT_STATE_ON) == BIT_IS_SET_8B)
         {
             *f_pulseState_pe = CL42T_MOTOR_PULSE_ON;
         }
