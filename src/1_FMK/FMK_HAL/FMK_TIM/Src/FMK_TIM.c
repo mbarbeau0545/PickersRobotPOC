@@ -1598,7 +1598,7 @@ static t_eReturnCode s_FMKTIM_Set_EvntChannelCfg(t_eFMKTIM_Timer f_timer_e,
     if(Ret_e == RC_OK)
     {
         //----------Get the prescaler/ ARR for the timer ------------------//
-        freqEvnt_f32 = (t_float32)(((t_float32)1.0f)/(f_periodms_u32/ (t_float32)CST_MSEC_TO_SEC));
+        freqEvnt_f32 = (t_float32)(((t_float32)1.0f)/(f_periodms_u32 / (t_float32)CST_MSEC_TO_SEC));
 
         //-------------Call Init Function-------------//
         Ret_e = s_FMKTIM_Set_BspTimerInit(  timerInfo_ps,

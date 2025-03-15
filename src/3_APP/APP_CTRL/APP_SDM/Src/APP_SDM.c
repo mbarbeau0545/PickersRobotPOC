@@ -421,7 +421,7 @@ static void s_APPSDM_FoundFreeIdx(void)
         g_freeItemIdx_u8 += (t_uint8)1;
         g_MaxIdxRegistration_u8 += (t_uint8)1;
     }
-    else 
+    else
     {
         //----- there is a good chance that the first or second element 
         //      if the array is now free -----//

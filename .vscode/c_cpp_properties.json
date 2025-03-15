@@ -8,12 +8,12 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "D:/Project/Software/STM32/f_testWithoutApp/include",
-                "D:/Project/Software/STM32/f_testWithoutApp/src",
-                "D:/Project/Software/STM32/f_testWithoutApp/src/0_Common",
-                "D:/Project/Software/STM32/f_testWithoutApp/src/1_FMK",
-                "D:/Project/Software/STM32/f_testWithoutApp/src/2_DRV",
-                "D:/Project/Software/STM32/f_testWithoutApp/src/3_APP",
+                "D:/Project/Software/STM32/f_demonstrationPOC/include",
+                "D:/Project/Software/STM32/f_demonstrationPOC/src",
+                "D:/Project/Software/STM32/f_demonstrationPOC/src/0_Common",
+                "D:/Project/Software/STM32/f_demonstrationPOC/src/1_FMK",
+                "D:/Project/Software/STM32/f_demonstrationPOC/src/2_DRV",
+                "D:/Project/Software/STM32/f_demonstrationPOC/src/3_APP",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/CMSIS/Include",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/CMSIS/Device/ST/STM32G4xx/Include",
                 "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/STM32G4xx_HAL_Driver/Inc",
@@ -58,12 +58,12 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "D:/Project/Software/STM32/f_testWithoutApp/include",
-                    "D:/Project/Software/STM32/f_testWithoutApp/src",
-                    "D:/Project/Software/STM32/f_testWithoutApp/src/0_Common",
-                    "D:/Project/Software/STM32/f_testWithoutApp/src/1_FMK",
-                    "D:/Project/Software/STM32/f_testWithoutApp/src/2_DRV",
-                    "D:/Project/Software/STM32/f_testWithoutApp/src/3_APP",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/include",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/src",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/src/0_Common",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/src/1_FMK",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/src/2_DRV",
+                    "D:/Project/Software/STM32/f_demonstrationPOC/src/3_APP",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/CMSIS/Include",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/CMSIS/Device/ST/STM32G4xx/Include",
                     "C:/Users/mbarb/.platformio/packages/framework-stm32cubeg4/Drivers/STM32G4xx_HAL_Driver/Inc",
@@ -107,7 +107,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60117",
+                "PLATFORMIO=60118",
                 "STM32G4",
                 "STM32G4xx",
                 "STM32G474xx",

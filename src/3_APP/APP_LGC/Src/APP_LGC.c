@@ -29,7 +29,9 @@
 // ********************************************************************
 // *                      Defines
 // ********************************************************************
-
+#define APPLGC_GTRY_PULSES_NB ((t_sint32)6400)
+#define APPLGC_GTRY_SPEED ((t_uint32)6000)
+#define APPLGC_PERDIODIC_FASTTASK ((t_uint32)5)
 // ********************************************************************
 // *                      Types
 // ********************************************************************
@@ -46,6 +48,11 @@ enum
     APPLGC_APP_CMD_BIT_NEW_DATA,
 };
 
+typedef enum 
+{
+    APPLGC_GTRY_GO_FORWARD = 0x00,
+    APPLGC_GTRY_GO_BACKWARD,
+} t_eGTRY_TestState;
 
 /* CAUTION : Automatic generated code section for Structure: Start */
 
@@ -67,6 +74,7 @@ typedef struct
 // ********************************************************************
 // *                      Variables
 // ********************************************************************
+static t_bool g_lockLogcOpe_b = False; 
 t_uint32 g_ticksendapp_u32;
 /**
 * @brief App Logic Module State
@@ -168,11 +176,20 @@ static t_eReturnCode s_APPLGC_SetActValues(void);
 static t_eReturnCode s_APPLGC_AppComStateMngmt(void);
 /**
 *
+*	@brief      Update Service Status and Actuators Values.\n
+*
+*
+*/
+static t_eReturnCode s_APPLGC_GTRY_UpdateSrvState(void);
+static t_eReturnCode s_APPLGC_GTRY_TestMovement(void);
+/**
+*
 *	@brief
 *	@note   
 *
 *
 */
+
 static t_eReturnCode s_APPLGC_ResetSrvState(void);
 /**
 *
@@ -214,6 +231,7 @@ static void s_APPLGC_AppEvntCallback(  t_uint8 * f_rxData_pu8,
                                     t_uint16 f_dataSize_u16, 
                                     t_eFMKSRL_RxCallbackInfo f_InfoCb_e);
 
+static void s_APPLGC_FastTask(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8);
 //****************************************************************************
 //                      Public functions - Implementation
 //********************************************************************************
@@ -552,6 +570,12 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
                                             FMKSRL_OPE_RX_CYCLIC_SIZE,
                                             (t_uint16)APPLGC_APP_PROTOCOL_LEN_DATA);
     }
+    if(Ret_e == RC_OK)
+    {
+        FMKCP_Set_EvntTimerCfg( FMKTIM_INTERRUPT_LINE_EVNT_1,
+                                APPLGC_PERDIODIC_FASTTASK,
+                                s_APPLGC_FastTask);
+    }
 
     return Ret_e;
 }
@@ -562,8 +586,19 @@ static t_eReturnCode s_APPLGC_ConfigurationState(void)
 static t_eReturnCode s_APPLGC_PreOperational(void)
 {
     t_eReturnCode Ret_e = RC_OK;
+    t_uFMKTIM_ITLineOpe evntOpe_u;
+    t_uint8 maskOpe_u8;
     
     Ret_e = APPSDM_ResetDiagEvnt();
+    if(Ret_e == RC_OK)
+    {
+        evntOpe_u.EvntOpe_e = FMKTIM_EVNT_OPE_START_TIMER;
+
+        FMKTIM_Set_InterruptLineOpe(FMKTIM_INTERRUPT_LINE_TYPE_EVNT,
+                                    (t_uint8)FMKTIM_INTERRUPT_LINE_EVNT_1,
+                                    evntOpe_u,
+                                    (t_uint8)0);
+    }
 
     return Ret_e;
 }
@@ -586,22 +621,13 @@ static t_eReturnCode s_APPLGC_Operational(void)
     }
     if(Ret_e == RC_OK)
     {
-        Ret_e = s_APPLGC_AppComStateMngmt();
-    }
-    if(Ret_e == RC_OK)
-    {
-        //------ Get Sensors Values for this cyclic -----//
-        Ret_e = s_APPLGC_GetSnsValues();
+        Ret_e = s_APPLGC_GTRY_UpdateSrvState();
     }
 
     //----- Call Agent Periodic Task Depending on Coordinator -----//
     if(Ret_e == RC_OK)
     {   
-        for(idxAgent_u8 = (t_uint8)0 ; (idxAgent_u8 < APPLGC_AGENT_NB) &&  (Ret_e >= RC_OK) ; idxAgent_u8++)
-        {
-            Ret_e = c_AppLGc_AgentFunc_apf[idxAgent_u8].PeriodTask_pcb( (t_float32 *)g_snsValues_af32,
-                                                                        (t_sAPPLGC_ServiceInfo *)g_srvFuncInfo_as);
-        }
+        Ret_e = s_APPLGC_GTRY_TestMovement();
     }
 
     if(Ret_e >= RC_OK)
@@ -666,6 +692,208 @@ static t_eReturnCode s_APPLGC_SetActValues(void)
     return Ret_e;
 }
 
+/*********************************
+ * s_APPLGC_FastTask
+ *********************************/
+static void s_APPLGC_FastTask(t_eFMKTIM_InterruptLineType f_InterruptType_e, t_uint8 f_InterruptLine_u8)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    //---- verify that no switch is on ----//
+    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
+    t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
+    t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
+    t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
+
+    Ret_e = s_APPLGC_GetSnsValues();
+
+    if(Ret_e == RC_OK
+    && g_lockLogcOpe_b == (t_bool)False)
+    {
+        //---- Check Axe X Switch ----//
+        if((g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_X_L_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_X_L_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_X_R_MIN] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_X_R_MAX] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrXL_u->Motor_s.frequency_u32 = 0;
+            actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            actgtrXL_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXL_u->Motor_s.stopPulse_b  = (t_bool)True;
+
+            actgtrXR_u->Motor_s.frequency_u32 = 0;
+            actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            actgtrXR_u->Motor_s.nbPulses_s32 = (t_uint32)0;
+            actgtrXR_u->Motor_s.stopPulse_b  = (t_bool)True;
+
+            APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_L, *actgtrXR_u);
+            APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_X_R, *actgtrXL_u);
+            APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_X, APPLGC_SRV_HEALTH_ERROR);
+        }
+        //---- Check Axe X Switch ----//
+        if((g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_Y_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_Y_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrY_u->Motor_s.frequency_u32 = 0;
+            actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+            actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+            APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_Y, *actgtrY_u);
+            APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Y, APPLGC_SRV_HEALTH_ERROR);
+        }
+        //---- Check Axe Y Switch ----//
+        if((g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_Z_MAX] == APPSNS_LIM_SWCH_NC_CONTACT)
+        || (g_snsValues_af32[APPSNS_SENSOR_LIM_SWCH_Z_MIN] == APPSNS_LIM_SWCH_NC_CONTACT))
+        {
+            actgtrZ_u->Motor_s.frequency_u32 = 0;
+            actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+            actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+            actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+            APPACT_Set_ActValue(APPACT_ACTUATOR_MTR_Z, *actgtrZ_u);
+            APPLGC_SetServiceHealth(APPLGC_SRV_GTRY_Z, APPLGC_SRV_HEALTH_ERROR);
+        }
+    }
+
+    return;
+}
+
+/*********************************
+ * s_APPLGC_GTRY_TestMovement
+ *********************************/
+static t_eReturnCode s_APPLGC_GTRY_TestMovement(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    static t_eGTRY_TestState s_State = APPLGC_GTRY_GO_FORWARD; 
+    t_uAPPACT_SetValue * actgtrXR_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_L]);
+    t_uAPPACT_SetValue * actgtrXL_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].actVal_pau[APPLGC_ACT_MTR_X_R]);
+    t_uAPPACT_SetValue * actgtrY_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].actVal_pau[APPLGC_ACT_MTR_Y]);
+    t_uAPPACT_SetValue * actgtrZ_u = (t_uAPPACT_SetValue *)(&g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].actVal_pau[APPLGC_ACT_MTR_Z]);
+    static t_bool s_setActuation_b = False;
+    static t_uint32 s_actTime_u32 = 0; 
+    t_uint32 currentTime_u32;
+    FMKCPU_Get_Tick(&currentTime_u32);
+
+    //---- lock data  -----//
+    g_lockLogcOpe_b = (t_bool)True;
+    
+    //---- check state -----//
+    if((g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e == APPLGC_SRV_STATE_STOPPED)
+    && (g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e == APPLGC_SRV_STATE_STOPPED)
+    && (g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e == APPLGC_SRV_STATE_STOPPED)
+    && ((currentTime_u32 - s_actTime_u32) > 1000))
+    {
+        FMKCPU_Get_Tick(&s_actTime_u32);
+        s_setActuation_b = True;
+    }
+    if(s_setActuation_b == (t_bool)True)
+    {
+        s_setActuation_b = False;
+        switch(s_State)
+        {
+            case APPLGC_GTRY_GO_FORWARD:
+            {
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrXL_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_L_DIR * APPLGC_GTRY_PULSES_NB);
+
+                    actgtrXR_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)(GTRY_MTR_X_R_DIR * APPLGC_GTRY_PULSES_NB);
+                }
+                else 
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                    
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrY_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrY_u->Motor_s.nbPulses_s32  = (t_sint32)APPLGC_GTRY_PULSES_NB;    
+                }
+                else 
+                {
+                    actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrZ_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrZ_u->Motor_s.nbPulses_s32  = (t_sint32)APPLGC_GTRY_PULSES_NB;
+                }
+                else 
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }  
+                s_State = APPLGC_GTRY_GO_BACKWARD;
+                break;
+            }
+            case APPLGC_GTRY_GO_BACKWARD:
+            {
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrXL_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrXL_u->Motor_s.nbPulses_s32  = (t_sint32)(-(GTRY_MTR_X_L_DIR * APPLGC_GTRY_PULSES_NB));
+
+                    actgtrXR_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrXR_u->Motor_s.nbPulses_s32  = (t_sint32)(-(GTRY_MTR_X_R_DIR * APPLGC_GTRY_PULSES_NB));
+                }
+                else 
+                {
+                    actgtrXL_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXL_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXL_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                    
+                    actgtrXR_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrXR_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrXR_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrY_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrY_u->Motor_s.nbPulses_s32  = (t_sint32)(-APPLGC_GTRY_PULSES_NB);  
+                }
+                else 
+                {
+                    actgtrY_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrY_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrY_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                }
+            
+
+                if(g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].health_e == APPLGC_SRV_HEALTH_OK)
+                {
+                    actgtrZ_u->Motor_s.frequency_u32 = (t_uint32)APPLGC_GTRY_SPEED;
+                    actgtrZ_u->Motor_s.nbPulses_s32  = (t_sint32)(-APPLGC_GTRY_PULSES_NB);
+                }
+                else 
+                {
+                    actgtrZ_u->Motor_s.nbPulses_s32 = (t_sint32)0;
+                    actgtrZ_u->Motor_s.stopPulse_b = (t_bool)True;
+                    actgtrZ_u->Motor_s.state_e = CL42T_MOTOR_STATE_OFF;
+                } 
+                s_State = APPLGC_GTRY_GO_FORWARD;
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+    }
+    g_lockLogcOpe_b = (t_bool)False;
+    return Ret_e; 
+}
 /*********************************
  * s_APPLGC_AppEvntCallback
  *********************************/
@@ -900,6 +1128,71 @@ static t_eReturnCode s_APPLGC_ResetSrvState(void)
         {
             Ret_e = APPLGC_SetServiceHealth((t_eAPPLGC_SrvList)idxSrv_u8, 
                                             APPLGC_SRV_HEALTH_OK);
+        }
+    }
+
+    return Ret_e;
+}
+
+/*********************************
+ * s_APPLGC_GTRY_UpdateSrvState
+ *********************************/
+static t_eReturnCode s_APPLGC_GTRY_UpdateSrvState(void)
+{
+    t_eReturnCode Ret_e = RC_OK;
+    t_uAPPACT_GetValue actMotorXLVal_u;
+    t_uAPPACT_GetValue actMotorXRVal_u;
+    t_uAPPACT_GetValue actMotorYVal_u;
+    t_uAPPACT_GetValue actMotorZVal_u;
+    t_uint8 appCmd_ua8[APPLGC_APP_PROTOCOL_LEN_DATA];
+    t_uint32 currenTime_u32;
+
+
+    //----- update Gantry Service X -----//
+    Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_X_L, &actMotorXLVal_u);
+    if(Ret_e == RC_OK)
+    {   
+        Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_X_R, &actMotorXRVal_u);
+    }
+    if(Ret_e == RC_OK)
+    {   
+        Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_Y, &actMotorYVal_u);
+    }
+    if(Ret_e == RC_OK)
+    {   
+        Ret_e = APPACT_Get_ActValue(APPACT_ACTUATOR_MTR_Z, &actMotorZVal_u);
+    }
+    if(Ret_e == RC_OK)
+    {
+        //----- update actuators state, what need to be reset in each cyclic -----//
+
+        //----- update service State -----//
+        if((actMotorXLVal_u.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_ON)
+        || (actMotorXRVal_u.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_ON))
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_MOVING;
+        }
+        else 
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_X].state_e = APPLGC_SRV_STATE_STOPPED;
+        }
+
+        if(actMotorYVal_u.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_ON)
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_MOVING;
+        }
+        else 
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_Y].state_e = APPLGC_SRV_STATE_STOPPED;
+        }
+
+        if(actMotorZVal_u.Motor_s.pulseState_e == CL42T_MOTOR_PULSE_ON)
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_MOVING;
+        }
+        else 
+        {
+            g_srvFuncInfo_as[APPLGC_SRV_GTRY_Z].state_e = APPLGC_SRV_STATE_STOPPED;
         }
     }
 
